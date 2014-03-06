@@ -44,32 +44,40 @@ class hubLog {
 		global $ilLog;
 		$this->il_log = $ilLog;
 
-		if (is_writable(self::PATH . DIRECTORY_SEPARATOR . self::FILENAME)) {
+		if (is_writable(self::getFilePath())) {
 			$this->hub_log = new ilLog(self::PATH, self::FILENAME, 'HUB');
-			if (self::DIRECT AND ! self::DISABLE) {
-				// $this->hub_log->write(self::getHeader('New Request'), self::L_WARN);
-			}
 		} else {
+			if (is_writable(self::PATH)) {
+				touch(self::getFilePath());
+			}
 			ilUtil::sendFailure('hub.log not writable', true);
 		}
 	}
 
 
+	/**
+	 * @return string
+	 */
+	protected static function getFilePath() {
+		return self::PATH . DIRECTORY_SEPARATOR . self::FILENAME;
+	}
+
+
 	public function __destruct() {
-		if (is_writable(self::PATH . DIRECTORY_SEPARATOR . self::FILENAME)) {
+		/*if (is_writable(self::getFilePath())) {
 			if (! self::DIRECT AND ! self::DISABLE) {
 				$this->hub_log->write(self::getHeader('New Request'), self::L_WARN);
 				foreach (self::$messages as $m) {
 					if ($m->getLevel() === self::L_PROD) {
-						$this->il_log->write($m->getMessage());
+						// $this->il_log->write($m->getMessage());
 					}
-					$this->hub_log->write($m->getMessage(), self::getLevel($m->getLevel()));
+					// $this->hub_log->write($m->getMessage(), self::getLevel($m->getLevel()));
 				}
 				$this->hub_log->write(self::getHeader('Request ended'), self::L_WARN);
 			} elseif (! self::DISABLE) {
 				$this->hub_log->write(self::getHeader('Request ended'), self::L_WARN);
 			}
-		}
+		}*/
 	}
 
 
