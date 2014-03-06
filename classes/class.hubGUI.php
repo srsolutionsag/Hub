@@ -95,6 +95,7 @@ class hubGUI {
 	public function executeCommand() {
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
+		$next_class = $next_class ? $next_class : 'hubOriginGUI';
 		$this->tpl->getStandardTemplate();
 		$this->setTabs($next_class);
 		$this->setTitleAndDescription();

@@ -12,7 +12,6 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectProperties.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubAccess.php');
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins/hubCourse/unibasSLCM/class.unibasSLCM.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Notification/class.hubOriginNotification.php');
 
 /**
@@ -88,13 +87,7 @@ class hubOriginGUI {
 
 
 	public function index() {
-		// require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
-		//		hubOriginConfiguration::updateDB();
-//		self::getChilds(261);
-//		foreach (self::$childs as $child) {
-//			$objCrs = new ilObjCourse($child);
-//			$objCrs->getMemberObject()->add(76051, IL_CRS_MEMBER);
-//		}
+//		include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
 		$tableGui = new hubOriginTableGUI($this, 'index');
 		$this->tpl->setContent($tableGui->getHTML());
 	}
@@ -118,23 +111,6 @@ class hubOriginGUI {
 				self::getChilds($ch['ref_id']);
 			}
 		}
-	}
-
-
-	protected function reset() {
-		/**
-		 * @var $hist hubSyncHistory
-		 */
-		foreach (hubSyncHistory::where(array( 'sr_hub_origin_id' => $_GET['origin_id'] ))->get() as $hist) {
-			if (ilObjectFactory::ObjectIdExists(ilObject2::_lookupObjId($hist->getIliasId()))) {
-				$ilObj = ilObjectFactory::getInstanceByRefId($hist->getIliasId());
-				$ilObj->delete();
-				$hist->getHubObject()->delete();
-				$hist->delete();
-			}
-		}
-		ilUtil::sendInfo('Reset ok', true);
-		$this->ctrl->redirect($this, 'index');
 	}
 
 
