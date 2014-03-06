@@ -32,16 +32,6 @@ class hubSyncCron {
 	}
 
 
-	private function sendNotification() {
-		require_once('./Modules/Course/classes/class.ilCourseMembershipMailNotification.php');
-		$mail = new ilCourseMembershipMailNotification();
-		$mail->setRefId(68448);
-		$mail->setRecipients(array( 6 ));
-		$mail->setType(ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
-		$mail->send();
-	}
-
-
 	public static function initILIAS() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		chdir(Hub::getRootPath());
@@ -144,7 +134,7 @@ class hubSyncCron {
 		foreach (hubOrigin::getOriginsForUsage($usage) as $origin) {
 			/**
 			 * @var $origin       hubOrigin
-			 * @var $originObject unibasOe
+			 * @var $originObject hubOrigin
 			 */
 			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
 			$originObject = $origin->getObject();

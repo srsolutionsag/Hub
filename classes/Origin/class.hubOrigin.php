@@ -136,6 +136,10 @@ class hubOrigin extends ActiveRecord {
 		$usage_class = self::getUsageClass($this->getId());
 		$existing = $usage_class::count();
 
+		if ($existing == 0) {
+			return true;
+		}
+
 		$percent = 100 / $existing * $amount_of_datasets;
 
 		return ($percent >= self::PERCENTAGE ? true : false);
