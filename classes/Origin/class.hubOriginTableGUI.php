@@ -60,7 +60,12 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		/**
 		 * @var $ilToolbar ilToolbarGUI
 		 */
+		$ilToolbar->setFormAction($this->ctrl->getFormAction($this->parent_obj), true);
 		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, 'add'));
+		$import = new ilFileInputGUI('import', 'import_file');
+		$import->setSuffixes(array( 'json' ));
+		$ilToolbar->addInputItem($import);
+		$ilToolbar->addFormButton($this->pl->txt('origin_table_button_import'), 'import');
 		// $this->addHeaderCommand($this->ctrl->getLinkTarget($this->parent_obj, 'add'), $this->pl->txt('origin_table_button_add'));
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
 		$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
@@ -113,10 +118,8 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		} else {
 			$actions->addItem($this->pl->txt('activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, 'activate'));
 		}
-		//		$actions->addItem($this->pl->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
-		if (self::DEV) {
-			//			$actions->addItem($this->pl->txt('reset'), 'reset', $this->ctrl->getLinkTarget($this->parent_obj, 'reset'));
-		}
+		$actions->addItem($this->pl->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
+		$actions->addItem($this->pl->txt('export'), 'export', $this->ctrl->getLinkTarget($this->parent_obj, 'export'));
 		$this->tpl->setCurrentBlock('cell');
 		$this->tpl->setVariable('VALUE', $actions->getHTML());
 		$this->tpl->parseCurrentBlock();

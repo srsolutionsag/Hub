@@ -87,9 +87,23 @@ class hubOriginGUI {
 
 
 	public function index() {
-//		include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
+		//		include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
 		$tableGui = new hubOriginTableGUI($this, 'index');
 		$this->tpl->setContent($tableGui->getHTML());
+	}
+
+
+	public function export() {
+		$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+		$form->export();
+		$this->tpl->setContent($form->getHTML());
+	}
+
+
+	public function import() {
+		$form = new hubOriginFormGUI($this, new hubOrigin());
+		$form->import();
+		$this->tpl->setContent($form->getHTML());
 	}
 
 

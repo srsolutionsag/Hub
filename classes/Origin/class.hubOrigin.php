@@ -77,6 +77,8 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * @param $ext_id
+	 *
 	 * @return hubOrigin
 	 */
 	public static function find($ext_id) {

@@ -18,6 +18,7 @@ edit#:#Bearbeiten
 delete#:#Löschen
 activate#:#Aktivieren
 deactivate#:#Deaktivieren
+export#:#Einstellungen exportieren
 <!-- ORIGIN -->
 origin_table_button_run#:#Synchronisierung starten
 origin_deactivate_all#:#Alle deaktivieren
@@ -44,6 +45,7 @@ origin_form_header_connection#:#Verbindung
 origin_form_field_notification_email#:#Benachrichtigung bei Fehler
 origin_form_field_summary_email#:#E-Mailadressen für Zusammenfassung
 origin_table_button_add#:#Anbindung hinzufügen
+origin_table_button_import#:#Anbindung importieren
 origin_table_title#:#Anbindungen
 origins_table_header_title#:#Titel
 origins_table_header_description#:#Beschreibung

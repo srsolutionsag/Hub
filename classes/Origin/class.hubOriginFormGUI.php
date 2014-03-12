@@ -141,28 +141,26 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 
 	public function fillForm() {
-		$array = array(
-			'title' => $this->origin->getTitle(),
-			'description' => $this->origin->getDescription(),
-			'matching_key_ilias' => $this->origin->getMatchingKeyIlias(),
-			'matching_key_origin' => $this->origin->getMatchingKeyOrigin(),
-			'usage_type' => $this->origin->getUsageType(),
-			'class_name' => $this->origin->getClassName(),
-			'active' => $this->origin->getActive(),
-			'conf_type' => $this->origin->getConfType(),
-			'file_path' => $this->origin->conf()->getFilePath(),
-			'db_username' => $this->origin->conf()->getSrvUsername(),
-			'db_password' => $this->origin->conf()->getSrvPassword(),
-			'db_host' => $this->origin->conf()->getSrvHost(),
-			'db_database' => $this->origin->conf()->getSrvDatabase(),
-			'db_port' => $this->origin->conf()->getSrvPort(),
-			'db_search_base' => $this->origin->conf()->getSrvSearchBase(),
-			'notification_email' => $this->origin->conf()->getNotificationEmail(),
-			'summary_email' => $this->origin->conf()->getSummaryEmail(),
-		);
-		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
-		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
+		$array = $this->getValues();
 		$this->setValuesByArray($array);
+	}
+
+
+	public function export() {
+		$array = $this->getValues();
+		header('Content-type: application/json');
+		header("Content-Transfer-Encoding: Binary");
+		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
+		echo json_encode($array);
+		exit;
+	}
+
+
+	public function import() {
+		if ($_FILES['import_file']['tmp_name']) {
+			$values = json_decode(file_get_contents($_FILES['import_file']['tmp_name']), true);
+			$this->setValuesByArray($values);
+		}
 	}
 
 
@@ -213,5 +211,35 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$objectProperitesFormGUI->saveObject();
 
 		return true;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	protected function getValues() {
+		$array = array(
+			'title' => $this->origin->getTitle(),
+			'description' => $this->origin->getDescription(),
+			'matching_key_ilias' => $this->origin->getMatchingKeyIlias(),
+			'matching_key_origin' => $this->origin->getMatchingKeyOrigin(),
+			'usage_type' => $this->origin->getUsageType(),
+			'class_name' => $this->origin->getClassName(),
+			'active' => $this->origin->getActive(),
+			'conf_type' => $this->origin->getConfType(),
+			'file_path' => $this->origin->conf()->getFilePath(),
+			'db_username' => $this->origin->conf()->getSrvUsername(),
+			'db_password' => $this->origin->conf()->getSrvPassword(),
+			'db_host' => $this->origin->conf()->getSrvHost(),
+			'db_database' => $this->origin->conf()->getSrvDatabase(),
+			'db_port' => $this->origin->conf()->getSrvPort(),
+			'db_search_base' => $this->origin->conf()->getSrvSearchBase(),
+			'notification_email' => $this->origin->conf()->getNotificationEmail(),
+			'summary_email' => $this->origin->conf()->getSummaryEmail(),
+		);
+		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
+		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
+
+		return $array;
 	}
 }
