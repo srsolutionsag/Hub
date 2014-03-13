@@ -1,5 +1,6 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/class.ilHubAccess.php');
 
 /**
  * Class ilHubUIHookGUI
@@ -41,11 +42,11 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	 *
 	 * @return array
 	 */
-	function getHTML($a_comp, $a_part, $a_par = array()) {
-		global $ilUser;
-		if ($a_comp == 'Services/MainMenu' AND
-			$a_part == 'main_menu_search' AND ($ilUser->getId() == 6 OR $ilUser->getId() == 22409)
-		) {
+	public function getHTML($a_comp, $a_part, $a_par = array()) {
+		global $ilUser, $rbacreview;
+		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
+
+		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
 			$ctrlTwo = new ilCtrl();
 			$ctrlTwo->setTargetScript('ilias.php');
 			$a_base_class = $_GET['baseClass'];
@@ -63,10 +64,16 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 			$_GET['cmdClass'] = $cmdClass;
 			$_GET['cmdNode'] = $cmdNode;
 
+			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
+			if (! in_array('CtrlMainMenu', $plugins)) {
+				$mode = ilUIHookPluginGUI::APPEND;
+			} else {
+				$mode = ilUIHookPluginGUI::KEEP;
+			}
+
 			return array(
-				'mode' => ilUIHookPluginGUI::KEEP,
-				'html' => '<div class=\'FSXrequestWorkspaceHeader\'>
-				<a href=\'' . $link . '\'>HUB</a></div>'
+				'mode' => $mode,
+				'html' => '<a href=\'' . $link . '\'>HUB</a>'
 			);
 		}
 
