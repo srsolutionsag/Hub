@@ -68,203 +68,206 @@ class hubOriginGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
-		$cmd = $this->ctrl->getCmd();
-		$this->performCommand($cmd);
+		if (ilHubAccess::checkAccess()) {
+			$cmd = $this->ctrl->getCmd();
+			$this->{$cmd}();
 
-		return true;
-	}
-
-
-	/**
-	 * @param $cmd
-	 *
-	 * @return mixed|void
-	 */
-	protected function performCommand($cmd) {
-		// TODO Rechteprüfung
-		$this->{$cmd}();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 
 	public function index() {
-		//		include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
-		$tableGui = new hubOriginTableGUI($this, 'index');
-		$this->tpl->setContent($tableGui->getHTML());
+		if (ilHubAccess::checkAccess()) {
+			$tableGui = new hubOriginTableGUI($this, 'index');
+			$this->tpl->setContent($tableGui->getHTML());
+		}
 	}
 
 
 	public function export() {
-		$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
-		$form->export();
-		$this->tpl->setContent($form->getHTML());
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+			$form->export();
+			$this->tpl->setContent($form->getHTML());
+		}
 	}
 
 
 	public function import() {
-		$form = new hubOriginFormGUI($this, new hubOrigin());
-		$form->import();
-		$this->tpl->setContent($form->getHTML());
-	}
-
-
-	protected static $childs = array();
-
-
-	/**
-	 * @param $node
-	 */
-	public static function getChilds($node) {
-		global $tree;
-		/**
-		 * @var $tree ilTree
-		 */
-		foreach ($tree->getChilds($node) as $ch) {
-			if ($ch['type'] == 'crs') {
-				self::$childs[] = $ch['ref_id'];
-			} elseif ($ch['type'] == 'cat') {
-				self::getChilds($ch['ref_id']);
-			}
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, new hubOrigin());
+			$form->import();
+			$this->tpl->setContent($form->getHTML());
 		}
 	}
 
 
 	public function run() {
-		$cron = new hubSyncCron();
-		$cron->run();
-		if (! hub::isCli()) {
-			ilUtil::sendInfo('Cronjob run');
+		if (ilHubAccess::checkAccess()) {
+			$cron = new hubSyncCron();
+			$cron->run();
+			if (! hub::isCli()) {
+				ilUtil::sendInfo('Cronjob run');
+			}
+			$this->index();
 		}
-		//		$this->ctrl->redirect($this, 'index');
-		$this->index();
 	}
 
 
 	public function updateAllTables() {
-		hubSyncHistory::updateDB();
-		hubCategory::updateDB();
-		hubCourse::updateDB();
-		hubMembership::updateDB();
-		hubOrigin::updateDB();
-		hubOriginObjectPropertyValue::updateDB();
-		hubUser::updateDB();
-		ilUtil::sendInfo('Update ok', true);
-		$this->ctrl->redirect($this, 'index');
+		if (ilHubAccess::checkAccess()) {
+			hubOriginConfiguration::installDB();
+			hubOrigin::installDB();
+			hubOriginObjectPropertyValue::installDB();
+			hubCategory::installDB();
+			hubCourse::installDB();
+			hubMembership::installDB();
+			hubUser::installDB();
+			hubSyncHistory::installDB();
+			ilUtil::sendInfo('Update ok', true);
+			$this->ctrl->redirect($this, 'index');
+		}
 	}
 
 
 	public function add() {
-		$form = new hubOriginFormGUI($this, new hubOrigin());
-		$form->fillForm();
-		$this->tpl->setContent($form->getHTML());
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, new hubOrigin());
+			$form->fillForm();
+			$this->tpl->setContent($form->getHTML());
+		}
 	}
 
 
 	public function create() {
-		$form = new hubOriginFormGUI($this, new hubOrigin());
-		$form->setValuesByPost();
-		if ($form->saveObject()) {
-			ilUtil::sendSuccess($this->pl->txt('success'), true);
-			$this->ctrl->setParameter($this, 'origin_id', NULL);
-			$this->ctrl->redirect($this, 'index');
-		} else {
-			$this->tpl->setContent($form->getHTML());
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, new hubOrigin());
+			$form->setValuesByPost();
+			if ($form->saveObject()) {
+				ilUtil::sendSuccess($this->pl->txt('success'), true);
+				$this->ctrl->setParameter($this, 'origin_id', NULL);
+				$this->ctrl->redirect($this, 'index');
+			} else {
+				$this->tpl->setContent($form->getHTML());
+			}
 		}
 	}
 
 
 	public function edit() {
-		$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
-		$form->fillForm();
-		$this->tpl->setContent($form->getHTML());
-	}
-
-
-	private function activate() {
-		/**
-		 * @var $hubOrigin hubOrigin
-		 */
-		$hubOrigin = hubOrigin::find($_GET['origin_id']);
-		$hubOrigin->setActive(true);
-		$hubOrigin->update();
-		hubLog::getInstance()->write('Origin activated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
-		ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
-		$this->ctrl->redirect($this, 'index');
-	}
-
-
-	private function deactivate() {
-		/**
-		 * @var $hubOrigin hubOrigin
-		 */
-		$hubOrigin = hubOrigin::find($_GET['origin_id']);
-		$hubOrigin->setActive(false);
-		$hubOrigin->update();
-		hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
-	}
-
-
-	public function deactivateAll() {
-		/**
-		 * @var $hubOrigin hubOrigin
-		 */
-		foreach (hubOrigin::get() as $hubOrigin) {
-			$hubOrigin->setActive(false);
-			$hubOrigin->update();
-			hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
-		}
-		ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
-		$this->ctrl->redirect($this, 'index');
-	}
-
-
-	public function activateAll() {
-		/**
-		 * @var $hubOrigin hubOrigin
-		 */
-		foreach (hubOrigin::get() as $hubOrigin) {
-			$hubOrigin->setActive(true);
-			$hubOrigin->update();
-			hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
-		}
-		ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
-		$this->ctrl->redirect($this, 'index');
-	}
-
-
-	public function update() {
-		$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
-		$form->setValuesByPost();
-		if ($form->saveObject()) {
-			ilUtil::sendSuccess($this->lng->txt('success'), true);
-			hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])
-					->getTitle(), hubLog::L_PROD);
-			$this->ctrl->setParameter($this, 'origin_id', NULL);
-			$this->ctrl->redirect($this, 'index');
-		} else {
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+			$form->fillForm();
 			$this->tpl->setContent($form->getHTML());
 		}
 	}
 
 
+	private function activate() {
+		if (ilHubAccess::checkAccess()) {
+			/**
+			 * @var $hubOrigin hubOrigin
+			 */
+			$hubOrigin = hubOrigin::find($_GET['origin_id']);
+			$hubOrigin->setActive(true);
+			$hubOrigin->update();
+			hubLog::getInstance()->write('Origin activated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
+			$this->ctrl->redirect($this, 'index');
+		}
+	}
+
+
+	private function deactivate() {
+		if (ilHubAccess::checkAccess()) {
+			/**
+			 * @var $hubOrigin hubOrigin
+			 */
+			$hubOrigin = hubOrigin::find($_GET['origin_id']);
+			$hubOrigin->setActive(false);
+			$hubOrigin->update();
+			hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
+			$this->ctrl->redirect($this, 'index');
+		}
+	}
+
+
+	public function deactivateAll() {
+		if (ilHubAccess::checkAccess()) {
+			/**
+			 * @var $hubOrigin hubOrigin
+			 */
+			foreach (hubOrigin::get() as $hubOrigin) {
+				$hubOrigin->setActive(false);
+				$hubOrigin->update();
+				hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			}
+			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
+			$this->ctrl->redirect($this, 'index');
+		}
+	}
+
+
+	public function activateAll() {
+		if (ilHubAccess::checkAccess()) {
+			/**
+			 * @var $hubOrigin hubOrigin
+			 */
+			foreach (hubOrigin::get() as $hubOrigin) {
+				$hubOrigin->setActive(true);
+				$hubOrigin->update();
+				hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			}
+			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
+			$this->ctrl->redirect($this, 'index');
+		}
+	}
+
+
+	public function update() {
+		if (ilHubAccess::checkAccess()) {
+			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+			$form->setValuesByPost();
+			if ($form->saveObject()) {
+				ilUtil::sendSuccess($this->lng->txt('success'), true);
+				hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])
+						->getTitle(), hubLog::L_PROD);
+				$this->ctrl->setParameter($this, 'origin_id', NULL);
+				$this->ctrl->redirect($this, 'index');
+			} else {
+				$this->tpl->setContent($form->getHTML());
+			}
+		}
+	}
+
+
 	public function confirmDelete() {
-		$this->ctrl->saveParameter($this, 'origin_id');
-		$conf = new ilConfirmationGUI();
-		$conf->setFormAction($this->ctrl->getFormAction($this));
-		$conf->setHeaderText($this->pl->txt('msg_confirm_delete_origin'));
-		$conf->setConfirm($this->lng->txt('delete'), 'delete');
-		$conf->setCancel($this->lng->txt('cancel'), 'index');
-		$this->tpl->setContent($conf->getHTML());
+		if (ilHubAccess::checkAccess()) {
+			$this->ctrl->saveParameter($this, 'origin_id');
+			$conf = new ilConfirmationGUI();
+			$conf->setFormAction($this->ctrl->getFormAction($this));
+			$conf->setHeaderText($this->pl->txt('msg_confirm_delete_origin'));
+			$conf->setConfirm($this->lng->txt('delete'), 'delete');
+			$conf->setCancel($this->lng->txt('cancel'), 'index');
+			$this->tpl->setContent($conf->getHTML());
+		}
 	}
 
 
 	public function delete() {
-		$origin = hubOrigin::find($_GET['origin_id']);
-		$origin->delete();
-		$this->ctrl->redirect($this, 'index');
+		if (ilHubAccess::checkAccess()) {
+			$origin = hubOrigin::find($_GET['origin_id']);
+			$origin->delete();
+			$this->ctrl->redirect($this, 'index');
+		}
 	}
 
 
-	function applyFilter() {
+	public function applyFilter() {
 		$tableGui = new hubOriginTableGUI($this, 'index');
 		$tableGui->writeFilterToSession();
 		$tableGui->resetOffset();
@@ -272,7 +275,7 @@ class hubOriginGUI {
 	}
 
 
-	function resetFilter() {
+	public function resetFilter() {
 		$tableGui = new hubOriginTableGUI($this, 'index');
 		$tableGui->resetOffset();
 		$tableGui->resetFilter();
