@@ -1,6 +1,5 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
-require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/class.ilHubAccess.php');
 
 /**
  * Class ilHubUIHookGUI
