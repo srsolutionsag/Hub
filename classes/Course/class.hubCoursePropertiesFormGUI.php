@@ -27,7 +27,7 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($te);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' NEW');
+		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
 		$this->addItem($h);
 
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_activate'), 'activate');
@@ -37,7 +37,7 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' UPDATED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
 		$this->addItem($h);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_move'), 'move');
@@ -56,7 +56,7 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' DELETED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('crs_prop_delete_mode'), 'delete');
 		$ro->setValue(hubCourse::DELETE_MODE_INACTIVE);

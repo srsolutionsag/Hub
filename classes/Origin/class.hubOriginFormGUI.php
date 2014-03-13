@@ -103,23 +103,23 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		{
 			$opt1 = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_file'), hubOrigin::CONF_TYPE_FILE, $this->pl->txt('origin_form_field_conf_type_file_info'));
 			{
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_file_path'), 'file_path');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_file_path'), 'file_path');
 				$opt1->addSubItem($te);
 			}
 			$ro->addOption($opt1);
 			$opt1 = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_db'), hubOrigin::CONF_TYPE_DB, $this->pl->txt('origin_form_field_conf_type_db_info'));
 			{
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_host'), 'db_host');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_host'), 'db_host');
 				$opt1->addSubItem($te);
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_port'), 'db_port');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_port'), 'db_port');
 				$opt1->addSubItem($te);
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_username'), 'db_username');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_username'), 'db_username');
 				$opt1->addSubItem($te);
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_password'), 'db_password');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_password'), 'db_password');
 				$opt1->addSubItem($te);
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_database'), 'db_database');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_database'), 'db_database');
 				$opt1->addSubItem($te);
-				$te = new ilTextInputGUI($this->pl->txt('origin_form_conf_db_search_base'), 'db_search_base');
+				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_search_base'), 'db_search_base');
 				$opt1->addSubItem($te);
 			}
 			$ro->addOption($opt1);

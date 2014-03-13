@@ -105,7 +105,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var $origin hubOrigin
 		 */
-		$opt[0] = $this->pl->txt('none');
+		$opt[0] = $this->pl->txt('common_none');
 		foreach (hubOrigin::get() as $origin) {
 			$opt[$origin->getId()] = $origin->getTitle();
 		}

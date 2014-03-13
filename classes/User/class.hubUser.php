@@ -94,6 +94,13 @@ class hubUser extends srModelObjectHubClass {
 			$this->ilias_object->setActive(false);
 			$this->ilias_object->setProfileIncomplete(true);
 		}
+		if ($this->object_properties->getCreatePassword()) {
+			$passwd = ilUtil::generatePasswords(1);
+			$password = md5($passwd[0]);
+			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
+		} else {
+			$this->ilias_object->setPasswd($this->getPasswd());
+		}
 		$this->ilias_object->setInstitution($this->getInstitution());
 		$this->ilias_object->setStreet($this->getStreet());
 		$this->ilias_object->setCity($this->getCity());
@@ -403,6 +410,14 @@ class hubUser extends srModelObjectHubClass {
 	 * @db_length           256
 	 */
 	protected $email;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        text
+	 * @db_length           256
+	 */
+	protected $email_password;
 	/**
 	 * @var string
 	 *
@@ -1025,6 +1040,24 @@ class hubUser extends srModelObjectHubClass {
 	public function getIliasRoles() {
 		return $this->ilias_roles;
 	}
+
+
+	/**
+	 * @param string $email_password
+	 */
+	public function setEmailPassword($email_password) {
+		$this->email_password = $email_password;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getEmailPassword() {
+		return $this->email_password;
+	}
+
+
 
 
 	//

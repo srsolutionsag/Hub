@@ -57,7 +57,9 @@ class hubOriginGUI {
 		$this->tabs_gui = $this->parent->tabs_gui;
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
-		//		$this->pl->updateLanguages();
+		if ($_GET['hrl'] == 'true') {
+			$this->pl->updateLanguageFiles();
+		}
 		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}

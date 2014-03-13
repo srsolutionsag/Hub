@@ -13,13 +13,7 @@ require_once('class.hubUser.php');
 class hubUserTableGUI extends srModelObjectTableGUI {
 
 	protected function initTableData() {
-		//echo '<pre>' . print_r($this->getNavigationParametersAsArray(), 1) . '</pre>';
-
-//		$this->setData(hubUser::limit($this->getNavStart(), $this->getNavStop())->getArray());
-
 		$this->setData(hubUser::getArray());
-//		$this->setMaxCount(hubUser::count());
-		$this->setLimit(50);
 	}
 
 
