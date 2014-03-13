@@ -44,7 +44,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($se);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' NEW');
+		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
 		$this->addItem($h);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_activate_account'), 'activate_account');
@@ -52,11 +52,19 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), 'create_password');
 		$this->addItem($cb);
-		$cb= new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), 'send_password');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), 'send_password');
+		$se = new ilSelectInputGUI($this->pl->txt('usr_prop_send_password_field'), 'send_password_field');
+		$opt = array(
+			'email' => 'email',
+			'external_account' => 'external_account',
+			'email_password' => 'email_password',
+		);
+		$se->setOptions($opt);
+		$cb->addSubItem($se);
 		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' UPDATED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
 		$this->addItem($h);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_reactivate_account'), 'reactivate_account');
@@ -76,7 +84,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' DELETED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('usr_prop_delete_mode'), 'delete');
 		$ro->setValue(hubUser::DELETE_MODE_INACTIVE);

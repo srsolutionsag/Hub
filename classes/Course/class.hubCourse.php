@@ -246,7 +246,6 @@ class hubCourse extends srModelObjectRepositoryObject {
 				FROM object_data dat
 				JOIN object_reference ref ON ref.obj_id = dat.obj_id
 				WHERE dat.import_id = ' . $this->db->quote($key, 'text');
-		echo '<pre>' . print_r($q, 1) . '</pre>';
 		$res = $this->db->query($q);
 		while ($row = $this->db->fetchObject($res)) {
 			return $row->ref_id;

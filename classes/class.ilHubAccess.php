@@ -1,5 +1,5 @@
 <?php
-
+require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
 /**
  * ilHubAccess
  *
@@ -23,8 +23,15 @@ class ilHubAccess {
 			global $ilUser;
 			$user_id = $ilUser->getId();
 		}
+		$roles = hubConfig::get('admin_roles') ? hubConfig::get('admin_roles') : 2;
 
-		return in_array($user_id, $rbacreview->assignedUsers(2));
+		foreach (explode(',', $roles) as $role_id) {
+			if (in_array($user_id, $rbacreview->assignedUsers($role_id))) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 

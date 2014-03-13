@@ -156,7 +156,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 			switch ($this->object_properties->getDelete()) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->ilias_object->setTitle($this->getTitle() . ' '
-						. $this->pl->txt('ilias_object_mark_deleted'));
+						. $this->pl->txt('com_prop_mark_deleted_text'));
 					if ($this->object_properties->getDeletedIcon()) {
 						$icon = $this->object_properties->getIconPath('_deleted');
 						if ($icon) {

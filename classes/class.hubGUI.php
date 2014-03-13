@@ -10,7 +10,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @revision          $r:
  *
  * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI
- * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI
+ * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI, hubConfGUI
  */
 class hubGUI {
 
@@ -52,14 +52,15 @@ class hubGUI {
 	 * @param $next_class
 	 */
 	private function setTabs($next_class) {
-		$this->tabs->addTab('origins', $this->pl->txt('origins'), $this->ctrl->getLinkTargetByClass('hubOriginGUI', 'index'));
+		$this->tabs->addTab('hub_origins', $this->pl->txt('hub_origins'), $this->ctrl->getLinkTargetByClass('hubOriginGUI', 'index'));
 		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
 		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
 		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
 		//		$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
+		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass('hubConfGUI', 'index'));
 		switch ($next_class) {
 			case 'huborigingui';
-				$this->tabs->setTabActive('origins');
+				$this->tabs->setTabActive('hub_origins');
 				break;
 			case 'hubcoursegui';
 				$this->tabs->setTabActive('hub_courses');
@@ -72,6 +73,9 @@ class hubGUI {
 				break;
 			case 'hubloggui';
 				$this->tabs->setTabActive('log');
+				break;
+			case 'hubconfgui';
+				$this->tabs->setTabActive('conf');
 				break;
 		}
 	}

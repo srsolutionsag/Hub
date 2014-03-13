@@ -1,162 +1,155 @@
-<!-- TABS -->
-hub_courses#:#Kurse
-hub_users#:#Benutzerkonten
+<!-- language file start -->
+cat_prop_base_node_external#:#Basis-Node extern
+cat_prop_base_node_ilias#:#Basis-Node ILIAS
+cat_prop_change_icon#:#Icon ersetzen (%s)
+cat_prop_create_icon#:#Icon erstellen
+cat_prop_delete_mode#:#Löschverhalten
+cat_prop_delete_mode_archive#:#In Kategorie archivieren
+cat_prop_delete_mode_archive_node#:#Ref-ID Archiv
+cat_prop_delete_mode_delete#:#Kategorie löschen
+cat_prop_delete_mode_inactive#:#Kategorie mit Text "%s" ergänzen
+cat_prop_delete_mode_none#:#Keine Aktion
+cat_prop_header_base#:#Basis-Node Einstellungen
+cat_prop_header_icon#:#Icon
+cat_prop_header_object#:#Objekt-Einstellungen
+cat_prop_move#:#Kategorie verschieben
+cat_prop_syncfield#:#Synchronisationsfeld
+cat_prop_syncfield_none#:#Kein Feld
+cat_prop_syncfield_title#:#Titel
+cat_prop_update_description#:#Beschreibung aktualisieren
+cat_prop_update_icon#:#Icon updaten
+cat_prop_update_title#:#Name aktualisieren
+com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
+com_prop_mark_deleted_text#:#(gelöscht)
+com_prop_shortlink#:#Shortlink aktivieren
+com_prop_use_ext_status#:#Externes Statusmodell verwenden
+common_actions#:#Aktionen
+common_activate#:#Aktivieren
+common_deactivate#:#Deaktivieren
+common_delete#:#Löschen
+common_edit#:#Bearbeiten
+common_export#:#Einstellungen exportieren
+common_none#:#Keine
+common_on_status#:#Objekt-Status:
+crs_prop_activate#:#Online setzen
+crs_prop_create_icon#:#Icon erstellen
+crs_prop_delete_mode#:#Löschverhalten
+crs_prop_delete_mode_delete#:#Kurs löschen
+crs_prop_delete_mode_inactive#:#Kurs offline setzen
+crs_prop_delete_mode_none#:#Keine Aktion
+crs_prop_header_icon#:#Icon-Einstellungen
+crs_prop_header_object#:#Objekt-Einstellungen
+crs_prop_move#:#Kurs verschieben
+crs_prop_node_noparent#:#Node-ID, wenn keine Parent-ID gefunden
+crs_prop_reactivate#:#Wieder online setzen
+crs_prop_update_description#:#Beschreibung aktualisieren
+crs_prop_update_icon#:#Icon aktualisieren
+crs_prop_update_title#:#Titel aktualisieren
+hub_conf#:#Einstellungen
 hub_categories#:#Kategorien
-origins#:#Schnittstellen-Verwaltung
-<!-- USERS -->
-hub_users_table_title#:#Benutzerkonten
-<!-- COURSES -->
-hub_courses_table_title#:#Kurse
-<!-- CATEGORIES -->
+hub_courses#:#Kurse
+hub_origins#:#Anbindungen
+hub_users#:#Benutzerkonten
 hub_categories_table_title#:#Kategorien
-<!-- COMMON -->
-sync_history_courses#:#Kurse
-none#:#Keine
-success#:#Gespeichert
-actions#:#Aktionen
-edit#:#Bearbeiten
-delete#:#Löschen
-activate#:#Aktivieren
-deactivate#:#Deaktivieren
-export#:#Einstellungen exportieren
-<!-- ORIGIN -->
-origin_table_button_run#:#Synchronisierung starten
-origin_deactivate_all#:#Alle deaktivieren
-origin_activate_all#:#Alle aktivieren
-origin_form_title_edit#:#Herkunft bearbeiten
-origin_form_title_add#:#Herkunft erstellen
-origin_form_button_update#:#Speichern
-origin_form_button_create#:#Speichern
-origin_form_button_index#:#Abbrechen
-origin_form_field_title#:#Titel
-origin_form_field_description#:#Beschreibung
-origin_form_field_matching_key_origin#:#Zuordnungsfeld in Fremddaten
-origin_form_field_matching_key_ilias#:#Zuordnungsfeld in ILIAS
-origin_form_field_usage_type#:#Sync-Verwendung
-origin_form_field_usage_type_1#:#Benutzer
-origin_form_field_usage_type_2#:#Kurs-Mitgliedschaften
-origin_form_field_usage_type_3#:#Kurse
-origin_form_field_usage_type_4#:#Kategorien
-origin_form_field_class_name#:#PHP-Klassenname
-origin_form_field_active#:#Synchronisation aktiv
-origin_form_header_notification#:#Benachrichtigung
-origin_form_header_sync#:#Synchronisation
-origin_form_header_connection#:#Verbindung
-origin_form_field_notification_email#:#Benachrichtigung bei Fehler
-origin_form_field_summary_email#:#E-Mailadressen für Zusammenfassung
-origin_table_button_add#:#Anbindung hinzufügen
-origin_table_button_import#:#Anbindung importieren
-origin_table_title#:#Anbindungen
-origins_table_header_title#:#Titel
-origins_table_header_description#:#Beschreibung
-origins_table_header_active#:#Aktiv
-origins_table_header_usage_type#:#Verwendung
-origins_table_header_last_update#:#Letzte Synchronisierung
-origins_table_header_duration#:#Dauer
-origins_table_header_count#:#Anzahl
-
-origin_form_field_conf_type#:#Verbindungstyp
-origin_form_field_conf_type_file#:#Datei
-origin_form_field_conf_type_file_info#:#Daten werden aus einer Datei gelesen
-origin_form_conf_file_path#:#Pfad zur Datei
-
-origin_form_field_conf_type_db#:#Datenbank
-origin_form_field_conf_type_db_info#:#Die Daten stammen aus einer Datenbankverbindung
-origin_form_conf_db_host#:#Host
-origin_form_conf_db_port#:#Port
-origin_form_conf_db_username#:#Login-Name
-origin_form_conf_db_password#:#Passwort
-origin_form_conf_db_database#:#Datenbank
-origin_form_conf_db_search_base#:#Search-Base
+hub_courses_table_title#:#Kurse
+hub_users_table_title#:#Benutzerkonten
+mem_prop_add_notification#:#Benachrichtigung aktivieren (wenn gewünscht)
+mem_prop_delete_mode#:#Löschverhalten
+mem_prop_delete_mode_delete#:#Mitgliedschaft beenden
+mem_prop_delete_mode_inactive#:#Zugriff sperren
+mem_prop_delete_mode_none#:#Mitgliedschaft bestehen lassen
+mem_prop_deleted_send_mail_admin#:#Admin
+mem_prop_deleted_send_mail_member#:#Mitglied
+mem_prop_deleted_send_mail_title#:#Mitgliedschaft beendet-Mail versenden an:
+mem_prop_deleted_send_mail_tutor#:#Tutor
+mem_prop_desktop_new#:#Container auf Schreibtisch
+mem_prop_desktop_updated#:#Container auf Schreibtisch
+mem_prop_new_send_mail_admin#:#Admin
+mem_prop_new_send_mail_member#:#Mitglied
+mem_prop_new_send_mail_title#:#Willkommens-Mail versenden an:
+mem_prop_new_send_mail_tutor#:#Tutor
+mem_prop_update_notification#:#Benachrichtigung aktualisieren (wenn gewünscht)
+mem_prop_update_role#:#Rolle aktualisieren
+mem_prop_updated_send_mail#:#Aufnahmemail verschicken
+mem_prop_updated_send_mail_admin#:#Admin
+mem_prop_updated_send_mail_member#:#Mitglied
+mem_prop_updated_send_mail_title#:#Statuswechsel-Mail versenden an:
+mem_prop_updated_send_mail_tutor#:#Tutor
 msg_confirm_delete_origin#:#Möchten Sie die Anbindung definitv löschen?
 msg_origin_activated#:#Anbindung aktiviert
 msg_origin_deactivated#:#Anbindung deaktiviert
-<!-- Properties -->
-properties#:#Einstellungen
-cat_prop_base_node_ilias#:#Basis-Node ILIAS
-cat_prop_base_node_external#:#Basis-Node extern
-cat_prop_move#:#Kategorie verschieben
-cat_prop_update_title#:#Name aktualisieren
-cat_prop_update_description#:#Beschreibung aktualisieren
-com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
-com_prop_shortlink#:#Shortlink aktivieren
-com_prop_use_ext_status#:#Externes Statusmodell verwenden
-cat_prop_syncfield#:#Synchronisationsfeld
-cat_prop_syncfield_title#:#Titel
-cat_prop_syncfield_none#:#Kein Feld
-cat_prop_header_base#:#Basis-Node Einstellungen
-cat_prop_header_object#:#Objekt-Einstellungen
-cat_prop_header_icon#:#Icon
-cat_prop_create_icon#:#Icon erstellen
-cat_prop_update_icon#:#Icon updaten
-cat_prop_delete_mode#:#Löschverhalten
-cat_prop_delete_mode_inactive#:#Kategorie mit Text "%s" ergänzen
-cat_prop_delete_mode_delete#:#Kategorie löschen
-cat_prop_delete_mode_none#:#Keine Aktion
-cat_prop_delete_mode_archive#:#In Kategorie archivieren
-cat_prop_delete_mode_archive_node#:#Ref-ID Archiv
-cat_prop_change_icon#:#Icon ersetzen (%s)
-usr_prop_update_firstname#:#Vorname aktualisieren
-usr_prop_update_login#:#Loginname aktualisieren
-usr_prop_update_lastname#:#Nachname aktualisieren
-usr_prop_update_email#:#E-Mail aktualisieren
+msg_saved#:#Gespeichert
+origin_form_button_create#:#Speichern
+origin_form_button_index#:#Abbrechen
+origin_form_button_update#:#Speichern
+origin_form_field_active#:#Synchronisation aktiv
+origin_form_field_class_name#:#PHP-Klassenname
+origin_form_field_conf_type#:#Verbindungstyp
+origin_form_field_conf_type_db#:#Server
+origin_form_field_conf_type_db_database#:#Datenbank#:#Datenbank
+origin_form_field_conf_type_db_host#:#Host#:#Host
+origin_form_field_conf_type_db_info#:#Die Daten stammen aus einer Serververbindung
+origin_form_field_conf_type_db_password#:#Passwort#:#Passwort
+origin_form_field_conf_type_db_port#:#Port#:#Port
+origin_form_field_conf_type_db_search_base#:#Search-Base#:#Search-Base
+origin_form_field_conf_type_db_username#:#Login-Name#:#Login-Name
+origin_form_field_conf_type_file#:#Datei oder Verzeichnis
+origin_form_field_conf_type_file_info#:#Daten werden aus einer Datei gelesen
+origin_form_field_conf_type_file_path#:#Pfad zur Datei
+origin_form_field_description#:#Beschreibung
+origin_form_field_notification_email#:#Benachrichtigung bei Fehler
+origin_form_field_summary_email#:#E-Mailadressen für Zusammenfassung
+origin_form_field_title#:#Titel
+origin_form_field_usage_type#:#Sync-Verwendung
+origin_form_field_usage_type_1#:#Benutzerkonten
+origin_form_field_usage_type_2#:#Kurs-Mitgliedschaften
+origin_form_field_usage_type_3#:#Kurse
+origin_form_field_usage_type_4#:#Kategorien
+origin_form_header_connection#:#Verbindung zu Daten
+origin_form_header_notification#:#Benachrichtigungen
+origin_form_header_sync#:#Synchronisation
+origin_form_properties#:#Einstellungen
+origin_form_title_add#:#Herkunft erstellen
+origin_form_title_edit#:#Herkunft bearbeiten
+origin_table_button_activate_all#:#Alle aktivieren
+origin_table_button_add#:#Anbindung hinzufügen
+origin_table_button_deactivate_all#:#Alle deaktivieren
+origin_table_button_import#:#Anbindung importieren
+origin_table_button_run#:#Synchronisierung starten
+origin_table_header_active#:#Aktiv
+origin_table_header_count#:#Anzahl
+origin_table_header_description#:#Beschreibung
+origin_table_header_duration#:#Dauer
+origin_table_header_last_update#:#Letzte Synchronisierung
+origin_table_header_title#:#Titel
+origin_table_header_usage_type#:#Verwendung
+origin_table_title#:#Anbindungen
 usr_prop_activate_account#:#Account aktivieren
-usr_prop_reactivate_account#:#Account reaktivieren
-usr_prop_header_object#:#Objekt-Einstellungen
-usr_prop_syncfield#:#Synchronisationsfeld
-usr_prop_syncfield_none#:#Kein Feld
 usr_prop_delete_mode#:#Löschverhalten
-usr_prop_delete_mode_inactive#:#Benutzer deaktivieren
 usr_prop_delete_mode_delete#:#Benutzer löschen
+usr_prop_delete_mode_inactive#:#Benutzer deaktivieren
 usr_prop_delete_mode_none#:#Keine Aktion
+usr_prop_header_object#:#Objekt-Einstellungen
 usr_prop_login_field#:#ILIAS Loginfeld
 usr_prop_login_field_none#:#Standard
-ilias_object_mark_deleted#:#(gelöscht)
-crs_prop_header_object#:#Objekt-Einstellungen
-crs_prop_move#:#Kurs verschieben
-crs_prop_update_title#:#Titel aktualisieren
-crs_prop_update_description#:#Beschreibung aktualisieren
-crs_prop_delete_mode#:#Löschverhalten
-crs_prop_delete_mode_none#:#Keine Aktion
-crs_prop_delete_mode_inactive#:#Kurs offline setzen
-crs_prop_delete_mode_delete#:#Kurs löschen
-crs_prop_header_icon#:#Icon-Einstellungen
-crs_prop_create_icon#:#Icon erstellen
-crs_prop_update_icon#:#Icon aktualisieren
-crs_prop_reactivate#:#Wieder online setzen
-crs_prop_node_noparent#:#Node-ID, wenn keine Parent-ID gefunden
-crs_prop_activate#:#Online setzen
-mem_prop_delete_mode#:#Löschverhalten
-mem_prop_delete_mode_none#:#Mitgliedschaft bestehen lassen
-mem_prop_delete_mode_inactive#:#Zugriff sperren
-mem_prop_delete_mode_delete#:#Mitgliedschaft beenden
-mem_prop_update_role#:#Rolle aktualisieren
-mem_prop_desktop_new#:#Container auf Schreibtisch
-mem_prop_desktop_updated#:#Container auf Schreibtisch
-mem_prop_update_notification#:#Benachrichtigung aktualisieren (wenn gewünscht)
-mem_prop_add_notification#:#Benachrichtigung aktivieren (wenn gewünscht)
-mem_prop_updated_send_mail#:#Aufnahmemail verschicken
-
-mem_prop_new_send_mail_title#:#Willkommens-Mail versenden an:
-mem_prop_new_send_mail_admin#:#Admin
-mem_prop_new_send_mail_tutor#:#Tutor
-mem_prop_new_send_mail_member#:#Mitglied
-
-mem_prop_updated_send_mail_title#:#Statuswechsel-Mail versenden an:
-mem_prop_updated_send_mail_admin#:#Admin
-mem_prop_updated_send_mail_tutor#:#Tutor
-mem_prop_updated_send_mail_member#:#Mitglied
-
-mem_prop_deleted_send_mail_title#:#"Mitgliedschaft beendet"-Mail versenden an:
-mem_prop_deleted_send_mail_admin#:#Admin
-mem_prop_deleted_send_mail_tutor#:#Tutor
-mem_prop_deleted_send_mail_member#:#Mitglied
-
-on_status#:#Objekt-Status:
-
-<!-- LOG -->
-log#:#Log
-list_status_1#:#New
-list_status_2#:#Updated
-list_status_3#:#Deleted
-list_status_6#:#Deleted
+usr_prop_reactivate_account#:#Account reaktivieren
+usr_prop_syncfield#:#Synchronisationsfeld
+usr_prop_syncfield_none#:#Kein Feld
+usr_prop_update_email#:#E-Mail aktualisieren
+usr_prop_update_firstname#:#Vorname aktualisieren
+usr_prop_update_lastname#:#Nachname aktualisieren
+usr_prop_update_login#:#Loginname aktualisieren
+usr_prop_create_password#:#Passwort erstellen
+usr_prop_send_password#:#Passwort per Mail versenden
+usr_prop_send_password_field#:#Feld mit E-Mailadresse
+admin_roles#:#Rollen
+admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
+admin_use_async#:#Asynchrone Synchronisation
+admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
+admin_async_user#:#Benutzername
+admin_async_password#:#Passwort 
+admin_async_client#:#Client-Name des Benutzers
+admin_form_button_save#:#Speichern
+admin_form_button_cancel#:#Abbrechen
+admin_form_title#:#Einstellungen
+admin_import_export#:#Import/Export von Anbindungen aktivieren

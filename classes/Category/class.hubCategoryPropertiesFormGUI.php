@@ -41,14 +41,14 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($se);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' NEW');
+		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
 		$this->addItem($h);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_create_icon'), 'create_icon');
 		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' UPDATED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
 		$this->addItem($h);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_move'), 'move');
@@ -65,14 +65,14 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' DELETED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);
 		//
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('cat_prop_delete_mode'), 'delete');
 		$ro->setValue(hubCategory::DELETE_MODE_INACTIVE);
 		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), NULL);
 		$ro->addOption($opt);
-		$opt = new ilRadioOption(sprintf($this->pl->txt('cat_prop_delete_mode_inactive'), $this->pl->txt('ilias_object_mark_deleted')), hubCategory::DELETE_MODE_INACTIVE);
+		$opt = new ilRadioOption(sprintf($this->pl->txt('cat_prop_delete_mode_inactive'), $this->pl->txt('com_prop_mark_deleted_text')), hubCategory::DELETE_MODE_INACTIVE);
 		{
 			$m = new ilCheckboxInputGUI(sprintf($this->pl->txt('cat_prop_change_icon'),
 				hubOrigin::getClassnameForOriginId($_GET['origin_id']) . '_deleted.png'), 'deleted_icon');

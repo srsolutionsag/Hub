@@ -67,4 +67,3 @@ class hubOriginException extends Exception {
 }
 
 ?>
-

@@ -26,7 +26,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->removeItemByPostVar('shortlink');
 
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' NEW');
+		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
 		$this->addItem($h);
 
 		$cb = new ilCheckboxInputGUI($this->pl->txt('mem_prop_desktop_new'), 'desktop_new');
@@ -48,7 +48,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' UPDATED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
 		$this->addItem($h);
 
 		$cb_new = new ilCheckboxInputGUI($this->pl->txt('mem_prop_update_role'), 'update_role');
@@ -74,7 +74,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb_new);
 
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('on_status') . ' DELETED');
+		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);
 
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('mem_prop_delete_mode'), 'delete');

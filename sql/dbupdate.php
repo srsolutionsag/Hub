@@ -20,3 +20,8 @@ hubMembership::installDB();
 hubUser::installDB();
 hubSyncHistory::installDB();
 ?>
+<#2>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
+hubConfig::installDB();
+?>

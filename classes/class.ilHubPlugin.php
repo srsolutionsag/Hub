@@ -1,6 +1,7 @@
 <?php
 
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/lib/simplexlsx.class.php');
 
 /**
  * Class ilHubPlugin
@@ -94,7 +95,11 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 			$hub_menu->setGuiClass('ilRouterGUI,hubGUI,hubOriginGUI');
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
-			$hub_menu->setPermission(2);
+			if (! function_exists('hubConfig::get')) {
+				$hub_menu->setPermission(2);
+			} else {
+				$hub_menu->setPermission(hubConfig::get('admin_roles'));
+			}
 			$hub_menu->setPlugin(true);
 
 			$entries[0][] = $hub_menu;
