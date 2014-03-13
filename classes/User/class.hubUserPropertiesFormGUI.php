@@ -50,6 +50,11 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_activate_account'), 'activate_account');
 		$this->addItem($cb);
 		//
+		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), 'create_password');
+		$this->addItem($cb);
+		$cb= new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), 'send_password');
+		$this->addItem($cb);
+		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('on_status') . ' UPDATED');
 		$this->addItem($h);

@@ -152,15 +152,18 @@ class hubOrigin extends ActiveRecord {
 	 * @return unibasSLCM
 	 */
 	public function getObject() {
-		if ($this->getClassFilePath()) {
+		if ($this->getClassFilePath() AND is_file($this->getClassFilePath())) {
 			require_once($this->getClassFilePath());
 			$class = $this->getClassName();
 			$originObject = new $class($this->getId());
 
 			return $originObject;
-		} else {
-			return $this;
 		}
+		if (! is_file($this->getClassFilePath())) {
+			ilUtil::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
+		}
+
+		return $this;
 	}
 
 

@@ -156,7 +156,11 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	public function import() {
+	/**
+	 * @param null $json_import
+	 */
+	public function import($json_import = NULL) {
+		$values = json_decode($json_import, true);
 		if ($_FILES['import_file']['tmp_name']) {
 			$values = json_decode(file_get_contents($_FILES['import_file']['tmp_name']), true);
 			$this->setValuesByArray($values);

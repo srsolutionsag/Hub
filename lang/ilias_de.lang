@@ -81,12 +81,6 @@ cat_prop_update_description#:#Beschreibung aktualisieren
 com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
 com_prop_shortlink#:#Shortlink aktivieren
 com_prop_use_ext_status#:#Externes Statusmodell verwenden
-usr_prop_update_firstname#:#Vorname aktualisieren
-usr_prop_update_login#:#Loginname aktualisieren
-usr_prop_update_lastname#:#Nachname aktualisieren
-usr_prop_update_email#:#E-Mail aktualisieren
-usr_prop_activate_account#:#Account aktivieren
-usr_prop_reactivate_account#:#Account reaktivieren
 cat_prop_syncfield#:#Synchronisationsfeld
 cat_prop_syncfield_title#:#Titel
 cat_prop_syncfield_none#:#Kein Feld
@@ -102,6 +96,12 @@ cat_prop_delete_mode_none#:#Keine Aktion
 cat_prop_delete_mode_archive#:#In Kategorie archivieren
 cat_prop_delete_mode_archive_node#:#Ref-ID Archiv
 cat_prop_change_icon#:#Icon ersetzen (%s)
+usr_prop_update_firstname#:#Vorname aktualisieren
+usr_prop_update_login#:#Loginname aktualisieren
+usr_prop_update_lastname#:#Nachname aktualisieren
+usr_prop_update_email#:#E-Mail aktualisieren
+usr_prop_activate_account#:#Account aktivieren
+usr_prop_reactivate_account#:#Account reaktivieren
 usr_prop_header_object#:#Objekt-Einstellungen
 usr_prop_syncfield#:#Synchronisationsfeld
 usr_prop_syncfield_none#:#Kein Feld
