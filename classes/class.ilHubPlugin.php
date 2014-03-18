@@ -1,7 +1,10 @@
 <?php
 
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
-require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/lib/simplexlsx.class.php');
+if(!in_array('SimpleXLSX', get_declared_classes())) {
+	require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/lib/simplexlsx.class.php');
+}
+
 
 /**
  * Class ilHubPlugin
