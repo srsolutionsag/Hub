@@ -69,6 +69,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
 		$this->origin_properties = hubOriginObjectProperties::getInstance($this->origin->getId());
+		$this->locked = (bool)hubConfig::get('lock');
 		$this->initStandardFields();
 		$this->initForm();
 		$origin->getObject()->appendFieldsToPropForm($this);
@@ -132,6 +133,12 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 */
 	public function appendToForm(ilPropertyFormGUI $form_gui) {
 		foreach ($this->getItems() as $item) {
+			if ($this->origin->getId() AND get_class($item) != 'ilFormSectionHeaderGUI') {
+				$item->setDisabled($this->locked);
+				foreach ($item->getSubItems() as $subitem) {
+					$subitem->setDisabled($this->locked);
+				}
+			}
 			$form_gui->addItem($item);
 		}
 
@@ -144,7 +151,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return mixed
 	 */
-	public function appendToItem($form_item) {
+	public function appendToSubItem($form_item) {
 		foreach ($this->getItems() as $item) {
 			$form_item->addSubItem($item);
 		}

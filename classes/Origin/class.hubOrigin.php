@@ -18,6 +18,7 @@ class hubOrigin extends ActiveRecord {
 	const PERCENTAGE = 90;
 	const CONF_TYPE_FILE = 1;
 	const CONF_TYPE_DB = 2;
+	const CONF_TYPE_EXTERNAL = 3;
 	/**
 	 * @var int
 	 */

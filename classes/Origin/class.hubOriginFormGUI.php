@@ -32,6 +32,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->ctrl = $ilCtrl;
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
+		$this->locked = (bool)hubConfig::get('lock');
 		$this->initForm();
 	}
 
@@ -53,46 +54,15 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->addItem($te);
 		//
 		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_title'), 'title');
+
 		$te->setRequired(true);
 		$this->addItem($te);
 		//
 		$te = new ilTextAreaInputGUI($this->pl->txt('origin_form_field_description'), 'description');
+
 		$te->setRequired(true);
 		$this->addItem($te);
-		//
-		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('origin_form_header_sync'));
-		$this->addItem($h);
-		//
-		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_class_name'), 'class_name');
-		$te->setRequired(true);
-		$this->addItem($te);
-		//
-		$ro = new ilRadioGroupInputGUI($this->pl->txt('origin_form_field_usage_type'), 'usage_type');
-		{
-			$prefix = 'origin_form_field_usage_type_';
-			$cat = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_CATEGORY), hub::OBJECTTYPE_CATEGORY);
-			if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_CATEGORY, $this->origin)) {
-				$objectProperitesFormGUI->appendToItem($cat);
-			}
-			$ro->addOption($cat);
-			$crs = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_COURSE), hub::OBJECTTYPE_COURSE);
-			if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_COURSE, $this->origin)) {
-				$objectProperitesFormGUI->appendToItem($crs);
-			}
-			$ro->addOption($crs);
-			$usr = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_USER), hub::OBJECTTYPE_USER);
-			if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_USER, $this->origin)) {
-				$objectProperitesFormGUI->appendToItem($usr);
-			}
-			$ro->addOption($usr);
-			$mem = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_MEMBERSHIP), hub::OBJECTTYPE_MEMBERSHIP);
-			if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_MEMBERSHIP, $this->origin)) {
-				$objectProperitesFormGUI->appendToItem($mem);
-			}
-			$ro->addOption($mem);
-		}
-		$this->addItem($ro);
+
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('origin_form_header_connection'));
@@ -101,30 +71,88 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		// Settings
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('origin_form_field_conf_type'), 'conf_type');
 		{
-			$opt1 = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_file'), hubOrigin::CONF_TYPE_FILE, $this->pl->txt('origin_form_field_conf_type_file_info'));
+			$db = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_file'), hubOrigin::CONF_TYPE_FILE, $this->pl->txt('origin_form_field_conf_type_file_info'));
 			{
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_file_path'), 'file_path');
-				$opt1->addSubItem($te);
+				$db->addSubItem($te);
 			}
-			$ro->addOption($opt1);
-			$opt1 = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_db'), hubOrigin::CONF_TYPE_DB, $this->pl->txt('origin_form_field_conf_type_db_info'));
+			$ro->addOption($db);
+			$file = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_db'), hubOrigin::CONF_TYPE_DB, $this->pl->txt('origin_form_field_conf_type_db_info'));
 			{
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_host'), 'db_host');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_port'), 'db_port');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_username'), 'db_username');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_password'), 'db_password');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_database'), 'db_database');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 				$te = new ilTextInputGUI($this->pl->txt('origin_form_field_conf_type_db_search_base'), 'db_search_base');
-				$opt1->addSubItem($te);
+				$file->addSubItem($te);
 			}
-			$ro->addOption($opt1);
+			$ro->addOption($file);
+			$external = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_external'), hubOrigin::CONF_TYPE_EXTERNAL, $this->pl->txt('origin_form_field_conf_type_external_info'));
+			$ro->addOption($external);
 		}
 		$this->addItem($ro);
+
+
+		//
+		$h = new ilFormSectionHeaderGUI();
+		$h->setTitle($this->pl->txt('origin_form_header_sync'));
+		$this->addItem($h);
+		//
+		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_class_name'), 'class_name');
+		$te->setDisabled($this->locked);
+		$te->setRequired(true);
+		$this->addItem($te);
+
+		if ($this->origin->getId()) {
+			$prefix = 'origin_form_field_usage_type_';
+			$te = new ilNonEditableValueGUI($this->pl->txt('origin_form_field_usage_type'), 'usage_type_ne');
+			$te->setValue($this->pl->txt($prefix . hub::OBJECTTYPE_CATEGORY));
+			$this->addItem($te);
+
+			$hi = new ilHiddenInputGUI('usage_type');
+			$this->addItem($hi);
+
+			if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin)) {
+				$objectProperitesFormGUI->appendToForm($this);
+			}
+		} else {
+			//
+			$ro = new ilRadioGroupInputGUI($this->pl->txt('origin_form_field_usage_type'), 'usage_type');
+			$ro->setDisabled($this->locked);
+			{
+				$prefix = 'origin_form_field_usage_type_';
+				$cat = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_CATEGORY), hub::OBJECTTYPE_CATEGORY);
+				if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_CATEGORY, $this->origin)) {
+					$objectProperitesFormGUI->appendToSubItem($cat);
+				}
+				$ro->addOption($cat);
+				$crs = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_COURSE), hub::OBJECTTYPE_COURSE);
+				if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_COURSE, $this->origin)) {
+					$objectProperitesFormGUI->appendToSubItem($crs);
+				}
+				$ro->addOption($crs);
+				$usr = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_USER), hub::OBJECTTYPE_USER);
+				if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_USER, $this->origin)) {
+					$objectProperitesFormGUI->appendToSubItem($usr);
+				}
+				$ro->addOption($usr);
+				$mem = new ilRadioOption($this->pl->txt($prefix
+					. hub::OBJECTTYPE_MEMBERSHIP), hub::OBJECTTYPE_MEMBERSHIP);
+				if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_MEMBERSHIP, $this->origin)) {
+					$objectProperitesFormGUI->appendToSubItem($mem);
+				}
+				$ro->addOption($mem);
+			}
+			$this->addItem($ro);
+		}
+
+
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('origin_form_header_notification'));

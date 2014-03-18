@@ -8,6 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubOriginException extends Exception {
 
+	const OTHER = - 1;
 	const CONNECTION_FAILED = 1;
 	const PARSE_DATA_FAILED = 2;
 	const NO_DATASETS = 3;
@@ -20,7 +21,8 @@ class hubOriginException extends Exception {
 	 * @var array
 	 */
 	protected static $msgs = array(
-		self::CONNECTION_FAILED => 'Es konnte keine Verbindung zum Freumdsystem hergestellt werden oder die Datei konnte nicht gelesen werden.',
+		self::OTHER => '',
+		self::CONNECTION_FAILED => 'Es konnte keine Verbindung zum Fremdsystem hergestellt werden oder die Datei konnte nicht gelesen werden.',
 		self::PARSE_DATA_FAILED => 'Daten konnten nicht erfolgreich gelesen werden.',
 		self::NO_DATASETS => 'Daten vom Fremdsystem konnten nicht abgerufen werden.',
 		self::CHECKSUM_MISMATCH => 'Die Anzahl Datensätze stimmt nicht mit der Checksumme überein.',
@@ -32,12 +34,12 @@ class hubOriginException extends Exception {
 
 
 	/**
-	 * @param string    $code
+	 * @param int       $code
 	 * @param hubOrigin $origin
 	 * @param bool      $send_mail
 	 * @param null      $optional_message
 	 */
-	public function __construct($code, hubOrigin $origin, $send_mail = false, $optional_message = NULL) {
+	public function __construct($code = self::OTHER, hubOrigin $origin, $send_mail = false, $optional_message = NULL) {
 		$message = 'hubOrigin-Class: ' . $origin->getClassName() . ' (sr_hub_origin_id ' . $origin->getId() . '): ';
 		$message .= PHP_EOL;
 		$message .= 'Fehlerbeschreibung: ' . self::$msgs[$code];

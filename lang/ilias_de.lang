@@ -85,6 +85,8 @@ origin_form_button_update#:#Speichern
 origin_form_field_active#:#Synchronisation aktiv
 origin_form_field_class_name#:#PHP-Klassenname
 origin_form_field_conf_type#:#Verbindungstyp
+origin_form_field_conf_type_external_info#:#Füllen der Hub-Tabelle durch Fremdsystem
+origin_form_field_conf_type_external#:#Extern
 origin_form_field_conf_type_db#:#Server
 origin_form_field_conf_type_db_database#:#Datenbank#:#Datenbank
 origin_form_field_conf_type_db_host#:#Host#:#Host
@@ -148,6 +150,8 @@ admin_use_async#:#Asynchrone Synchronisation
 admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
 admin_async_user#:#Benutzername
 admin_async_password#:#Passwort 
+admin_async_cli_php#:#Pfad zu PHP (z.B. /usr/bin/php)
+admin_password_email_body#:#E-Mail-Body beim versenden von Passwörtern
 admin_async_client#:#Client-Name des Benutzers
 admin_form_button_save#:#Speichern
 admin_form_button_cancel#:#Abbrechen
