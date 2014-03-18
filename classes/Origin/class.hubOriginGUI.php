@@ -119,6 +119,18 @@ class hubOriginGUI {
 	}
 
 
+	public function runAsync() {
+		if (ilHubAccess::checkAccess()) {
+			$async = new hubAsyncSync();
+			$async->run();
+			if (! hub::isCli()) {
+				ilUtil::sendInfo('Cronjob run');
+			}
+			$this->ctrl->redirect($this, 'index');
+		}
+	}
+
+
 	public function updateAllTables() {
 		if (ilHubAccess::checkAccess()) {
 			hubOriginConfiguration::installDB();

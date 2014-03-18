@@ -2,6 +2,7 @@
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.srModelObjectTableGUI.php');
 require_once('class.hubOrigin.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/Sync/class.hubAsyncSync.php');
 
 /**
  * TableGUI srModelObjectTableGUI
@@ -70,6 +71,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		}
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
 		if (hubConfig::get('use_async')) {
+			$this->addCommandButton('runAsync', $this->pl->txt('origin_table_button_run') . ' (Async)');
 			$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
 		}
 		$this->addCommandButton('deactivateAll', $this->pl->txt('origin_table_button_deactivate_all'));

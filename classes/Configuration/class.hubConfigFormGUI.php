@@ -35,6 +35,9 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	private function initForm() {
+		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_lock'), 'lock');
+		$this->addItem($cb);
+
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_use_async'), 'use_async');
 		$cb->setInfo($this->pl->txt('admin_use_async_info'));
 
@@ -44,8 +47,9 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$cb->addSubItem($te);
 		$te = new ilTextInputGUI($this->pl->txt('admin_async_client'), 'async_client');
 		$cb->addSubItem($te);
+		$te = new ilTextInputGUI($this->pl->txt('admin_async_cli_php'), 'async_cli_php');
+		$cb->addSubItem($te);
 		$this->addItem($cb);
-
 
 		$te = new ilTextInputGUI($this->pl->txt('admin_roles'), 'admin_roles');
 		$cb->setInfo($this->pl->txt('admin_roles_info'));
@@ -55,21 +59,12 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$this->addItem($cb);
 
 		$te = new ilTextareaInputGUI($this->pl->txt('admin_password_email_body'), 'password_email_body');
+		$te->setCols(80);
+		$te->setRows(15);
+		$te->addPlugin('placeholder');
 		$this->addItem($te);
 
 		$this->addCommandButtons();
-	}
-
-
-	/**
-	 * @param $a_item
-	 *
-	 * @return mixed
-	 */
-	public function addItem($a_item) {
-
-
-		return parent::addItem($a_item);
 	}
 
 

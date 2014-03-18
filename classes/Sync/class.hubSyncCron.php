@@ -11,6 +11,16 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubSyncCron {
 
+	/**
+	 * @var int|bool
+	 */
+	protected $origin_id;
+	/**
+	 * @var array
+	 */
+	protected $messages = array();
+
+
 	public function __construct() {
 		global $ilDB, $ilUser, $ilCtrl;
 		/**
@@ -21,6 +31,7 @@ class hubSyncCron {
 		$this->db = $ilDB;
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
+		$this->origin_id = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;
 		$this->log = hubLog::getInstance();
 	}
 
@@ -28,7 +39,11 @@ class hubSyncCron {
 	public static function initAndRun() {
 		self::initILIAS();
 		$cronJob = new self();
-		$cronJob->run();
+		if ($cronJob->origin_id) {
+			$cronJob->runSingleOrigin();
+		} else {
+			$cronJob->run();
+		}
 	}
 
 
@@ -67,28 +82,57 @@ class hubSyncCron {
 	}
 
 
+	public function runSingleOrigin() {
+		self::includes();
+
+		$this->log->write('New Sync initiated', hubLog::L_PROD);
+		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
+		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
+		// User
+		$this->log->write('Sync single Origin: ' . $this->origin_id, hubLog::L_PROD);
+		try {
+			$origin = hubOrigin::find($this->origin_id);
+			if ($this->syncOrigin($origin)) {
+				$class = hubOrigin::getUsageClass($this->origin_id);
+				if ($class::buildILIASObjects() !== true) {
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, $origin, true);
+				};
+				$class::logCounts();
+			}
+		} catch (Exception $e) {
+			$this->messages[] = $e->getMessage();
+		}
+		$this->handleMessages();
+	}
+
+
 	/**
 	 * @throws hubOriginException
 	 */
 	public function run() {
 		self::includes();
+		$this->log->write('New Sync initiated', hubLog::L_PROD);
+		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
+		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
+		// User
+		$this->log->write('Sync Users', hubLog::L_PROD);
 		try {
-			$this->log->write('New Sync initiated', hubLog::L_PROD);
-			$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
-			$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
-			// User
-			$this->log->write('Sync Users', hubLog::L_PROD);
-			if ($this->syncData(hub::OBJECTTYPE_USER)) {
+			if ($this->syncUsageType(hub::OBJECTTYPE_USER)) {
 				hubDurationLogger::start('build_users', false);
+				$class = hub::getObjectClassname(hub::OBJECTTYPE_USER);
 				if (hubUser::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
 				};
 				hubUser::logCounts();
 				hubDurationLogger::log('build_users');
 			}
-			// Category
-			$this->log->write('Sync Categories', hubLog::L_PROD);
-			if ($this->syncData(hub::OBJECTTYPE_CATEGORY)) {
+		} catch (Exception $e) {
+			$this->messages[] = $e->getMessage();
+		}
+		// Category
+		$this->log->write('Sync Categories', hubLog::L_PROD);
+		try {
+			if ($this->syncUsageType(hub::OBJECTTYPE_CATEGORY)) {
 				hubDurationLogger::start('build_categories', false);
 				if (hubCategory::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -96,9 +140,13 @@ class hubSyncCron {
 				hubCategory::logCounts();
 				hubDurationLogger::log('build_categories');
 			}
-			// Courses
-			$this->log->write('Sync Courses', hubLog::L_PROD);
-			if ($this->syncData(hub::OBJECTTYPE_COURSE)) {
+		} catch (Exception $e) {
+			$this->messages[] = $e->getMessage();
+		}
+		// Courses
+		$this->log->write('Sync Courses', hubLog::L_PROD);
+		try {
+			if ($this->syncUsageType(hub::OBJECTTYPE_COURSE)) {
 				hubDurationLogger::start('build_courses', false);
 				if (hubCourse::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -106,9 +154,13 @@ class hubSyncCron {
 				hubCourse::logCounts();
 				hubDurationLogger::log('build_courses');
 			}
-			// Memberships
-			$this->log->write('Sync Memberships', hubLog::L_PROD);
-			if ($this->syncData(hub::OBJECTTYPE_MEMBERSHIP)) {
+		} catch (Exception $e) {
+			$this->messages[] = $e->getMessage();
+		}
+		// Memberships
+		$this->log->write('Sync Memberships', hubLog::L_PROD);
+		try {
+			if ($this->syncUsageType(hub::OBJECTTYPE_MEMBERSHIP)) {
 				hubDurationLogger::start('build_memberships', false);
 				if (hubMembership::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -117,10 +169,9 @@ class hubSyncCron {
 				hubDurationLogger::log('build_memberships');
 			}
 		} catch (Exception $e) {
-			ilUtil::sendFailure($e->getMessage(), true);
+			$this->messages[] = $e->getMessage();
 		}
-
-		hubOrigin::sendSummaries();
+		$this->handleMessages();
 	}
 
 
@@ -130,14 +181,38 @@ class hubSyncCron {
 	 * @return bool
 	 * @throws hubOriginException
 	 */
-	private function syncData($usage) {
+	private function syncUsageType($usage) {
+		$failed = 0;
 		foreach (hubOrigin::getOriginsForUsage($usage) as $origin) {
 			/**
 			 * @var $origin       hubOrigin
 			 * @var $originObject hubOrigin
 			 */
+			if (! $this->syncOrigin($origin)) {
+				$failed ++;
+			}
+		}
+		if ($failed > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
+	/**
+	 * @param $origin
+	 *
+	 * @return bool
+	 * @throws hubOriginException
+	 */
+	private function syncOrigin(hubOrigin $origin) {
+		try {
 			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
 			$originObject = $origin->getObject();
+			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {
+				return true;
+			}
 			$this->log->write('Sync-Class: ' . get_class($originObject), hubLog::L_PROD);
 			if ($originObject->connect()) {
 				hubDurationLogger::start('parse_data_origin_' . $origin->getId(), false);
@@ -176,9 +251,17 @@ class hubSyncCron {
 			} else {
 				throw new hubOriginException(hubOriginException::CONNECTION_FAILED, $origin, true);
 			}
+		} catch (Exception $e) {
+			$this->messages[] = $e->getMessage();
 		}
+	}
 
-		return false;
+
+	private function handleMessages() {
+		if (count($this->messages) > 0) {
+			ilUtil::sendFailure(implode('<br>', $this->messages), true);
+		}
+		hubOrigin::sendSummaries();
 	}
 }
 
