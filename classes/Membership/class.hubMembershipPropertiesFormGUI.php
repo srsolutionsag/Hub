@@ -25,6 +25,17 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 	protected function initForm() {
 		$this->removeItemByPostVar('shortlink');
 
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_get_usr_id'), 'get_usr_id_from_origin');
+		/**
+		 * @var $origin hubOrigin
+		 */
+		$opt[0] = $this->pl->txt('common_none');
+		foreach (hubOrigin::where(array( 'usage_type' => hub::OBJECTTYPE_USER ))->get() as $origin) {
+			$opt[$origin->getId()] = $origin->getTitle();
+		}
+		$se->setOptions($opt);
+		$this->addItem($se);
+
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
 		$this->addItem($h);

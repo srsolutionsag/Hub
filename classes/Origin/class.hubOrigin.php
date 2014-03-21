@@ -15,7 +15,6 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubOrigin extends ActiveRecord {
 
-	const PERCENTAGE = 90;
 	const CONF_TYPE_FILE = 1;
 	const CONF_TYPE_DB = 2;
 	const CONF_TYPE_EXTERNAL = 3;
@@ -113,8 +112,12 @@ class hubOrigin extends ActiveRecord {
 		 * @var $obj hubOrigin
 		 */
 		$obj = self::find($sr_hub_origin_id);
+		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == NULL) {
 
-		return $obj->getClassname();
+			return 'hubOrigin';
+		} else {
+			return $obj->getClassname();
+		}
 	}
 
 
@@ -146,8 +149,8 @@ class hubOrigin extends ActiveRecord {
 			}
 
 			$percent = 100 / $existing * $amount_of_datasets;
-			$percentage = self::PERCENTAGE;
 			$percentage = $this->props()->getByKey('check_amount_percentage');
+			$percentage = $percentage ? $percentage : 80;
 
 			return ($percent >= $percentage ? true : false);
 		} else {

@@ -1,10 +1,9 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
 if (! ilHubPlugin::checkPreconditions()) {
-
 }
 $id = 'hub';
-$version = '1.0.04';
+$version = '1.0.05';
 $ilias_min_version = '4.2.0';
 $ilias_max_version = '4.5.999';
 $responsible = 'Fabian Schmid';

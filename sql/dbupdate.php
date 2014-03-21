@@ -25,3 +25,10 @@ hubSyncHistory::installDB();
 require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
 hubConfig::installDB();
 ?>
+<#3>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
+hubUser::updateDB();
+hubOrigin::updateDB();
+?>
