@@ -69,7 +69,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
 		$this->origin_properties = hubOriginObjectProperties::getInstance($this->origin->getId());
-		$this->locked = (bool)hubConfig::get('lock');
+		$this->locked = $this->origin->isLocked();
 		$this->initStandardFields();
 		$this->initForm();
 		$origin->getObject()->appendFieldsToPropForm($this);
@@ -125,6 +125,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		// $this->addItem($cb);
 
 		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), 'check_amount');
+		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
 		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), 'check_amount_percentage');
 		$opt = array(
 			10 => '10%',

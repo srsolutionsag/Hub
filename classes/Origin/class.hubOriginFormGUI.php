@@ -32,8 +32,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->ctrl = $ilCtrl;
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
-		//		$this->pl->updateLanguageFiles();
-		$this->locked = (bool)hubConfig::get('lock');
+		$this->locked = $this->origin->isLocked();
 		$this->initForm();
 	}
 
@@ -77,6 +76,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		//
 		// Settings
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('origin_form_field_conf_type'), 'conf_type');
+		$ro->setDisabled($this->locked);
 		{
 			$db = new ilRadioOption($this->pl->txt('origin_form_field_conf_type_file'), hubOrigin::CONF_TYPE_FILE, $this->pl->txt('origin_form_field_conf_type_file_info'));
 			{
@@ -181,9 +181,9 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 	public function export() {
 		$array = $this->getValues();
-				header('Content-type: application/json');
-				header("Content-Transfer-Encoding: Binary");
-				header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
+		header('Content-type: application/json');
+		header("Content-Transfer-Encoding: Binary");
+		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
 		echo json_encode($array);
 		exit;
 		$class_path = $this->origin->getClassPath();

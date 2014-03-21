@@ -51,6 +51,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_activate_account'), 'activate_account');
 		$this->addItem($cb);
 		//
+		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), 'create_password');
 		$this->addItem($cb);
 		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), 'send_password');
@@ -62,7 +63,16 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		);
 		$se->setOptions($opt);
 		$cb->addSubItem($se);
+
+		$te = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_subject'), 'password_mail_subject');
+		$cb->addSubItem($te);
+		$te = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), 'password_mail_body');
+		$te->setInfo($this->pl->txt('usr_prop_password_mail_placeholders').': [LOGIN], [PASSWORD]');
+		$te->setCols(80);
+		$te->setRows(15);
+		$cb->addSubItem($te);
 		$this->addItem($cb);
+		//
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');

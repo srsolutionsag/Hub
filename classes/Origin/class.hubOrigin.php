@@ -274,6 +274,14 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * @return bool
+	 */
+	public function isLocked() {
+		return (bool)hubConfig::get('lock') AND (bool)$this->getActive();
+	}
+
+
+	/**
 	 * @return string
 	 */
 	private static function getOriginsPath() {

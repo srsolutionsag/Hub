@@ -16,11 +16,15 @@ cat_prop_move#:#Kategorie verschieben
 cat_prop_syncfield#:#Synchronisationsfeld
 cat_prop_syncfield_none#:#Kein Feld
 cat_prop_syncfield_title#:#Titel
+_#:#
 cat_prop_update_description#:#Beschreibung aktualisieren
 cat_prop_update_icon#:#Icon updaten
 cat_prop_update_title#:#Name aktualisieren
+com_prop_check_amount#:#Mengenvergleich
+com_prop_check_amount_info#:#Fehler, wenn weniger als X% der bestehenden Datensätzen geliefert werden
 com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
 com_prop_mark_deleted_text#:#(gelöscht)
+com_prop_check_amount_percentage#:#Prozentwert
 com_prop_shortlink#:#Shortlink aktivieren
 com_prop_use_ext_status#:#Externes Statusmodell verwenden
 common_actions#:#Aktionen
@@ -144,7 +148,11 @@ usr_prop_update_lastname#:#Nachname aktualisieren
 usr_prop_update_login#:#Loginname aktualisieren
 usr_prop_create_password#:#Passwort erstellen
 usr_prop_send_password#:#Passwort per Mail versenden
+usr_prop_password_mail_body#:#Text
+usr_prop_password_mail_placeholders#:#Verfügbare Platzhalter
+usr_prop_password_mail_subject#:#Betreff
 usr_prop_send_password_field#:#Feld mit E-Mailadresse
+admin_lock#:#Einstellungen aktiver Anbindungen sperren
 admin_roles#:#Rollen
 admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
 admin_use_async#:#Asynchrone Synchronisation
