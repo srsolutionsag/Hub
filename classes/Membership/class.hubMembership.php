@@ -128,6 +128,27 @@ class hubMembership extends srModelObjectHubClass {
 				break;
 			}
 		}
+
+		if (! $this->getUsrId()) {
+			if ($this->props()->getByKey('get_usr_id_from_origin')) {
+				$where = array(
+					'sr_hub_origin_id' => $this->props()->getByKey('get_usr_id_from_origin'),
+					'ext_id' => $this->getExtIdUsr()
+				);
+				$hubUser = hubUser::where($where)->first();
+			} else {
+				$hubUser = hubUser::find($this->getExtIdUsr());
+			}
+
+			/**
+			 * @var $hubUser hubUser
+			 */
+
+			$usr_id = $hubUser->getHistoryObject()->getIliasId();
+			if ($usr_id) {
+				$this->setUsrId($usr_id);
+			}
+		}
 	}
 
 

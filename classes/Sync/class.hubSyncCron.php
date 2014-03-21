@@ -211,6 +211,10 @@ class hubSyncCron {
 			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
 			$originObject = $origin->getObject();
 			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {
+				if (! hubSyncHistory::initStatus($origin->getId())) {
+					throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, true);
+				}
+
 				return true;
 			}
 			$this->log->write('Sync-Class: ' . get_class($originObject), hubLog::L_PROD);

@@ -39,6 +39,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 			'external_account' => 'External Account',
 			'ext_id' => 'Externe ID',
 			'first_and_lastname' => 'vorname.nachname',
+			'own' => 'hub-Field login',
 		);
 		$se->setOptions($opt);
 		$this->addItem($se);

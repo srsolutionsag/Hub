@@ -181,10 +181,11 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 	public function export() {
 		$array = $this->getValues();
-		//		header('Content-type: application/json');
-		//		header("Content-Transfer-Encoding: Binary");
-		//		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
-
+				header('Content-type: application/json');
+				header("Content-Transfer-Encoding: Binary");
+				header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
+		echo json_encode($array);
+		exit;
 		$class_path = $this->origin->getClassPath();
 		if ($class_path) {
 			$ok = file_put_contents($class_path . '/settings.json', json_encode($array));
