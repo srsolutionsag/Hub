@@ -48,7 +48,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 	public function updateLanguageFiles() {
 		if(!in_array('SimpleXLSX', get_declared_classes())) {
-			require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/lib/simplexlsx.class.php');
+			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/lib/simplexlsx.class.php');
 		}
 		$path = substr(__FILE__, 0, strpos(__FILE__, 'classes')) . 'lang/';
 		if (file_exists($path . 'lang_custom.xlsx')) {
