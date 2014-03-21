@@ -32,6 +32,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->ctrl = $ilCtrl;
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
+		//		$this->pl->updateLanguageFiles();
 		$this->locked = (bool)hubConfig::get('lock');
 		$this->initForm();
 	}
@@ -50,6 +51,12 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			$this->addCommandButton('update', $this->pl->txt('origin_form_button_update'));
 		}
 		// Form Elements
+		if ($this->origin->getId()) {
+			$ne = new ilNonEditableValueGUI($this->pl->txt('origin_form_field_id'));
+			$ne->setValue($this->origin->getId());
+			$this->addItem($ne);
+		}
+
 		$te = new ilCheckboxInputGUI($this->pl->txt('origin_form_field_active'), 'active');
 		$this->addItem($te);
 		//
@@ -98,7 +105,6 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		}
 		$this->addItem($ro);
 
-
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('origin_form_header_sync'));
@@ -106,7 +112,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		//
 		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_class_name'), 'class_name');
 		$te->setDisabled($this->locked);
-		$te->setRequired(true);
+		//		$te->setRequired(true);
 		$this->addItem($te);
 
 		if ($this->origin->getId()) {
@@ -152,7 +158,6 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			$this->addItem($ro);
 		}
 
-
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('origin_form_header_notification'));
@@ -176,11 +181,42 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 	public function export() {
 		$array = $this->getValues();
-		header('Content-type: application/json');
-		header("Content-Transfer-Encoding: Binary");
-		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
-		echo json_encode($array);
-		exit;
+		//		header('Content-type: application/json');
+		//		header("Content-Transfer-Encoding: Binary");
+		//		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
+
+		$class_path = $this->origin->getClassPath();
+		if ($class_path) {
+			$ok = file_put_contents($class_path . '/settings.json', json_encode($array));
+			if ($ok) {
+
+				$temp_path = ilUtil::getDataDir() . "/temp";
+				if (! is_dir($temp_path)) {
+					ilUtil::createDirectory($temp_path);
+				}
+				$zip = tempnam($temp_path, "tmp");
+
+				ilUtil::zip($class_path, $zip);
+				//				header('Content-type: application/zip');
+				//				header("Content-Transfer-Encoding: Binary");
+				//				header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".zip\"");
+				//				ilUtil::readFile($zip);
+
+				//				header('Content-Type: application/zip');
+				//				header('Content-disposition: attachment; filename=filename.zip');
+				//				header('Content-Length: ' . filesize($zip));
+				//				readfile($zip);
+
+				echo $zip;
+			}
+		}
+
+		//		echo ;
+
+		//		ilUtil::createDirectory()
+		//		ilUtil::ilTempnam()
+
+		//		exit;
 	}
 
 

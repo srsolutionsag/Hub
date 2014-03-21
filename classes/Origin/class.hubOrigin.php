@@ -19,6 +19,7 @@ class hubOrigin extends ActiveRecord {
 	const CONF_TYPE_FILE = 1;
 	const CONF_TYPE_DB = 2;
 	const CONF_TYPE_EXTERNAL = 3;
+	const CLASS_NONE = 'none';
 	/**
 	 * @var int
 	 */
@@ -133,19 +134,25 @@ class hubOrigin extends ActiveRecord {
 	 * @return bool
 	 */
 	public function compareDataWithExisting($amount_of_datasets) {
-		/**
-		 * @var $usage_class hubCourse
-		 */
-		$usage_class = self::getUsageClass($this->getId());
-		$existing = $usage_class::count();
+		if ($this->props()->getByKey('check_amount')) {
+			/**
+			 * @var $usage_class hubCourse
+			 */
+			$usage_class = self::getUsageClass($this->getId());
+			$existing = $usage_class::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
 
-		if ($existing == 0) {
+			if ($existing == 0) {
+				return true;
+			}
+
+			$percent = 100 / $existing * $amount_of_datasets;
+			$percentage = self::PERCENTAGE;
+			$percentage = $this->props()->getByKey('check_amount_percentage');
+
+			return ($percent >= $percentage ? true : false);
+		} else {
 			return true;
 		}
-
-		$percent = 100 / $existing * $amount_of_datasets;
-
-		return ($percent >= self::PERCENTAGE ? true : false);
 	}
 
 
@@ -160,7 +167,7 @@ class hubOrigin extends ActiveRecord {
 
 			return $originObject;
 		}
-		if (! is_file($this->getClassFilePath())) {
+		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
 			ilUtil::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
 		}
 
@@ -244,8 +251,19 @@ class hubOrigin extends ActiveRecord {
 	 */
 	private function getClassFilePath() {
 		if ($this->getClassName()) {
-			return self::getOriginsPathForUsageType($this->getUsageType()) . $this->getClassName() . '/class.'
-			. $this->getClassName() . '.php';
+			return $this->getClassPath() . '/class.' . $this->getClassName() . '.php';
+		} else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getClassPath() {
+		if ($this->getClassName()) {
+			return self::getOriginsPathForUsageType($this->getUsageType()) . $this->getClassName();
 		} else {
 			return false;
 		}
@@ -265,7 +283,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @return string
 	 */
-	private static function  getOriginsPathForUsageType($usage_type) {
+	public static function  getOriginsPathForUsageType($usage_type) {
 		return self::getOriginsPath() . hub::getObjectClassname($usage_type) . '/';
 	}
 
@@ -414,7 +432,7 @@ class hubOrigin extends ActiveRecord {
 	 * @db_length              256
 	 * @db_is_notnull          true
 	 */
-	protected $class_name;
+	protected $class_name = self::CLASS_NONE;
 	/**
 	 * @var DateTime
 	 *
