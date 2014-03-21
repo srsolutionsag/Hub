@@ -90,6 +90,7 @@ class hubUser extends srModelObjectHubClass {
 		$this->ilias_object->setEmail($this->getEmail());
 		if ($this->object_properties->getActivateAccount()) {
 			$this->ilias_object->setActive(true);
+			$this->ilias_object->setTimeLimitUnlimited(true);
 			$this->ilias_object->setProfileIncomplete(false);
 		} else {
 			$this->ilias_object->setActive(false);
@@ -101,6 +102,9 @@ class hubUser extends srModelObjectHubClass {
 			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
+		}
+		if ($this->props()->getByKey('send_password')) {
+			$this->sendPasswordMail();
 		}
 		$this->ilias_object->setInstitution($this->getInstitution());
 		$this->ilias_object->setStreet($this->getStreet());
@@ -181,15 +185,16 @@ class hubUser extends srModelObjectHubClass {
 	}
 
 
-	public function sendPasswordMail() {
+	protected function sendPasswordMail() {
 		global $ilSetting;
+		$mail_field = $this->getEmailPassword();
 		$mail = new ilMimeMail();
 		$mail->autoCheck(false);
 		$mail->From($ilSetting->get('admin_email'));
-		$mail->To($this->getEmailPassword());
-		$body = hubConfig::get('password_email_body');
-		$body = strtr($body, array( 'password' => $this->getPasswd(), 'login' => $this->getLogin() ));
-		$mail->Subject(hubConfig::get('password_email_subject'));
+		$mail->To($this->{$mail_field});
+		$body = $this->props()->getByKey('password_mail_body');
+		$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
+		$mail->Subject($this->props()->getByKey('password_mail_subject'));
 		$mail->Body($body);
 		$mail->Send();
 	}
@@ -216,8 +221,6 @@ class hubUser extends srModelObjectHubClass {
 			if ($this->object_properties->getUpdateEmail()) {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
-			$this->generatePassword();
-			$this->sendPasswordMail();
 
 			$this->ilias_object->setInstitution($this->getInstitution());
 			$this->ilias_object->setStreet($this->getStreet());

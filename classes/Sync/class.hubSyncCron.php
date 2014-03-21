@@ -211,6 +211,7 @@ class hubSyncCron {
 			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
 			$originObject = $origin->getObject();
 			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {
+				$this->writeLastUpdate($origin);
 				if (! hubSyncHistory::initStatus($origin->getId())) {
 					throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, true);
 				}
@@ -228,11 +229,8 @@ class hubSyncCron {
 							hubDurationLogger::start('build_ext_objects_origin_' . $origin->getId(), false);
 							if ($originObject->buildEntries()) {
 								hubDurationLogger::log('build_ext_objects_origin_' . $origin->getId());
-								$time = new DateTime();
-								$origin->setLastUpdate($time->format(DateTime::ISO8601));
-								$origin->setDuration(hubDurationLogger::stop('overall_origin_' . $origin->getId()));
-								$origin->update();
-								hubDurationLogger::log('overall_origin_' . $origin->getId());
+								$this->writeLastUpdate($origin);
+
 								hubDurationLogger::start('init_status_' . $origin->getId(), false);
 								if (! hubSyncHistory::initStatus($origin->getId())) {
 									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, true);
@@ -266,6 +264,18 @@ class hubSyncCron {
 			ilUtil::sendFailure(implode('<br>', $this->messages), true);
 		}
 		hubOrigin::sendSummaries();
+	}
+
+
+	/**
+	 * @param hubOrigin $origin
+	 */
+	private function writeLastUpdate(hubOrigin $origin) {
+		$time = new DateTime();
+		$origin->setLastUpdate($time->format(DateTime::ISO8601));
+		$origin->setDuration(hubDurationLogger::stop('overall_origin_' . $origin->getId()));
+		hubDurationLogger::log('overall_origin_' . $origin->getId());
+		$origin->update();
 	}
 }
 

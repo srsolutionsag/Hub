@@ -58,12 +58,6 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), 'import_export');
 		$this->addItem($cb);
 
-		$te = new ilTextareaInputGUI($this->pl->txt('admin_password_email_body'), 'password_email_body');
-		$te->setCols(80);
-		$te->setRows(15);
-		$te->addPlugin('placeholder');
-		$this->addItem($te);
-
 		$this->addCommandButtons();
 	}
 
