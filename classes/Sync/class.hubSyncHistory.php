@@ -194,7 +194,6 @@ class hubSyncHistory extends ActiveRecord {
 	 * @db_length              1
 	 */
 	protected $deleted = 0;
-
 	/**
 	 * @var bool
 	 *

@@ -123,6 +123,24 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		}
 		$cb->setInfo($status_string);
 		// $this->addItem($cb);
+
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), 'check_amount');
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), 'check_amount_percentage');
+		$opt = array(
+			10 => '10%',
+			20 => '20%',
+			30 => '30%',
+			40 => '40%',
+			50 => '50%',
+			60 => '60%',
+			70 => '70%',
+			80 => '80%',
+			90 => '90%',
+			100 => '100%',
+		);
+		$se->setOptions($opt);
+		$cb->addSubItem($se);
+		$this->addItem($cb);
 	}
 
 

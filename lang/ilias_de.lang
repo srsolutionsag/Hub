@@ -82,6 +82,7 @@ msg_saved#:#Gespeichert
 origin_form_button_create#:#Speichern
 origin_form_button_index#:#Abbrechen
 origin_form_button_update#:#Speichern
+origin_form_field_id#:#ID
 origin_form_field_active#:#Synchronisation aktiv
 origin_form_field_class_name#:#PHP-Klassenname
 origin_form_field_conf_type#:#Verbindungstyp

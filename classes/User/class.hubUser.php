@@ -171,6 +171,12 @@ class hubUser extends srModelObjectHubClass {
 	}
 
 
+	public function generatePassword() {
+		$pwds = ilUtil::generatePasswords(1);
+		$this->setPasswd($pwds[0]);
+	}
+
+
 	public function updateUser() {
 		if ($this->object_properties->getUpdateLogin() OR $this->object_properties->getUpdateFirstname()
 			OR $this->object_properties->getUpdateLastname() OR $this->object_properties->getUpdateEmail()
