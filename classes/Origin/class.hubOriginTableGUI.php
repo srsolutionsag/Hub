@@ -2,7 +2,7 @@
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.srModelObjectTableGUI.php');
 require_once('class.hubOrigin.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
-require_once('./Customizing/global/plugins/Services/UIComponent/UserinterfaceHook/Hub/classes/Sync/class.hubAsyncSync.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubAsyncSync.php');
 
 /**
  * TableGUI srModelObjectTableGUI
