@@ -1,5 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectHubClass.php');
+require_once('./Services/Mail/classes/class.ilMimeMail.php');
 
 /**
  * Class hubUser
@@ -95,8 +96,8 @@ class hubUser extends srModelObjectHubClass {
 			$this->ilias_object->setProfileIncomplete(true);
 		}
 		if ($this->object_properties->getCreatePassword()) {
-			$passwd = ilUtil::generatePasswords(1);
-			$password = md5($passwd[0]);
+			$this->generatePassword();
+			$password = md5($this->getPasswd());
 			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
@@ -147,6 +148,9 @@ class hubUser extends srModelObjectHubClass {
 			case 'first_and_lastname':
 				$login = self::cleanName($this->getFirstname()) . '.' . self::cleanName($this->getLastname());
 				break;
+			case 'own':
+				$login = $this->getLogin();
+				break;
 			default:
 				$login =
 					substr(self::cleanName($this->getFirstname()), 0, 1) . '.' . self::cleanName($this->getLastname());
@@ -177,6 +181,20 @@ class hubUser extends srModelObjectHubClass {
 	}
 
 
+	public function sendPasswordMail() {
+		global $ilSetting;
+		$mail = new ilMimeMail();
+		$mail->autoCheck(false);
+		$mail->From($ilSetting->get('admin_email'));
+		$mail->To($this->getEmailPassword());
+		$body = hubConfig::get('password_email_body');
+		$body = strtr($body, array( 'password' => $this->getPasswd(), 'login' => $this->getLogin() ));
+		$mail->Subject(hubConfig::get('password_email_subject'));
+		$mail->Body($body);
+		$mail->Send();
+	}
+
+
 	public function updateUser() {
 		if ($this->object_properties->getUpdateLogin() OR $this->object_properties->getUpdateFirstname()
 			OR $this->object_properties->getUpdateLastname() OR $this->object_properties->getUpdateEmail()
@@ -198,7 +216,9 @@ class hubUser extends srModelObjectHubClass {
 			if ($this->object_properties->getUpdateEmail()) {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
-			//
+			$this->generatePassword();
+			$this->sendPasswordMail();
+
 			$this->ilias_object->setInstitution($this->getInstitution());
 			$this->ilias_object->setStreet($this->getStreet());
 			$this->ilias_object->setCity($this->getCity());
@@ -392,6 +412,14 @@ class hubUser extends srModelObjectHubClass {
 	 * @db_length           256
 	 */
 	protected $lastname;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        text
+	 * @db_length           256
+	 */
+	protected $login;
 	/**
 	 * @var string
 	 *
@@ -1064,6 +1092,20 @@ class hubUser extends srModelObjectHubClass {
 	}
 
 
+	/**
+	 * @param string $login
+	 */
+	public function setLogin($login) {
+		$this->login = $login;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getLogin() {
+		return $this->login;
+	}
 
 
 	//
