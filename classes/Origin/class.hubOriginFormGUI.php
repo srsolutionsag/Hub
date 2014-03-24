@@ -181,43 +181,21 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 	public function export() {
 		$array = $this->getValues();
-		header('Content-type: application/json');
-		header("Content-Transfer-Encoding: Binary");
-		header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".json\"");
-		echo json_encode($array);
-		exit;
-		$class_path = $this->origin->getClassPath();
-		if ($class_path) {
-			$ok = file_put_contents($class_path . '/settings.json', json_encode($array));
-			if ($ok) {
-
-				$temp_path = ilUtil::getDataDir() . "/temp";
-				if (! is_dir($temp_path)) {
-					ilUtil::createDirectory($temp_path);
-				}
-				$zip = tempnam($temp_path, "tmp");
-
-				ilUtil::zip($class_path, $zip);
-				//				header('Content-type: application/zip');
-				//				header("Content-Transfer-Encoding: Binary");
-				//				header("Content-disposition: attachment; filename=\"export_" . $array['class_name'] . ".zip\"");
-				//				ilUtil::readFile($zip);
-
-				//				header('Content-Type: application/zip');
-				//				header('Content-disposition: attachment; filename=filename.zip');
-				//				header('Content-Length: ' . filesize($zip));
-				//				readfile($zip);
-
-				echo $zip;
-			}
+		$tmp_dir = ilUtil::ilTempnam();
+		ilUtil::makeDir($tmp_dir);
+		$zip_base_dir = $tmp_dir . DIRECTORY_SEPARATOR . $this->origin->getClassName();
+		ilUtil::makeDir($zip_base_dir);
+		$tmpzipfile = $tmp_dir . DIRECTORY_SEPARATOR . $this->origin->getClassName() . '.zip';
+		file_put_contents($zip_base_dir . '/settings.json', json_encode($array));
+		ilUtil::rCopy($this->origin->getClassPath(), $zip_base_dir);
+		try {
+			ilUtil::zip($zip_base_dir, $tmpzipfile);
+			rename($tmpzipfile, $zipfile = ilUtil::ilTempnam());
+			ilUtil::delDir($tmp_dir);
+			ilUtil::deliverFile($zipfile, $this->origin->getClassName() . '.zip', '', false, true, true);
+		} catch (ilFileException $e) {
+			ilUtil::sendInfo($e->getMessage(), true);
 		}
-
-		//		echo ;
-
-		//		ilUtil::createDirectory()
-		//		ilUtil::ilTempnam()
-
-		//		exit;
 	}
 
 
@@ -225,10 +203,25 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 * @param null $json_import
 	 */
 	public function import($json_import = NULL) {
-		$values = json_decode($json_import, true);
-		if ($_FILES['import_file']['tmp_name']) {
-			$values = json_decode(file_get_contents($_FILES['import_file']['tmp_name']), true);
-			$this->setValuesByArray($values);
+		//		$values = json_decode($json_import, true);
+		//		if ($_FILES['import_file']['tmp_name']) {
+		//			$values = json_decode(file_get_contents($_FILES['import_file']['tmp_name']), true);
+		//			$this->setValuesByArray($values);
+		//		}
+
+		$tmp_name = $_FILES['import_file']['tmp_name'];
+		$name = basename($_FILES['import_file']['name'], '.zip');
+
+		$tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+
+		if ($tmp_name) {
+
+			ilUtil::moveUploadedFile($tmp_name, )
+
+			ilUtil::unzip($tmp_name);
+			echo $tmp_dir . '/' . $name;
+			ilUtil::rCopy($tmp_dir . '/' . $name, '/Users/fschmid/Desktop/test/');
+			//						$this->setValuesByArray($values);
 		}
 	}
 
@@ -310,5 +303,25 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
 
 		return $array;
+	}
+
+
+	/**
+	 * @param $src
+	 * @param $dst
+	 */
+	public static function rCopy($src, $dst) {
+		$dir = opendir($src);
+		@mkdir($dst);
+		while (false !== ($file = readdir($dir))) {
+			if (($file != '.') && ($file != '..')) {
+				if (is_dir($src . '/' . $file)) {
+					recurse_copy($src . '/' . $file, $dst . '/' . $file);
+				} else {
+					copy($src . '/' . $file, $dst . '/' . $file);
+				}
+			}
+		}
+		closedir($dir);
 	}
 }
