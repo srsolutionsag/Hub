@@ -91,18 +91,15 @@ class hubOriginGUI {
 
 	public function export() {
 		if (ilHubAccess::checkAccess()) {
-			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
-			$form->export();
-			$this->tpl->setContent($form->getHTML());
+			hubOriginExport::export(hubOrigin::find($_GET['origin_id']));
 		}
 	}
 
 
 	public function import() {
 		if (ilHubAccess::checkAccess()) {
-			$form = new hubOriginFormGUI($this, new hubOrigin());
-			$form->import();
-			$this->tpl->setContent($form->getHTML());
+			hubOriginExport::import($_FILES);
+			$this->index();
 		}
 	}
 
