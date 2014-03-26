@@ -154,6 +154,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 
 
 	protected function deleteCategory() {
+		$hist = $this->getHistoryObject();
 		if ($this->object_properties->getDelete()) {
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
 			switch ($this->object_properties->getDelete()) {
@@ -166,15 +167,12 @@ class hubCategory extends srModelObjectRepositoryObject {
 							$this->ilias_object->saveIcons($icon, $icon, $icon);
 						}
 					}
-					$hist = $this->getHistoryObject();
-					$hist->setDeleted(true);
-					$hist->setAlreadyDeleted(true);
-					$hist->update();
+
 					$this->ilias_object->update();
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$this->getHistoryObject()->delete();
+					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_ARCHIVE:
 					if ($this->object_properties->getArchiveNode()) {
@@ -183,13 +181,13 @@ class hubCategory extends srModelObjectRepositoryObject {
 						$old_parent = $tree->getParentId($ref_id);
 						$tree->moveTree($ref_id, $this->object_properties->getArchiveNode());
 						$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
-						$hist = $this->getHistoryObject();
-						$hist->setAlreadyDeleted(true);
-						$hist->update();
 					}
 					break;
 			}
+			$hist->setDeleted(true);
+			$hist->setAlreadyDeleted(true);
 		}
+		$hist->update();
 	}
 
 

@@ -45,6 +45,18 @@ class hubConfig extends ActiveRecord {
 
 
 	/**
+	 * @return bool
+	 */
+	public static function isImportEnabled() {
+		return hubConfig::get('import_export') AND
+		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY)) AND
+		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP)) AND
+		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
+		AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
+	}
+
+
+	/**
 	 * @var string
 	 *
 	 * @db_has_field        true
