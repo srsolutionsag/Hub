@@ -2,6 +2,7 @@
 require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategoryPropertiesFormGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertiesFormGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOriginExport.php');
 
 /**
  * Class hubOriginFormGUI
@@ -180,49 +181,12 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 
 	public function export() {
-		$array = $this->getValues();
-		$tmp_dir = ilUtil::ilTempnam();
-		ilUtil::makeDir($tmp_dir);
-		$zip_base_dir = $tmp_dir . DIRECTORY_SEPARATOR . $this->origin->getClassName();
-		ilUtil::makeDir($zip_base_dir);
-		$tmpzipfile = $tmp_dir . DIRECTORY_SEPARATOR . $this->origin->getClassName() . '.zip';
-		file_put_contents($zip_base_dir . '/settings.json', json_encode($array));
-		ilUtil::rCopy($this->origin->getClassPath(), $zip_base_dir);
-		try {
-			ilUtil::zip($zip_base_dir, $tmpzipfile);
-			rename($tmpzipfile, $zipfile = ilUtil::ilTempnam());
-			ilUtil::delDir($tmp_dir);
-			ilUtil::deliverFile($zipfile, $this->origin->getClassName() . '.zip', '', false, true, true);
-		} catch (ilFileException $e) {
-			ilUtil::sendInfo($e->getMessage(), true);
-		}
+		hubOriginExport::export($this->origin);
 	}
 
 
-	/**
-	 * @param null $json_import
-	 */
-	public function import($json_import = NULL) {
-		//		$values = json_decode($json_import, true);
-		//		if ($_FILES['import_file']['tmp_name']) {
-		//			$values = json_decode(file_get_contents($_FILES['import_file']['tmp_name']), true);
-		//			$this->setValuesByArray($values);
-		//		}
-
-		$tmp_name = $_FILES['import_file']['tmp_name'];
-		$name = basename($_FILES['import_file']['name'], '.zip');
-
-		$tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
-
-		if ($tmp_name) {
-
-			ilUtil::moveUploadedFile($tmp_name, )
-
-			ilUtil::unzip($tmp_name);
-			echo $tmp_dir . '/' . $name;
-			ilUtil::rCopy($tmp_dir . '/' . $name, '/Users/fschmid/Desktop/test/');
-			//						$this->setValuesByArray($values);
-		}
+	public function import() {
+		hubOriginExport::import($_FILES);
 	}
 
 
@@ -279,7 +243,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @return array
 	 */
-	protected function getValues() {
+	public function getValues() {
 		$array = array(
 			'title' => $this->origin->getTitle(),
 			'description' => $this->origin->getDescription(),

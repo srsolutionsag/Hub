@@ -65,7 +65,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, 'add'));
 		if (hubConfig::get('import_export')) {
 			$import = new ilFileInputGUI('import', 'import_file');
-			$import->setSuffixes(array( 'json' ));
+			$import->setSuffixes(array( 'json', 'zip' ));
 			$ilToolbar->addInputItem($import);
 			$ilToolbar->addFormButton($this->pl->txt('origin_table_button_import'), 'import');
 		}

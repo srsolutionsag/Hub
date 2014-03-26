@@ -143,10 +143,11 @@ class hubMembership extends srModelObjectHubClass {
 			/**
 			 * @var $hubUser hubUser
 			 */
-
-			$usr_id = $hubUser->getHistoryObject()->getIliasId();
-			if ($usr_id) {
-				$this->setUsrId($usr_id);
+			if($hubUser) {
+				$usr_id = $hubUser->getHistoryObject()->getIliasId();
+				if ($usr_id) {
+					$this->setUsrId($usr_id);
+				}
 			}
 		}
 	}
