@@ -66,19 +66,31 @@ class hub {
 	 * @return string
 	 */
 	public static function getRootPath() {
-		/*$hostname = shell_exec('hostname');
-				switch ($hostname) {
-					case 'ilias-webt1':
-					case 'ilias-webn1':
-					case 'ilias-webn2':
-					case 'ilias-webn3':
-						$path = '/var/www/ilias-4.3.x';
-						break;
-					default:
-						$path = substr(__FILE__, 0, strpos(__FILE__, 'Customizing'));
-						break;
-				}*/
 		return dirname(__FILE__) . '/../../../../../../../..';
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public static function getBackTrace() {
+		$return = '';
+		foreach (debug_backtrace() as $bt) {
+			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
+				AND ! in_array($bt['class'], array(
+					'hub',
+					'ilCtrl',
+					'ilObjectPluginGUI',
+					'ilObject2GUI',
+					'ilObjectFactory',
+					'ilObject2'
+				))
+			) {
+				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
+			}
+		}
+
+		return $return;
 	}
 
 

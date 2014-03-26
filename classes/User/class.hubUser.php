@@ -59,7 +59,6 @@ class hubUser extends srModelObjectHubClass {
 				case hubSyncHistory::STATUS_UPDATED:
 					$hubUser->updateUser();
 					hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
-					//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User updated:');
 					break;
 				case hubSyncHistory::STATUS_DELETED:
 					$hubUser->deleteUser();
@@ -67,7 +66,7 @@ class hubUser extends srModelObjectHubClass {
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
-					hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
+					hubCounter::incrementIgnored($hubUser->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
 					break;
 			}
@@ -91,15 +90,14 @@ class hubUser extends srModelObjectHubClass {
 		$this->ilias_object->setFirstname($this->getFirstname());
 		$this->ilias_object->setLastname($this->getLastname());
 		$this->ilias_object->setEmail($this->getEmail());
-		if ($this->object_properties->getActivateAccount()) {
+		if ($this->object_properties->getByKey('activate_account')) {
 			$this->ilias_object->setActive(true);
-			$this->ilias_object->setTimeLimitUnlimited(true);
 			$this->ilias_object->setProfileIncomplete(false);
 		} else {
 			$this->ilias_object->setActive(false);
 			$this->ilias_object->setProfileIncomplete(true);
 		}
-		if ($this->object_properties->getCreatePassword()) {
+		if ($this->object_properties->getByKey('activate_account')) {
 			$this->generatePassword();
 			$password = md5($this->getPasswd());
 			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
@@ -259,13 +257,15 @@ class hubUser extends srModelObjectHubClass {
 				case self::DELETE_MODE_INACTIVE:
 					$this->ilias_object->setActive(false);
 					$this->ilias_object->update();
+
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$hist = $this->getHistoryObject();
-					$hist->setAlreadyDeleted(true);
 					break;
 			}
+			$hist = $this->getHistoryObject();
+			$hist->setAlreadyDeleted(true);
+			$hist->update();
 		}
 	}
 
@@ -553,7 +553,7 @@ class hubUser extends srModelObjectHubClass {
 	 * @db_fieldtype        text
 	 * @db_length           256
 	 */
-	protected $time_limit_unlimited;
+	protected $time_limit_unlimited = true;
 	/**
 	 * @var string
 	 *

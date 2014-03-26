@@ -143,6 +143,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 
 
 	protected function deleteCourse() {
+		$hist = $this->getHistoryObject();
 		if ($this->object_properties->getDelete()) {
 			$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
 			switch ($this->object_properties->getDelete()) {
@@ -156,17 +157,16 @@ class hubCourse extends srModelObjectRepositoryObject {
 						}
 					}
 					$this->ilias_object->update();
-					$hist = $this->getHistoryObject();
-					$hist->setDeleted(true);
-					$hist->setAlreadyDeleted(true);
-					$hist->update();
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$this->getHistoryObject()->delete();
+					$hist->setIliasId(NULL);
 					break;
 			}
+			$hist->setDeleted(true);
+			$hist->setAlreadyDeleted(true);
 		}
+		$hist->update();
 	}
 
 

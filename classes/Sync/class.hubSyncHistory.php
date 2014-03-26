@@ -17,8 +17,8 @@ class hubSyncHistory extends ActiveRecord {
 	const STATUS_NEW = 1;
 	const STATUS_UPDATED = 2;
 	const STATUS_DELETED = 3;
-	const STATUS_DELETED_IN_ILIAS = 1; // 4
-	const STATUS_NEWLY_DELIVERED = 2; // 5
+	const STATUS_DELETED_IN_ILIAS = self::STATUS_NEW; // 4
+	const STATUS_NEWLY_DELIVERED = self::STATUS_UPDATED; // 5
 	const STATUS_ALREADY_DELETED = 6;
 	/**
 	 * @var bool
@@ -38,43 +38,22 @@ class hubSyncHistory extends ActiveRecord {
 		/**
 		 * @var $class     hubCategory
 		 * @var $hubObject hubCategory
+		 * @var $ilDB      ilDB
 		 */
 		if (! self::$loaded[$sr_hub_origin_id]) {
+			global $ilDB;
 			$class = hubOrigin::getUsageClass($sr_hub_origin_id);
 			$sql = 'UPDATE sr_hub_sync_history hist
 					JOIN ' . $class::returnDbTableName() . ' hub_obj ON hub_obj.ext_id = hist.ext_id
 					SET hist.deleted = 1
-					WHERE hist.sr_hub_origin_id = ' . $sr_hub_origin_id . '
+					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
-			global $ilDB;
 			$ilDB->query($sql);
+
 			self::$loaded[$sr_hub_origin_id] = true;
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getBackTrace() {
-		$return = '';
-		foreach (debug_backtrace() as $bt) {
-			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
-				AND ! in_array($bt['class'], array(
-					'ilCtrl',
-					'ilObjectPluginGUI',
-					'ilObject2GUI',
-					'ilObjectFactory',
-					'ilObject2'
-				))
-			) {
-				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
-			}
-		}
-
-		return $return;
 	}
 
 
@@ -85,7 +64,7 @@ class hubSyncHistory extends ActiveRecord {
 	public function getStatus() {
 		if (! self::isLoaded($this->getSrHubOriginId())) {
 			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
-				. print_r($this->getBackTrace(), 1));
+				. print_r(hub::getBackTrace(), 1));
 		} else {
 			return $this->getTemporaryStatus();
 		}
@@ -106,19 +85,19 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return int
 	 */
 	public function getTemporaryStatus() {
-		$ilias_id = $this->getIliasId();
-		if ($ilias_id) {
-			if ($this->getDeleted() == 1) {
-				if ($this->getAlreadyDeleted() == 1) {
+		if ($this->getIliasId()) {
+			if ($this->getDeleted()) {
+				if ($this->getAlreadyDeleted()) {
 					return self::STATUS_ALREADY_DELETED;
 				} else {
 					return self::STATUS_DELETED;
 				}
 			} else {
-				if (! ilObject2::_exists($ilias_id, ($this->getIliasIdType()
-				== srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false))
-				) {
+				if ($this->isDeletedInILIAS()) {
 					return self::STATUS_DELETED_IN_ILIAS;
+				}
+				if ($this->getAlreadyDeleted()) {
+					return self::STATUS_NEWLY_DELIVERED;
 				}
 
 				return self::STATUS_UPDATED;
@@ -167,6 +146,15 @@ class hubSyncHistory extends ActiveRecord {
 		}
 
 		return $status;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	private function isDeletedInILIAS() {
+		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType()
+		== srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false));
 	}
 
 

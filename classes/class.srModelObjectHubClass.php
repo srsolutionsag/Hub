@@ -9,6 +9,8 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 
 /**
  * Class srModelObjectHubClass
+ *
+ * @author Fabian Schmid <fs@studer-raimann.ch>
  */
 abstract class srModelObjectHubClass extends ActiveRecord {
 
@@ -116,13 +118,6 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	}
 
 
-	public function getOriginProperties() {
-		if ($this->getSrHubOriginId()) {
-			hubOrigin::find($this->getSrHubOriginId())->properties;
-		}
-	}
-
-
 	/**
 	 * @param hubOrigin $origin
 	 */
@@ -143,14 +138,15 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	 * @param hubOrigin $origin
 	 */
 	public function updateInto(hubOrigin $origin) {
-		//self::logBuilding();
 		$this->setSrHubOriginId($origin->getId());
 		$this->updateDeliveryDate();
-		$this->getHistoryObject();
+		$hist = $this->getHistoryObject();
+		$hist->setDeleted(false);
+		$hist->update();
 		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
+
 			parent::update();
 		} else {
-			$this->log->write('hubObject created: ' . $this->getExtId(), hubLog::L_DEBUG);
 			parent::create();
 		}
 	}
