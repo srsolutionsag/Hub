@@ -34,7 +34,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
 		$this->locked = $this->origin->isLocked();
-		$this->required = !$disable_required;
+		$this->required = ! $disable_required;
 		$this->initForm();
 	}
 
@@ -63,12 +63,12 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		//
 		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_title'), 'title');
 
-		$te->setRequired($this->required );
+		$te->setRequired($this->required);
 		$this->addItem($te);
 		//
 		$te = new ilTextAreaInputGUI($this->pl->txt('origin_form_field_description'), 'description');
 
-		$te->setRequired($this->required );
+		$te->setRequired($this->required);
 		$this->addItem($te);
 
 		//

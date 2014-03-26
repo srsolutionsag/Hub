@@ -183,7 +183,11 @@ class hubSyncCron {
 	 */
 	private function syncUsageType($usage) {
 		$failed = 0;
-		foreach (hubOrigin::getOriginsForUsage($usage) as $origin) {
+		$originsForUsage = hubOrigin::getOriginsForUsage($usage);
+		if (count($originsForUsage) == 0) {
+			return false;
+		}
+		foreach ($originsForUsage as $origin) {
 			/**
 			 * @var $origin       hubOrigin
 			 * @var $originObject hubOrigin

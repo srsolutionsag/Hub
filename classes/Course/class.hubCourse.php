@@ -37,6 +37,9 @@ class hubCourse extends srModelObjectRepositoryObject {
 		 */
 		hubCounter::logRunning();
 		foreach (self::get() as $hubCourse) {
+			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
+				continue;
+			}
 			$full_title = $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . $hubCourse->getTitleExtension();
 			switch ($hubCourse->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
