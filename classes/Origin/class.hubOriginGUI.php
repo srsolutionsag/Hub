@@ -160,7 +160,7 @@ class hubOriginGUI {
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('success'), true);
 				$this->ctrl->setParameter($this, 'origin_id', NULL);
-				$this->ctrl->redirect($this, 'index');
+//				$this->ctrl->redirect($this, 'index');
 			} else {
 				$this->tpl->setContent($form->getHTML());
 			}
@@ -170,8 +170,13 @@ class hubOriginGUI {
 
 	public function edit() {
 		if (ilHubAccess::checkAccess()) {
+			global $ilToolbar;
+			/**
+			 * @var $ilToolbar ilToolbarGUI
+			 */
 			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
 			$form->fillForm();
+			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, 'export'));
 			$this->tpl->setContent($form->getHTML());
 		}
 	}

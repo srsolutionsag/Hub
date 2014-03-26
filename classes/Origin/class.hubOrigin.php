@@ -211,6 +211,7 @@ class hubOrigin extends ActiveRecord {
 	public function delete() {
 		$this->deleteFoldersAndFiles();
 		$this->conf->delete();
+		$this->object_properties->delete();
 		parent::delete();
 	}
 
