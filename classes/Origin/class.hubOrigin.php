@@ -655,6 +655,24 @@ class hubOrigin extends ActiveRecord {
 	public function getDuration() {
 		return $this->duration;
 	}
+
+
+	/**
+	 * @return int
+	 * @description read Checksum of your Data and return int Count
+	 */
+	public function getChecksum() {
+		return $this->checksum;
+	}
+
+
+	/**
+	 * @return array
+	 * @description return array of Data
+	 */
+	public function getData() {
+		return $this->data;
+	}
 }
 
 ?>

@@ -29,6 +29,9 @@ class hubUser extends srModelObjectHubClass {
 		 * @var $hubUser hubUser
 		 */
 		foreach (self::get() as $hubUser) {
+			if (! hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
+				continue;
+			}
 			hubCounter::logRunning();
 			$existing = NULL;
 			$hubUser->loadObjectProperties();
@@ -613,7 +616,9 @@ class hubUser extends srModelObjectHubClass {
 	 */
 	public function updateInto(hubOrigin $origin) {
 		$temp = $this->ilias_roles;
-		$this->ilias_roles = implode(',', $this->ilias_roles);
+		if (is_array($this->ilias_roles)) {
+			$this->ilias_roles = implode(',', $this->ilias_roles);
+		}
 		parent::updateInto($origin);
 		$this->ilias_roles = $temp;
 	}

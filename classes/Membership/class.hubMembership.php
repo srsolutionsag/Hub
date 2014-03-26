@@ -66,6 +66,9 @@ class hubMembership extends srModelObjectHubClass {
 		 * @var $hubMembership hubMembership
 		 */
 		foreach (self::get() as $hubMembership) {
+			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
+				continue;
+			}
 			hubCounter::logBuilding();
 			$hubMembership->loadObjectProperties();
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
@@ -143,7 +146,7 @@ class hubMembership extends srModelObjectHubClass {
 			/**
 			 * @var $hubUser hubUser
 			 */
-			if($hubUser) {
+			if ($hubUser) {
 				$usr_id = $hubUser->getHistoryObject()->getIliasId();
 				if ($usr_id) {
 					$this->setUsrId($usr_id);

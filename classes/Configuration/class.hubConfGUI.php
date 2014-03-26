@@ -1,5 +1,6 @@
 <?php
 require_once('class.hubConfigFormGUI.php');
+
 /**
  * Class hubConfGUI
  *
@@ -42,7 +43,7 @@ class hubConfGUI {
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
 		if ($_GET['hrl'] == 'true') {
-//			$this->pl->updateLanguageFiles();
+			//			$this->pl->updateLanguageFiles();
 		}
 	}
 

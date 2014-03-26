@@ -56,15 +56,49 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
+	 * @return string
+	 */
+	public function getBackTrace() {
+		$return = '';
+		foreach (debug_backtrace() as $bt) {
+			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
+				AND ! in_array($bt['class'], array(
+					'ilCtrl',
+					'ilObjectPluginGUI',
+					'ilObject2GUI',
+					'ilObjectFactory',
+					'ilObject2'
+				))
+			) {
+				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
+			}
+		}
+
+		return $return;
+	}
+
+
+	/**
 	 * @return int
 	 * @throws Exception
 	 */
 	public function getStatus() {
-		if (! self::$loaded[$this->getSrHubOriginId()]) {
-			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()');
+		if (! self::isLoaded($this->getSrHubOriginId())) {
+			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
+				. print_r($this->getBackTrace(), 1));
 		} else {
 			return $this->getTemporaryStatus();
 		}
+	}
+
+
+	/**
+	 * @param $sr_hub_origin_id
+	 *
+	 * @return bool
+	 */
+	public static function isLoaded($sr_hub_origin_id) {
+		return isset(self::$loaded[$sr_hub_origin_id]);
 	}
 
 

@@ -160,7 +160,7 @@ class hubOriginGUI {
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('success'), true);
 				$this->ctrl->setParameter($this, 'origin_id', NULL);
-//				$this->ctrl->redirect($this, 'index');
+				//				$this->ctrl->redirect($this, 'index');
 			} else {
 				$this->tpl->setContent($form->getHTML());
 			}

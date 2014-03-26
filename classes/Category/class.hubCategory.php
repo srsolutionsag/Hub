@@ -45,6 +45,9 @@ class hubCategory extends srModelObjectRepositoryObject {
 		 */
 		hubCounter::logRunning();
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
+			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
+				continue;
+			}
 			$hubCategory->loadObjectProperties();
 			$existing_ref_id = 0;
 			switch ($hubCategory->object_properties->getSyncfield()) {
