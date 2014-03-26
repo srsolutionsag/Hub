@@ -79,6 +79,9 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 	}
 
 
+	/**
+	 * @return bool
+	 */
 	protected function initTableRowTemplate() {
 		return false;
 	}

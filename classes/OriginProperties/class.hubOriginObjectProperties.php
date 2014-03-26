@@ -118,13 +118,29 @@ class hubOriginObjectProperties {
 	}
 
 
+	public function delete() {
+		/**
+		 * @var $prop hubOriginObjectPropertyValue
+		 */
+		$where = array( 'sr_hub_origin_id' => $this->getSrHubOriginId() );
+		foreach (hubOriginObjectPropertyValue::where($where)->get() as $prop) {
+			$prop->delete();
+		}
+	}
+
+
 	/**
-	 * @param $key
-	 * @param $a_value
+	 * @param      $key
+	 * @param      $a_value
+	 * @param bool $short_prefix
 	 */
-	public function setByKey($key, $a_value) {
+	public function setByKey($key, $a_value, $short_prefix = true) {
 		if ($key) {
-			$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_';
+			if ($short_prefix) {
+				$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_';
+			} else {
+				$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_' . $this->getPrefix() . '_';
+			}
 			$key = $prefix . self::_fromCamelCase($key);
 			$value = new hubOriginObjectPropertyValue($key);
 			$value->setSrHubOriginId($this->getSrHubOriginId());
@@ -132,6 +148,30 @@ class hubOriginObjectProperties {
 			$value->setPropertyValue($a_value);
 			$value->updateInto();
 			$this->{$key} = $a_value;
+		}
+	}
+
+
+	/**
+	 * @param $array
+	 */
+	public function importRaw(array $array) {
+		$import = array();
+		foreach ($array as $key => $value) {
+			if (preg_match("/(usr|cat|crs|mem)_(.*)/us", $key, $matches)) {
+				$import[$matches[2]] = $value;
+			}
+		}
+		$this->import($import);
+	}
+
+
+	/**
+	 * @param array $array
+	 */
+	public function import(array $array) {
+		foreach ($array as $key => $value) {
+			$this->setByKey($key, $value, false);
 		}
 	}
 

@@ -26,7 +26,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	protected $ctrl;
 
 
-	public function __construct($parent_gui, hubOrigin $origin) {
+	public function __construct($parent_gui, hubOrigin $origin, $disable_required = false) {
 		global $ilCtrl;
 		$this->origin = $origin;
 		$this->parent_gui = $parent_gui;
@@ -34,6 +34,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
 		$this->pl = new ilHubPlugin();
 		$this->locked = $this->origin->isLocked();
+		$this->required = !$disable_required;
 		$this->initForm();
 	}
 
@@ -62,12 +63,12 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		//
 		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_title'), 'title');
 
-		$te->setRequired(true);
+		$te->setRequired($this->required );
 		$this->addItem($te);
 		//
 		$te = new ilTextAreaInputGUI($this->pl->txt('origin_form_field_description'), 'description');
 
-		$te->setRequired(true);
+		$te->setRequired($this->required );
 		$this->addItem($te);
 
 		//
@@ -204,6 +205,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->origin->conf()->setSrvSearchBase($this->getInput('db_search_base'));
 		$this->origin->conf()->setNotificationEmail($this->getInput('notification_email'));
 		$this->origin->conf()->setSummaryEmail($this->getInput('summary_email'));
+
 		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
 		$objectProperitesFormGUI->fillObject();
 
