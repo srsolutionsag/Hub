@@ -180,16 +180,6 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	public function export() {
-		hubOriginExport::export($this->origin);
-	}
-
-
-	public function import() {
-		hubOriginExport::import($_FILES);
-	}
-
-
 	/**
 	 * @return bool
 	 */
