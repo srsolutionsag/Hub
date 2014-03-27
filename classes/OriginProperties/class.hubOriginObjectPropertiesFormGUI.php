@@ -202,14 +202,14 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		 */
 		foreach ($this->getItems() as $item) {
 			if (get_class($item) != 'ilFormSectionHeaderGUI') {
-				$value = $this->origin_properties->getByKey($item->getPostVar(), true);
+				$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 				if ($value) {
 					$array[$item->getPostVar()] = $value;
 				}
 				if (get_class($item) == 'ilRadioGroupInputGUI') {
 					foreach ($item->getOptions() as $op) {
 						foreach ($op->getSubItems() as $subItem) {
-							$value = $this->origin_properties->getByKey($subItem->getPostVar(), true);
+							$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 							if ($value) {
 								$array[$subItem->getPostVar()] = $value;
 							}
@@ -217,7 +217,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 					}
 				} else {
 					foreach ($item->getSubItems() as $subItem) {
-						$value = $this->origin_properties->getByKey($subItem->getPostVar(), true);
+						$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 						if ($value) {
 							$array[$subItem->getPostVar()] = $value;
 						}

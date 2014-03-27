@@ -35,7 +35,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 		 * @var $hubOrigin hubOrigin
 		 */
 		foreach (hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_CATEGORY) as $hubOrigin) {
-			self::buildForParentId($hubOrigin->props()->getBaseNodeExternal());
+			self::buildForParentId($hubOrigin->props()->get('base_node_external'));
 		}
 
 		return true;
@@ -56,7 +56,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 			}
 			$hubCategory->loadObjectProperties();
 			$existing_ref_id = 0;
-			switch ($hubCategory->object_properties->getSyncfield()) {
+			switch ($hubCategory->props()->get('sync_field')) {
 				case 'title':
 					$existing_ref_id = $hubCategory->lookupRefIdByTitle();
 					break;
@@ -133,18 +133,18 @@ class hubCategory extends srModelObjectRepositoryObject {
 	protected function updateCategory() {
 		$update = false;
 		$this->ilias_object = ilObjectFactory::getInstanceByRefId($this->getHistoryObject()->getIliasId());
-		if ($this->object_properties->getUpdateTitle()) {
+		if ($this->props()->get('update_title')) {
 			$this->ilias_object->setTitle($this->getTitle());
 			$update = true;
 		}
-		if ($this->object_properties->getUpdateDescription()) {
+		if ($this->props()->get('update_description')) {
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
-		if ($this->object_properties->getUpdateIcon()) {
+		if ($this->props()->get('update_icon')) {
 			$this->updateIcon();
 		}
-		if ($this->object_properties->getMove()) {
+		if ($this->props()->get('move')) {
 			global $tree, $rbacadmin;
 			$ref_id = $this->ilias_object->getRefId();
 			$old_parent = $tree->getParentId($ref_id);
@@ -161,14 +161,14 @@ class hubCategory extends srModelObjectRepositoryObject {
 
 	protected function deleteCategory() {
 		$hist = $this->getHistoryObject();
-		if ($this->object_properties->getDelete()) {
+		if ($this->props()->get('delete')) {
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
-			switch ($this->object_properties->getDelete()) {
+			switch ($this->props()->get('delete')) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->ilias_object->setTitle($this->getTitle() . ' '
 						. $this->pl->txt('com_prop_mark_deleted_text'));
-					if ($this->object_properties->getDeletedIcon()) {
-						$icon = $this->object_properties->getIconPath('_deleted');
+					if ($this->props()->get('deleted_icon')) {
+						$icon = $this->props()->getIconPath('_deleted');
 						if ($icon) {
 							$this->ilias_object->saveIcons($icon, $icon, $icon);
 						}
@@ -181,11 +181,11 @@ class hubCategory extends srModelObjectRepositoryObject {
 					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_ARCHIVE:
-					if ($this->object_properties->getArchiveNode()) {
+					if ($this->props()->get('archive_node')) {
 						global $tree, $rbacadmin;
 						$ref_id = $this->ilias_object->getRefId();
 						$old_parent = $tree->getParentId($ref_id);
-						$tree->moveTree($ref_id, $this->object_properties->getArchiveNode());
+						$tree->moveTree($ref_id, $this->props()->get('archive_node'));
 						$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
 					}
 					break;
@@ -208,7 +208,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 		$node = $this->getNode();
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
-		if ($this->object_properties->getCreateIcon()) {
+		if ($this->props()->get('create_icon')) {
 			$this->updateIcon();
 		}
 		$history = $this->getHistoryObject();
@@ -226,9 +226,9 @@ class hubCategory extends srModelObjectRepositoryObject {
 		 * @var $tree ilTree
 		 */
 		global $tree;
-		$base_node_ilias = ($this->object_properties->getBaseNodeIlias() ? $this->object_properties->getBaseNodeIlias() : 1);
+		$base_node_ilias = ($this->props()->get('base_node_ilias') ? $this->props()->get('base_node_ilias') : 1);
 		if ($this->getParentIdType() == self::PARENT_ID_TYPE_EXTERNAL_ID) {
-			if ($this->getExtId() == $this->object_properties->getBaseNodeExternal()) {
+			if ($this->getExtId() == $this->props()->get('base_node_external')) {
 				return $base_node_ilias;
 			} else {
 				$parent_id = ilObject::_getAllReferences(ilObject::_lookupObjIdByImportId($this->returnParentImportId()));
