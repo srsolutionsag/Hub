@@ -26,15 +26,15 @@ class hubMembership extends srModelObjectHubClass {
 	/**
 	 * @var ilCourseParticipant
 	 */
-	protected $members_object;
+	public $members_object;
 	/**
 	 * @var ilObjCourse
 	 */
-	protected $crs;
+	public $crs;
 	/**
 	 * @var ilCourseParticipants
 	 */
-	protected $participants;
+	public $participants;
 	/**
 	 * @var int
 	 */
