@@ -19,6 +19,10 @@ class hubUser extends srModelObjectHubClass {
 	const ACCOUNT_TYPE_SHIB = 2;
 	const ACCOUNT_TYPE_LDAP = 3;
 	const ACCOUNT_TYPE_RADIUS = 4;
+	/**
+	 * @var ilObjUser
+	 */
+	public $ilias_object;
 
 
 	/**
@@ -382,10 +386,7 @@ class hubUser extends srModelObjectHubClass {
 	//
 	// Fields
 	//
-	/**
-	 * @var ilObjUser
-	 */
-	protected $ilias_object;
+
 	/**
 	 * @var string
 	 *

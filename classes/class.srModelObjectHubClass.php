@@ -30,7 +30,7 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	/**
 	 * @var ilObject2
 	 */
-	protected $ilias_object;
+	public $ilias_object;
 	/**
 	 * @var hubOriginObjectProperties
 	 */

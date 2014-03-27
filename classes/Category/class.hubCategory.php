@@ -14,6 +14,12 @@ require_once('./Modules/Category/classes/class.ilObjCategory.php');
 class hubCategory extends srModelObjectRepositoryObject {
 
 	/**
+	 * @var ilObjCategory
+	 */
+	public $ilias_object;
+
+
+	/**
 	 * @return string
 	 */
 	static function returnDbTableName() {
