@@ -40,7 +40,7 @@ class hubUser extends srModelObjectHubClass {
 			$existing = NULL;
 			$hubUser->loadObjectProperties();
 			$existing_usr_id = 0;
-			switch ($hubUser->object_properties->getSyncfield()) {
+			switch ($hubUser->props()->get('sync_field')) {
 				case 'email':
 					$existing_usr_id = self::lookupUsrIdByEmail($hubUser->getEmail());
 					break;
@@ -94,21 +94,21 @@ class hubUser extends srModelObjectHubClass {
 		$this->ilias_object->setFirstname($this->getFirstname());
 		$this->ilias_object->setLastname($this->getLastname());
 		$this->ilias_object->setEmail($this->getEmail());
-		if ($this->object_properties->getByKey('activate_account')) {
+		if ($this->props()->get('activate_account')) {
 			$this->ilias_object->setActive(true);
 			$this->ilias_object->setProfileIncomplete(false);
 		} else {
 			$this->ilias_object->setActive(false);
 			$this->ilias_object->setProfileIncomplete(true);
 		}
-		if ($this->object_properties->getByKey('activate_account')) {
+		if ($this->props()->get('activate_account')) {
 			$this->generatePassword();
 			$password = md5($this->getPasswd());
 			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
-		if ($this->props()->getByKey('send_password')) {
+		if ($this->props()->get('send_password')) {
 			$this->sendPasswordMail();
 		}
 		$this->ilias_object->setInstitution($this->getInstitution());
@@ -144,7 +144,7 @@ class hubUser extends srModelObjectHubClass {
 		if (! $this->ilias_object) {
 			return false;
 		}
-		switch ($this->object_properties->getLoginField()) {
+		switch ($this->props()->get('login_field')) {
 			case 'email':
 				$login = $this->getEmail();
 				break;
@@ -197,33 +197,33 @@ class hubUser extends srModelObjectHubClass {
 		$mail->autoCheck(false);
 		$mail->From($ilSetting->get('admin_email'));
 		$mail->To($this->{$mail_field});
-		$body = $this->props()->getByKey('password_mail_body');
+		$body = $this->props()->get('password_mail_body');
 		$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
-		$mail->Subject($this->props()->getByKey('password_mail_subject'));
+		$mail->Subject($this->props()->get('password_mail_subject'));
 		$mail->Body($body);
 		$mail->Send();
 	}
 
 
 	public function updateUser() {
-		if ($this->object_properties->getUpdateLogin() OR $this->object_properties->getUpdateFirstname()
-			OR $this->object_properties->getUpdateLastname() OR $this->object_properties->getUpdateEmail()
-			OR $this->object_properties->getReactivateAccount()
+		if ($this->props()->get('update_login') OR $this->props()->get('update_firstname')
+			OR $this->props()->get('update_lastname') OR $this->props()->get('update_email')
+			OR $this->props()->get('reactivate_account')
 		) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->setTitle($this->getFirstname() . ' ' . $this->getLastname());
 			$this->ilias_object->setDescription($this->getEmail());
-			if ($this->object_properties->getUpdateLogin()) {
+			if ($this->props()->get('update_login')) {
 				$this->updateLogin();
 			}
-			if ($this->object_properties->getUpdateFirstname()) {
+			if ($this->props()->get('update_firstname')) {
 				$this->ilias_object->setFirstname($this->getFirstname());
 			}
-			if ($this->object_properties->getUpdateLastname()) {
+			if ($this->props()->get('update_lastname')) {
 				$this->ilias_object->setLastname($this->getLastname());
 			}
-			if ($this->object_properties->getUpdateEmail()) {
+			if ($this->props()->get('update_email')) {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
@@ -244,7 +244,7 @@ class hubUser extends srModelObjectHubClass {
 			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
 			$this->ilias_object->setMatriculation($this->getMatriculation());
 			$this->ilias_object->setGender($this->getGender());
-			if ($this->object_properties->getReactivateAccount()) {
+			if ($this->props()->get('reactivate_account')) {
 				$this->ilias_object->setActive(true);
 			}
 			$this->updateExternalAuth();
@@ -255,9 +255,9 @@ class hubUser extends srModelObjectHubClass {
 
 
 	public function deleteUser() {
-		if ($this->object_properties->getDelete()) {
+		if ($this->props()->get('delete')) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
-			switch ($this->object_properties->getDelete()) {
+			switch ($this->props()->get('delete')) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->ilias_object->setActive(false);
 					$this->ilias_object->update();

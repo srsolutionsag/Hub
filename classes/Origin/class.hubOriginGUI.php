@@ -236,9 +236,9 @@ class hubOriginGUI {
 			foreach (hubOrigin::get() as $hubOrigin) {
 				$hubOrigin->setActive(true);
 				$hubOrigin->update();
-				hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+				hubLog::getInstance()->write('Origin activated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
 			}
-			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
+			ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
 			$this->ctrl->redirect($this, 'index');
 		}
 	}

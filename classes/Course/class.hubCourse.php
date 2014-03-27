@@ -33,7 +33,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 	public static function buildILIASObjects() {
 		/**
 		 * @var $hubCourse hubCourse
-		 * @var $hubOrigin unibasSLCM
+		 * @var $hubOrigin hubOrigin
 		 */
 		hubCounter::logRunning();
 		foreach (self::get() as $hubCourse) {
@@ -58,6 +58,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses deleted:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
+					echo "ad";
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
 					break;
@@ -76,7 +77,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 		$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
-		if ($this->object_properties->getActivate()) {
+		if ($this->props()->get('activate')) {
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 		}
 		$this->updateAdditionalFields();
@@ -85,7 +86,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 		$node = $this->getDependecesNode();
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
-		if ($this->object_properties->getCreateIcon()) {
+		if ($this->props()->get('create_icon')) {
 			$this->updateIcon();
 			$this->ilias_object->update();
 		}
@@ -101,26 +102,26 @@ class hubCourse extends srModelObjectRepositoryObject {
 		$update = false;
 		$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
 		$ref_id = $this->ilias_object->getRefId();
-		if ($this->object_properties->getMove()) { //} AND $this->getNode() != $tree->getParentId($ref_id)) {
+		if ($this->props()->get('move')) { //} AND $this->getNode() != $tree->getParentId($ref_id)) {
 			$old_parent = $tree->getParentId($ref_id);
 			$tree->moveTree($ref_id, $this->getDependecesNode());
 			$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
 			$update = true;
 		}
-		if ($this->object_properties->getUpdateTitle()) {
+		if ($this->props()->get('update_title')) {
 			$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
-		if ($this->object_properties->getUpdateDescription()) {
+		if ($this->props()->get('update_description')) {
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
-		if ($this->object_properties->getUpdateIcon()) {
+		if ($this->props()->get('update_icon')) {
 			$this->updateIcon();
 			$update = true;
 		}
-		if ($this->object_properties->getReactivate()) {
+		if ($this->props()->get('reactivate')) {
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 			$update = true;
 		}
@@ -144,14 +145,14 @@ class hubCourse extends srModelObjectRepositoryObject {
 
 	protected function deleteCourse() {
 		$hist = $this->getHistoryObject();
-		if ($this->object_properties->getDelete()) {
+		if ($this->props()->get('delete')) {
 			$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
-			switch ($this->object_properties->getDelete()) {
+			switch ($this->props()->get('delete')) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->log->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
 					$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_OFFLINE);
-					if ($this->object_properties->getDeletedIcon()) {
-						$icon = $this->object_properties->getIconPath('_deleted');
+					if ($this->props()->get('delete_icon')) {
+						$icon = $this->props()->getIconPath('_deleted');
 						if ($icon) {
 							$this->ilias_object->saveIcons($icon, $icon, $icon);
 						}
@@ -175,9 +176,9 @@ class hubCourse extends srModelObjectRepositoryObject {
 	 */
 	private function getNode() {
 		global $tree;
-		$base_node_ilias = ($this->object_properties->getNodeNoparent() ? $this->object_properties->getNodeNoparent() : 1);
+		$base_node_ilias = ($this->props()->get('node_noparent') ? $this->props()->get('node_noparent') : 1);
 		if ($this->getParentIdType() == self::PARENT_ID_TYPE_EXTERNAL_ID) {
-			if ($this->object_properties->getOriginLink()) {
+			if ($this->props()->get('origin_link')) {
 				/**
 				 * @var $obj hubCategory
 				 */

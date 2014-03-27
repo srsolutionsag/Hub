@@ -137,7 +137,7 @@ class hubOrigin extends ActiveRecord {
 	 * @return bool
 	 */
 	public function compareDataWithExisting($amount_of_datasets) {
-		if ($this->props()->getByKey('check_amount')) {
+		if ($this->props()->get('check_amount')) {
 			/**
 			 * @var $usage_class hubCourse
 			 */
@@ -149,7 +149,7 @@ class hubOrigin extends ActiveRecord {
 			}
 
 			$percent = 100 / $existing * $amount_of_datasets;
-			$percentage = $this->props()->getByKey('check_amount_percentage');
+			$percentage = $this->props()->get('check_amount_percentage');
 			$percentage = $percentage ? $percentage : 80;
 
 			return ($percent >= $percentage ? true : false);

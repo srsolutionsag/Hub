@@ -100,21 +100,41 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param      $key
-	 * @param bool $short_prefix
+	 * @param $key
 	 *
 	 * @return mixed
 	 */
-	public function getByKey($key, $short_prefix = false) {
-		if ($short_prefix) {
-			$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_';
-		} else {
-			$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_' . $this->getPrefix() . '_';
-		}
-
+	public function getByShortPrefix($key) {
+		$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_';
 		$key = $prefix . $key;
 
 		return $this->{$key};
+	}
+
+
+	/**
+	 * @param      $key
+	 *
+	 * @internal param bool $short_prefix
+	 *
+	 * @return mixed
+	 */
+	public function get($key) {
+		$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_' . $this->getPrefix() . '_';
+		$key = $prefix . $key;
+
+		return $this->{$key};
+	}
+
+
+	/**
+	 * @param $key
+	 *
+	 * @deprecated
+	 * @return mixed
+	 */
+	public function getByKey($key) {
+		return $this->get($key);
 	}
 
 
@@ -186,9 +206,9 @@ class hubOriginObjectProperties {
 		// Getter
 		$prefix = $this->getPrefix() . '_' . $this->getSrHubOriginId() . '_' . $this->getPrefix() . '_';
 		if (preg_match("/get([a-zA-Z]*)/u", $name, $matches) AND count($arguments) == 0) {
-			$key = $prefix . self::_fromCamelCase($matches[1]);
+			hubLog::getInstance()->write('Deprecated __call! ' . $name, hubLog::L_DEBUG);
 
-			return $this->{$key};
+			return $this->get(self::_fromCamelCase($matches[1]));
 		}
 		// Setter
 		if (preg_match("/set([a-zA-Z]*)/u", $name, $matches) AND count($arguments) == 1) {

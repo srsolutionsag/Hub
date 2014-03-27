@@ -55,7 +55,7 @@ abstract class srModelObjectRepositoryObject extends srModelObjectHubClass {
 
 
 	protected function updateIcon() {
-		$icon = $this->object_properties->getIconPath();
+		$icon = $this->props()->getIconPath();
 		if ($icon) {
 			$this->ilias_object->saveIcons($icon, $icon, $icon);
 		}

@@ -133,9 +133,9 @@ class hubMembership extends srModelObjectHubClass {
 		}
 
 		if (! $this->getUsrId()) {
-			if ($this->props()->getByKey('get_usr_id_from_origin')) {
+			if ($this->props()->get('get_usr_id_from_origin')) {
 				$where = array(
-					'sr_hub_origin_id' => $this->props()->getByKey('get_usr_id_from_origin'),
+					'sr_hub_origin_id' => $this->props()->get('get_usr_id_from_origin'),
 					'ext_id' => $this->getExtIdUsr()
 				);
 				$hubUser = hubUser::where($where)->first();
@@ -176,10 +176,10 @@ class hubMembership extends srModelObjectHubClass {
 			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
-			if ($this->getHasNotification() AND $this->object_properties->getAddNotification()) {
+			if ($this->getHasNotification() AND $this->props()->get('add_notification')) {
 				$this->participants->updateNotification($this->getUsrId(), true);
 			}
-			if ($this->object_properties->getDesktopNew()) {
+			if ($this->props()->get('desktop_new')) {
 				ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 			}
 			$this->sendMails('new', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
@@ -190,16 +190,16 @@ class hubMembership extends srModelObjectHubClass {
 
 	public function updateMembership() {
 		if ($this->ilias_role_id) {
-			if ($this->object_properties->getUpdateRole()) {
+			if ($this->props()->get('update_role')) {
 				$this->initObject();
 				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL
 				) {
 					$this->participants->add($this->getUsrId(), $this->getContainerRole());
 				}
-				if ($this->getHasNotification() AND $this->object_properties->getUpdateNotification()) {
+				if ($this->getHasNotification() AND $this->props()->get('update_notification')) {
 					$this->participants->updateNotification($this->getUsrId(), true);
 				}
-				if ($this->object_properties->getDesktopUpdated()) {
+				if ($this->props()->get('desktop_update')) {
 					ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 				}
 				$this->sendMails('updated', ilCourseMembershipMailNotification::TYPE_STATUS_CHANGED);
@@ -211,7 +211,7 @@ class hubMembership extends srModelObjectHubClass {
 
 	protected function deleteMembership() {
 		$this->initObject();
-		switch ($this->object_properties->getByKey('delete')) {
+		switch ($this->props()->get('delete')) {
 			case self::DELETE_MODE_INACTIVE:
 				break;
 			case self::DELETE_MODE_DELETE:
@@ -234,17 +234,17 @@ class hubMembership extends srModelObjectHubClass {
 		switch ($this->getContainerRole()) {
 			case self::CONT_ROLE_CRS_ADMIN:
 			case self::CONT_ROLE_GRP_ADMIN:
-				$send = $this->object_properties->getByKey($prefix . '_send_mail_admin');
+				$send = $this->props()->get($prefix . '_send_mail_admin');
 				if (! $this->getHasNotification()) {
 					$send = false;
 				}
 				break;
 			case self::CONT_ROLE_CRS_TUTOR:
-				$send = $this->object_properties->getByKey($prefix . '_send_mail_tutor');
+				$send = $this->props()->get($prefix . '_send_mail_tutor');
 				break;
 			case self::CONT_ROLE_CRS_MEMBER:
 			case self::CONT_ROLE_GRP_MEMBER:
-				$send = $this->object_properties->getByKey($prefix . '_send_mail_member');
+				$send = $this->props()->get($prefix . '_send_mail_member');
 				break;
 		}
 		if ($send) {
