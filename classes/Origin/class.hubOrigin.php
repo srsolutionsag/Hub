@@ -286,7 +286,11 @@ class hubOrigin extends ActiveRecord {
 	 * @return string
 	 */
 	private static function getOriginsPath() {
-		return hub::getPath() . 'origins/';
+		if (hubConfig::get('origins_path')) {
+			return rtrim(hubConfig::get('origins_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		} else {
+			return hub::getPath() . 'origins/';
+		}
 	}
 
 

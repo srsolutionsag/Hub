@@ -63,6 +63,30 @@ class hubLog {
 	}
 
 
+	/**
+	 * @return string
+	 */
+	public static function getBackTrace() {
+		$return = '';
+		foreach (debug_backtrace() as $bt) {
+			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
+				AND ! in_array($bt['class'], array(
+					'hub',
+					'ilCtrl',
+					'ilObjectPluginGUI',
+					'ilObject2GUI',
+					'ilObjectFactory',
+					'ilObject2'
+				))
+			) {
+				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
+			}
+		}
+
+		return $return;
+	}
+
+
 	public function __destruct() {
 		/*if (is_writable(self::getFilePath())) {
 			if (! self::DIRECT AND ! self::DISABLE) {

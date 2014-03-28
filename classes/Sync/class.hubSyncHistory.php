@@ -1,4 +1,6 @@
 <?php
+
+
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 require_once('./Services/Object/classes/class.ilObject2.php');
@@ -64,7 +66,7 @@ class hubSyncHistory extends ActiveRecord {
 	public function getStatus() {
 		if (! self::isLoaded($this->getSrHubOriginId())) {
 			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
-				. print_r(hub::getBackTrace(), 1));
+				. print_r(hubLog::getBackTrace(), 1));
 		} else {
 			return $this->getTemporaryStatus();
 		}
