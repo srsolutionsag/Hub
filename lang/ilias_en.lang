@@ -1,4 +1,7 @@
 <!-- language file start -->
+admin_origins_path#:#Pfad des origins-Verzeichnis 
+admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet
+admin_header_sync#:#Synchronisation
 admin_async_cli_php#:#Pfad zu PHP (z.B. /usr/bin/php)
 admin_async_client#:#Client-Name des Benutzers
 admin_async_password#:#Passwort 
@@ -39,6 +42,8 @@ com_prop_check_amount_percentage#:#Prozentwert
 com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
 com_prop_mark_deleted_text#:#(gelöscht)
 com_prop_shortlink#:#Shortlink aktivieren
+mem_prop_get_usr_id_info#:#Es wird nach Einträgen mit der selben Ext-ID gesucht
+mem_prop_get_usr_id#:#User-ID aus anderer Anbindung
 com_prop_use_ext_status#:#Externes Statusmodell verwenden
 common_actions#:#Aktionen
 common_activate#:#Aktivieren
@@ -165,3 +170,4 @@ usr_prop_update_email#:#E-Mail aktualisieren
 usr_prop_update_firstname#:#Vorname aktualisieren
 usr_prop_update_lastname#:#Nachname aktualisieren
 usr_prop_update_login#:#Loginname aktualisieren
+_#:#

@@ -1,4 +1,6 @@
 <?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertiesFields.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembershipFields.php');
 require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 
 /**
@@ -102,7 +104,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	private function initStandardFields() {
-		$se = new ilSelectInputGUI($this->pl->txt('com_prop_link_to_origin'), 'origin_link');
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_link_to_origin'), hubOriginObjectPropertiesFields::ORIGIN_LINK);
 		/**
 		 * @var $origin hubOrigin
 		 */
@@ -113,10 +115,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$se->setOptions($opt);
 		$this->addItem($se);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), 'shortlink');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), hubOriginObjectPropertiesFields::SHORTLINK);
 		$this->addItem($cb);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_use_ext_status'), 'use_ext_status');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_use_ext_status'), hubOriginObjectPropertiesFields::USE_EXT_STATUS);
 		$status_string = '';
 		foreach (hubSyncHistory::getAllStatusAsArray() as $name => $int) { // FSX externer Status
 			$status_string .= $name . ': ' . $int . ', ';
@@ -124,9 +126,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$cb->setInfo($status_string);
 		// $this->addItem($cb);
 
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), 'check_amount');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), hubOriginObjectPropertiesFields::CHECK_AMOUNT);
 		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
-		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), 'check_amount_percentage');
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::CHECK_AMOUNT_PERCENTAGE);
 		$opt = array(
 			10 => '10%',
 			20 => '20%',

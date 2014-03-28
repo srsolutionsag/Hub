@@ -57,8 +57,10 @@ class hub {
 	 * @return string
 	 */
 	public static function getPath() {
-		return
-			realpath(self::getRootPath()) . '/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/';
+		$real_path = realpath(self::getRootPath()) . 'Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/';
+		$real_path = rtrim($real_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+		return $real_path;
 	}
 
 
@@ -66,31 +68,10 @@ class hub {
 	 * @return string
 	 */
 	public static function getRootPath() {
-		return dirname(__FILE__) . '/../../../../../../../..';
-	}
+		$path = dirname(__FILE__) . '/../../../../../../../..';
+		$real_path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
-
-	/**
-	 * @return string
-	 */
-	public static function getBackTrace() {
-		$return = '';
-		foreach (debug_backtrace() as $bt) {
-			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
-				AND ! in_array($bt['class'], array(
-					'hub',
-					'ilCtrl',
-					'ilObjectPluginGUI',
-					'ilObject2GUI',
-					'ilObjectFactory',
-					'ilObject2'
-				))
-			) {
-				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
-			}
-		}
-
-		return $return;
+		return $real_path;
 	}
 
 

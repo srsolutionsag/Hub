@@ -43,7 +43,7 @@ class hubConfGUI {
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
 		if ($_GET['hrl'] == 'true') {
-			//			$this->pl->updateLanguageFiles();
+			$this->pl->updateLanguageFiles();
 		}
 	}
 
@@ -65,7 +65,9 @@ class hubConfGUI {
 	 * @return mixed|void
 	 */
 	protected function performCommand($cmd) {
-		$this->{$cmd}();
+//		if(ilHubAccess::checkAccess()) {
+			$this->{$cmd}();
+//		}
 	}
 
 
