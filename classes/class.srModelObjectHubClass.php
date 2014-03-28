@@ -62,6 +62,11 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 		$this->setExtId($ext_id);
 		parent::__construct($ext_id);
 		$this->object_properties = hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
+		global $ilDB;
+		/**
+		 * @var $ilDB ilDB;
+		 */
+		$this->db = $ilDB;
 		/*
 		$database = ilDBWrapperFactory::getWrapper('mysql');
 		$database->setDBHost('127.0.0.1');
