@@ -69,7 +69,7 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);
 		//
-		$ro = new ilRadioGroupInputGUI($this->pl->txt('cat_prop_delete_mode'), self::DELETE);
+		$ro = new ilRadioGroupInputGUI($this->pl->txt('cat_prop_delete_mode'), hubCategoryFields::DELETE);
 		$ro->setValue(hubCategory::DELETE_MODE_INACTIVE);
 		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), NULL);
 		$ro->addOption($opt);
