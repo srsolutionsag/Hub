@@ -147,9 +147,9 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 		$this->updateDeliveryDate();
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
+		// $hist->setAlreadyDeleted(false);
 		$hist->update();
 		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
-
 			parent::update();
 		} else {
 			parent::create();

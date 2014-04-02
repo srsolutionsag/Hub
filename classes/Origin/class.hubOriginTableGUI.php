@@ -63,6 +63,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		 */
 		$ilToolbar->setFormAction($this->ctrl->getFormAction($this->parent_obj), true);
 		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, 'add'));
+
 		if (hubConfig::isImportEnabled()) {
 			$import = new ilFileInputGUI('import', 'import_file');
 			$import->setSuffixes(array( 'json', 'zip' ));
@@ -123,7 +124,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 			$actions->addItem($this->pl->txt('common_activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, 'activate'));
 		}
 		$actions->addItem($this->pl->txt('common_delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
-		if (hubConfig::get('import_export')) {
+		if (hubConfig::isImportEnabled()) {
 			$actions->addItem($this->pl->txt('common_export'), 'export', $this->ctrl->getLinkTarget($this->parent_obj, 'export'));
 		}
 		$this->tpl->setCurrentBlock('cell');
