@@ -13,6 +13,7 @@ class hubCounter {
 	const CREATED = 'created';
 	const UPDATED = 'updated';
 	const IGNORED = 'ignored';
+	const NEWLY_DELIVERED = 'newly_delivered';
 	const BUILT = 'built';
 	/**
 	 * @var array
@@ -54,6 +55,17 @@ class hubCounter {
 		}
 
 		return $return;
+	}
+
+	//
+	// INCREMENT
+	//
+
+	/**
+	 * @param $sr_hub_origin_id
+	 */
+	public static function incrementNewlyDelivered($sr_hub_origin_id) {
+		self::increment($sr_hub_origin_id, self::NEWLY_DELIVERED);
 	}
 
 
@@ -99,6 +111,9 @@ class hubCounter {
 		self::increment(self::BUILT, self::BUILT);
 	}
 
+	//
+	// GET VALUES
+	//
 
 	/**
 	 * @param $sr_hub_origin_id
@@ -109,6 +124,18 @@ class hubCounter {
 	 */
 	public static function getCountDeleted($sr_hub_origin_id) {
 		return self::getCountForOriginId(self::DELETED, $sr_hub_origin_id);
+	}
+
+
+	/**
+	 * @param $sr_hub_origin_id
+	 *
+	 * @internal param null $sr_hub_origin_id
+	 *
+	 * @return array
+	 */
+	public static function getCountNewlyDelivered($sr_hub_origin_id) {
+		return self::getCountForOriginId(self::NEWLY_DELIVERED, $sr_hub_origin_id);
 	}
 
 
@@ -155,6 +182,9 @@ class hubCounter {
 		return self::getCountForOriginId(self::BUILT, self::BUILT);
 	}
 
+	//
+	// COMMON
+	//
 
 	public static function logRunning() {
 		self::incrementBuilt();

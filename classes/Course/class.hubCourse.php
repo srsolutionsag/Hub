@@ -58,9 +58,13 @@ class hubCourse extends srModelObjectRepositoryObject {
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses deleted:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
-					echo "ad";
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
+					break;
+				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
+					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
+					$hubCourse->updateCourse();
 					break;
 			}
 			$hubCourse->getHistoryObject()->updatePickupDate();

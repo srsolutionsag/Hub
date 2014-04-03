@@ -20,7 +20,7 @@ class hubSyncHistory extends ActiveRecord {
 	const STATUS_UPDATED = 2;
 	const STATUS_DELETED = 3;
 	const STATUS_DELETED_IN_ILIAS = self::STATUS_NEW; // 4
-	const STATUS_NEWLY_DELIVERED = self::STATUS_UPDATED; // 5
+	const STATUS_NEWLY_DELIVERED = 5; // 5
 	const STATUS_ALREADY_DELETED = 6;
 	/**
 	 * @var bool

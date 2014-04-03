@@ -73,6 +73,11 @@ class hubUser extends srModelObjectHubClass {
 					hubCounter::incrementIgnored($hubUser->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
 					break;
+				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+					hubCounter::incrementNewlyDelivered($hubUser->getSrHubOriginId());
+					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
+					$hubUser->updateUser();
+					break;
 			}
 			$hubUser->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
@@ -206,9 +211,9 @@ class hubUser extends srModelObjectHubClass {
 
 
 	public function updateUser() {
-		if ($this->props()->get('update_login') OR $this->props()->get('update_firstname')
-			OR $this->props()->get('update_lastname') OR $this->props()->get('update_email')
-			OR $this->props()->get('reactivate_account')
+		if ($this->props()->get('update_login') OR $this->props()->get('update_firstname') OR $this->props()
+				->get('update_lastname') OR $this->props()->get('update_email') OR $this->props()
+				->get('reactivate_account')
 		) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
