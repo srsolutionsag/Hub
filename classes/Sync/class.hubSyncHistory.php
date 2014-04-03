@@ -111,6 +111,8 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	public function updatePickupDate() {
+		$this->setAlreadyDeleted(false);
+		$this->setDeleted(false);
 		$this->setPickupDateMicro(microtime(true));
 		$this->update();
 	}

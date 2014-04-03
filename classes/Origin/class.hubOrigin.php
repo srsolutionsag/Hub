@@ -58,6 +58,8 @@ class hubOrigin extends ActiveRecord {
 		hubOriginNotification::addMessage($this->getId(), $deleted);
 		$ignored = 'Total Ignored: ' . hubCounter::getCountIgnored($this->getId());
 		hubOriginNotification::addMessage($this->getId(), $ignored);
+		$newly_delivered = 'Total Newly Delivered: ' . hubCounter::getCountNewlyDelivered($this->getId());
+		hubOriginNotification::addMessage($this->getId(), $newly_delivered);
 	}
 
 
