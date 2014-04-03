@@ -89,6 +89,11 @@ class hubCategory extends srModelObjectRepositoryObject {
 					hubCounter::incrementIgnored($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category ignored:');
 					break;
+				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+					hubCounter::incrementNewlyDelivered($hubCategory->getSrHubOriginId());
+					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category newly delivered:');
+					$hubCategory->updateCategory();
+					break;
 			}
 			$hubCategory->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCategory->getSrHubOriginId());

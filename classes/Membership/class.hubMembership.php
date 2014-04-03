@@ -88,6 +88,11 @@ class hubMembership extends srModelObjectHubClass {
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
 					break;
+				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+					hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
+					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $hubMembership->getExtId(), 'Membership newly delivered:');
+					$hubMembership->updateMembership();
+					break;
 			}
 			$hubMembership->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
