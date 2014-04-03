@@ -57,7 +57,7 @@ class hub {
 	 * @return string
 	 */
 	public static function getPath() {
-		$real_path = realpath(self::getRootPath()) . 'Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/';
+		$real_path = self::getRootPath() . 'Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/';
 		$real_path = rtrim($real_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		return $real_path;
@@ -68,7 +68,7 @@ class hub {
 	 * @return string
 	 */
 	public static function getRootPath() {
-		$path = dirname(__FILE__) . '/../../../../../../../..';
+		$path = realpath(dirname(__FILE__) . '/../../../../../../../..');
 		$real_path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		return $real_path;
