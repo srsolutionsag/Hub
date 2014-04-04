@@ -120,7 +120,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		if ($this->origin->getId()) {
 			$prefix = 'origin_form_field_usage_type_';
 			$te = new ilNonEditableValueGUI($this->pl->txt('origin_form_field_usage_type'), 'usage_type_ne');
-			$te->setValue($this->pl->txt($prefix . hub::OBJECTTYPE_CATEGORY));
+			$te->setValue($this->pl->txt($prefix . $this->origin->getUsageType()));
 			$this->addItem($te);
 
 			$hi = new ilHiddenInputGUI('usage_type');

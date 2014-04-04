@@ -45,6 +45,9 @@ class hubConfGUI {
 		if ($_GET['hrl'] == 'true') {
 			$this->pl->updateLanguageFiles();
 		}
+		if ($_GET['rl'] == 'true') {
+			$this->pl->updateLanguages();
+		}
 	}
 
 
