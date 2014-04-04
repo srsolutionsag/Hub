@@ -1,4 +1,5 @@
 <?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUserFields.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertiesFormGUI.php');
 
 /**
@@ -22,17 +23,17 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 	 * @description build FormElements
 	 */
 	protected function initForm() {
-		$se = new ilSelectInputGUI($this->pl->txt('usr_prop_syncfield'), 'syncfield');
+		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_syncfield'), hubUserFields::F_SYNCFIELD);
 		$opt = array(
 			NULL => $this->pl->txt('usr_prop_syncfield_none'),
 			'email' => 'E-Mail',
 			'external_account' => 'External Account',
 			//			'matriculation' => 'Matriculation',
 		);
-		$se->setOptions($opt);
-		$this->addItem($se);
+		$syncfield->setOptions($opt);
+		$this->addItem($syncfield);
 		//
-		$se = new ilSelectInputGUI($this->pl->txt('usr_prop_login_field'), 'login_field');
+		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_login_field'), hubUserFields::F_LOGIN_FIELD);
 		$opt = array(
 			NULL => $this->pl->txt('usr_prop_login_field_none'),
 			'email' => 'E-Mail',
@@ -41,70 +42,70 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 			'first_and_lastname' => 'vorname.nachname',
 			'own' => 'hub-Field login',
 		);
-		$se->setOptions($opt);
-		$this->addItem($se);
+		$syncfield->setOptions($opt);
+		$this->addItem($syncfield);
 		//
-		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('common_on_status') . ' NEW');
-		$this->addItem($h);
+		$header = new ilFormSectionHeaderGUI();
+		$header->setTitle($this->pl->txt('common_on_status') . ' NEW');
+		$this->addItem($header);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_activate_account'), 'activate_account');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_activate_account'), hubUserFields::F_ACTIVATE_ACCOUNT);
+		$this->addItem($activate);
 		//
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), 'create_password');
-		$this->addItem($cb);
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), 'send_password');
-		$se = new ilSelectInputGUI($this->pl->txt('usr_prop_send_password_field'), 'send_password_field');
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), hubUserFields::F_CREATE_PASSWORD);
+		$this->addItem($activate);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), hubUserFields::F_SEND_PASSWORD);
+		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_send_password_field'), hubUserFields::F_SEND_PASSWORD_FIELD);
 		$opt = array(
 			'email' => 'email',
 			'external_account' => 'external_account',
 			'email_password' => 'email_password',
 		);
-		$se->setOptions($opt);
-		$cb->addSubItem($se);
+		$syncfield->setOptions($opt);
+		$activate->addSubItem($syncfield);
 
-		$te = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_subject'), 'password_mail_subject');
-		$cb->addSubItem($te);
-		$te = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), 'password_mail_body');
-		$te->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD]');
-		$te->setCols(80);
-		$te->setRows(15);
-		$cb->addSubItem($te);
-		$this->addItem($cb);
+		$subject = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_subject'), hubUserFields::F_PASSWORD_MAIL_SUBJECT);
+		$activate->addSubItem($subject);
+		$subject = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), hubUserFields::F_PASSWORD_MAIL_BODY);
+		$subject->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD]');
+		$subject->setCols(80);
+		$subject->setRows(15);
+		$activate->addSubItem($subject);
+		$this->addItem($activate);
 		//
 		//
-		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
-		$this->addItem($h);
+		$header = new ilFormSectionHeaderGUI();
+		$header->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
+		$this->addItem($header);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_reactivate_account'), 'reactivate_account');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_reactivate_account'), hubUserFields::F_REACTIVATE_ACCOUNT);
+		$this->addItem($activate);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_firstname'), 'update_firstname');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_firstname'), hubUserFields::F_UPDATE_FIRSTNAME);
+		$this->addItem($activate);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_lastname'), 'update_lastname');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_lastname'), hubUserFields::F_UPDATE_LASTNAME);
+		$this->addItem($activate);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_email'), 'update_email');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_email'), hubUserFields::F_UPDATE_EMAIL);
+		$this->addItem($activate);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_login'), 'update_login');
-		$this->addItem($cb);
+		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_update_login'), hubUserFields::F_UPDATE_LOGIN);
+		$this->addItem($activate);
 		//
 		//
-		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
-		$this->addItem($h);
-		$ro = new ilRadioGroupInputGUI($this->pl->txt('usr_prop_delete_mode'), 'delete');
-		$ro->setValue(hubUser::DELETE_MODE_INACTIVE);
+		$header = new ilFormSectionHeaderGUI();
+		$header->setTitle($this->pl->txt('common_on_status') . ' DELETED');
+		$this->addItem($header);
+		$delete = new ilRadioGroupInputGUI($this->pl->txt('usr_prop_delete_mode'), hubUserFields::F_DELETE);
+		$delete->setValue(hubUser::DELETE_MODE_INACTIVE);
 		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_none'), NULL);
-		$ro->addOption($opt);
+		$delete->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_inactive'), hubUser::DELETE_MODE_INACTIVE);
-		$ro->addOption($opt);
+		$delete->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_delete'), hubUser::DELETE_MODE_DELETE);
-		$ro->addOption($opt);
-		$this->addItem($ro);
+		$delete->addOption($opt);
+		$this->addItem($delete);
 	}
 }

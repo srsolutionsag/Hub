@@ -138,19 +138,22 @@ class hubCategory extends srModelObjectRepositoryObject {
 
 	protected function updateCategory() {
 		$update = false;
-		$this->ilias_object = ilObjectFactory::getInstanceByRefId($this->getHistoryObject()->getIliasId());
 		if ($this->props()->get(hubCategoryFields::UPDATE_TITLE)) {
+			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitle());
 			$update = true;
 		}
 		if ($this->props()->get(hubCategoryFields::UPDATE_DESCRIPTION)) {
+			$this->initObject();
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
 		if ($this->props()->get(hubCategoryFields::UPDATE_ICON)) {
+			$this->initObject();
 			$this->updateIcon();
 		}
 		if ($this->props()->get(hubCategoryFields::MOVE)) {
+			$this->initObject();
 			global $tree, $rbacadmin;
 			$ref_id = $this->ilias_object->getRefId();
 			$old_parent = $tree->getParentId($ref_id);
@@ -253,6 +256,13 @@ class hubCategory extends srModelObjectRepositoryObject {
 			} else {
 				return $this->getParentId();
 			}
+		}
+	}
+
+
+	protected function initObject() {
+		if (! isset($this->ilias_object)) {
+			$this->ilias_object = ilObjectFactory::getInstanceByRefId($this->getHistoryObject()->getIliasId());
 		}
 	}
 }
