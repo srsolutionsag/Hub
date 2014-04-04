@@ -183,7 +183,7 @@ class hubUser extends srModelObjectHubClass {
 
 	protected function sendPasswordMail() {
 		global $ilSetting;
-		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);//$this->getEmailPassword();
+		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);
 		if($mail_field) {
 			$mail = new ilMimeMail();
 			$mail->autoCheck(false);
