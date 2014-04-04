@@ -37,23 +37,8 @@ class hubUser extends srModelObjectHubClass {
 				continue;
 			}
 			hubCounter::logRunning();
-			$existing = NULL;
 			$hubUser->loadObjectProperties();
-			$existing_usr_id = 0;
-			switch ($hubUser->props()->get('sync_field')) {
-				case 'email':
-					$existing_usr_id = self::lookupUsrIdByEmail($hubUser->getEmail());
-					break;
-				case 'external_account':
-					$existing_usr_id = self::lookupUsrIdByExtAccount($hubUser->getExternalAccount());
-					break;
-			}
-			if ($existing_usr_id > 6 AND $hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW) {
-				$history = $hubUser->getHistoryObject();
-				$history->setIliasId($existing_usr_id);
-				$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
-				$history->update();
-			}
+			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					$hubUser->createUser();
@@ -99,21 +84,21 @@ class hubUser extends srModelObjectHubClass {
 		$this->ilias_object->setFirstname($this->getFirstname());
 		$this->ilias_object->setLastname($this->getLastname());
 		$this->ilias_object->setEmail($this->getEmail());
-		if ($this->props()->get('activate_account')) {
+		if ($this->props()->get(hubUserFields::F_ACTIVATE_ACCOUNT)) {
 			$this->ilias_object->setActive(true);
 			$this->ilias_object->setProfileIncomplete(false);
 		} else {
 			$this->ilias_object->setActive(false);
 			$this->ilias_object->setProfileIncomplete(true);
 		}
-		if ($this->props()->get('activate_account')) {
+		if ($this->props()->get(hubUserFields::F_CREATE_PASSWORD)) {
 			$this->generatePassword();
 			$password = md5($this->getPasswd());
 			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
-		if ($this->props()->get('send_password')) {
+		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
 			$this->sendPasswordMail();
 		}
 		$this->ilias_object->setInstitution($this->getInstitution());
@@ -149,7 +134,7 @@ class hubUser extends srModelObjectHubClass {
 		if (! $this->ilias_object) {
 			return false;
 		}
-		switch ($this->props()->get('login_field')) {
+		switch ($this->props()->get(hubUserFields::F_LOGIN_FIELD)) {
 			case 'email':
 				$login = $this->getEmail();
 				break;
@@ -202,33 +187,33 @@ class hubUser extends srModelObjectHubClass {
 		$mail->autoCheck(false);
 		$mail->From($ilSetting->get('admin_email'));
 		$mail->To($this->{$mail_field});
-		$body = $this->props()->get('password_mail_body');
+		$body = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_BODY);
 		$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
-		$mail->Subject($this->props()->get('password_mail_subject'));
+		$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
 		$mail->Body($body);
 		$mail->Send();
 	}
 
 
 	public function updateUser() {
-		if ($this->props()->get('update_login') OR $this->props()->get('update_firstname') OR $this->props()
-				->get('update_lastname') OR $this->props()->get('update_email') OR $this->props()
-				->get('reactivate_account')
+		if ($this->props()->get('update_login') OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME)
+			OR $this->props()->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()
+				->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)
 		) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->setTitle($this->getFirstname() . ' ' . $this->getLastname());
 			$this->ilias_object->setDescription($this->getEmail());
-			if ($this->props()->get('update_login')) {
+			if ($this->props()->get(hubUserFields::F_UPDATE_LOGIN)) {
 				$this->updateLogin();
 			}
-			if ($this->props()->get('update_firstname')) {
+			if ($this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME)) {
 				$this->ilias_object->setFirstname($this->getFirstname());
 			}
-			if ($this->props()->get('update_lastname')) {
+			if ($this->props()->get(hubUserFields::F_UPDATE_LASTNAME)) {
 				$this->ilias_object->setLastname($this->getLastname());
 			}
-			if ($this->props()->get('update_email')) {
+			if ($this->props()->get(hubUserFields::F_UPDATE_EMAIL)) {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
@@ -249,7 +234,7 @@ class hubUser extends srModelObjectHubClass {
 			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
 			$this->ilias_object->setMatriculation($this->getMatriculation());
 			$this->ilias_object->setGender($this->getGender());
-			if ($this->props()->get('reactivate_account')) {
+			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
 			}
 			$this->updateExternalAuth();
@@ -260,9 +245,9 @@ class hubUser extends srModelObjectHubClass {
 
 
 	public function deleteUser() {
-		if ($this->props()->get('delete')) {
+		if ($this->props()->get(hubUserFields::F_DELETE)) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
-			switch ($this->props()->get('delete')) {
+			switch ($this->props()->get(hubUserFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->ilias_object->setActive(false);
 					$this->ilias_object->update();
@@ -345,10 +330,10 @@ class hubUser extends srModelObjectHubClass {
 		/**
 		 * @var $ilDB ilDB
 		 */
-		$q = 'SELECT usr_id FROM usr_data WHERE login = ' . $ilDB->quote($login, 'text');
-		$q .= ' AND usr_id != ' . $ilDB->quote($usr_id, 'integer');
+		$query = 'SELECT usr_id FROM usr_data WHERE login = ' . $ilDB->quote($login, 'text');
+		$query .= ' AND usr_id != ' . $ilDB->quote($usr_id, 'integer');
 
-		return (bool)$ilDB->numRows($ilDB->query($q));
+		return (bool)$ilDB->numRows($ilDB->query($query));
 	}
 
 
@@ -360,8 +345,8 @@ class hubUser extends srModelObjectHubClass {
 	 */
 	public static function lookupUsrIdByField($fieldname, $value) {
 		global $ilDB;
-		$q = 'SELECT usr_id FROM usr_data WHERE ' . $fieldname . ' LIKE ' . $ilDB->quote($value, 'text');
-		$res = $ilDB->query($q);
+		$query = 'SELECT usr_id FROM usr_data WHERE ' . $fieldname . ' LIKE ' . $ilDB->quote($value, 'text');
+		$res = $ilDB->query($query);
 		$existing = $ilDB->fetchObject($res);
 
 		return $existing->usr_id ? $existing->usr_id : false;
@@ -615,6 +600,28 @@ class hubUser extends srModelObjectHubClass {
 	 * @db_length           256
 	 */
 	protected $ilias_roles = array();
+
+
+	/**
+	 * @param $hubUser
+	 */
+	protected static function lookupExisting(hubUser $hubUser) {
+		$existing_usr_id = 0;
+		switch ($hubUser->props()->get(hubUserFields::F_SYNCFIELD)) {
+			case 'email':
+				$existing_usr_id = self::lookupUsrIdByEmail($hubUser->getEmail());
+				break;
+			case 'external_account':
+				$existing_usr_id = self::lookupUsrIdByExtAccount($hubUser->getExternalAccount());
+				break;
+		}
+		if ($existing_usr_id > 6 AND $hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW) {
+			$history = $hubUser->getHistoryObject();
+			$history->setIliasId($existing_usr_id);
+			$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
+			$history->update();
+		}
+	}
 
 
 	/**
