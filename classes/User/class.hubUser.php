@@ -183,16 +183,18 @@ class hubUser extends srModelObjectHubClass {
 
 	protected function sendPasswordMail() {
 		global $ilSetting;
-		$mail_field = $this->getEmailPassword();
-		$mail = new ilMimeMail();
-		$mail->autoCheck(false);
-		$mail->From($ilSetting->get('admin_email'));
-		$mail->To($this->{$mail_field});
-		$body = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_BODY);
-		$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
-		$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
-		$mail->Body($body);
-		$mail->Send();
+		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);//$this->getEmailPassword();
+		if($mail_field) {
+			$mail = new ilMimeMail();
+			$mail->autoCheck(false);
+			$mail->From($ilSetting->get('admin_email'));
+			$mail->To($this->{$mail_field});
+			$body = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_BODY);
+			$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
+			$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
+			$mail->Body($body);
+			$mail->Send();
+		}
 	}
 
 
