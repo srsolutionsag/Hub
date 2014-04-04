@@ -66,9 +66,14 @@ class hubOrigin extends ActiveRecord {
 
 	public static function sendSummaries() {
 		foreach (self::get() as $hubOrigin) {
-			$hubOrigin->addSummary();
-			hubOriginNotification::send($hubOrigin);
+			$hubOrigin->sendSummary();
 		}
+	}
+
+
+	public function sendSummary() {
+		$this->addSummary();
+		hubOriginNotification::send($this);
 	}
 
 
