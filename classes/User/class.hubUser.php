@@ -259,6 +259,7 @@ class hubUser extends srModelObjectHubClass {
 			}
 			$hist = $this->getHistoryObject();
 			$hist->setAlreadyDeleted(true);
+			$hist->setDeleted(true);
 			$hist->update();
 		}
 	}

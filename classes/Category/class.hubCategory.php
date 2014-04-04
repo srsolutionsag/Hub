@@ -169,8 +169,8 @@ class hubCategory extends srModelObjectRepositoryObject {
 
 
 	protected function deleteCategory() {
-		$hist = $this->getHistoryObject();
 		if ($this->props()->get(hubCategoryFields::DELETE)) {
+			$hist = $this->getHistoryObject();
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
 			switch ($this->props()->get(hubCategoryFields::DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
@@ -201,8 +201,8 @@ class hubCategory extends srModelObjectRepositoryObject {
 			}
 			$hist->setDeleted(true);
 			$hist->setAlreadyDeleted(true);
+			$hist->update();
 		}
-		$hist->update();
 	}
 
 

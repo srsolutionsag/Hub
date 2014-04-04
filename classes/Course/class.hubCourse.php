@@ -173,8 +173,8 @@ class hubCourse extends srModelObjectRepositoryObject {
 					$hist->setIliasId(NULL);
 					break;
 			}
-			$hist->setDeleted(true);
 			$hist->setAlreadyDeleted(true);
+			$hist->setDeleted(true);
 			$hist->update();
 		}
 	}

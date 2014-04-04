@@ -39,7 +39,7 @@ class hubAsyncSync {
 		$cron .= $this->getUser() . ' ';
 		$cron .= $this->getPassword() . ' ';
 		$cron .= $this->getClient();
-		$cron .= " > /dev/null 2>/dev/null &";
+		$cron .= " > /dev/null &";
 
 		exec($cron);
 	}

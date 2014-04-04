@@ -219,9 +219,15 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 					}
 				} else {
 					foreach ($item->getSubItems() as $subItem) {
-						$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
+						$value = $this->origin_properties->getByShortPrefix($subItem->getPostVar());
 						if ($value) {
 							$array[$subItem->getPostVar()] = $value;
+						}
+						foreach ($subItem->getSubItems() as $sub_subitem) {
+							$value = $this->origin_properties->getByShortPrefix($sub_subitem->getPostVar());
+							if ($value) {
+								$array[$sub_subitem->getPostVar()] = $value;
+							}
 						}
 					}
 				}
@@ -248,6 +254,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 				} else {
 					foreach ($item->getSubItems() as $subItem) {
 						$this->origin_properties->setByKey($subItem->getPostVar(), $this->getInput($subItem->getPostVar()));
+						foreach ($subItem->getSubItems() as $sub_subitem) {
+							$this->origin_properties->setByKey($sub_subitem->getPostVar(), $this->getInput($sub_subitem->getPostVar()));
+						}
 					}
 				}
 			}

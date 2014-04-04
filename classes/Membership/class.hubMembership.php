@@ -226,6 +226,7 @@ class hubMembership extends srModelObjectHubClass {
 				break;
 		}
 		$history = $this->getHistoryObject();
+		$history->setDeleted(true);
 		$history->setAlreadyDeleted(true);
 		$history->update();
 	}
