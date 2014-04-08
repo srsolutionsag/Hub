@@ -234,7 +234,7 @@ class hubSyncCron {
 							if ($originObject->buildEntries()) {
 								hubDurationLogger::log('build_ext_objects_origin_' . $origin->getId());
 								$this->writeLastUpdate($origin);
-								$origin->afterSync();
+								$originObject->afterSync();
 
 								hubDurationLogger::start('init_status_' . $origin->getId(), false);
 								if (! hubSyncHistory::initStatus($origin->getId())) {
