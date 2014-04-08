@@ -39,14 +39,11 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function __construct($id = 0) {
 		parent::__construct($id);
-		$this->conf = hubOriginConfiguration::conf($this->getId());
-		$this->log = hubLog::getInstance();
-		$this->loadObjectProperties();
-	}
-
-
-	public function loadConf() {
-		$this->conf = hubOriginConfiguration::conf($this->getId());
+		$this->loadConf();
+		$this->loadProps();
+		// $this->conf = hubOriginConfiguration::conf($this->getId());
+		// $this->log = hubLog::getInstance();
+		// $this->loadObjectProperties();
 	}
 
 
@@ -183,6 +180,14 @@ class hubOrigin extends ActiveRecord {
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function afterSync() {
+		return true;
 	}
 
 
@@ -338,18 +343,27 @@ class hubOrigin extends ActiveRecord {
 	}
 
 
+	public function loadConf() {
+		if (! isset($this->conf)) {
+			$this->conf = hubOriginConfiguration::conf($this->getId());
+		}
+	}
+
+
 	/**
 	 * @return hubOriginObjectProperties
 	 */
 	public function props() {
-		$this->loadObjectProperties();
+		$this->loadProps();
 
 		return $this->object_properties;
 	}
 
 
-	public function loadObjectProperties() {
-		$this->object_properties = hubOriginObjectProperties::getInstance($this->getId());
+	public function loadProps() {
+		if (! isset($this->object_properties)) {
+			$this->object_properties = hubOriginObjectProperties::getInstance($this->getId());
+		}
 	}
 
 

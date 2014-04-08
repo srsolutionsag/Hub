@@ -184,7 +184,7 @@ class hubUser extends srModelObjectHubClass {
 	protected function sendPasswordMail() {
 		global $ilSetting;
 		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);
-		if($mail_field) {
+		if ($mail_field) {
 			$mail = new ilMimeMail();
 			$mail->autoCheck(false);
 			$mail->From($ilSetting->get('admin_email'));
@@ -656,8 +656,8 @@ class hubUser extends srModelObjectHubClass {
 	}
 
 
-	private function clearRoles() {
-		//$this->ilias_roles = array();
+	public function clearRoles() {
+		$this->ilias_roles = array();
 	}
 
 
