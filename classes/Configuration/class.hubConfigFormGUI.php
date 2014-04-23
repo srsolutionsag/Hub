@@ -35,66 +35,51 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	private function initForm() {
-		$this->setTitle($this->pl->txt('admin_form_title'));
-
-		$te = new ilTextInputGUI($this->pl->txt('admin_origins_path'), 'origins_path');
-		$te->setInfo($this->pl->txt('admin_origins_path_info'));
-		$this->addItem($te);
-
-		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_lock'), 'lock');
-		$this->addItem($cb);
-
-		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('admin_header_sync'));
-		$this->addItem($h);
-
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_use_async'), 'use_async');
 		$cb->setInfo($this->pl->txt('admin_use_async_info'));
-
 		$te = new ilTextInputGUI($this->pl->txt('admin_async_user'), 'async_user');
 		$cb->addSubItem($te);
 		$te = new ilTextInputGUI($this->pl->txt('admin_async_password'), 'async_password');
 		$cb->addSubItem($te);
 		$te = new ilTextInputGUI($this->pl->txt('admin_async_client'), 'async_client');
 		$cb->addSubItem($te);
-		$te = new ilTextInputGUI($this->pl->txt('admin_async_cli_php'), 'async_cli_php');
-		$cb->addSubItem($te);
 		$this->addItem($cb);
-
 		$te = new ilTextInputGUI($this->pl->txt('admin_roles'), 'admin_roles');
-		$te->setInfo($this->pl->txt('admin_roles_info'));
+		$cb->setInfo($this->pl->txt('admin_roles_info'));
 		$this->addItem($te);
-
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), 'import_export');
 		$this->addItem($cb);
-
+		$te = new ilTextareaInputGUI($this->pl->txt('admin_password_email_body'), 'password_email_body');
+		$this->addItem($te);
 		$this->addCommandButtons();
+	}
+
+
+	/**
+	 * @param $a_item
+	 *
+	 * @return mixed
+	 */
+	public function addItem($a_item) {
+		return parent::addItem($a_item);
 	}
 
 
 	public function fillForm() {
 		$array = array();
 		foreach ($this->getItems() as $item) {
-			$this->getValuesForItem($item, $array);
-		}
-		$this->setValuesByArray($array);
-	}
-
-
-	/**
-	 * @param $item
-	 * @param $array
-	 *
-	 * @internal param $key
-	 */
-	private function getValuesForItem($item, &$array) {
-		if (self::checkItem($item)) {
+			/**
+			 * @var $item    ilCheckboxInputGUI
+			 * @var $subitem ilCheckboxInputGUI
+			 */
 			$key = $item->getPostVar();
 			$array[$key] = hubConfig::get($key);
 			foreach ($item->getSubItems() as $subitem) {
-				$this->getValuesForItem($subitem, $array);
+				$key = $subitem->getPostVar();
+				$array[$key] = hubConfig::get($key);
 			}
 		}
+		$this->setValuesByArray($array);
 	}
 
 
@@ -120,34 +105,18 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 			return false;
 		}
 		foreach ($this->getItems() as $item) {
-			$this->saveValueForItem($item);
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * @param $item
-	 */
-	private function saveValueForItem($item) {
-		if (self::checkItem($item)) {
+			/**
+			 * @var $item ilCheckboxInputGUI
+			 */
 			$key = $item->getPostVar();
 			hubConfig::set($key, $this->getInput($key));
 			foreach ($item->getSubItems() as $subitem) {
-				$this->saveValueForItem($subitem);
+				$key = $subitem->getPostVar();
+				hubConfig::set($key, $this->getInput($key));
 			}
 		}
-	}
 
-
-	/**
-	 * @param $item
-	 *
-	 * @return bool
-	 */
-	public static function checkItem($item) {
-		return get_class($item) != 'ilFormSectionHeaderGUI';
+		return true;
 	}
 
 

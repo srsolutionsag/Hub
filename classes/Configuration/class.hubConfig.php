@@ -36,23 +36,11 @@ class hubConfig extends ActiveRecord {
 	public static function set($name, $value) {
 		$obj = new self($name);
 		$obj->setValue($value);
-		if (hubConfig::where(array( 'name' => $name ))->hasSets()) {
+		if (self::where(array( 'name' => $name ))->hasSets()) {
 			$obj->update();
 		} else {
 			$obj->create();
 		}
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isImportEnabled() {
-		return hubConfig::get('import_export') AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY)) AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP)) AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
-		AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
 	}
 
 
