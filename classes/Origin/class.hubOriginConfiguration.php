@@ -102,7 +102,9 @@ class hubOriginConfiguration extends ActiveRecord {
 	public static function conf($sr_hub_origin_id) {
 		$where = array( 'sr_hub_origin_id' => $sr_hub_origin_id );
 		if (self::where($where)->hasSets()) {
-			return self::where($where)->first();
+			$activeRecord = self::where($where)->first();
+
+			return $activeRecord;
 		} else {
 			$obj = new self();
 			$obj->setSrHubOriginId($sr_hub_origin_id);
