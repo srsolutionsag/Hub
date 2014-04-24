@@ -34,7 +34,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	private function initForm() {
+	protected  function initForm() {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_use_async'), 'use_async');
 		$cb->setInfo($this->pl->txt('admin_use_async_info'));
 		$te = new ilTextInputGUI($this->pl->txt('admin_async_user'), 'async_user');
