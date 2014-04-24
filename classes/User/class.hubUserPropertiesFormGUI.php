@@ -55,7 +55,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_create_password'), hubUserFields::F_CREATE_PASSWORD);
 		$this->addItem($activate);
-		$activate = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), hubUserFields::F_SEND_PASSWORD);
+		$send_password = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), hubUserFields::F_SEND_PASSWORD);
 		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_send_password_field'), hubUserFields::F_SEND_PASSWORD_FIELD);
 		$opt = array(
 			'email' => 'email',
@@ -66,13 +66,16 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$activate->addSubItem($syncfield);
 
 		$subject = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_subject'), hubUserFields::F_PASSWORD_MAIL_SUBJECT);
-		$activate->addSubItem($subject);
-		$subject = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), hubUserFields::F_PASSWORD_MAIL_BODY);
-		$subject->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD]');
-		$subject->setCols(80);
-		$subject->setRows(15);
-		$activate->addSubItem($subject);
-		$this->addItem($activate);
+		$send_password->addSubItem($subject);
+		$mail_body = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), hubUserFields::F_PASSWORD_MAIL_BODY);
+		$mail_body->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD], [VALID_UNTIL]');
+		$mail_body->setCols(80);
+		$mail_body->setRows(15);
+		$send_password->addSubItem($mail_body);
+		$mail_date_format = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_date_format'), hubUserFields::F_PASSWORD_MAIL_DATE_FORMAT);
+		$mail_date_format->setInfo('<a target=\'_blank\' href=\'http://php.net/manual/de/function.date.php\'>Info</a>');
+		$send_password->addSubItem($mail_date_format);
+		$this->addItem($send_password);
 		//
 		//
 		$header = new ilFormSectionHeaderGUI();

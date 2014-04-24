@@ -41,15 +41,15 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 	 */
 	protected function fillTableRow($a_set) {
 		/**
-		 * @var $hubSyncHistory hubSyncHistory
+		 * @var $hubSyncHistory   hubSyncHistory
 		 * @var $hubCategory      hubCategory
 		 */
-//		echo '<pre>' . print_r($a_set, 1) . '</pre>';
+		//		echo '<pre>' . print_r($a_set, 1) . '</pre>';
 		$hubCategory = hubCategory::find($a_set['ext_id']);
 		$hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
 		$this->addCell($hubCategory->getExtId());
-		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>'
-			. $hubCategory->getTitlePrefix() . $hubCategory->getTitle() . '</a>');
+		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCategory->getTitlePrefix()
+			. $hubCategory->getTitle() . '</a>');
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCategory->getParentId()) . '\'>'
 			. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCategory->getParentId())) . '</a>');
 

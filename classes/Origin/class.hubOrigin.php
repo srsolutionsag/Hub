@@ -41,9 +41,6 @@ class hubOrigin extends ActiveRecord {
 		parent::__construct($id);
 		$this->loadConf();
 		$this->loadProps();
-		// $this->conf = hubOriginConfiguration::conf($this->getId());
-		// $this->log = hubLog::getInstance();
-		// $this->loadObjectProperties();
 	}
 
 
@@ -288,7 +285,7 @@ class hubOrigin extends ActiveRecord {
 	 * @return bool
 	 */
 	public function isLocked() {
-		return (bool)hubConfig::get('lock') AND (bool)$this->getActive();
+		return (bool)hubConfig::get(hubConfig::F_LOCK) AND (bool)$this->getActive();
 	}
 
 
@@ -296,8 +293,8 @@ class hubOrigin extends ActiveRecord {
 	 * @return string
 	 */
 	private static function getOriginsPath() {
-		if (hubConfig::get('origins_path')) {
-			return rtrim(hubConfig::get('origins_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		if (hubConfig::get(hubConfig::F_ORIGINS_PATH)) {
+			return rtrim(hubConfig::get(hubConfig::F_ORIGINS_PATH), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 		} else {
 			return hub::getPath() . 'origins/';
 		}
@@ -336,6 +333,8 @@ class hubOrigin extends ActiveRecord {
 	 * @return hubOriginConfiguration
 	 */
 	public function conf() {
+		$this->loadConf();
+
 		return $this->conf;
 	}
 

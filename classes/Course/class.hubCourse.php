@@ -158,7 +158,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 			$this->initObject();
 			switch ($this->props()->get(hubCourseFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					$this->log->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+					hubLog::getInstance()->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
 					$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_OFFLINE);
 					if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
 						$icon = $this->props()->getIconPath('_deleted');
@@ -216,8 +216,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 	 * @return bool
 	 */
 	private function hasDependences() {
-		return $this->getFirstDependence() != NULL OR $this->getSecondDependence() != NULL OR
-		$this->getThirdDependence() != NULL;
+		return $this->getFirstDependence() != NULL OR $this->getSecondDependence() != NULL OR $this->getThirdDependence() != NULL;
 	}
 
 
@@ -255,13 +254,17 @@ class hubCourse extends srModelObjectRepositoryObject {
 	 * @return bool
 	 */
 	protected function lookupDependenceCategory($deph) {
+		global $ilDB;
+		/**
+		 * @var $ilDB ilDB
+		 */
 		$key = 'srhub_' . $this->getSrHubOriginId() . '_dep_' . $deph . '_' . $this->getParentId();
 		$query = 'SELECT ref_id
 				FROM object_data dat
 				JOIN object_reference ref ON ref.obj_id = dat.obj_id
-				WHERE dat.import_id = ' . $this->db->quote($key, 'text');
-		$res = $this->db->query($query);
-		while ($row = $this->db->fetchObject($res)) {
+				WHERE dat.import_id = ' . $ilDB->quote($key, 'text');
+		$res = $ilDB->query($query);
+		while ($row = $ilDB->fetchObject($res)) {
 			return $row->ref_id;
 		}
 

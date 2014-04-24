@@ -50,6 +50,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			$this->addCommandButton('create', $this->pl->txt('origin_form_button_create'));
 		} else {
 			$this->addCommandButton('update', $this->pl->txt('origin_form_button_update'));
+			$this->addCommandButton('updateAndStay', $this->pl->txt('origin_form_button_update_and_stay'));
 		}
 		// Form Elements
 		if ($this->origin->getId()) {
@@ -150,8 +151,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 					$objectProperitesFormGUI->appendToSubItem($usr);
 				}
 				$ro->addOption($usr);
-				$mem = new ilRadioOption($this->pl->txt($prefix
-					. hub::OBJECTTYPE_MEMBERSHIP), hub::OBJECTTYPE_MEMBERSHIP);
+				$mem = new ilRadioOption($this->pl->txt($prefix . hub::OBJECTTYPE_MEMBERSHIP), hub::OBJECTTYPE_MEMBERSHIP);
 				if ($objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, hub::OBJECTTYPE_MEMBERSHIP, $this->origin)) {
 					$objectProperitesFormGUI->appendToSubItem($mem);
 				}

@@ -28,7 +28,6 @@ class hubSyncCron {
 		 * @var $ilUser ilObjUser
 		 * @var $ilCtrl ilCtrl
 		 */
-		$this->db = $ilDB;
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
 		$this->origin_id = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;

@@ -205,8 +205,7 @@ class hubCounter {
 	 * @return int
 	 */
 	public static function getCountOverall() {
-		return (self::getCount(self::CREATED) + self::getCount(self::UPDATED) + self::getCount(self::DELETED)
-			+ self::getCount(self::IGNORED));
+		return (self::getCount(self::CREATED) + self::getCount(self::UPDATED) + self::getCount(self::DELETED) + self::getCount(self::IGNORED));
 	}
 }
 

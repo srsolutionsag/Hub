@@ -83,6 +83,7 @@ class hubOriginGUI {
 
 	public function index() {
 		if (ilHubAccess::checkAccess()) {
+			//			$this->updateAllTables();
 			$tableGui = new hubOriginTableGUI($this, 'index');
 			$this->tpl->setContent($tableGui->getHTML());
 		}
@@ -139,7 +140,7 @@ class hubOriginGUI {
 			hubUser::installDB();
 			hubSyncHistory::installDB();
 			ilUtil::sendInfo('Update ok', true);
-			$this->ctrl->redirect($this, 'index');
+			//			$this->ctrl->redirect($this, 'index');
 		}
 	}
 
@@ -244,20 +245,28 @@ class hubOriginGUI {
 	}
 
 
-	public function update() {
+	/**
+	 * @param bool $redirect
+	 */
+	public function update($redirect = true) {
 		if (ilHubAccess::checkAccess()) {
 			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
 			$form->setValuesByPost();
 			if ($form->saveObject()) {
-				ilUtil::sendSuccess($this->lng->txt('success'), true);
-				hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])
-						->getTitle(), hubLog::L_PROD);
+				ilUtil::sendSuccess($this->pl->txt('msg_saved'), $redirect);
+				hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])->getTitle(), hubLog::L_PROD);
 				$this->ctrl->setParameter($this, 'origin_id', NULL);
-				$this->ctrl->redirect($this, 'index');
-			} else {
-				$this->tpl->setContent($form->getHTML());
+				if ($redirect) {
+					$this->ctrl->redirect($this, 'index');
+				}
 			}
+			$this->tpl->setContent($form->getHTML());
 		}
+	}
+
+
+	public function updateAndStay() {
+		$this->update(false);
 	}
 
 

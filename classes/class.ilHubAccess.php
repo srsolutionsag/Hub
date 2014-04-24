@@ -24,7 +24,7 @@ class ilHubAccess {
 			global $ilUser;
 			$user_id = $ilUser->getId();
 		}
-		$roles = hubConfig::get('admin_roles') ? hubConfig::get('admin_roles') : 2;
+		$roles = hubConfig::get(hubConfig::F_ADMIN_ROLES) ? hubConfig::get(hubConfig::F_ADMIN_ROLES) : 2;
 
 		foreach (explode(',', $roles) as $role_id) {
 			if (in_array($user_id, $rbacreview->assignedUsers($role_id))) {

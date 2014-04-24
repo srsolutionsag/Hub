@@ -68,9 +68,9 @@ class hubConfGUI {
 	 * @return mixed|void
 	 */
 	protected function performCommand($cmd) {
-//		if(ilHubAccess::checkAccess()) {
-			$this->{$cmd}();
-//		}
+		//		if(ilHubAccess::checkAccess()) {
+		$this->{$cmd}();
+		//		}
 	}
 
 

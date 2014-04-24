@@ -51,6 +51,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 		 * @var $hubCategory hubCategory
 		 */
 		hubCounter::logRunning();
+
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
 				continue;
@@ -174,8 +175,8 @@ class hubCategory extends srModelObjectRepositoryObject {
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
 			switch ($this->props()->get(hubCategoryFields::DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					$this->ilias_object->setTitle($this->getTitle() . ' '
-						. $this->pl->txt('com_prop_mark_deleted_text'));
+					$ilHubPlugin = new ilHubPlugin();
+					$this->ilias_object->setTitle($this->getTitle() . ' ' . $ilHubPlugin->txt('com_prop_mark_deleted_text'));
 					if ($this->props()->get(hubCategoryFields::DELETED_ICON)) {
 						$icon = $this->props()->getIconPath('_deleted');
 						if ($icon) {

@@ -24,8 +24,7 @@ class hubContext extends ilContext {
 	public static function init($a_type) {
 		$class_name = self::getClassForType($a_type);
 		if ($class_name) {
-			include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Services/class.'
-				. $class_name . '.php');
+			include_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Services/class.' . $class_name . '.php');
 			self::$class_name = $class_name;
 			self::$type = $a_type;
 

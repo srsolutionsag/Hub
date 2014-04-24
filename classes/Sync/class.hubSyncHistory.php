@@ -28,6 +28,14 @@ class hubSyncHistory extends ActiveRecord {
 	protected static $loaded = array();
 
 
+	/**
+	 * @param int $ext_id
+	 */
+	public function __construct($ext_id = 0) {
+		parent::__construct($ext_id, new hubConnector());
+	}
+
+
 	//
 	// Workflow
 	//
@@ -155,8 +163,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return bool
 	 */
 	private function isDeletedInILIAS() {
-		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType()
-		== srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false));
+		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false));
 	}
 
 

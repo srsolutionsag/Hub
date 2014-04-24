@@ -69,8 +69,7 @@ class hubLog {
 	public static function getBackTrace() {
 		$return = '';
 		foreach (debug_backtrace() as $bt) {
-			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' ))
-				AND ! in_array($bt['class'], array(
+			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' )) AND ! in_array($bt['class'], array(
 					'hub',
 					'ilCtrl',
 					'ilObjectPluginGUI',

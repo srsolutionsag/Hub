@@ -1,4 +1,5 @@
 <?php
+
 require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 require_once('class.hubConfig.php');
 
@@ -34,39 +35,60 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	protected  function initForm() {
+	protected function initForm() {
 		$this->setTitle($this->pl->txt('admin_form_title'));
 
-		$te = new ilTextInputGUI($this->pl->txt('admin_origins_path'), 'origins_path');
+		$te = new ilTextInputGUI($this->pl->txt('admin_origins_path'), hubConfig::F_ORIGINS_PATH);
 		$te->setInfo($this->pl->txt('admin_origins_path_info'));
 		$this->addItem($te);
 
-		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_lock'), 'lock');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_lock'), hubConfig::F_LOCK);
 		$this->addItem($cb);
 
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_header_sync'));
 		$this->addItem($h);
 
-		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_use_async'), 'use_async');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_use_async'), hubConfig::F_USE_ASYNC);
 		$cb->setInfo($this->pl->txt('admin_use_async_info'));
 
-		$te = new ilTextInputGUI($this->pl->txt('admin_async_user'), 'async_user');
+		$te = new ilTextInputGUI($this->pl->txt('admin_async_user'), hubConfig::F_ASYNC_USER);
 		$cb->addSubItem($te);
-		$te = new ilTextInputGUI($this->pl->txt('admin_async_password'), 'async_password');
+		$te = new ilTextInputGUI($this->pl->txt('admin_async_password'), hubConfig::F_ASYNC_PASSWORD);
 		$cb->addSubItem($te);
-		$te = new ilTextInputGUI($this->pl->txt('admin_async_client'), 'async_client');
+		$te = new ilTextInputGUI($this->pl->txt('admin_async_client'), hubConfig::F_ASYNC_CLIENT);
 		$cb->addSubItem($te);
-		$te = new ilTextInputGUI($this->pl->txt('admin_async_cli_php'), 'async_cli_php');
+		$te = new ilTextInputGUI($this->pl->txt('admin_async_cli_php'), hubConfig::F_ASYNC_CLI_PHP);
 		$cb->addSubItem($te);
 		$this->addItem($cb);
 
-		$te = new ilTextInputGUI($this->pl->txt('admin_roles'), 'admin_roles');
+		$te = new ilTextInputGUI($this->pl->txt(hubConfig::F_ADMIN_ROLES), hubConfig::F_ADMIN_ROLES);
 		$te->setInfo($this->pl->txt('admin_roles_info'));
 		$this->addItem($te);
 
-		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), 'import_export');
+		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), hubConfig::F_IMPORT_EXPORT);
 		$this->addItem($cb);
+
+		$h = new ilFormSectionHeaderGUI();
+		$h->setTitle($this->pl->txt('admin_header_db'));
+		$this->addItem($h);
+
+		//
+		// DB
+		//
+		$db = new ilCheckboxInputGUI($this->pl->txt('admin_db'), hubConfig::F_DB);
+		$db_host = new ilTextInputGUI($this->pl->txt('admin_db_host'), hubConfig::F_DB_HOST);
+		$db->addSubItem($db_host);
+		$db_name = new ilTextInputGUI($this->pl->txt('admin_db_name'), hubConfig::F_DB_NAME);
+		$db->addSubItem($db_name);
+		$db_user = new ilTextInputGUI($this->pl->txt('admin_db_user'), hubConfig::F_DB_USER);
+		$db->addSubItem($db_user);
+		$db_password = new ilTextInputGUI($this->pl->txt('admin_db_password'), hubConfig::F_DB_PASSWORD);
+		$db->addSubItem($db_password);
+		$db_password = new ilTextInputGUI($this->pl->txt('admin_db_port'), hubConfig::F_DB_PORT);
+		$db->addSubItem($db_password);
+
+		$this->addItem($db);
 
 		$this->addCommandButtons();
 	}
