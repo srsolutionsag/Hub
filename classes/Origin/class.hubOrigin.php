@@ -118,7 +118,6 @@ class hubOrigin extends ActiveRecord {
 		 */
 		$obj = self::find($sr_hub_origin_id);
 		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == NULL) {
-
 			return 'hubOrigin';
 		} else {
 			return $obj->getClassname();
@@ -148,11 +147,9 @@ class hubOrigin extends ActiveRecord {
 			 */
 			$usage_class = self::getUsageClass($this->getId());
 			$existing = $usage_class::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
-
 			if ($existing == 0) {
 				return true;
 			}
-
 			$percent = 100 / $existing * $amount_of_datasets;
 			$percentage = $this->props()->get('check_amount_percentage');
 			$percentage = $percentage ? $percentage : 80;
@@ -344,7 +341,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function loadConf() {
-		if (! isset($this->conf)) {
+		if (! isset($this->conf) OR $this->conf->getSrHubOriginId() != $this->getId()) {
 			$this->conf = hubOriginConfiguration::conf($this->getId());
 		}
 	}
@@ -361,7 +358,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function loadProps() {
-		if (! isset($this->object_properties)) {
+		if (! isset($this->object_properties) OR $this->object_properties->getSrHubOriginId() != $this->getId()) {
 			$this->object_properties = hubOriginObjectProperties::getInstance($this->getId());
 		}
 	}

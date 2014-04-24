@@ -2,6 +2,8 @@
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.srModelObjectTableGUI.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
 require_once('class.hubCategory.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
+@include_once('./Services/Link/classes/class.ilLink.php');
 
 /**
  * TableGUI hubCategoryTableGUI
@@ -13,7 +15,7 @@ require_once('class.hubCategory.php');
 class hubCategoryTableGUI extends srModelObjectTableGUI {
 
 	protected function initTableData() {
-		$this->setData(hubCategory::getArray());
+		$this->setData(hubCategory::orderBy('title')->getArray());
 	}
 
 
@@ -22,7 +24,12 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 	 * @description returns false, if automatic columns are needed, otherwise implement your columns
 	 */
 	protected function initTableColumns() {
-		return false;
+		$this->addColumn('External ID');
+		$this->addColumn('Title');
+		$this->addColumn('Category');
+		$this->addColumn('Status');
+
+		return true;
 	}
 
 
@@ -33,7 +40,22 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 	 * @description implement your woen fillRow or return false
 	 */
 	protected function fillTableRow($a_set) {
-		return false;
+		/**
+		 * @var $hubSyncHistory hubSyncHistory
+		 * @var $hubCategory      hubCategory
+		 */
+//		echo '<pre>' . print_r($a_set, 1) . '</pre>';
+		$hubCategory = hubCategory::find($a_set['ext_id']);
+		$hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
+		$this->addCell($hubCategory->getExtId());
+		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>'
+			. $hubCategory->getTitlePrefix() . $hubCategory->getTitle() . '</a>');
+		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCategory->getParentId()) . '\'>'
+			. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCategory->getParentId())) . '</a>');
+
+		$this->addCell($this->pl->txt('list_status_' . $hubSyncHistory->getTemporaryStatus()));
+
+		return true;
 	}
 
 
