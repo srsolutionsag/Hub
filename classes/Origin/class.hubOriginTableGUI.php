@@ -71,7 +71,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 			$ilToolbar->addFormButton($this->pl->txt('origin_table_button_import'), 'import');
 		}
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
-		if (hubConfig::get('use_async')) {
+		if (hubConfig::get(hubConfig::F_USE_ASYNC)) {
 			$this->addCommandButton('runAsync', $this->pl->txt('origin_table_button_run') . ' (Async)');
 			$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
 		}

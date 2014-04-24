@@ -44,18 +44,17 @@ class hubCourseTableGUI extends srModelObjectTableGUI {
 		 * @var $hubSyncHistory hubSyncHistory
 		 * @var $hubCourse      hubCourse
 		 */
-		if($a_set['ext_id']) {
+		if ($a_set['ext_id']) {
 			$hubCourse = hubCourse::find($a_set['ext_id']);
 			$hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
 			$this->addCell($hubCourse->getExtId());
-			$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>'
-				. $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . '</a>');
+			$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix()
+				. $hubCourse->getTitle() . '</a>');
 			$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCourse->getParentId()) . '\'>'
 				. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>');
 
 			$this->addCell($this->pl->txt('list_status_' . $hubSyncHistory->getTemporaryStatus()));
 		}
-
 
 		return true;
 	}

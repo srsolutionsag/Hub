@@ -16,6 +16,7 @@ class hubUserFields extends hubOriginObjectPropertiesFields {
 	const F_SEND_PASSWORD_FIELD = 'send_password_field';
 	const F_PASSWORD_MAIL_SUBJECT = 'password_mail_subject';
 	const F_PASSWORD_MAIL_BODY = 'password_mail_body';
+	const F_PASSWORD_MAIL_DATE_FORMAT = 'password_mail_date_format';
 	const F_REACTIVATE_ACCOUNT = 'reactivate_account';
 	const F_UPDATE_FIRSTNAME = 'update_firstname';
 	const F_UPDATE_LASTNAME = 'update_lastname';

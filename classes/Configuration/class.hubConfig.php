@@ -8,6 +8,23 @@ require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRe
  */
 class hubConfig extends ActiveRecord {
 
+	const F_DB_HOST = 'db_host';
+	const F_DB = 'db';
+	const F_DB_NAME = 'db_name';
+	const F_DB_USER = 'db_user';
+	const F_DB_PASSWORD = 'db_password';
+	const F_DB_PORT = 'db_port';
+	const F_ORIGINS_PATH = 'origins_path';
+	const F_LOCK = 'lock';
+	const F_USE_ASYNC = 'use_async';
+	const F_ASYNC_USER = 'async_user';
+	const F_ASYNC_PASSWORD = 'async_password';
+	const F_ASYNC_CLIENT = 'async_client';
+	const F_ASYNC_CLI_PHP = 'async_cli_php';
+	const F_ADMIN_ROLES = 'admin_roles';
+	const F_IMPORT_EXPORT = 'import_export';
+
+
 	/**
 	 * @return string
 	 * @description Return the Name of your Database Table
@@ -48,8 +65,7 @@ class hubConfig extends ActiveRecord {
 	 * @return bool
 	 */
 	public static function isImportEnabled() {
-		return hubConfig::get('import_export') AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY)) AND
+		return hubConfig::get(self::F_IMPORT_EXPORT) AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY)) AND
 		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP)) AND
 		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
 		AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));

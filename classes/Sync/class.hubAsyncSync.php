@@ -26,10 +26,10 @@ class hubAsyncSync {
 
 
 	public function __construct() {
-		$this->setCliPhp(hubConfig::get('async_cli_php') ? hubConfig::get('async_cli_php') : exec('which php'));
-		$this->setUser(hubConfig::get('async_user'));
-		$this->setPassword(hubConfig::get('async_password'));
-		$this->setClient(hubConfig::get('async_client'));
+		$this->setCliPhp(hubConfig::get(hubConfig::F_ASYNC_CLI_PHP) ? hubConfig::get(hubConfig::F_ASYNC_CLI_PHP) : exec('which php'));
+		$this->setUser(hubConfig::get(hubConfig::F_ASYNC_USER));
+		$this->setPassword(hubConfig::get(hubConfig::F_ASYNC_PASSWORD));
+		$this->setClient(hubConfig::get(hubConfig::F_ASYNC_CLIENT));
 	}
 
 

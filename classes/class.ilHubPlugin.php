@@ -99,7 +99,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 			if (! function_exists('hubConfig::get')) {
 				$hub_menu->setPermission(2);
 			} else {
-				$hub_menu->setPermission(hubConfig::get('admin_roles'));
+				$hub_menu->setPermission(hubConfig::get(hubConfig::F_ADMIN_ROLES));
 			}
 			$hub_menu->setPlugin(true);
 

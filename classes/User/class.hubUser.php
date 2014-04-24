@@ -152,8 +152,7 @@ class hubUser extends srModelObjectHubClass {
 				$login = $this->getLogin();
 				break;
 			default:
-				$login =
-					substr(self::cleanName($this->getFirstname()), 0, 1) . '.' . self::cleanName($this->getLastname());
+				$login = substr(self::cleanName($this->getFirstname()), 0, 1) . '.' . self::cleanName($this->getLastname());
 		}
 		$appendix = 2;
 		$login_tmp = $login;
@@ -163,7 +162,12 @@ class hubUser extends srModelObjectHubClass {
 		}
 		//$this->ilias_object->updateLogin($login); has restriction --> direct Method
 		$this->ilias_object->setLogin($login);
-		$this->db->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
+		global $ilDB;
+		/**
+		 * @var $ilDB ilDB
+		 */
+
+		$ilDB->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
 			'text',
 			'integer'
 		), array(
@@ -190,7 +194,15 @@ class hubUser extends srModelObjectHubClass {
 			$mail->From($ilSetting->get('admin_email'));
 			$mail->To($this->{$mail_field});
 			$body = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_BODY);
-			$body = strtr($body, array( '[PASSWORD]' => $this->getPasswd(), '[LOGIN]' => $this->getLogin() ));
+
+			$format = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_DATE_FORMAT);
+			$format = $format ? $format : DATE_ISO8601;
+
+			$body = strtr($body, array(
+				'[PASSWORD]' => $this->getPasswd(),
+				'[LOGIN]' => $this->getLogin(),
+				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
+			));
 			$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
 			$mail->Body($body);
 			$mail->Send();
@@ -199,10 +211,7 @@ class hubUser extends srModelObjectHubClass {
 
 
 	public function updateUser() {
-		if ($this->props()->get('update_login') OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME)
-			OR $this->props()->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()
-				->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)
-		) {
+		if ($this->isUpdateRequired()) {
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->setTitle($this->getFirstname() . ' ' . $this->getLastname());
@@ -1160,6 +1169,16 @@ class hubUser extends srModelObjectHubClass {
 		);
 
 		return strtolower(strtr($name, $upas));
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	protected function isUpdateRequired() {
+		return $this->props()->get(hubUserFields::F_UPDATE_LOGIN) OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME) OR $this->props()
+			->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
+			->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
 }
 

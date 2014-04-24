@@ -6,6 +6,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Notification/class.hubOriginNotification.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubCounter.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
 
 /**
  * Class srModelObjectHubClass
@@ -32,14 +33,6 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	 */
 	public $ilias_object;
 	/**
-	 * @var hubOriginObjectProperties
-	 */
-	protected $object_properties;
-	/**
-	 * @var ilHubPlugin
-	 */
-	protected $pl;
-	/**
 	 * @var array
 	 */
 	protected static $counter = array();
@@ -56,28 +49,8 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	/**
 	 * @param int $ext_id
 	 */
-	public function __construct($ext_id = NULL) {
-		$this->pl = new ilHubPlugin();
-		$this->log = hubLog::getInstance();
-		$this->setExtId($ext_id);
-		parent::__construct($ext_id);
-		$this->object_properties = hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
-		global $ilDB;
-		/**
-		 * @var $ilDB ilDB;
-		 */
-		$this->db = $ilDB;
-		/*
-		$database = ilDBWrapperFactory::getWrapper('mysql');
-		$database->setDBHost('127.0.0.1');
-		$database->setDBName('middleware');
-		$database->setDBUser('middleware');
-		$database->setDBPassword('middleware');
-		$database->setDBPort(3306);
-		$database->connect();
-		$this->db = $database;
-		// $this-db = konfigurierbar machen
-		*/
+	public function __construct($ext_id = 0) {
+		parent::__construct($ext_id, new hubConnector());
 	}
 
 
@@ -85,19 +58,16 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	 * @return hubOriginObjectProperties
 	 */
 	public function props() {
-		return $this->object_properties;
-	}
-
-
-	public function loadObjectProperties() {
-		$this->object_properties = hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
+		return hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
 	}
 
 
 	/**
-	 * @var hubProperties
+	 * @deprecated
 	 */
-	public $properties;
+	public function loadObjectProperties() {
+		// $this->object_properties = hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
+	}
 
 
 	/**
@@ -147,7 +117,6 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 		$this->updateDeliveryDate();
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
-		// $hist->setAlreadyDeleted(false);
 		$hist->update();
 		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
 			parent::update();
