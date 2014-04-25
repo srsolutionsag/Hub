@@ -126,6 +126,7 @@ class hubSyncHistory extends ActiveRecord {
 
 	/**
 	 * @return hubCourse
+	 * @deprecated
 	 */
 	public function getHubObject() {
 		$class = hubOrigin::getUsageClass($this->getSrHubOriginId());
@@ -164,6 +165,15 @@ class hubSyncHistory extends ActiveRecord {
 	 */
 	private function isDeletedInILIAS() {
 		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false));
+	}
+
+
+	public function create() {
+		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
+			parent::update();
+		} else {
+			parent::create();
+		}
 	}
 
 
