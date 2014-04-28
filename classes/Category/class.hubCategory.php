@@ -60,7 +60,6 @@ class hubCategory extends hubRepositoryObject {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
 				continue;
 			}
-			//			$hubCategory->loadObjectProperties();
 			$existing_ref_id = 0;
 			switch ($hubCategory->props()->get(hubCategoryFields::SYNCFIELD)) {
 				case 'title':
@@ -73,30 +72,24 @@ class hubCategory extends hubRepositoryObject {
 				$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
 				$history->update();
 			}
-			//			$hubCategory->loadObjectProperties();
-
-			echo "!!!";
-			if (hubSyncCron::getDryRun()) {
-				echo $hubCategory->getTitle() . ': ' . $hubCategory->getHistoryObject()->getStatus();
-				echo '<br>';
-				//				echo hubSyncHistory::hasIliasId($hubCategory, self::$id_type);
-				echo '<br>';
-				echo '<br>';
-			}
-
 			switch ($hubCategory->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					$hubCategory->createCategory();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCategory->createCategory();
+					}
 					hubCounter::incrementCreated($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category created:');
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					$hubCategory->updateCategory();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCategory->updateCategory();
+					}
 					hubCounter::incrementUpdated($hubCategory->getSrHubOriginId());
-					//					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category updated:');
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-					$hubCategory->deleteCategory();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCategory->deleteCategory();
+					}
 					hubCounter::incrementDeleted($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category deleted:');
 					break;
@@ -107,7 +100,9 @@ class hubCategory extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category newly delivered:');
-					$hubCategory->updateCategory();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCategory->updateCategory();
+					}
 					break;
 			}
 			$hubCategory->getHistoryObject()->updatePickupDate();
@@ -180,6 +175,9 @@ class hubCategory extends hubRepositoryObject {
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->update();
 		}
+		$history = $this->getHistoryObject();
+		$history->setAlreadyDeleted(false);
+		$history->setDeleted(false);
 	}
 
 

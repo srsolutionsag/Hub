@@ -26,7 +26,7 @@ class hubSyncCron {
 
 
 	public function __construct() {
-		global $ilDB, $ilUser, $ilCtrl;
+		global $ilUser, $ilCtrl;
 		/**
 		 * @var $ilDB   ilDB
 		 * @var $ilUser ilObjUser
@@ -120,7 +120,7 @@ class hubSyncCron {
 		// User
 		$this->log->write('Sync Users', hubLog::L_PROD);
 		try {
-			if ($this->syncUsageType(hub::OBJECTTYPE_USER) AND ! self::getDryRun()) {
+			if ($this->syncUsageType(hub::OBJECTTYPE_USER)) {
 				hubDurationLogger::start('build_users', false);
 				$class = hub::getObjectClassname(hub::OBJECTTYPE_USER);
 				if (hubUser::buildILIASObjects() !== true) {
@@ -135,7 +135,7 @@ class hubSyncCron {
 		// Category
 		$this->log->write('Sync Categories', hubLog::L_PROD);
 		try {
-			if ($this->syncUsageType(hub::OBJECTTYPE_CATEGORY) AND ! self::getDryRun()) {
+			if ($this->syncUsageType(hub::OBJECTTYPE_CATEGORY)) {
 				hubDurationLogger::start('build_categories', false);
 				if (hubCategory::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -149,7 +149,7 @@ class hubSyncCron {
 		// Courses
 		$this->log->write('Sync Courses', hubLog::L_PROD);
 		try {
-			if ($this->syncUsageType(hub::OBJECTTYPE_COURSE) AND ! self::getDryRun()) {
+			if ($this->syncUsageType(hub::OBJECTTYPE_COURSE)) {
 				hubDurationLogger::start('build_courses', false);
 				if (hubCourse::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -163,7 +163,7 @@ class hubSyncCron {
 		// Memberships
 		$this->log->write('Sync Memberships', hubLog::L_PROD);
 		try {
-			if ($this->syncUsageType(hub::OBJECTTYPE_MEMBERSHIP) AND ! self::getDryRun()) {
+			if ($this->syncUsageType(hub::OBJECTTYPE_MEMBERSHIP)) {
 				hubDurationLogger::start('build_memberships', false);
 				if (hubMembership::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
@@ -283,7 +283,9 @@ class hubSyncCron {
 		$origin->setLastUpdate($time->format(DateTime::ISO8601));
 		$origin->setDuration(hubDurationLogger::stop('overall_origin_' . $origin->getId()));
 		hubDurationLogger::log('overall_origin_' . $origin->getId());
-		$origin->update();
+		if (! self::getDryRun()) {
+			$origin->update();
+		}
 	}
 
 

@@ -38,20 +38,25 @@ class hubUser extends hubObject {
 				continue;
 			}
 			hubCounter::logRunning();
-//			$hubUser->loadObjectProperties();
 			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					$hubUser->createUser();
+					if (! hubSyncCron::getDryRun()) {
+						$hubUser->createUser();
+					}
 					hubCounter::incrementCreated($hubUser->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User created:');
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					$hubUser->updateUser();
+					if (! hubSyncCron::getDryRun()) {
+						$hubUser->updateUser();
+					}
 					hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-					$hubUser->deleteUser();
+					if (! hubSyncCron::getDryRun()) {
+						$hubUser->deleteUser();
+					}
 					hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
 					break;
@@ -62,7 +67,9 @@ class hubUser extends hubObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubUser->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
-					$hubUser->updateUser();
+					if (! hubSyncCron::getDryRun()) {
+						$hubUser->updateUser();
+					}
 					break;
 			}
 			$hubUser->getHistoryObject()->updatePickupDate();

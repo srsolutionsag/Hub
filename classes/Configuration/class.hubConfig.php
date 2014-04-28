@@ -27,6 +27,10 @@ class hubConfig extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $cache = array();
+	/**
+	 * @var array
+	 */
+	protected static $cache_loaded = array();
 
 
 	/**
@@ -44,9 +48,10 @@ class hubConfig extends ActiveRecord {
 	 * @return string
 	 */
 	public static function get($name) {
-		if (! isset(self::$cache[$name])) {
+		if (! self::$cache_loaded[$name]) {
 			$obj = new self($name);
 			self::$cache[$name] = $obj->getValue();
+			self::$cache_loaded[$name] = true;
 		}
 
 		return self::$cache[$name];
