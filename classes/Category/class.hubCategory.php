@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectRepositoryObject.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Category/classes/class.ilObjCategory.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategoryFields.php');
 
@@ -12,8 +12,12 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @revision $r$
  */
-class hubCategory extends srModelObjectRepositoryObject {
+class hubCategory extends hubRepositoryObject {
 
+	/**
+	 * @var int
+	 */
+	public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
 	/**
 	 * @var ilObjCategory
 	 */
@@ -56,7 +60,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
 				continue;
 			}
-			$hubCategory->loadObjectProperties();
+			//			$hubCategory->loadObjectProperties();
 			$existing_ref_id = 0;
 			switch ($hubCategory->props()->get(hubCategoryFields::SYNCFIELD)) {
 				case 'title':
@@ -69,7 +73,17 @@ class hubCategory extends srModelObjectRepositoryObject {
 				$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
 				$history->update();
 			}
-			$hubCategory->loadObjectProperties();
+			//			$hubCategory->loadObjectProperties();
+
+			echo "!!!";
+			if (hubSyncCron::getDryRun()) {
+				echo $hubCategory->getTitle() . ': ' . $hubCategory->getHistoryObject()->getStatus();
+				echo '<br>';
+				//				echo hubSyncHistory::hasIliasId($hubCategory, self::$id_type);
+				echo '<br>';
+				echo '<br>';
+			}
+
 			switch ($hubCategory->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					$hubCategory->createCategory();
@@ -223,7 +237,7 @@ class hubCategory extends srModelObjectRepositoryObject {
 		}
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getRefId());
-		$history->setIliasIdType(self::ILIAS_ID_TYPE_REF_ID);
+		$history->setIliasIdType(self::$id_type);
 		$history->update();
 	}
 

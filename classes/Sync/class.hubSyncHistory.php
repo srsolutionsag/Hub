@@ -26,6 +26,10 @@ class hubSyncHistory extends ActiveRecord {
 	 * @var bool
 	 */
 	protected static $loaded = array();
+	/**
+	 * @var array
+	 */
+	protected static $cache = array();
 
 
 	/**
@@ -34,6 +38,36 @@ class hubSyncHistory extends ActiveRecord {
 	public function __construct($ext_id = 0) {
 		parent::__construct($ext_id, new hubConnector());
 	}
+
+
+	protected static $num = 0;
+
+
+	/**
+	 * @param hubObject $hubObject
+	 *
+	 * @internal param $ext_id
+	 * @internal param $sr_hub_origin_id
+	 *
+	 * @return hubSyncHistory
+	 */
+	public static function getInstance(hubObject $hubObject) {
+		$ext_id = $hubObject->getExtId();
+		$sr_hub_origin_id = $hubObject->getSrHubOriginId();
+		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
+			$obj = new self($ext_id);
+			$obj->setSrHubOriginId($sr_hub_origin_id);
+			$obj->setIliasIdType($hubObject::$id_type);
+			$ilias_id = self::hasIliasId($hubObject);
+			$obj->setIliasId($ilias_id);
+			echo '<pre>' . print_r($obj, 1) . '</pre>';
+
+			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
+		}
+
+		return self::$cache[$sr_hub_origin_id][$ext_id];
+	}
+
 
 
 	//
@@ -87,7 +121,37 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return bool
 	 */
 	public static function isLoaded($sr_hub_origin_id) {
-		return isset(self::$loaded[$sr_hub_origin_id]);
+		return self::$loaded[$sr_hub_origin_id];
+	}
+
+
+	/**
+	 * @param hubObject $hubObject
+	 * @param int                   $type
+	 *
+	 * @return int
+	 */
+	public static function hasIliasId(hubObject $hubObject, $type = hubObject::ILIAS_ID_TYPE_OBJ_ID) {
+		global $ilDB;
+		/**
+		 * @var $ilDB ilDB
+		 */
+		switch ($type) {
+			case hubObject::ILIAS_ID_TYPE_OBJ_ID:
+			case hubObject::ILIAS_ID_TYPE_ROLE:
+			case hubObject::ILIAS_ID_TYPE_USER:
+				$sql = 'SELECT obj_id FROM object_data WHERE import_id = ' . $ilDB->quote($hubObject->returnImportId());
+				$res = $ilDB->fetchObject($ilDB->query($sql));
+
+				return $res->obj_id;
+				break;
+			case hubObject::ILIAS_ID_TYPE_REF_ID:
+				$sql = 'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = ' . $ilDB->quote($hubObject->returnImportId());
+				$res = $ilDB->fetchObject($ilDB->query($sql));
+
+				return $res->ref_id;
+				break;
+		}
 	}
 
 
@@ -164,18 +228,21 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return bool
 	 */
 	private function isDeletedInILIAS() {
-		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID ? true : false));
+		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == hubObject::ILIAS_ID_TYPE_REF_ID ? true : false));
 	}
 
 
-	public function create() {
+	private function isInTrash() {
+	}
+
+
+	/*public function create() {
 		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
 			parent::update();
 		} else {
 			parent::create();
 		}
-	}
-
+	}*/
 
 	/**
 	 * @var int

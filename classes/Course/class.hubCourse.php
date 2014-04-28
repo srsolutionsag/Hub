@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectRepositoryObject.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourseFields.php');
 
@@ -12,7 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @revision $r$
  */
-class hubCourse extends srModelObjectRepositoryObject {
+class hubCourse extends hubRepositoryObject {
 
 	/**
 	 * @var ilObjCourse
@@ -41,7 +41,7 @@ class hubCourse extends srModelObjectRepositoryObject {
 			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
 				continue;
 			}
-			$hubCourse->loadObjectProperties();
+//			$hubCourse->loadObjectProperties();
 			$full_title = $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . $hubCourse->getTitleExtension();
 			switch ($hubCourse->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:

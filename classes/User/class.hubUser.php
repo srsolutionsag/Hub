@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectHubClass.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubObject.php');
 require_once('./Services/Mail/classes/class.ilMimeMail.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUserFields.php');
 
@@ -12,7 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @revision $r$
  */
-class hubUser extends srModelObjectHubClass {
+class hubUser extends hubObject {
 
 	const GENDER_MALE = 'm';
 	const GENDER_FEMALE = 'f';
@@ -38,7 +38,7 @@ class hubUser extends srModelObjectHubClass {
 				continue;
 			}
 			hubCounter::logRunning();
-			$hubUser->loadObjectProperties();
+//			$hubUser->loadObjectProperties();
 			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:

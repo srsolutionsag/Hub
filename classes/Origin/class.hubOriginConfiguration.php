@@ -92,6 +92,10 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @db_length       2000
 	 */
 	protected $summary_email;
+	/**
+	 * @var hubOriginConfiguration[]
+	 */
+	protected static $cache = array();
 
 
 	/**
@@ -100,17 +104,21 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @return hubOriginConfiguration
 	 */
 	public static function conf($sr_hub_origin_id) {
-		$where = array( 'sr_hub_origin_id' => $sr_hub_origin_id );
-		if (self::where($where)->hasSets()) {
-			$activeRecord = self::where($where)->first();
+		if (! isset(self::$cache[$sr_hub_origin_id])) {
+			$where = array( 'sr_hub_origin_id' => $sr_hub_origin_id );
+			if (self::where($where)->hasSets()) {
+				$activeRecord = self::where($where)->first();
 
-			return $activeRecord;
-		} else {
-			$obj = new self();
-			$obj->setSrHubOriginId($sr_hub_origin_id);
+				self::$cache[$sr_hub_origin_id] = $activeRecord;
+			} else {
+				$obj = new self();
+				$obj->setSrHubOriginId($sr_hub_origin_id);
 
-			return $obj;
+				self::$cache[$sr_hub_origin_id] = $obj;
+			}
 		}
+
+		return self::$cache[$sr_hub_origin_id];
 	}
 
 
