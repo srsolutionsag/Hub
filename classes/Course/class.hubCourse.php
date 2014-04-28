@@ -41,21 +41,27 @@ class hubCourse extends hubRepositoryObject {
 			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
 				continue;
 			}
-//			$hubCourse->loadObjectProperties();
+
 			$full_title = $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . $hubCourse->getTitleExtension();
-			switch ($hubCourse->getHistoryObject()->getStatus()) {
+			$history = $hubCourse->getHistoryObject();
+			switch ($history->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					$hubCourse->createCourse();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCourse->createCourse();
+					}
 					hubCounter::incrementCreated($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses created:');
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					$hubCourse->updateCourse();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCourse->updateCourse();
+					}
 					hubCounter::incrementUpdated($hubCourse->getSrHubOriginId());
-					//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses updated:');
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-					$hubCourse->deleteCourse();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCourse->deleteCourse();
+					}
 					hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses deleted:');
 					break;
@@ -66,10 +72,12 @@ class hubCourse extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
-					$hubCourse->updateCourse();
+					if (! hubSyncCron::getDryRun()) {
+						$hubCourse->updateCourse();
+					}
 					break;
 			}
-			$hubCourse->getHistoryObject()->updatePickupDate();
+			$history->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCourse->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCourse);
 		}
@@ -139,6 +147,9 @@ class hubCourse extends hubRepositoryObject {
 			$this->updateAdditionalFields();
 			$this->ilias_object->update();
 		}
+		$history = $this->getHistoryObject();
+		$history->setAlreadyDeleted(false);
+		$history->setDeleted(false);
 	}
 
 

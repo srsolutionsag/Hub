@@ -71,18 +71,23 @@ class hubMembership extends hubObject {
 				continue;
 			}
 			hubCounter::logBuilding();
-//			$hubMembership->loadObjectProperties();
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					$hubMembership->createMembership();
+					if (! hubSyncCron::getDryRun()) {
+						$hubMembership->createMembership();
+					}
 					hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					$hubMembership->updateMembership();
+					if (! hubSyncCron::getDryRun()) {
+						$hubMembership->updateMembership();
+					}
 					hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-					$hubMembership->deleteMembership();
+					if (! hubSyncCron::getDryRun()) {
+						$hubMembership->deleteMembership();
+					}
 					hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
@@ -91,7 +96,9 @@ class hubMembership extends hubObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $hubMembership->getExtId(), 'Membership newly delivered:');
-					$hubMembership->createMembership();
+					if (! hubSyncCron::getDryRun()) {
+						$hubMembership->createMembership();
+					}
 					break;
 			}
 			$hubMembership->getHistoryObject()->updatePickupDate();

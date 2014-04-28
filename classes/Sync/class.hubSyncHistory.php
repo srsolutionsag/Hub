@@ -22,6 +22,7 @@ class hubSyncHistory extends ActiveRecord {
 	const STATUS_DELETED_IN_ILIAS = self::STATUS_NEW; // 4
 	const STATUS_NEWLY_DELIVERED = 5; // 5
 	const STATUS_ALREADY_DELETED = 6;
+	const STATUS_IN_TRASH = self::STATUS_UPDATED; // 7
 	/**
 	 * @var bool
 	 */
@@ -40,9 +41,6 @@ class hubSyncHistory extends ActiveRecord {
 	}
 
 
-	protected static $num = 0;
-
-
 	/**
 	 * @param hubObject $hubObject
 	 *
@@ -54,19 +52,41 @@ class hubSyncHistory extends ActiveRecord {
 	public static function getInstance(hubObject $hubObject) {
 		$ext_id = $hubObject->getExtId();
 		$sr_hub_origin_id = $hubObject->getSrHubOriginId();
+
+		if (! $ext_id OR ! $sr_hub_origin_id) {
+			return new self($ext_id);
+		}
+
 		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
 			$obj = new self($ext_id);
 			$obj->setSrHubOriginId($sr_hub_origin_id);
 			$obj->setIliasIdType($hubObject::$id_type);
-			$ilias_id = self::hasIliasId($hubObject);
-			$obj->setIliasId($ilias_id);
-			echo '<pre>' . print_r($obj, 1) . '</pre>';
+			$wh = array( 'ext_id' => $ext_id, 'sr_hub_origin_id' => $sr_hub_origin_id );
+
+			if (! self::where($wh)->hasSets()) {
+				$obj->create();
+			}
 
 			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
 		}
 
 		return self::$cache[$sr_hub_origin_id][$ext_id];
 	}
+
+
+	public function update() {
+		parent::update();
+		self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
+	}
+
+
+	public function create() {
+		parent::create();
+		self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
+	}
+
+
+
 
 
 
@@ -127,7 +147,7 @@ class hubSyncHistory extends ActiveRecord {
 
 	/**
 	 * @param hubObject $hubObject
-	 * @param int                   $type
+	 * @param int       $type
 	 *
 	 * @return int
 	 */
@@ -189,17 +209,6 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @return hubCourse
-	 * @deprecated
-	 */
-	public function getHubObject() {
-		$class = hubOrigin::getUsageClass($this->getSrHubOriginId());
-
-		return $class::find($this->getExtId());
-	}
-
-
-	/**
 	 * @return string
 	 * @description Return the Name of your Database Table
 	 */
@@ -235,14 +244,6 @@ class hubSyncHistory extends ActiveRecord {
 	private function isInTrash() {
 	}
 
-
-	/*public function create() {
-		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
-			parent::update();
-		} else {
-			parent::create();
-		}
-	}*/
 
 	/**
 	 * @var int
