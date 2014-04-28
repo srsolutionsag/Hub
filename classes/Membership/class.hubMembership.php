@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectRepositoryObject.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
 require_once('./Services/Membership/classes/class.ilParticipants.php');
 require_once('./Modules/Course/classes/class.ilCourseParticipants.php');
@@ -16,7 +16,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @revision $r$
  */
-class hubMembership extends srModelObjectHubClass {
+class hubMembership extends hubObject {
 
 	const DELIMITER = '###';
 	const CONT_ROLE_CRS_ADMIN = 1;
@@ -71,7 +71,7 @@ class hubMembership extends srModelObjectHubClass {
 				continue;
 			}
 			hubCounter::logBuilding();
-			$hubMembership->loadObjectProperties();
+//			$hubMembership->loadObjectProperties();
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					$hubMembership->createMembership();

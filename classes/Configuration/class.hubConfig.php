@@ -23,6 +23,10 @@ class hubConfig extends ActiveRecord {
 	const F_ASYNC_CLI_PHP = 'async_cli_php';
 	const F_ADMIN_ROLES = 'admin_roles';
 	const F_IMPORT_EXPORT = 'import_export';
+	/**
+	 * @var array
+	 */
+	protected static $cache = array();
 
 
 	/**
@@ -40,9 +44,12 @@ class hubConfig extends ActiveRecord {
 	 * @return string
 	 */
 	public static function get($name) {
-		$obj = new self($name);
+		if (! isset(self::$cache[$name])) {
+			$obj = new self($name);
+			self::$cache[$name] = $obj->getValue();
+		}
 
-		return $obj->getValue();
+		return self::$cache[$name];
 	}
 
 

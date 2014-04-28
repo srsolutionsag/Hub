@@ -47,6 +47,7 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 		//		echo '<pre>' . print_r($a_set, 1) . '</pre>';
 		$hubCategory = hubCategory::find($a_set['ext_id']);
 		$hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
+		$hubSyncHistory = hubSyncHistory::getInstance($hubCategory);
 		$this->addCell($hubCategory->getExtId());
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCategory->getTitlePrefix()
 			. $hubCategory->getTitle() . '</a>');

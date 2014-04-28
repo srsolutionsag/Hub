@@ -116,6 +116,18 @@ class hubOriginGUI {
 		}
 	}
 
+	public function dryRun() {
+		if (ilHubAccess::checkAccess()) {
+			$cron = new hubSyncCron();
+			$cron->setDryrun(true);
+			$cron->run();
+			if (! hub::isCli()) {
+				ilUtil::sendInfo('Cronjob run');
+			}
+			$this->index();
+		}
+	}
+
 
 	public function runAsync() {
 		if (ilHubAccess::checkAccess()) {

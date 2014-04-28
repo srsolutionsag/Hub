@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.srModelObjectHubClass.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubObject.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOriginConfiguration.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubCounter.php');
@@ -374,11 +374,11 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param srModelObjectHubClass $hubObject
+	 * @param hubObject $hubObject
 	 *
-	 * @return srModelObjectHubClass
+	 * @return hubObject
 	 */
-	public static function afterObjectModification(srModelObjectHubClass $hubObject) {
+	public static function afterObjectModification(hubObject $hubObject) {
 		return $hubObject;
 	}
 

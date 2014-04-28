@@ -9,11 +9,11 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
 
 /**
- * Class srModelObjectHubClass
+ * Class hubObject
  *
  * @author Fabian Schmid <fs@studer-raimann.ch>
  */
-abstract class srModelObjectHubClass extends ActiveRecord {
+abstract class hubObject extends ActiveRecord {
 
 	const MODULO = 3000;
 	const IMPORT_PREFIX = 'srhub_';
@@ -36,6 +36,10 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $counter = array();
+	/**
+	 * @var int
+	 */
+	public static $id_type = self::ILIAS_ID_TYPE_OBJ_ID;
 
 
 	/**
@@ -74,22 +78,7 @@ abstract class srModelObjectHubClass extends ActiveRecord {
 	 * @return hubSyncHistory
 	 */
 	public function getHistoryObject() {
-		/**
-		 * @var $history hubSyncHistory
-		 */
-		$where = array(
-			'ext_id' => $this->getExtId(),
-			'sr_hub_origin_id' => $this->getSrHubOriginId(),
-		);
-		$history = hubSyncHistory::where($where)->first();
-		if (! $history) {
-			$history = new hubSyncHistory();
-			$history->setExtId($this->getExtId());
-			$history->setSrHubOriginId($this->getSrHubOriginId());
-			$history->create();
-		}
-
-		return $history;
+		return hubSyncHistory::getInstance($this);
 	}
 
 

@@ -58,11 +58,11 @@ class hubSyncHistoryTableGUI extends srModelObjectTableGUI {
 		//          [ext_id] => 00002426
 		//      )
 		switch ($a_set['ilias_id_type']) {
-			case srModelObjectHubClass::ILIAS_ID_TYPE_OBJ_ID:
-			case srModelObjectHubClass::ILIAS_ID_TYPE_USER:
+			case hubObject::ILIAS_ID_TYPE_OBJ_ID:
+			case hubObject::ILIAS_ID_TYPE_USER:
 				$title = ilObject2::_lookupTitle($a_set['ilias_id']);
 				break;
-			case srModelObjectHubClass::ILIAS_ID_TYPE_REF_ID:
+			case hubObject::ILIAS_ID_TYPE_REF_ID:
 				$title = ilObject2::_lookupTitle(ilObject2::_lookupObjId($a_set['ilias_id']));
 				$link = ilLink::_getLink($a_set['ilias_id']);
 				break;

@@ -1,12 +1,12 @@
 <?php
-require_once('class.srModelObjectHubClass.php');
+require_once('class.hubObject.php');
 
 /**
- * Class srModelObjectRepositoryObject
+ * Class hubRepositoryObject
  *
  * @author Fabian Schmid <fs@studer-raimann.ch>
  */
-abstract class srModelObjectRepositoryObject extends srModelObjectHubClass {
+abstract class hubRepositoryObject extends hubObject {
 
 	const PARENT_ID_TYPE_REF_ID = 1;
 	const PARENT_ID_TYPE_EXTERNAL_ID = 2;
