@@ -7,7 +7,7 @@ require_once('class.hubConfig.php');
  * Form-Class hubConfigFormGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version           $Id:
+ * @version           1.1.02
  *
  */
 class hubConfigFormGUI extends ilPropertyFormGUI {
@@ -37,6 +37,10 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 	protected function initForm() {
 		$this->setTitle($this->pl->txt('admin_form_title'));
+
+		$te = new ilTextInputGUI($this->pl->txt('admin_root_path'), hubConfig::F_ROOT_PATH);
+		$te->setInfo($this->pl->txt('admin_root_path_info'));
+		$this->addItem($te);
 
 		$te = new ilTextInputGUI($this->pl->txt('admin_origins_path'), hubConfig::F_ORIGINS_PATH);
 		$te->setInfo($this->pl->txt('admin_origins_path_info'));

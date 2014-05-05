@@ -8,12 +8,30 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
+ * @version 1.1.02
  *
  * @revision $r$
  */
 class hubCategory extends hubRepositoryObject {
 
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_is_notnull       true
+	 * @db_fieldtype        integer
+	 * @db_length           1
+	 */
+	protected $show_infopage = true;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_is_notnull       true
+	 * @db_fieldtype        integer
+	 * @db_length           1
+	 */
+	protected $show_news = true;
 	/**
 	 * @var int
 	 */
@@ -277,6 +295,38 @@ class hubCategory extends hubRepositoryObject {
 		if (! isset($this->ilias_object)) {
 			$this->ilias_object = ilObjectFactory::getInstanceByRefId($this->getHistoryObject()->getIliasId());
 		}
+	}
+
+
+	/**
+	 * @param int $show_infopage
+	 */
+	public function setShowInfopage($show_infopage) {
+		$this->show_infopage = $show_infopage;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getShowInfopage() {
+		return $this->show_infopage;
+	}
+
+
+	/**
+	 * @param int $show_news
+	 */
+	public function setShowNews($show_news) {
+		$this->show_news = $show_news;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getShowNews() {
+		return $this->show_news;
 	}
 }
 

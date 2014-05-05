@@ -1,11 +1,12 @@
 <?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
 
 /**
  * Class hub
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
+ * @version 1.1.02
  *
  * @revision $r$
  */
@@ -68,10 +69,22 @@ class hub {
 	 * @return string
 	 */
 	public static function getRootPath() {
-		$path = realpath(dirname(__FILE__) . '/../../../../../../../..');
-		$real_path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$override_file = dirname(__FILE__) . '/Configuration/root';
+		if (is_file($override_file)) {
+			$path = file_get_contents($override_file);
+			$path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
-		return $real_path;
+			return $path;
+		}
+		$root_config = hubConfig::get(hubConfig::F_ROOT_PATH);
+		if ($root_config) {
+			$path = rtrim($root_config, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		} else {
+			$path = realpath(dirname(__FILE__) . '/../../../../../../../..');
+			$path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		}
+
+		return $path;
 	}
 
 
@@ -80,5 +93,9 @@ class hub {
 	 */
 	public static function isCli() {
 		return (php_sapi_name() === 'cli');
+	}
+
+
+	public static function initILIAS() {
 	}
 }

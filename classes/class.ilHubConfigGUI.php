@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @author  Alex Killing <alex.killing@gmx.de>
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version $Id$
+ * @version 1.1.02
  *
  */
 class ilHubConfigGUI extends ilPluginConfigGUI {

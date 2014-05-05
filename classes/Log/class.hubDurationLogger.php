@@ -3,6 +3,9 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 
 /**
  * Class hubDurationLogger
+ *
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @version 1.1.02
  */
 class hubDurationLogger {
 

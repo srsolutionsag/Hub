@@ -4,7 +4,8 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 /**
  * Class hubOriginException
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @version 1.1.02
  */
 class hubOriginException extends Exception {
 
@@ -28,7 +29,7 @@ class hubOriginException extends Exception {
 		self::CHECKSUM_MISMATCH => 'Die Anzahl Datensätze stimmt nicht mit der Checksumme überein.',
 		self::BUILD_ENTRIES_FAILED => 'Die hubObjects konnten nicht erfolgreich erstellt werden.',
 		self::BUILD_ILIAS_OBJECTS_FAILED => 'Die ILIAS-Objecte konnten nicht erfolgreich modifiziert werden.',
-		self::TOO_MANY_LOST_DATASETS => 'Die Anzahl gelieferter Datensätze beträgt weniger als 90% der bestehenden Datensätze',
+		self::TOO_MANY_LOST_DATASETS => 'Die Anzahl gelieferter Datensätze beträgt weniger als der vorgegebene Prozentsatz der bestehenden Datensätze',
 		self::INIT_STATUS_FAILED => 'Der Status der hubObjekte konnte nicht erfolgreich gelesen werden.',
 	);
 

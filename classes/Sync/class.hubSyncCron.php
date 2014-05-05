@@ -1,12 +1,12 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
+
 
 /**
  * hubSyncCron
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
- * @version 1.0.0
+ * @version 1.1.02
  * @revision $r$
  */
 class hubSyncCron {
@@ -53,22 +53,12 @@ class hubSyncCron {
 	public static function initILIAS() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		chdir(Hub::getRootPath());
-		require_once('./include/inc.ilias_version.php');
-		require_once('./Services/Component/classes/class.ilComponent.php');
 		require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
-
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.2.999')) {
-			include_once "Services/Context/classes/class.ilContext.php";
-			ilContext::init(ilContext::CONTEXT_CRON);
-			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
-		} else {
-			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
-		}
+		ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
 		$_COOKIE['ilClientId'] = $_SERVER['argv'][3];
 		$_POST['username'] = $_SERVER['argv'][1];
 		$_POST['password'] = $_SERVER['argv'][2];
 		require_once('./include/inc.header.php');
-
 		self::includes();
 	}
 
@@ -87,7 +77,6 @@ class hubSyncCron {
 
 	public function runSingleOrigin() {
 		self::includes();
-
 		$this->log->write('New Sync initiated', hubLog::L_PROD);
 		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
 		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
@@ -98,7 +87,7 @@ class hubSyncCron {
 			if ($this->syncOrigin($origin)) {
 				$class = hubOrigin::getUsageClass($this->origin_id);
 				if ($class::buildILIASObjects() !== true) {
-					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, $origin, true);
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, $origin, ! self::getDryRun());
 				};
 				$class::logCounts();
 			}
@@ -124,7 +113,7 @@ class hubSyncCron {
 				hubDurationLogger::start('build_users', false);
 				$class = hub::getObjectClassname(hub::OBJECTTYPE_USER);
 				if (hubUser::buildILIASObjects() !== true) {
-					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				};
 				hubUser::logCounts();
 				hubDurationLogger::log('build_users');
@@ -138,7 +127,7 @@ class hubSyncCron {
 			if ($this->syncUsageType(hub::OBJECTTYPE_CATEGORY)) {
 				hubDurationLogger::start('build_categories', false);
 				if (hubCategory::buildILIASObjects() !== true) {
-					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
 				hubCategory::logCounts();
 				hubDurationLogger::log('build_categories');
@@ -152,7 +141,7 @@ class hubSyncCron {
 			if ($this->syncUsageType(hub::OBJECTTYPE_COURSE)) {
 				hubDurationLogger::start('build_courses', false);
 				if (hubCourse::buildILIASObjects() !== true) {
-					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
 				hubCourse::logCounts();
 				hubDurationLogger::log('build_courses');
@@ -166,7 +155,7 @@ class hubSyncCron {
 			if ($this->syncUsageType(hub::OBJECTTYPE_MEMBERSHIP)) {
 				hubDurationLogger::start('build_memberships', false);
 				if (hubMembership::buildILIASObjects() !== true) {
-					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), true);
+					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
 				hubMembership::logCounts();
 				hubDurationLogger::log('build_memberships');
@@ -214,6 +203,9 @@ class hubSyncCron {
 	 * @throws hubOriginException
 	 */
 	private function syncOrigin(hubOrigin $origin) {
+		/**
+		 * @var $originObject hubOrigin
+		 */
 		try {
 			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
 			$originObject = $origin->getObject();
@@ -238,28 +230,28 @@ class hubSyncCron {
 								hubDurationLogger::log('build_ext_objects_origin_' . $origin->getId());
 								$this->writeLastUpdate($origin);
 								$originObject->afterSync();
-
 								hubDurationLogger::start('init_status_' . $origin->getId(), false);
 								if (! hubSyncHistory::initStatus($origin->getId())) {
-									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, true);
+									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, ! self::getDryRun());
 								}
 								hubDurationLogger::log('init_status_' . $origin->getId());
 
 								return true;
 							} else {
-								throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, true);
+								throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, ! self::getDryRun());
 							}
 						} else {
-							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, true);
+							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, ! self::getDryRun());
 						}
 					} else {
-						throw new hubOriginException(hubOriginException::TOO_MANY_LOST_DATASETS, $origin, true);
+						$percentage = $originObject->props()->get(hubOriginObjectPropertiesFields::CHECK_AMOUNT_PERCENTAGE) . '%';
+						throw new hubOriginException(hubOriginException::TOO_MANY_LOST_DATASETS, $origin, ! self::getDryRun(), $percentage);
 					}
 				} else {
-					throw new hubOriginException(hubOriginException::PARSE_DATA_FAILED, $origin, true);
+					throw new hubOriginException(hubOriginException::PARSE_DATA_FAILED, $origin, ! self::getDryRun());
 				}
 			} else {
-				throw new hubOriginException(hubOriginException::CONNECTION_FAILED, $origin, true);
+				throw new hubOriginException(hubOriginException::CONNECTION_FAILED, $origin, ! self::getDryRun());
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
@@ -272,6 +264,9 @@ class hubSyncCron {
 			ilUtil::sendFailure(implode('<br>', $this->messages), true);
 		}
 		hubOrigin::sendSummaries();
+		if (self::getDryRun() OR ! hub::isCli()) {
+			ilUtil::sendInfo(hubOriginNotification::getSummaryString(), false);
+		}
 	}
 
 

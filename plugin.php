@@ -3,7 +3,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 if (! ilHubPlugin::checkPreconditions()) {
 }
 $id = 'hub';
-$version = '1.1.00';
+$version = '1.1.02';
 $ilias_min_version = '4.2.0';
 $ilias_max_version = '4.5.999';
 $responsible = 'Fabian Schmid';

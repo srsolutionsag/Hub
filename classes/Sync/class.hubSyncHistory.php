@@ -10,7 +10,7 @@ require_once('./Services/Object/classes/class.ilObject2.php');
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
+ * @version 1.1.02
  *
  * @revision $r$
  */

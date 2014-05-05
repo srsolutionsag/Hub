@@ -4,7 +4,9 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 /**
  * Class hubCategoryFields
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ *
+ * @version 1.1.02
  */
 class hubCategoryFields extends hubOriginObjectPropertiesFields {
 

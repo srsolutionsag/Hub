@@ -7,7 +7,7 @@ require_once('class.hubCategoryTableGUI.php');
  * GUI-Class hubCategoryGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version           $Id:
+ * @version           1.1.02
  *
  */
 class hubCategoryGUI {

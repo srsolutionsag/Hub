@@ -4,7 +4,8 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 /**
  * Class hubOriginNotification
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @version 1.1.02
  */
 class hubOriginNotification {
 
@@ -36,10 +37,10 @@ class hubOriginNotification {
 		$origin->loadConf();
 		$mail = $origin->conf()->getSummaryEmail();
 		if ($mail AND $origin->getActive()) {
-			$str = 'hubSyncSummary ' . $origin->getTitle() . ' (' . date('d.m.Y - H:i:s') . ')';
+			$str = self::buildSubject($origin);
 			mail($mail, $str, self::buildMessage($sr_hub_origin_id));
 		}
-		self::$messages[$sr_hub_origin_id] = array();
+		//self::$messages[$sr_hub_origin_id] = array();
 	}
 
 
@@ -61,6 +62,32 @@ class hubOriginNotification {
 		}
 
 		return $message;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public static function getSummaryString() {
+		$string = '';
+		foreach (array_keys(self::$messages) as $sr_hub_origin_id) {
+			$string .= self::buildSubject(hubOrigin::find($sr_hub_origin_id)) . PHP_EOL;
+			$string .= self::buildMessage($sr_hub_origin_id);
+		}
+
+		return nl2br($string);
+	}
+
+
+	/**
+	 * @param hubOrigin $origin
+	 *
+	 * @return string
+	 */
+	protected static function buildSubject(hubOrigin $origin) {
+		$str = 'hubSyncSummary ' . $origin->getTitle() . ' (' . date('d.m.Y - H:i:s') . ')';
+
+		return $str;
 	}
 }
 
