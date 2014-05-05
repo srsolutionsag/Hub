@@ -8,7 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
+ * @version 1.1.02
  *
  * @revision $r$
  */
@@ -320,50 +320,12 @@ class hubCourse extends hubRepositoryObject {
 	}
 
 
-	/**
-	 * @param hubOrigin $origin
-	 */
-	public function updateInto(hubOrigin $origin) {
-		$temp = $this->administrators;
-		$this->administrators = @implode(',', $this->administrators);
-		parent::updateInto($origin);
-		$this->administrators = $temp;
-	}
-
-
-	public function read() {
-		parent::read();
-		$this->administrators = @explode(',', $this->administrators);
-	}
-
-
-	/**
-	 * @param int $usr_id
-	 */
-	public function addAdmin($usr_id) {
-		$this->administrators[] = $usr_id;
-		$this->administrators = array_unique($this->administrators);
-	}
-
-
-	/**
-	 * @return bool
-	 *
-	 * @deprecated
-	 */
-	protected function updateAdministrators() {
-		return false;
-		if (count($this->getAdministrators()) >= 1) {
-			if ($this->ilias_object) {
-				$memberObject = $this->ilias_object->getMemberObject();
-				foreach ($this->getAdministrators() as $usr_id) {
-					if (! $memberObject->isAdmin()) {
-						$memberObject->add($usr_id, IL_CRS_ADMIN);
-					}
-				}
-			}
+	protected function initObject() {
+		if (! isset($this->ilias_object)) {
+			$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
 		}
 	}
+
 
 
 	//
@@ -465,6 +427,14 @@ class hubCourse extends hubRepositoryObject {
 	 * @db_length           128
 	 */
 	protected $responsible_email = '';
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        text
+	 * @db_length           256
+	 */
+	protected $notification_email = '';
 	/**
 	 * @var int
 	 *
@@ -639,22 +609,6 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
-	 * @param array $administrators
-	 */
-	public function setAdministrators($administrators) {
-		$this->administrators = $administrators;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAdministrators() {
-		return $this->administrators;
-	}
-
-
-	/**
 	 * @param string $responsible_email
 	 */
 	public function setResponsibleEmail($responsible_email) {
@@ -686,10 +640,19 @@ class hubCourse extends hubRepositoryObject {
 	}
 
 
-	protected function initObject() {
-		if (! isset($this->ilias_object)) {
-			$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
-		}
+	/**
+	 * @param string $notification_email
+	 */
+	public function setNotificationEmail($notification_email) {
+		$this->notification_email = $notification_email;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getNotificationEmail() {
+		return $this->notification_email;
 	}
 }
 

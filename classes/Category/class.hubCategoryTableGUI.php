@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * TableGUI hubCategoryTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version $Id:
+ * @version 1.1.02
  *
  */
 class hubCategoryTableGUI extends srModelObjectTableGUI {
@@ -44,16 +44,13 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 		 * @var $hubSyncHistory   hubSyncHistory
 		 * @var $hubCategory      hubCategory
 		 */
-
 		$hubCategory = hubCategory::find($a_set['ext_id']);
 		$hubSyncHistory = hubSyncHistory::getInstance($hubCategory);
-
 		$this->addCell($hubCategory->getExtId());
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCategory->getTitlePrefix()
 			. $hubCategory->getTitle() . '</a>');
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCategory->getParentId()) . '\'>'
 			. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCategory->getParentId())) . '</a>');
-
 		$this->addCell($this->pl->txt('list_status_' . $hubSyncHistory->getTemporaryStatus()));
 
 		return true;

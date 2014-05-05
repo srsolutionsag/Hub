@@ -4,7 +4,8 @@ require_once('class.hubObject.php');
 /**
  * Class hubRepositoryObject
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @version 1.1.02
  */
 abstract class hubRepositoryObject extends hubObject {
 

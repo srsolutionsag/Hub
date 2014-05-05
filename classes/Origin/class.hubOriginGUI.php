@@ -18,7 +18,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * GUI-Class hubOriginGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version           $Id:
+ * @version           1.1.02
  *
  */
 class hubOriginGUI {
@@ -110,11 +110,12 @@ class hubOriginGUI {
 			$cron = new hubSyncCron();
 			$cron->run();
 			if (! hub::isCli()) {
-				ilUtil::sendInfo('Cronjob run');
+				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->index();
 		}
 	}
+
 
 	public function dryRun() {
 		if (ilHubAccess::checkAccess()) {
@@ -122,7 +123,7 @@ class hubOriginGUI {
 			$cron->setDryrun(true);
 			$cron->run();
 			if (! hub::isCli()) {
-				ilUtil::sendInfo('Cronjob run');
+				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->index();
 		}
@@ -134,7 +135,7 @@ class hubOriginGUI {
 			$async = new hubAsyncSync();
 			$async->run();
 			if (! hub::isCli()) {
-				ilUtil::sendInfo('Cronjob run');
+				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->ctrl->redirect($this, 'index');
 		}

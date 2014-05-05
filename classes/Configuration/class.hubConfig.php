@@ -4,7 +4,8 @@ require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRe
 /**
  * Class hubConfig
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @version 1.1.02
  */
 class hubConfig extends ActiveRecord {
 
@@ -15,6 +16,7 @@ class hubConfig extends ActiveRecord {
 	const F_DB_PASSWORD = 'db_password';
 	const F_DB_PORT = 'db_port';
 	const F_ORIGINS_PATH = 'origins_path';
+	const F_ROOT_PATH = 'root_path';
 	const F_LOCK = 'lock';
 	const F_USE_ASYNC = 'use_async';
 	const F_ASYNC_USER = 'async_user';
