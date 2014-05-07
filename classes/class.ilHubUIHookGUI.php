@@ -43,7 +43,8 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	 * @return array
 	 */
 	public function getHTML($a_comp, $a_part, $a_par = array()) {
-		global $ilUser, $rbacreview;
+		global $ilUser, $rbacreview, $ilCtrl;
+
 		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
@@ -63,6 +64,14 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 			$_GET['cmd'] = $cmd;
 			$_GET['cmdClass'] = $cmdClass;
 			$_GET['cmdNode'] = $cmdNode;
+
+
+			$link = $this->ctrl->getLinkTargetByClass(array(
+				'ilRouterGUI',
+				'hubGUI',
+				'hubOriginGUI'
+			), 'index');
+
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (! in_array('CtrlMainMenu', $plugins)) {
