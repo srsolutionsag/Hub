@@ -7,7 +7,7 @@ require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
  * Class hubOriginObjectPropertiesFormGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  */
 abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 

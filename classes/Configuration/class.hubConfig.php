@@ -1,11 +1,12 @@
 <?php
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+require_once('./include/inc.ilias_version.php');
 
 /**
  * Class hubConfig
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  * 
  */
 class hubConfig extends ActiveRecord {
@@ -26,6 +27,10 @@ class hubConfig extends ActiveRecord {
 	const F_ASYNC_CLI_PHP = 'async_cli_php';
 	const F_ADMIN_ROLES = 'admin_roles';
 	const F_IMPORT_EXPORT = 'import_export';
+	const MIN_ILIAS_VERSION = self::ILIAS_43;
+	const ILIAS_43 = 43;
+	const ILIAS_44 = 44;
+	const ILIAS_45 = 45;
 	/**
 	 * @var array
 	 */
@@ -42,6 +47,56 @@ class hubConfig extends ActiveRecord {
 	 */
 	static function returnDbTableName() {
 		return 'sr_hub_conf';
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public static function getILIASVersion() {
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.5.000')) {
+			return self::ILIAS_45;
+		}
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.4.000')) {
+			return self::ILIAS_44;
+		}
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.3.000')) {
+			return self::ILIAS_43;
+		}
+
+		return 0;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public static function isILIASSupported() {
+		return self::getILIASVersion() >= self::MIN_ILIAS_VERSION;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public static function is44() {
+		return self::getILIASVersion() >= self::ILIAS_44;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public static function is43() {
+		return self::getILIASVersion() >= self::ILIAS_43;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public static function is45() {
+		return self::getILIASVersion() >= self::ILIAS_45;
 	}
 
 

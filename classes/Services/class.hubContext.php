@@ -7,7 +7,7 @@ require_once('./Services/Context/classes/class.ilContext.php');
  *
  * @author  Jörg Lützenkirchen <luetzenkirchen@leifos.com>
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  *
  * @ingroup ServicesContext
  */

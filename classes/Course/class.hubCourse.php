@@ -8,9 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
- *
- * @revision $r$
+ * @version 1.1.03
  */
 class hubCourse extends hubRepositoryObject {
 
@@ -67,7 +65,7 @@ class hubCourse extends hubRepositoryObject {
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
+//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
 					break;
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
@@ -432,7 +430,7 @@ class hubCourse extends hubRepositoryObject {
 	 *
 	 * @db_has_field        true
 	 * @db_fieldtype        text
-	 * @db_length           256
+	 * @db_length           128
 	 */
 	protected $notification_email = '';
 	/**

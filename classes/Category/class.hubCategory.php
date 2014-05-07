@@ -2,23 +2,23 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Category/classes/class.ilObjCategory.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategoryFields.php');
+require_once('./Services/Container/classes/class.ilContainerSorting.php');
 
 /**
  * Class hubCategory
  *
- *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  *
- * @revision $r$
  */
 class hubCategory extends hubRepositoryObject {
 
+	const ORDER_TYPE_TITLE = 0;
+	const ORDER_TYPE_MANUALLY = 1;
 	/**
 	 * @var int
 	 *
 	 * @db_has_field        true
-	 * @db_is_notnull       true
 	 * @db_fieldtype        integer
 	 * @db_length           1
 	 */
@@ -27,11 +27,26 @@ class hubCategory extends hubRepositoryObject {
 	 * @var int
 	 *
 	 * @db_has_field        true
-	 * @db_is_notnull       true
 	 * @db_fieldtype        integer
 	 * @db_length           1
 	 */
 	protected $show_news = true;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           8
+	 */
+	protected $position = 0;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           1
+	 */
+	protected $order_type = self::ORDER_TYPE_TITLE;
 	/**
 	 * @var int
 	 */
@@ -164,6 +179,18 @@ class hubCategory extends hubRepositoryObject {
 	}
 
 
+	/**
+	 * FSX TODO
+	 */
+	protected function updateSorting() {
+		/**
+		 * @var $sorting ilContainerSorting
+		 */
+		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
+		$sorting->sortItems(array());
+	}
+
+
 	protected function updateCategory() {
 		$update = false;
 		if ($this->props()->get(hubCategoryFields::UPDATE_TITLE)) {
@@ -190,6 +217,7 @@ class hubCategory extends hubRepositoryObject {
 			$update = true;
 		}
 		if ($update) {
+			$this->ilias_object->setOrderType($this->getOrderType());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->update();
 		}
@@ -239,6 +267,7 @@ class hubCategory extends hubRepositoryObject {
 
 	private function createCategory() {
 		$this->ilias_object = new ilObjCategory();
+		$this->ilias_object->setOrderType($this->getOrderType());
 		$this->ilias_object->setTitle($this->getTitle());
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
@@ -327,6 +356,38 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	public function getShowNews() {
 		return $this->show_news;
+	}
+
+
+	/**
+	 * @param int $position
+	 */
+	public function setPosition($position) {
+		$this->position = $position;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getPosition() {
+		return $this->position;
+	}
+
+
+	/**
+	 * @param int $order_type
+	 */
+	public function setOrderType($order_type) {
+		$this->order_type = $order_type;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getOrderType() {
+		return $this->order_type;
 	}
 }
 

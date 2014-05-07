@@ -5,7 +5,7 @@ require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
  * Class ilHubUIHookGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  */
 class ilHubUIHookGUI extends ilUIHookPluginGUI {
 

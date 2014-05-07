@@ -12,7 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubObject
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  */
 abstract class hubObject extends ActiveRecord {
 

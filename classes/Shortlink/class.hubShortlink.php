@@ -4,7 +4,7 @@
  * Class hubShortlink
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  */
 class hubShortlink {
 

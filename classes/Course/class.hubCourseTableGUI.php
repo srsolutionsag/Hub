@@ -9,13 +9,22 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * TableGUI srModelObjectTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  *
  */
 class hubCourseTableGUI extends srModelObjectTableGUI {
 
 	protected function initTableData() {
-		$this->setData(hubCourse::orderBy('title')->getArray());
+		$this->setExternalSorting(true);
+		$this->setExternalSegmentation(true);
+		$this->setDefaultOrderField('title');
+		$this->determineLimit();
+		$this->determineOffsetAndOrder();
+		$this->setMaxCount(hubCourse::count());
+		$hubCourseCollection = hubCourse::orderBy($this->getOrderField(), $this->getOrderDirection());
+		$hubCourseCollection->limit($this->getOffset(), $this->getLimit());
+		$this->setData($hubCourseCollection->getArray());
+//		echo '<pre>' . print_r($hubCourseCollection->getArray(), 1) . '</pre>';
 	}
 
 
@@ -25,7 +34,7 @@ class hubCourseTableGUI extends srModelObjectTableGUI {
 	 */
 	protected function initTableColumns() {
 		$this->addColumn('External ID');
-		$this->addColumn('Title');
+		$this->addColumn('Title', 'title');
 		$this->addColumn('Category');
 		$this->addColumn('Status');
 

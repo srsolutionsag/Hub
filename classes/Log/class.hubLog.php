@@ -5,7 +5,7 @@ require_once('./Services/Logging/classes/class.ilLog.php');
  * Class hubLog
  *
  * @author      Fabian Schmid <fs@studer-raimann.ch>
- * @version     1.1.02
+ * @version 1.1.03
  * @description Async Log for HubPlugin
  */
 class hubLog {
@@ -43,7 +43,6 @@ class hubLog {
 	protected function __construct() {
 		global $ilLog;
 		$this->il_log = $ilLog;
-
 		if (is_writable(self::getFilePath())) {
 			$this->hub_log = new ilLog(self::PATH, self::FILENAME, 'HUB');
 		} else {
