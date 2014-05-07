@@ -18,7 +18,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * GUI-Class hubOriginGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version           1.1.02
+ * @version 1.1.03
  *
  */
 class hubOriginGUI {
@@ -82,8 +82,27 @@ class hubOriginGUI {
 
 
 	public function index() {
+//
+//		require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Demo/Message/class.arMessage.php');
+////		arMessage::resetDB();
+//		$arMessage = new arMessage();
+//		$arMessage->setTitle('Erste Nachricht');
+//		$arMessage->setBody('Hallo Welt');
+//		$arMessage->setPriority(arMessage::PRIO_HIGH);
+//		$arMessage->setReceiverId(6);
+//		$arMessage->setSenderId(256);
+//		$arMessage->setType(arMessage::TYPE_NEW);
+////		$arMessage->create();
+////		$arMessage->create();
+//
+//		$arMessage = new arMessage(1);
+//		$arMessage->delete();
+//
+////		echo '<pre>' . print_r($arMessage, 1) . '</pre>';
+//		echo '<pre>' . print_r(arMessage::get(), 1) . '</pre>';
+
 		if (ilHubAccess::checkAccess()) {
-			//			$this->updateAllTables();
+//			hubCategory::updateDB();
 			$tableGui = new hubOriginTableGUI($this, 'index');
 			$this->tpl->setContent($tableGui->getHTML());
 		}

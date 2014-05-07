@@ -8,7 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubOriginFormGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  */
 class hubOriginFormGUI extends ilPropertyFormGUI {
 

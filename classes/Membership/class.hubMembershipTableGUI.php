@@ -7,7 +7,7 @@ require_once('class.hubMembership.php');
  * TableGUI srModelObjectTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  *
  */
 class hubMembershipTableGUI extends srModelObjectTableGUI {

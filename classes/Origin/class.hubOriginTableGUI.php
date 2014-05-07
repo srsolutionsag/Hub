@@ -8,7 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * TableGUI srModelObjectTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.02
+ * @version 1.1.03
  *
  */
 class hubOriginTableGUI extends srModelObjectTableGUI {
