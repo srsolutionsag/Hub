@@ -48,7 +48,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
-			$ctrlTwo = new ilCtrl();
+			/*$ctrlTwo = new ilCtrl();
 			$ctrlTwo->setTargetScript('ilias.php');
 			$a_base_class = $_GET['baseClass'];
 			$cmd = $_GET['cmd'];
@@ -71,7 +71,8 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 				'hubGUI',
 				'hubOriginGUI'
 			), 'index');
-
+*/
+			$link = '';
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (! in_array('CtrlMainMenu', $plugins)) {
