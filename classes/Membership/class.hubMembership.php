@@ -229,6 +229,7 @@ class hubMembership extends hubObject {
 				break;
 			case self::DELETE_MODE_DELETE:
 				$this->participants->delete($this->getUsrId());
+				$this->participants->updateNotification($this->getUsrId(), false);
 				$this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
 		}
