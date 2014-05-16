@@ -7,7 +7,7 @@ require_once('./include/inc.ilias_version.php');
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 1.1.03
- * 
+ *
  */
 class hubConfig extends ActiveRecord {
 
@@ -106,7 +106,7 @@ class hubConfig extends ActiveRecord {
 	 * @return string
 	 */
 	public static function get($name) {
-		if (! self::$cache_loaded[$name]) {
+		if (! isset(self::$cache_loaded[$name])) {
 			$obj = new self($name);
 			self::$cache[$name] = $obj->getValue();
 			self::$cache_loaded[$name] = true;

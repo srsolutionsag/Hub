@@ -76,13 +76,9 @@ class hub {
 
 			return $path;
 		}
-		$root_config = hubConfig::get(hubConfig::F_ROOT_PATH);
-		if ($root_config) {
-			$path = rtrim($root_config, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-		} else {
-			$path = realpath(dirname(__FILE__) . '/../../../../../../../..');
-			$path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-		}
+
+		$path = realpath(dirname(__FILE__) . '/../../../../../../../..');
+		$path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		return $path;
 	}
