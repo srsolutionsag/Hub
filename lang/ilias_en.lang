@@ -144,6 +144,7 @@ origin_form_field_usage_type_4#:#Kategorien
 origin_form_header_connection#:#Verbindung zu Daten
 origin_form_header_notification#:#Benachrichtigungen
 origin_form_header_sync#:#Synchronisation
+origin_table_button_dryrun#:#Dry-Run
 origin_table_button_activate_all#:#Alle aktivieren
 origin_table_button_add#:#Anbindung hinzufügen
 origin_table_button_deactivate_all#:#Alle deaktivieren
