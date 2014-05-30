@@ -24,6 +24,10 @@ class hubUser extends hubObject {
 	 * @var ilObjUser
 	 */
 	public $ilias_object;
+	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
 
 
 	/**

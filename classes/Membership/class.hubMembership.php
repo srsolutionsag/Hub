@@ -25,6 +25,10 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
 	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
+	/**
 	 * @var ilCourseParticipant
 	 */
 	public $members_object;
