@@ -25,6 +25,10 @@ class hubSyncHistory extends ActiveRecord {
 	/**
 	 * @var bool
 	 */
+	protected $ar_safe_read = false;
+	/**
+	 * @var bool
+	 */
 	protected static $loaded = array();
 	/**
 	 * @var array

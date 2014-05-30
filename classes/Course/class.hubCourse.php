@@ -16,6 +16,10 @@ class hubCourse extends hubRepositoryObject {
 	 * @var ilObjCourse
 	 */
 	public $ilias_object;
+	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
 
 
 	/**
@@ -65,7 +69,7 @@ class hubCourse extends hubRepositoryObject {
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
-//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
+					//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
 					break;
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());

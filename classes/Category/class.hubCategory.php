@@ -16,6 +16,10 @@ class hubCategory extends hubRepositoryObject {
 	const ORDER_TYPE_TITLE = 0;
 	const ORDER_TYPE_MANUALLY = 1;
 	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
+	/**
 	 * @var int
 	 *
 	 * @db_has_field        true
