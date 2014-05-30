@@ -107,8 +107,12 @@ class hubConfig extends ActiveRecord {
 	 */
 	public static function get($name) {
 		if (! isset(self::$cache_loaded[$name])) {
-			$obj = new self($name);
-			self::$cache[$name] = $obj->getValue();
+			$obj = self::find($name);
+			if ($obj === NULL) {
+				self::$cache[$name] = NULL;
+			} else {
+				self::$cache[$name] = $obj->getValue();
+			}
 			self::$cache_loaded[$name] = true;
 		}
 
@@ -119,14 +123,21 @@ class hubConfig extends ActiveRecord {
 	/**
 	 * @param $name
 	 * @param $value
+	 *
+	 * @return null
 	 */
 	public static function set($name, $value) {
-		$obj = new self($name);
-		$obj->setValue($value);
-		if (self::where(array( 'name' => $name ))->hasSets()) {
-			$obj->update();
-		} else {
+		/**
+		 * @var $obj arConfig
+		 */
+		$obj = self::find($name);
+		if ($obj === NULL) {
+			$obj = new self($name);
+			$obj->setValue($value);
 			$obj->create();
+		} else {
+			$obj->setValue($value);
+			$obj->update();
 		}
 	}
 
