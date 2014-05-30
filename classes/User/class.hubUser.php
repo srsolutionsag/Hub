@@ -118,6 +118,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setCity($this->getCity());
 		$this->ilias_object->setZipcode($this->getZipcode());
 		$this->ilias_object->setCountry($this->getCountry());
+		$this->ilias_object->setSelectedCountry($this->getSelCountry());
 		$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
 		$this->ilias_object->setPhoneHome($this->getPhoneHome());
 		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
@@ -245,7 +246,7 @@ class hubUser extends hubObject {
 			$this->ilias_object->setCity($this->getCity());
 			$this->ilias_object->setZipcode($this->getZipcode());
 			$this->ilias_object->setCountry($this->getCountry());
-			$this->ilias_object->setSelectedCountry($this->getCountry());
+			$this->ilias_object->setSelectedCountry($this->getSelCountry());
 			$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
 			$this->ilias_object->setPhoneHome($this->getPhoneHome());
 			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
@@ -513,6 +514,14 @@ class hubUser extends hubObject {
 	 * @db_length           256
 	 */
 	protected $country;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        text
+	 * @db_length           8
+	 */
+	protected $sel_country;
 	/**
 	 * @var string
 	 *
@@ -1118,6 +1127,22 @@ class hubUser extends hubObject {
 	 */
 	public function getIliasRoles() {
 		return $this->ilias_roles;
+	}
+
+
+	/**
+	 * @param string $sel_country
+	 */
+	public function setSelCountry($sel_country) {
+		$this->sel_country = $sel_country;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getSelCountry() {
+		return $this->sel_country;
 	}
 
 
