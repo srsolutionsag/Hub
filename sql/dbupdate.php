@@ -39,7 +39,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 hubCategory::updateDB();
 hubCourse::updateDB();
 ?>
-<#4>
+<#5>
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
 hubUser::updateDB();
