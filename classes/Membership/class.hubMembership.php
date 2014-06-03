@@ -213,8 +213,8 @@ class hubMembership extends hubObject {
 				) {
 					$this->participants->add($this->getUsrId(), $this->getContainerRole());
 				}
-				if ($this->getHasNotification() AND $this->props()->get(hubMembershipFields::UPDATE_NOTIFICATION)) {
-					$this->participants->updateNotification($this->getUsrId(), true);
+				if ($this->props()->get(hubMembershipFields::UPDATE_NOTIFICATION)) {
+					$this->participants->updateNotification($this->getUsrId(), (bool)$this->getHasNotification());
 				}
 				if ($this->props()->get(hubMembershipFields::DESKTOP_UPDATED)) {
 					ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);

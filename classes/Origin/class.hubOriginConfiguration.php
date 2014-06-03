@@ -14,6 +14,10 @@ class hubOriginConfiguration extends ActiveRecord {
 
 	const SALT = 'bcb0b417e2ffb2a00a33e109fdeba4e5e7ef08bc55aa0cd8e021db54763051cb';
 	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
+	/**
 	 * @var string
 	 * @db_has_field    true
 	 * @db_is_notnull   true

@@ -38,7 +38,6 @@ class hubCourse extends hubRepositoryObject {
 		 * @var $hubCourse hubCourse
 		 * @var $hubOrigin hubOrigin
 		 */
-		hubCounter::logRunning();
 		foreach (self::get() as $hubCourse) {
 			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
 				continue;

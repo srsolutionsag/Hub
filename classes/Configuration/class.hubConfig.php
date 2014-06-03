@@ -40,6 +40,11 @@ class hubConfig extends ActiveRecord {
 	 */
 	protected static $cache_loaded = array();
 
+	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
+
 
 	/**
 	 * @return string
