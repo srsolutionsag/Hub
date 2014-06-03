@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubCounter {
 
-	const MODULO = 3000;
+	const MODULO = 500;
 	const DELETED = 'deleted';
 	const CREATED = 'created';
 	const UPDATED = 'updated';
@@ -189,15 +189,15 @@ class hubCounter {
 
 	public static function logRunning() {
 		self::incrementBuilt();
-		if ((self::getCountOverall() % self::MODULO) == 0) {
-			// hubLog::getInstance()->write(get_called_class() . ': working...', hubLog::L_DEBUG);
+		if ((self::getCountBuilt() % self::MODULO) == 0) {
+			hubLog::getInstance()->write(get_called_class() . ': working...', hubLog::L_DEBUG);
 		}
 	}
 
 
 	public static function logBuilding() {
-		if ((self::getCountBuilt() % self::MODULO) == 0) {
-			// hubLog::getInstance()->write(get_called_class() . ': building...', hubLog::L_DEBUG);
+		if ((self::getCountOverall() % self::MODULO) == 0) {
+			hubLog::getInstance()->write(get_called_class() . ': building...', hubLog::L_DEBUG);
 		}
 	}
 

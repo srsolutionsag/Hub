@@ -91,7 +91,6 @@ class hubCategory extends hubRepositoryObject {
 		/**
 		 * @var $hubCategory hubCategory
 		 */
-		hubCounter::logRunning();
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {

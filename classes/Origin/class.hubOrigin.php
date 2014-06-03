@@ -32,6 +32,10 @@ class hubOrigin extends ActiveRecord {
 	 * @var hubOriginObjectProperties
 	 */
 	protected $object_properties;
+	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
 
 
 	/**

@@ -41,7 +41,6 @@ class hubUser extends hubObject {
 			if (! hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
 				continue;
 			}
-			hubCounter::logRunning();
 			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
