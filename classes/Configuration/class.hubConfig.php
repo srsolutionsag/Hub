@@ -1,6 +1,7 @@
 <?php
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
 require_once('./include/inc.ilias_version.php');
+require_once('./Services/Component/classes/class.ilComponent.php');
 
 /**
  * Class hubConfig
