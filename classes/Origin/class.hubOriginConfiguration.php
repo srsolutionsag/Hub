@@ -319,7 +319,11 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @return string
 	 */
 	private static function enc($text) {
-		return trim(base64_encode(@mcrypt_encrypt(MCRYPT_RIJNDAEL_256, self::SALT, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+		if (function_exists('mcrypt_encrypt')) {
+			return trim(base64_encode(@mcrypt_encrypt(MCRYPT_RIJNDAEL_256, self::SALT, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+		} else {
+			return $text;
+		}
 	}
 
 
@@ -329,7 +333,11 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @return string
 	 */
 	private static function dec($text) {
-		return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, self::SALT, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+		if (function_exists('mcrypt_decrypt')) {
+			return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, self::SALT, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+		} else {
+			return $text;
+		}
 	}
 }
 

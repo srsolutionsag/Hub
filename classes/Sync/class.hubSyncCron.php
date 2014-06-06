@@ -53,8 +53,15 @@ class hubSyncCron {
 	public static function initILIAS() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		chdir(Hub::getRootPath());
-		require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
-		ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
+		if (hubConfig::is44() OR hubConfig::is45()) {
+			require_once('./Services/Context/classes/class.ilContext.php');
+			ilContext::init(ilContext::CONTEXT_CRON);
+			require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
+			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
+		} else {
+			require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
+			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
+		}
 		$_COOKIE['ilClientId'] = $_SERVER['argv'][3];
 		$_POST['username'] = $_SERVER['argv'][1];
 		$_POST['password'] = $_SERVER['argv'][2];

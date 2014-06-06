@@ -42,6 +42,8 @@ class hubAsyncSync {
 		$cron .= $this->getClient();
 		$cron .= " > /dev/null &";
 
+		ilUtil::sendInfo($cron, true);
+
 		exec($cron);
 	}
 

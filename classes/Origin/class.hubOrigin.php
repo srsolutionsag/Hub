@@ -338,7 +338,7 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function conf() {
 		$this->loadConf();
-
+		
 		return $this->conf;
 	}
 

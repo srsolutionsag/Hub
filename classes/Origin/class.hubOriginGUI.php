@@ -73,7 +73,6 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
 			$this->{$cmd}();
-
 			return true;
 		} else {
 			return false;
@@ -82,27 +81,7 @@ class hubOriginGUI {
 
 
 	public function index() {
-//
-//		require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Demo/Message/class.arMessage.php');
-////		arMessage::resetDB();
-//		$arMessage = new arMessage();
-//		$arMessage->setTitle('Erste Nachricht');
-//		$arMessage->setBody('Hallo Welt');
-//		$arMessage->setPriority(arMessage::PRIO_HIGH);
-//		$arMessage->setReceiverId(6);
-//		$arMessage->setSenderId(256);
-//		$arMessage->setType(arMessage::TYPE_NEW);
-////		$arMessage->create();
-////		$arMessage->create();
-//
-//		$arMessage = new arMessage(1);
-//		$arMessage->delete();
-//
-////		echo '<pre>' . print_r($arMessage, 1) . '</pre>';
-//		echo '<pre>' . print_r(arMessage::get(), 1) . '</pre>';
-
 		if (ilHubAccess::checkAccess()) {
-//			hubCategory::updateDB();
 			$tableGui = new hubOriginTableGUI($this, 'index');
 			$this->tpl->setContent($tableGui->getHTML());
 		}
@@ -211,6 +190,7 @@ class hubOriginGUI {
 			$form->fillForm();
 			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, 'export'));
 			$this->tpl->setContent($form->getHTML());
+
 		}
 	}
 
