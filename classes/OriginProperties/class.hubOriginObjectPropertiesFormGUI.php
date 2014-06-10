@@ -203,12 +203,12 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		 * @var $subItem ilCheckboxInputGUI
 		 */
 		foreach ($this->getItems() as $item) {
-			if (get_class($item) != 'ilFormSectionHeaderGUI') {
+			if (! $item instanceof ilFormSectionHeaderGUI) {
 				$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 				if ($value) {
 					$array[$item->getPostVar()] = $value;
 				}
-				if (get_class($item) == 'ilRadioGroupInputGUI') {
+				if ($item instanceof ilRadioGroupInputGUI) {
 					foreach ($item->getOptions() as $op) {
 						foreach ($op->getSubItems() as $subItem) {
 							$value = $this->origin_properties->getByShortPrefix($item->getPostVar());

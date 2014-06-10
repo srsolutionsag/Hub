@@ -44,6 +44,16 @@ class hubSyncHistory extends ActiveRecord {
 	}
 
 
+	public static function preloadObjects() {
+		/**
+		 * @var $hubSyncHistory hubSyncHistory
+		 */
+		foreach (parent::preloadObjects() as $hubSyncHistory) {
+			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
+		}
+	}
+
+
 	/**
 	 * @param hubObject $hubObject
 	 *
@@ -61,11 +71,13 @@ class hubSyncHistory extends ActiveRecord {
 		}
 
 		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
-			$obj = new self($ext_id);
+			/**
+			 * @var $obj hubSyncHistory
+			 */
+			$obj = self::findOrGetInstance($ext_id);
 			$obj->setSrHubOriginId($sr_hub_origin_id);
 			$obj->setIliasIdType($hubObject::$id_type);
 			$wh = array( 'ext_id' => $ext_id, 'sr_hub_origin_id' => $sr_hub_origin_id );
-
 			if (! self::where($wh)->hasSets()) {
 				$obj->create();
 			}

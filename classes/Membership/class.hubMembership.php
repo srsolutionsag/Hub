@@ -58,11 +58,17 @@ class hubMembership extends hubObject {
 	 */
 	public static function getInstance($ext_id_usr, $ext_id_container) {
 		$ext_id = implode(self::DELIMITER, array( $ext_id_usr, $ext_id_container ));
-		$hub = new hubMembership($ext_id);
-		$hub->setExtIdCourse($ext_id_container);
-		$hub->setExtIdUsr($ext_id_usr);
+		/**
+		 * @var $hubMembership hubMembership
+		 */
+		$hubMembership = hubMembership::find($ext_id);
+		if (! $hubMembership) {
+			$hubMembership = new hubMembership($ext_id);
+		}
+		$hubMembership->setExtIdCourse($ext_id_container);
+		$hubMembership->setExtIdUsr($ext_id_usr);
 
-		return $hub;
+		return $hubMembership;
 	}
 
 
@@ -74,7 +80,7 @@ class hubMembership extends hubObject {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 				continue;
 			}
-			hubCounter::logBuilding();
+			// hubCounter::logBuilding();
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					if (! hubSyncCron::getDryRun()) {
@@ -188,8 +194,7 @@ class hubMembership extends hubObject {
 
 	public function createMembership() {
 		$this->initObject();
-		if ($this->ilias_role_id) {
-
+		if ($this->ilias_role_id > 1) {
 			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
@@ -206,11 +211,10 @@ class hubMembership extends hubObject {
 
 
 	public function updateMembership() {
-		if ($this->ilias_role_id) {
+		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
-				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL
-				) {
+				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 					$this->participants->add($this->getUsrId(), $this->getContainerRole());
 				}
 				if ($this->props()->get(hubMembershipFields::UPDATE_NOTIFICATION)) {

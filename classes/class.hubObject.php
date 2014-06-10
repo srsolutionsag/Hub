@@ -108,7 +108,8 @@ abstract class hubObject extends ActiveRecord {
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
 		$hist->update();
-		if (self::where(array( 'ext_id' => $this->getExtId() ))->hasSets()) {
+		$hubObject = self::find($this->getExtId());
+		if ($hubObject) {
 			parent::update();
 		} else {
 			parent::create();

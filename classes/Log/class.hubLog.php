@@ -49,7 +49,7 @@ class hubLog {
 			if (is_writable(self::PATH)) {
 				touch(self::getFilePath());
 			}
-			ilUtil::sendFailure('hub.log not writable', true);
+			//ilUtil::sendFailure('hub.log not writable', true);
 		}
 	}
 

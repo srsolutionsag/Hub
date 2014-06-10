@@ -3,6 +3,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Modules/Category/classes/class.ilObjCategory.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategoryFields.php');
 require_once('./Services/Container/classes/class.ilContainerSorting.php');
+require_once('./Services/Repository/classes/class.ilRepUtil.php');
 
 /**
  * Class hubCategory
@@ -196,6 +197,7 @@ class hubCategory extends hubRepositoryObject {
 
 	protected function updateCategory() {
 		$update = false;
+		$this->moveObject();
 		if ($this->props()->get(hubCategoryFields::UPDATE_TITLE)) {
 			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitle());
@@ -209,15 +211,6 @@ class hubCategory extends hubRepositoryObject {
 		if ($this->props()->get(hubCategoryFields::UPDATE_ICON)) {
 			$this->initObject();
 			$this->updateIcon();
-		}
-		if ($this->props()->get(hubCategoryFields::MOVE)) {
-			$this->initObject();
-			global $tree, $rbacadmin;
-			$ref_id = $this->ilias_object->getRefId();
-			$old_parent = $tree->getParentId($ref_id);
-			$tree->moveTree($ref_id, $this->getNode());
-			$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
-			$update = true;
 		}
 		if ($update) {
 			$this->ilias_object->setOrderType($this->getOrderType());
@@ -300,24 +293,54 @@ class hubCategory extends hubRepositoryObject {
 		global $tree;
 		$base_node_prop = $this->props()->get(hubCategoryFields::BASE_NODE_ILIAS);
 		$base_node_ilias = ($base_node_prop ? $base_node_prop : 1);
+		$base_node_external = $this->props()->get(hubCategoryFields::BASE_NODE_EXTERNAL);
+
 		if ($this->getParentIdType() == self::PARENT_ID_TYPE_EXTERNAL_ID) {
-			if ($this->getExtId() == $this->props()->get(hubCategoryFields::BASE_NODE_EXTERNAL)) {
-				return $base_node_ilias;
+			if ($this->getExtId() == $base_node_external) {
+				return (int)$base_node_ilias;
 			} else {
 				$parent_id = ilObject::_getAllReferences(ilObject::_lookupObjIdByImportId($this->returnParentImportId()));
-				$keys = array_keys($parent_id);
-				$node = $keys [0];
-				if ($node) {
-					return $node;
+				$node = (int)array_shift(array_keys($parent_id));
+				if ($tree->isInTree($node)) {
+					return (int)$node;
 				} else {
-					return $base_node_ilias;
+					return (int)$base_node_ilias;
 				}
 			}
 		} elseif ($this->getParentIdType() == self::PARENT_ID_TYPE_REF_ID) {
 			if (! $tree->isInTree($this->getParentId())) {
 				return $base_node_ilias;
 			} else {
-				return $this->getParentId();
+				return (int)$this->getParentId();
+			}
+		}
+	}
+
+
+	protected function moveObject() {
+		if ($this->props()->get(hubCategoryFields::MOVE)) {
+			global $tree, $rbacadmin;
+			$this->initObject();
+			$dependecesNode = $this->getNode();
+			if ($tree->isDeleted($this->ilias_object->getRefId())) {
+				hubLog::getInstance()->write('Category restored: ' . $this->getExtId());
+				$ilRepUtil = new ilRepUtil();
+				$ilRepUtil->restoreObjects($dependecesNode, array( $this->ilias_object->getRefId() ));
+			}
+			try {
+				$ref_id = $this->ilias_object->getRefId();
+				$old_parent = $tree->getParentId($ref_id);
+				if ($old_parent != $dependecesNode) {
+					$str = 'Moving Category ' . $this->getExtId() . ' from ' . $old_parent . ' to ' . $dependecesNode;
+					$tree->moveTree($ref_id, $dependecesNode);
+					$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
+					hubLog::getInstance()->write($str);
+					hubOriginNotification::addMessage($this->getSrHubOriginId(), $str, 'Moved:');
+				}
+			} catch (InvalidArgumentException $e) {
+				$str1 = 'Error moving Category in Tree: ' . $this->getExtId();
+
+				hubLog::getInstance()->write($str1);
 			}
 		}
 	}

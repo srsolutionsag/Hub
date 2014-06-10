@@ -18,6 +18,7 @@ class hubOriginException extends Exception {
 	const BUILD_ILIAS_OBJECTS_FAILED = 6;
 	const TOO_MANY_LOST_DATASETS = 7;
 	const INIT_STATUS_FAILED = 8;
+	const PHP_FATAL_ERROR = 9;
 	/**
 	 * @var array
 	 */
@@ -31,6 +32,7 @@ class hubOriginException extends Exception {
 		self::BUILD_ILIAS_OBJECTS_FAILED => 'Die ILIAS-Objecte konnten nicht erfolgreich modifiziert werden.',
 		self::TOO_MANY_LOST_DATASETS => 'Die Anzahl gelieferter Datensätze beträgt weniger als der vorgegebene Prozentsatz der bestehenden Datensätze',
 		self::INIT_STATUS_FAILED => 'Der Status der hubObjekte konnte nicht erfolgreich gelesen werden.',
+		self::PHP_FATAL_ERROR => 'PHP FATAL ERROR',
 	);
 
 

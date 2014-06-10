@@ -1,5 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 
 /**
  * Class hub
@@ -81,6 +82,33 @@ class hub {
 		$path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		return $path;
+	}
+
+
+	/**
+	 * @description ATTENTION: Does not yet work...
+	 */
+	public static function initErrorCallback() {
+		//		ini_set('display_errors', false);
+		register_shutdown_function('hub::fatalErrorHandler');
+	}
+
+
+	/**
+	 * @throws hubOriginException
+	 */
+	public static function fatalErrorHandler() {
+		$e = (object)error_get_last();
+		if (($e->type === E_ERROR) || ($e->type === E_USER_ERROR)) {
+			echo $error_message = 'hub FatalError:' . $e->message . ' in ' . $e->file . ' (Line ' . $e->line . ')';
+			hubLog::getInstance()->write($error_message);
+			throw new hubOriginException(hubOriginException::OTHER, new hubOrigin(), true);
+		}
+	}
+
+
+	public static function restoreErrorCallback() {
+		restore_error_handler();
 	}
 
 
