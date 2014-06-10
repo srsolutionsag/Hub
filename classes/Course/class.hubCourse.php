@@ -114,15 +114,7 @@ class hubCourse extends hubRepositoryObject {
 
 	public function updateCourse() {
 		$update = false;
-		if ($this->props()->get(hubCourseFields::F_MOVE)) { //} AND $this->getNode() != $tree->getParentId($ref_id)) {
-			global $tree, $rbacadmin;
-			$this->initObject();
-			$ref_id = $this->ilias_object->getRefId();
-			$old_parent = $tree->getParentId($ref_id);
-			$tree->moveTree($ref_id, $this->getDependecesNode());
-			$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
-			$update = true;
-		}
+		$this->moveObject();
 		if ($this->props()->get(hubCourseFields::F_UPDATE_TITLE)) {
 			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
@@ -654,6 +646,35 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	public function getNotificationEmail() {
 		return $this->notification_email;
+	}
+
+
+	protected function moveObject() {
+		if ($this->props()->get(hubCourseFields::F_MOVE)) {
+			global $tree, $rbacadmin;
+			$this->initObject();
+			$dependecesNode = $this->getDependecesNode();
+			if ($tree->isDeleted($this->ilias_object->getRefId())) {
+				hubLog::getInstance()->write('Course restored: ' . $this->getExtId());
+				$ilRepUtil = new ilRepUtil();
+				$ilRepUtil->restoreObjects($dependecesNode, array( $this->ilias_object->getRefId() ));
+			}
+			try {
+				$ref_id = $this->ilias_object->getRefId();
+				$old_parent = $tree->getParentId($ref_id);
+				if ($old_parent != $dependecesNode) {
+					$str = 'Moving Course ' . $this->getExtId() . ' from ' . $old_parent . ' to ' . $dependecesNode;
+					$tree->moveTree($ref_id, $dependecesNode);
+					$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
+					hubLog::getInstance()->write($str);
+					hubOriginNotification::addMessage($this->getSrHubOriginId(), $str, 'Moved:');
+				}
+			} catch (InvalidArgumentException $e) {
+				$str1 = 'Error moving Course in Tree: ' . $this->getExtId();
+
+				hubLog::getInstance()->write($str1);
+			}
+		}
 	}
 }
 

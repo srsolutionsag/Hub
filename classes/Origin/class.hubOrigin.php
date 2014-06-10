@@ -338,7 +338,7 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function conf() {
 		$this->loadConf();
-		
+
 		return $this->conf;
 	}
 
@@ -393,12 +393,13 @@ class hubOrigin extends ActiveRecord {
 	/**
 	 * @var int
 	 *
-	 * @db_has_field        true
-	 * @db_is_unique        true
-	 * @db_is_primary       true
-	 * @db_is_notnull       true
-	 * @db_fieldtype        integer
-	 * @db_length           4
+	 * @db_has_field          true
+	 * @db_is_unique          true
+	 * @db_is_primary         true
+	 * @db_is_notnull         true
+	 * @db_fieldtype          integer
+	 * @db_length             4
+	 * @db_sequence           true
 	 */
 	protected $id = 0;
 	/**

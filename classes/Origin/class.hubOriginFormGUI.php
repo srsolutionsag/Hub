@@ -255,8 +255,8 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			'notification_email' => $this->origin->conf()->getNotificationEmail(),
 			'summary_email' => $this->origin->conf()->getSummaryEmail(),
 		);
-		// $objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
-		// $array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
+		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
+		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
 
 		return $array;
 	}

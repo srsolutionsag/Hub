@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * hubSyncCron
  *
@@ -171,6 +170,7 @@ class hubSyncCron {
 			$this->messages[] = $e->getMessage();
 		}
 		$this->handleMessages();
+		hub::restoreErrorCallback();
 	}
 
 

@@ -18,7 +18,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * GUI-Class hubOriginGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version           1.1.03
  *
  */
 class hubOriginGUI {
@@ -73,6 +73,7 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
 			$this->{$cmd}();
+
 			return true;
 		} else {
 			return false;
@@ -190,7 +191,6 @@ class hubOriginGUI {
 			$form->fillForm();
 			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, 'export'));
 			$this->tpl->setContent($form->getHTML());
-
 		}
 	}
 
