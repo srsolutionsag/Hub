@@ -88,7 +88,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$db_password = new ilTextInputGUI($this->pl->txt('admin_db_port'), hubConfig::F_DB_PORT);
 		$db->addSubItem($db_password);
 
-		$this->addItem($db);
+//		$this->addItem($db);
 
 		$this->addCommandButtons();
 	}
