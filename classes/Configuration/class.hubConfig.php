@@ -137,14 +137,12 @@ class hubConfig extends ActiveRecord {
 		 * @var $obj arConfig
 		 */
 		$obj = self::findOrGetInstance($name);
-		if ($obj === NULL) {
-			$obj = new self($name);
-			$obj->setValue($value);
-			$obj->create();
-		} else {
-			$obj->setValue($value);
-			$obj->update();
-		}
+        $obj->setValue($value);
+        if(self::where(array('name' => $name))->hasSets()) {
+            $obj->update();
+        } else {
+            $obj->create();
+        }
 	}
 
 
