@@ -57,14 +57,11 @@ class hubMembership extends hubObject {
 	 * @return hubMembership
 	 */
 	public static function getInstance($ext_id_usr, $ext_id_container) {
-		$ext_id = implode(self::DELIMITER, array( $ext_id_usr, $ext_id_container ));
+		$ext_id = $ext_id_usr . self::DELIMITER . $ext_id_container;
 		/**
 		 * @var $hubMembership hubMembership
 		 */
-		$hubMembership = hubMembership::find($ext_id);
-		if (! $hubMembership) {
-			$hubMembership = new hubMembership($ext_id);
-		}
+		$hubMembership = hubMembership::findOrGetInstance($ext_id);
 		$hubMembership->setExtIdCourse($ext_id_container);
 		$hubMembership->setExtIdUsr($ext_id_usr);
 
@@ -80,7 +77,6 @@ class hubMembership extends hubObject {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 				continue;
 			}
-			// hubCounter::logBuilding();
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					if (! hubSyncCron::getDryRun()) {
