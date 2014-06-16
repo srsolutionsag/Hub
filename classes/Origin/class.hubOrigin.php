@@ -45,6 +45,7 @@ class hubOrigin extends ActiveRecord {
 		parent::__construct($id);
 		$this->loadConf();
 		$this->loadProps();
+        $this->log = hubLog::getInstance();
 	}
 
 
@@ -378,12 +379,12 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param hubObject $hubObject
+	 * @param hubObject $hub_object
 	 *
 	 * @return hubObject
 	 */
-	public static function afterObjectModification(hubObject $hubObject) {
-		return $hubObject;
+	public static function afterObjectModification(hubObject $hub_object) {
+		return $hub_object;
 	}
 
 
