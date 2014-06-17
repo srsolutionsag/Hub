@@ -68,11 +68,11 @@ class hubMembership extends hubObject {
 		return $hubMembership;
 	}
 
-
-	public static function buildILIASObjects() {
+    public static function buildILIASObjects() {
 		/**
 		 * @var $hubMembership hubMembership
-		 */
+         * @var $hubOrigin hubOrigin
+         */
 		foreach (self::get() as $hubMembership) {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 				continue;
@@ -110,6 +110,8 @@ class hubMembership extends hubObject {
 			$hubMembership->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubMembership);
+            $hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId());
+            $hubOriginObj->afterObjectInit($hubMembership);
 		}
 
 		return true;

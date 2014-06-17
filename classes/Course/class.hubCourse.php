@@ -81,6 +81,8 @@ class hubCourse extends hubRepositoryObject {
 			$history->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCourse->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCourse);
+            $hubOriginObj = $hubOrigin::find($hubCourse->getSrHubOriginId());
+            $hubOriginObj->afterObjectInit($hubCourse);
 		}
 
 		return true;
