@@ -236,12 +236,12 @@ class hubSyncCron {
 							if ($originObject->buildEntries()) {
 								hubDurationLogger::log('build_ext_objects_origin_' . $origin->getId());
 								$this->writeLastUpdate($origin);
-								$originObject->afterSync();
 								hubDurationLogger::start('init_status_' . $origin->getId(), false);
 								if (! hubSyncHistory::initStatus($origin->getId())) {
 									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, ! self::getDryRun());
 								}
 								hubDurationLogger::log('init_status_' . $origin->getId());
+                                $originObject->afterSync();
 
 								return true;
 							} else {
