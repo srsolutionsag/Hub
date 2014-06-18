@@ -73,9 +73,9 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
 		if (hubConfig::get(hubConfig::F_USE_ASYNC)) {
 			$this->addCommandButton('runAsync', $this->pl->txt('origin_table_button_run') . ' (Async)');
-			$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
-			$this->addCommandButton('dryRun', $this->pl->txt('origin_table_button_dryrun'));
 		}
+		$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
+		$this->addCommandButton('dryRun', $this->pl->txt('origin_table_button_dryrun'));
 		$this->addCommandButton('deactivateAll', $this->pl->txt('origin_table_button_deactivate_all'));
 		$this->addCommandButton('activateAll', $this->pl->txt('origin_table_button_activate_all'));
 	}
