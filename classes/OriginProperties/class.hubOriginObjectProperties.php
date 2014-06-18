@@ -93,6 +93,15 @@ class hubOriginObjectProperties {
 	 * @return bool|string
 	 */
 	public function getIconPath($appendix = '') {
+		/**
+		 * @var $hubOrigin hubOrigin
+		 */
+		$hubOrigin = hubOrigin::find($this->getSrHubOriginId());
+		$file = $hubOrigin->getClassPath() . '/icon' . $appendix . '.png';
+		if (is_file($file)) {
+			return $file;
+		}
+
 		$path = hub::getPath() . 'icons/' . hubOrigin::getUsageClass($this->getSrHubOriginId()) . '/'
 			. hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
 		if (is_file($path)) {

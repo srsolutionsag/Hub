@@ -64,15 +64,16 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 			$_GET['cmd'] = $cmd;
 			$_GET['cmdClass'] = $cmdClass;
 			$_GET['cmdNode'] = $cmdNode;
-
+*/
 
 			$link = $this->ctrl->getLinkTargetByClass(array(
 				'ilRouterGUI',
 				'hubGUI',
 				'hubOriginGUI'
 			), 'index');
-*/
-			$link = '';
+
+//			$link = '';
+
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (! in_array('CtrlMainMenu', $plugins)) {
