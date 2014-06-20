@@ -48,6 +48,29 @@ abstract class hubObject extends ActiveRecord {
 
 
 	/**
+	 * @param $primary_key
+	 *
+	 * @internal param array $add_constructor_args
+	 *
+	 * @return hubObject
+	 */
+	public static function find($primary_key) {
+		/**
+		 * @var $obj hubObject
+		 */
+
+		$class_name = get_called_class();
+		if (! arObjectCache::isCached($class_name, $primary_key)) {
+			$obj = arFactory::getInstance($class_name, 0);
+			$obj->setExtId($primary_key);
+			$obj->storeObjectToCache();
+		}
+
+		return arObjectCache::get($class_name, $primary_key);
+	}
+
+
+	/**
 	 * @return mixed
 	 *
 	 * @desciprion Build get Status of Hisory an build your ILIAS-Objects
