@@ -45,6 +45,34 @@ abstract class hubObject extends ActiveRecord {
 	 * @var bool
 	 */
 	public $ar_safe_read = false;
+	/**
+	 * @var array
+	 */
+	protected static $loaded = array();
+	/**
+	 * @var array
+	 */
+	protected static $existing_ext_ids = array();
+
+
+	/**
+	 * @param $class
+	 * @param $ext_id
+	 *
+	 * @return bool
+	 */
+	public static function exists($class, $ext_id) {
+		/**
+		 * @var $class hubMembership
+		 */
+		if (! self::$loaded[$class]) {
+			$class::get();
+			self::$existing_ext_ids[$class] = array_values($class::getArray(NULL, 'ext_id'));
+			self::$loaded[$class] = true;
+		}
+
+		return in_array($ext_id, self::$existing_ext_ids[$class]);
+	}
 
 
 	/**
@@ -135,18 +163,11 @@ abstract class hubObject extends ActiveRecord {
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
 		$hist->update();
-		if (self::where(array( 'ext_id' => $this->getPrimaryFieldValue() ))->hasSets()) {
+		if (self::exists(get_class($this), $this->getExtId())) {
 			parent::update();
 		} else {
 			parent::create();
 		}
-
-		//		$hubObject = self::find($this->getExtId());
-		//		if ($hubObject) {
-		//			parent::update();
-		//		} else {
-		//			parent::create();
-		//		}
 	}
 
 
