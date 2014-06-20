@@ -45,7 +45,7 @@ class hubOrigin extends ActiveRecord {
 		parent::__construct($id);
 		$this->loadConf();
 		$this->loadProps();
-        $this->log = hubLog::getInstance();
+		$this->log = hubLog::getInstance();
 	}
 
 
@@ -367,18 +367,20 @@ class hubOrigin extends ActiveRecord {
 		}
 	}
 
-    /**
-     * This method is executed after the ILIAS object is initialized
-     *
-     * @param hubObject $hub_object
-     * @return \hubObject
-     */
-    public function afterObjectInit(hubObject $hub_object) {
-        return $hub_object;
-    }
+
+	/**
+	 * This method is executed after the ILIAS object is initialized
+	 *
+	 * @param hubObject $hub_object
+	 *
+	 * @return \hubObject
+	 */
+	public function afterObjectInit(hubObject $hub_object) {
+		return $hub_object;
+	}
 
 
-    /**
+	/**
 	 * @param ilPropertyFormGUI $form_gui
 	 *
 	 * @return ilPropertyFormGUI
@@ -390,6 +392,7 @@ class hubOrigin extends ActiveRecord {
 
 	/**
 	 * @param hubObject $hub_object
+	 *
 	 * @deprecated Use non-static afterObjectInit method
 	 * @return hubObject
 	 */

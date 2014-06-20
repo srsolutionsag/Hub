@@ -7,7 +7,7 @@ require_once('class.hubConfig.php');
  * Form-Class hubConfigFormGUI
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version           1.1.03
  *
  */
 class hubConfigFormGUI extends ilPropertyFormGUI {
@@ -88,7 +88,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$db_password = new ilTextInputGUI($this->pl->txt('admin_db_port'), hubConfig::F_DB_PORT);
 		$db->addSubItem($db_password);
 
-//		$this->addItem($db);
+		//		$this->addItem($db);
 
 		$this->addCommandButtons();
 	}

@@ -41,6 +41,10 @@ abstract class hubObject extends ActiveRecord {
 	 * @var int
 	 */
 	public static $id_type = self::ILIAS_ID_TYPE_OBJ_ID;
+	/**
+	 * @var bool
+	 */
+	public $ar_safe_read = false;
 
 
 	/**
@@ -108,18 +112,18 @@ abstract class hubObject extends ActiveRecord {
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
 		$hist->update();
-        if(self::where(array('ext_id' => $this->getPrimaryFieldValue()))->hasSets()) {
-            parent::update();
-        } else {
-            parent::create();
-        }
+		if (self::where(array( 'ext_id' => $this->getPrimaryFieldValue() ))->hasSets()) {
+			parent::update();
+		} else {
+			parent::create();
+		}
 
-//		$hubObject = self::find($this->getExtId());
-//		if ($hubObject) {
-//			parent::update();
-//		} else {
-//			parent::create();
-//		}
+		//		$hubObject = self::find($this->getExtId());
+		//		if ($hubObject) {
+		//			parent::update();
+		//		} else {
+		//			parent::create();
+		//		}
 	}
 
 
@@ -147,6 +151,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @var int
 	 *
 	 * @db_has_field        true
+	 * @db_is_notnull       true
 	 * @db_is_notnull       true
 	 * @db_is_primary       true
 	 * @db_fieldtype        text
@@ -187,13 +192,13 @@ abstract class hubObject extends ActiveRecord {
 	 */
 	protected $ext_status = NULL;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
+	/**
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
 
 
 	/**

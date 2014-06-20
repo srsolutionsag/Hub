@@ -6,7 +6,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  * @description
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version           1.1.03
  * @revision          $r:
  *
  * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI

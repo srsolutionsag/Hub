@@ -77,10 +77,14 @@ class hubSyncHistory extends ActiveRecord {
 			$obj = self::findOrGetInstance($ext_id);
 			$obj->setSrHubOriginId($sr_hub_origin_id);
 			$obj->setIliasIdType($hubObject::$id_type);
-			$wh = array( 'ext_id' => $ext_id, 'sr_hub_origin_id' => $sr_hub_origin_id );
-			if (! self::where($wh)->hasSets()) {
+			//			$wh = array( 'ext_id' => $ext_id, 'sr_hub_origin_id' => $sr_hub_origin_id );
+			if ($obj->is_new) {
 				$obj->create();
 			}
+
+			//			if (! self::where($wh)->hasSets()) {
+			//				$obj->create();
+			//			}
 
 			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
 		}
@@ -91,13 +95,13 @@ class hubSyncHistory extends ActiveRecord {
 
 	public function update() {
 		parent::update();
-		self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
+		//self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
 	}
 
 
 	public function create() {
 		parent::create();
-		self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
+		//		self::$cache[$this->getSrHubOriginId()][$this->getExtId()] = $this;
 	}
 
 

@@ -7,7 +7,7 @@ require_once('class.hubCourseTableGUI.php');
  * GUI-Class hubCourse
  *
  * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version           1.1.03
  *
  */
 class hubCourseGUI {

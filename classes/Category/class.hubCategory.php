@@ -17,10 +17,6 @@ class hubCategory extends hubRepositoryObject {
 	const ORDER_TYPE_TITLE = 0;
 	const ORDER_TYPE_MANUALLY = 1;
 	/**
-	 * @var bool
-	 */
-	protected $ar_safe_read = false;
-	/**
 	 * @var int
 	 *
 	 * @db_has_field        true
@@ -91,8 +87,8 @@ class hubCategory extends hubRepositoryObject {
 	private static function buildForParentId($parent_id = 0) {
 		/**
 		 * @var $hubCategory hubCategory
-         * @var $hubOrigin hubOrigin
-         */
+		 * @var $hubOrigin   hubOrigin
+		 */
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
@@ -146,9 +142,9 @@ class hubCategory extends hubRepositoryObject {
 			$hubCategory->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCategory->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCategory);
-            $hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
-            $hubOriginObj->afterObjectInit($hubCategory);
-            if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== ''
+			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
+			$hubOriginObj->afterObjectInit($hubCategory);
+			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== ''
 			) {
 				self::buildForParentId($hubCategory->getExtId());
 			}
