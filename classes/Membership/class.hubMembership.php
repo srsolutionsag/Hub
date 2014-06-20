@@ -55,10 +55,17 @@ class hubMembership extends hubObject {
 	 */
 	public static function getInstance($ext_id_usr, $ext_id_container) {
 		$ext_id = $ext_id_usr . self::DELIMITER . $ext_id_container;
+
 		/**
 		 * @var $hubMembership hubMembership
 		 */
-		$hubMembership = hubMembership::findOrGetInstance($ext_id);
+		// $hubMembership = hubMembership::findOrGetInstance($ext_id);
+		if(self::exists('hubMembership', $ext_id )) {
+			$hubMembership = hubMembership::find($ext_id);
+		} else {
+			$hubMembership = new self($ext_id);
+		}
+
 		$hubMembership->setExtIdCourse($ext_id_container);
 		$hubMembership->setExtIdUsr($ext_id_usr);
 
