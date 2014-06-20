@@ -24,10 +24,7 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_CRS_TUTOR = 3;
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
-	/**
-	 * @var bool
-	 */
-	protected $ar_safe_read = false;
+
 	/**
 	 * @var ilCourseParticipant
 	 */
@@ -68,11 +65,12 @@ class hubMembership extends hubObject {
 		return $hubMembership;
 	}
 
-    public static function buildILIASObjects() {
+
+	public static function buildILIASObjects() {
 		/**
 		 * @var $hubMembership hubMembership
-         * @var $hubOrigin hubOrigin
-         */
+		 * @var $hubOrigin     hubOrigin
+		 */
 		foreach (self::get() as $hubMembership) {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 				continue;
@@ -86,7 +84,7 @@ class hubMembership extends hubObject {
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
 					if (! hubSyncCron::getDryRun()) {
-						$hubMembership->updateMembership();
+						// $hubMembership->updateMembership();
 					}
 					hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
 					break;
@@ -110,8 +108,8 @@ class hubMembership extends hubObject {
 			$hubMembership->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubMembership);
-            $hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId());
-            $hubOriginObj->afterObjectInit($hubMembership);
+			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId());
+			$hubOriginObj->afterObjectInit($hubMembership);
 		}
 
 		return true;
@@ -154,15 +152,15 @@ class hubMembership extends hubObject {
 		}
 
 		if (! $this->getUsrId()) {
-			if ($this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN)) {
-				$where = array(
-					'sr_hub_origin_id' => $this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN),
-					'ext_id' => $this->getExtIdUsr()
-				);
-				$hubUser = hubUser::where($where)->first();
-			} else {
-				$hubUser = hubUser::find($this->getExtIdUsr());
-			}
+			//	if ($this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN)) {
+			//		$where = array(
+			//			'sr_hub_origin_id' => $this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN),
+			//			'ext_id' => $this->getExtIdUsr()
+			//		);
+			//		$hubUser = hubUser::where($where)->first();
+			//	} else {
+			$hubUser = hubUser::find($this->getExtIdUsr());
+			//	}
 
 			/**
 			 * @var $hubUser hubUser

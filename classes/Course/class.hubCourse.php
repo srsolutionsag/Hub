@@ -16,10 +16,6 @@ class hubCourse extends hubRepositoryObject {
 	 * @var ilObjCourse
 	 */
 	public $ilias_object;
-	/**
-	 * @var bool
-	 */
-	protected $ar_safe_read = false;
 
 
 	/**
@@ -81,8 +77,8 @@ class hubCourse extends hubRepositoryObject {
 			$history->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCourse->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCourse);
-            $hubOriginObj = $hubOrigin::find($hubCourse->getSrHubOriginId());
-            $hubOriginObj->afterObjectInit($hubCourse);
+			$hubOriginObj = $hubOrigin::find($hubCourse->getSrHubOriginId());
+			$hubOriginObj->afterObjectInit($hubCourse);
 		}
 
 		return true;

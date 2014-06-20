@@ -40,7 +40,6 @@ class hubConfig extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $cache_loaded = array();
-
 	/**
 	 * @var bool
 	 */
@@ -137,12 +136,12 @@ class hubConfig extends ActiveRecord {
 		 * @var $obj arConfig
 		 */
 		$obj = self::findOrGetInstance($name);
-        $obj->setValue($value);
-        if(self::where(array('name' => $name))->hasSets()) {
-            $obj->update();
-        } else {
-            $obj->create();
-        }
+		$obj->setValue($value);
+		if (self::where(array( 'name' => $name ))->hasSets()) {
+			$obj->update();
+		} else {
+			$obj->create();
+		}
 	}
 
 

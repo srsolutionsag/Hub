@@ -24,7 +24,7 @@ class hubCourseTableGUI extends srModelObjectTableGUI {
 		$hubCourseCollection = hubCourse::orderBy($this->getOrderField(), $this->getOrderDirection());
 		$hubCourseCollection->limit($this->getOffset(), $this->getLimit());
 		$this->setData($hubCourseCollection->getArray());
-//		echo '<pre>' . print_r($hubCourseCollection->getArray(), 1) . '</pre>';
+		//		echo '<pre>' . print_r($hubCourseCollection->getArray(), 1) . '</pre>';
 	}
 
 
