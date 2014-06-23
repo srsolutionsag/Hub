@@ -185,12 +185,13 @@ class hubCategory extends hubRepositoryObject {
 	/**
 	 * FSX TODO
 	 */
-	protected function updateSorting() {
+	private  function updateSorting() {
 		/**
 		 * @var $sorting ilContainerSorting
 		 */
 		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
-		$sorting->sortItems(array());
+//		$sorting->sortItems(array());
+
 	}
 
 

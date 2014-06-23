@@ -26,10 +26,6 @@ class hubOriginObjectProperties {
 	 * @var array
 	 */
 	private static $cache = array();
-	/**
-	 * @var bool
-	 */
-	protected $ar_safe_read = false;
 
 
 	/**

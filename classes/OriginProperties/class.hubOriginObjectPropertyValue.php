@@ -14,6 +14,12 @@ require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRe
 class hubOriginObjectPropertyValue extends ActiveRecord {
 
 	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
+
+
+	/**
 	 * @return string
 	 */
 	static function returnDbTableName() {

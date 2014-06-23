@@ -61,9 +61,14 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_description'), hubCategoryFields::UPDATE_DESCRIPTION);
 		$this->addItem($cb);
 		//
-		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_icon'), hubCategoryFields::UPDATE_ICON);
 		$this->addItem($cb);
+		//
+		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_calendar'), hubCategoryFields::F_UPDATE_CALENDAR);
+//		$this->addItem($cb);
+		//
+		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
+//		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
