@@ -12,7 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  * @revision $r$
  */
@@ -60,7 +60,7 @@ class hubMembership extends hubObject {
 		 * @var $hubMembership hubMembership
 		 */
 		// $hubMembership = hubMembership::findOrGetInstance($ext_id);
-		if(self::exists('hubMembership', $ext_id )) {
+		if (self::exists('hubMembership', $ext_id)) {
 			$hubMembership = hubMembership::find($ext_id);
 		} else {
 			$hubMembership = new self($ext_id);

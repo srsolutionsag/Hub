@@ -7,7 +7,7 @@ require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
  * Class hubOriginObjectPropertiesFormGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
@@ -79,32 +79,41 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	private function personalizeFields() {
-		foreach ($this->getItems() as $item) {
-			/**
-			 * @var ilRadioGroupInputGUI $item
-			 * @var ilRadioOption        $op
-			 */
-			if (get_class($item) != 'ilFormSectionHeaderGUI') {
-				$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
-				if (get_class($item) == 'ilRadioGroupInputGUI') {
-					foreach ($item->getOptions() as $op) {
-						foreach ($op->getSubItems() as $subItem) {
-							$subItem->setPostVar($this->getPrefix() . '_' . $subItem->getPostVar());
-						}
+	/**
+	 * @param ilFormPropertyGUI $item
+	 */
+	protected function personalizeOneField($item) {
+		/**
+		 * @var ilRadioGroupInputGUI $item
+		 * @var ilRadioGroupInputGUI $subItem
+		 * @var ilRadioOption        $op
+		 */
+		if (! $item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI) {
+			$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
+			if ($item instanceof ilRadioGroupInputGUI) {
+				foreach ($item->getOptions() as $op) {
+					foreach ($op->getSubItems() as $subItem) {
+						$this->personalizeOneField($subItem);
 					}
-				} else {
-					foreach ($item->getSubItems() as $subItem) {
-						$subItem->setPostVar($this->getPrefix() . '_' . $subItem->getPostVar());
-					}
+				}
+			} else {
+				foreach ($item->getSubItems() as $subItem) {
+					$this->personalizeOneField($subItem);
 				}
 			}
 		}
 	}
 
 
+	protected function personalizeFields() {
+		foreach ($this->getItems() as $item) {
+			$this->personalizeOneField($item);
+		}
+	}
+
+
 	private function initStandardFields() {
-		$se = new ilSelectInputGUI($this->pl->txt('com_prop_link_to_origin'), hubOriginObjectPropertiesFields::ORIGIN_LINK);
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_link_to_origin'), hubOriginObjectPropertiesFields::F_ORIGIN_LINK);
 		/**
 		 * @var $origin hubOrigin
 		 */
@@ -115,10 +124,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$se->setOptions($opt);
 		$this->addItem($se);
 		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), hubOriginObjectPropertiesFields::SHORTLINK);
-		$this->addItem($cb);
-		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_use_ext_status'), hubOriginObjectPropertiesFields::USE_EXT_STATUS);
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_use_ext_status'), hubOriginObjectPropertiesFields::F_USE_EXT_STATUS);
 		$status_string = '';
 		foreach (hubSyncHistory::getAllStatusAsArray() as $name => $int) { // FSX externer Status
 			$status_string .= $name . ': ' . $int . ', ';
@@ -126,9 +132,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$cb->setInfo($status_string);
 		// $this->addItem($cb);
 
-		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), hubOriginObjectPropertiesFields::CHECK_AMOUNT);
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_check_amount'), hubOriginObjectPropertiesFields::F_CHECK_AMOUNT);
 		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
-		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::CHECK_AMOUNT_PERCENTAGE);
+		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE);
 		$opt = array(
 			10 => '10%',
 			20 => '20%',
@@ -143,6 +149,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		);
 		$se->setOptions($opt);
 		$cb->addSubItem($se);
+		$this->addItem($cb);
+		//
+		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), hubOriginObjectPropertiesFields::F_SHORTLINK);
 		$this->addItem($cb);
 	}
 

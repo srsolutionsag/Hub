@@ -6,7 +6,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubCoursePropertiesFormGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 
@@ -23,6 +23,12 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 	 * @description build FormElements
 	 */
 	protected function initForm() {
+		// Shortlink appendix
+		$shortlink = $this->getItemByPostVar(hubCourseFields::F_SHORTLINK);
+		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_check_online'), hubCourseFields::F_SL_CHECK_ONLINE);
+		$msg = new ilTextAreaInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_MSG_NOT_ONLINE), hubCourseFields::F_MSG_NOT_ONLINE);
+		$cb->addSubItem($msg);
+		$shortlink->addSubItem($cb);
 		//
 		$te = new ilTextInputGUI($this->pl->txt('crs_prop_node_noparent'), hubCourseFields::F_NODE_NOPARENT);
 		$this->addItem($te);
@@ -36,6 +42,12 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_create_icon'), hubCourseFields::F_CREATE_ICON);
 		$this->addItem($cb);
+		//
+		$send_mail = new ilCheckboxInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_SEND_NOTIFICATION), hubCourseFields::F_SEND_NOTIFICATION);
+		$notification_body = new ilTextAreaInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_BODY), hubCourseFields::F_NOT_BODY);
+		$notification_body->setInfo(hubCourseFields::getPlaceHolderStrings());
+		$send_mail->addSubItem($notification_body);
+		$this->addItem($send_mail);
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');

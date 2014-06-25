@@ -5,7 +5,7 @@
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
- * @version 1.1.03
+ * @version 1.1.04
  * @revision $r$
  */
 class hubSyncCron {
@@ -49,7 +49,7 @@ class hubSyncCron {
 	}
 
 
-	public static function initILIAS() {
+	/*public static function initILIAS() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		chdir(Hub::getRootPath());
 		if (hubConfig::is44() OR hubConfig::is45()) {
@@ -66,8 +66,7 @@ class hubSyncCron {
 		$_POST['password'] = $_SERVER['argv'][2];
 		require_once('./include/inc.header.php');
 		self::includes();
-	}
-
+	}*/
 
 	private static function includes() {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
@@ -241,7 +240,7 @@ class hubSyncCron {
 									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, ! self::getDryRun());
 								}
 								hubDurationLogger::log('init_status_' . $origin->getId());
-                                $originObject->afterSync();
+								$originObject->afterSync();
 
 								return true;
 							} else {
@@ -251,7 +250,7 @@ class hubSyncCron {
 							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, ! self::getDryRun());
 						}
 					} else {
-						$percentage = $originObject->props()->get(hubOriginObjectPropertiesFields::CHECK_AMOUNT_PERCENTAGE) . '%';
+						$percentage = $originObject->props()->get(hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE) . '%';
 						throw new hubOriginException(hubOriginException::TOO_MANY_LOST_DATASETS, $origin, ! self::getDryRun(), $percentage);
 					}
 				} else {

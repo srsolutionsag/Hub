@@ -7,7 +7,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  * @revision $r$
  */
@@ -99,11 +99,14 @@ class hub {
 	 */
 	public static function fatalErrorHandler() {
 		$e = (object)error_get_last();
+		var_dump($e); // FSX
 		if (($e->type === E_ERROR) || ($e->type === E_USER_ERROR)) {
 			echo $error_message = 'hub FatalError:' . $e->message . ' in ' . $e->file . ' (Line ' . $e->line . ')';
 			hubLog::getInstance()->write($error_message);
+
 			throw new hubOriginException(hubOriginException::OTHER, new hubOrigin(), true);
 		}
+		exit;
 	}
 
 
@@ -120,6 +123,39 @@ class hub {
 	}
 
 
-	public static function initILIAS() {
+	const CONTEXT_CRON = 1;
+	const CONTEXT_WEB = 2;
+
+
+	/**
+	 * @param int $context
+	 */
+	public static function initILIAS($context = self::CONTEXT_CRON) {
+		chdir(self::getRootPath());
+		require_once('./Services/Context/classes/class.ilContext.php');
+		require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
+		switch ($context) {
+			case self::CONTEXT_CRON:
+				$il_context = ilContext::CONTEXT_CRON;
+				$il_context_auth = ilAuthFactory::CONTEXT_CRON;
+				$_COOKIE['ilClientId'] = $_SERVER['argv'][3];
+				$_POST['username'] = $_SERVER['argv'][1];
+				$_POST['password'] = $_SERVER['argv'][2];
+				break;
+			case self::CONTEXT_WEB:
+				$il_context = ilContext::CONTEXT_WEB;
+				$il_context_auth = ilAuthFactory::CONTEXT_WEB;
+				$_POST['username'] = 'anonymous';
+				$_POST['password'] = 'anonymous';
+				break;
+		}
+
+		if (hubConfig::is44() OR hubConfig::is45()) {
+			ilContext::init($il_context);
+			ilAuthFactory::setContext($il_context_auth);
+		} else {
+			ilAuthFactory::setContext($il_context_auth);
+		}
+		require_once('./include/inc.header.php');
 	}
 }

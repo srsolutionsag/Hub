@@ -4,10 +4,13 @@
  * Class hubShortlink
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class hubShortlink {
 
+	const REDIRECT_BASE = 1;
+	const REDIRECT_OBJECT = 2;
+	const REDIRECT_PARENT = 3;
 	/**
 	 * @var string
 	 */
@@ -20,6 +23,30 @@ class hubShortlink {
 	 * @var string
 	 */
 	protected $link = '';
+	/**
+	 * @var ilObjCourse
+	 */
+	protected $il_object = NULL;
+	/**
+	 * @var int
+	 */
+	protected $ref_id;
+	/**
+	 * @var int
+	 */
+	protected $obj_id;
+	/**
+	 * @var int
+	 */
+	protected $parent_id;
+	/**
+	 * @var string
+	 */
+	protected $type;
+	/**
+	 * @var string
+	 */
+	protected $parent_type;
 
 
 	/**
@@ -34,17 +61,30 @@ class hubShortlink {
 	 * @param $ext_id
 	 */
 	private function __construct($ext_id) {
-		$this->initILIAS();
+		require_once(dirname(__FILE__) . '/../class.hub.php');
+		hub::initILIAS(hub::CONTEXT_WEB);
+		self::includes();
 		$this->setExtId($ext_id);
-		if ($this->checkShortlink()) {
-			$this->redirectToObject();
-		} else {
-			$this->redirectToBase();
+		switch ($this->checkShortlink()) {
+			case self::REDIRECT_BASE:
+				$this->redirectToBase();
+				break;
+			case self::REDIRECT_PARENT:
+				$this->redirectToParent();
+				break;
+			case self::REDIRECT_OBJECT:
+				$this->redirectToObject();
+				break;
 		}
 	}
 
 
 	private function redirectToObject() {
+		ilUtil::redirect($this->getLink());
+	}
+
+
+	private function redirectToParent() {
 		ilUtil::redirect($this->getLink());
 	}
 
@@ -55,49 +95,71 @@ class hubShortlink {
 
 
 	/**
-	 * @return bool
+	 * @return bool|int
 	 */
 	private function checkShortlink() {
 		/**
 		 * @var hubSyncHistory $hubSyncHistory
 		 * @var hubOrigin      $hubOrigin
 		 * @var hubCourse      $class
+		 * @var hubCourse      $hubObject
+		 * @var ilTree         $tree
 		 */
 		foreach (hub::getObjectTypeClassNames() as $class) {
-			if ($class::where(array( 'shortlink' => $this->getExtId() ))->hasSets()) {
-				$ext_id = $class::where(array( 'shortlink' => $this->getExtId() ))->first()->getExtId();
+			if ($class::where(array( 'shortlink' => $this->getExtId() ))->debug()->hasSets()) {
+				$hubObject = $class::where(array( 'shortlink' => $this->getExtId() ))->first();
 				break;
 			}
 		}
-		if (! $ext_id) {
+		if (! $hubObject) {
 			ilUtil::sendFailure('No Object for this Shortlink found.', true);
+
+			return self::REDIRECT_BASE;
 		}
-		$hubSyncHistory = hubSyncHistory::find($ext_id);
+		$hubSyncHistory = hubSyncHistory::getInstance($hubObject);
 		if ($hubSyncHistory->getSrHubOriginId()) {
 			$this->setSrHubOriginId($hubSyncHistory->getSrHubOriginId());
-			$hubOriginObjectProperties = hubOriginObjectProperties::getInstance($hubSyncHistory->getSrHubOriginId());
-			if ($hubOriginObjectProperties->getShortlink() AND $hubSyncHistory->getIliasId()) {
+			$hubOriginObjectProperties = hubOriginObjectProperties::getInstance($hubObject->getSrHubOriginId());
+			if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SHORTLINK) AND $hubSyncHistory->getIliasId()) {
 				$hubOrigin = hubOrigin::find($this->getSrHubOriginId());
 				switch ($hubOrigin->getUsageType()) {
 					case hub::OBJECTTYPE_COURSE;
 					case hub::OBJECTTYPE_CATEGORY;
-						global $ilObjDataCache;
-						$a_ref_id = $hubSyncHistory->getIliasId();
-						$a_type = $ilObjDataCache->lookupType($ilObjDataCache->lookupObjId($a_ref_id));
 						$server = ($_SERVER['HTTPS'] == 'on' ? 'http://' : 'http://') . $_SERVER['SERVER_NAME'];
-						$link = $server . '/goto_' . urlencode(CLIENT_ID) . '_' . $a_type . '_' . $a_ref_id . '.html';
+						$this->initObjectData($hubSyncHistory->getIliasId());
+						if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SL_CHECK_ONLINE)) {
+							if ($this->getIlObject()->getOfflineStatus()) {
+								ilUtil::sendInfo($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_MSG_NOT_ONLINE), true);
+								$link =
+									$server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getParentType() . '_' . $this->getParentId() . '.html';
+								$this->setLink($link);
+
+								return self::REDIRECT_PARENT;
+							}
+						}
+						$link = $server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getType() . '_' . $this->getRefId() . '.html';
 						$this->setLink($link);
 
-						return true;
+						return self::REDIRECT_OBJECT;
 				}
-			} else {
-				// ilUtil::sendFailure('No Object for this Shortlink found.', true);
 			}
-		} else {
-			// ilUtil::sendFailure('No Object for this Shortlink found.', true);
 		}
 
-		return false;
+		return self::REDIRECT_BASE;
+	}
+
+
+	/**
+	 * @param $ref_id
+	 */
+	protected function initObjectData($ref_id) {
+		global $tree;
+		$this->setRefId($ref_id);
+		$this->setParentId($tree->getParentId($ref_id));
+		$this->setObjId(ilObject2::_lookupObjId($this->getRefId()));
+		$this->setIlObject(ilObjectFactory::getInstanceByObjId($this->getObjId()));
+		$this->setType($this->getIlObject()->getType());
+		$this->setParentType(ilObject2::_lookupType($this->getParentId(), true));
 	}
 
 
@@ -152,34 +214,99 @@ class hubShortlink {
 	}
 
 
-	//
-	// Helpers
-	//
-	private function initILIAS() {
-		switch (trim(shell_exec('hostname'))) {
-			case 'ilias-webt1':
-			case 'ilias-webn1':
-			case 'ilias-webn2':
-			case 'ilias-webn3':
-				$path = '/var/www/ilias-4.3.x';
-				break;
-			default:
-				$path = substr(__FILE__, 0, strpos(__FILE__, 'Customizing'));
-				break;
-		}
-		chdir($path);
-		require_once('./include/inc.ilias_version.php');
-		require_once('./Services/Component/classes/class.ilComponent.php');
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.2.999')) {
-			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Services/class.hubContext.php');
-			hubContext::init(hubContext::CONTEXT_HUB);
-			require_once('./include/inc.header.php');
-		} else {
-			$_GET['baseClass'] = 'ilStartUpGUI';
-			require_once('include/inc.get_pear.php');
-			require_once('include/inc.header.php');
-		}
-		self::includes();
+	/**
+	 * @param \ilObjCourse $il_object
+	 */
+	public function setIlObject($il_object) {
+		$this->il_object = $il_object;
+	}
+
+
+	/**
+	 * @return \ilObjCourse
+	 */
+	public function getIlObject() {
+		return $this->il_object;
+	}
+
+
+	/**
+	 * @param int $parent_id
+	 */
+	public function setParentId($parent_id) {
+		$this->parent_id = $parent_id;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getParentId() {
+		return $this->parent_id;
+	}
+
+
+	/**
+	 * @param int $ref_id
+	 */
+	public function setRefId($ref_id) {
+		$this->ref_id = $ref_id;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getRefId() {
+		return $this->ref_id;
+	}
+
+
+	/**
+	 * @param string $type
+	 */
+	public function setType($type) {
+		$this->type = $type;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getType() {
+		return $this->type;
+	}
+
+
+	/**
+	 * @param int $obj_id
+	 */
+	public function setObjId($obj_id) {
+		$this->obj_id = $obj_id;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getObjId() {
+		return $this->obj_id;
+	}
+
+
+	/**
+	 * @param string $parent_type
+	 */
+	public function setParentType($parent_type) {
+		$this->parent_type = $parent_type;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getParentType() {
+		return $this->parent_type;
 	}
 
 

@@ -5,10 +5,17 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubCourseFields
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class hubCourseFields extends hubOriginObjectPropertiesFields {
 
+	protected static $notification_placeholder = array(
+		'title',
+		'description',
+		'responsible',
+		'notification_email',
+		'shortlink',
+	);
 	const F_NODE_NOPARENT = 'node_noparent';
 	const F_ACTIVATE = 'activate';
 	const F_CREATE_ICON = 'create_icon';
@@ -19,6 +26,20 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 	const F_REACTIVATE = 'reactivate';
 	const F_DELETE = 'delete';
 	const F_DELETED_ICON = 'deleted_icon';
+	const F_SEND_NOTIFICATION = 'send_notification';
+	const F_NOT_BODY = 'notification_body';
+
+
+	/**
+	 * @return string
+	 */
+	public static function getPlaceHolderStrings() {
+		$return = '[';
+		$return .= implode('], [', self::$notification_placeholder);
+		$return .= ']';
+
+		return strtoupper($return);
+	}
 }
 
 ?>

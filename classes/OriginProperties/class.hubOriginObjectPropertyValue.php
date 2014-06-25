@@ -7,7 +7,7 @@ require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRe
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  * @revision $r$
  */
@@ -41,6 +41,7 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 		if (self::where(array( 'property_key' => $this->getPropertyKey() ))->hasSets()) {
 			parent::update();
 		} else {
+
 			parent::create();
 		}
 	}
