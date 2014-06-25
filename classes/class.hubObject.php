@@ -241,7 +241,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @var int
 	 *
 	 * @db_has_field            true
-	 * @db_fieldtype            datetime
+	 * @db_fieldtype            timestamp
 	 */
 	protected $creation_date = NULL;
 

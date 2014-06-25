@@ -53,5 +53,5 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 hubUser::updateDB();
 hubCategory::updateDB();
 hubMembership::updateDB();
-hubUser::updateDB();
+hubCourse::updateDB();
 ?>

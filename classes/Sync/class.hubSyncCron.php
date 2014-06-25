@@ -39,7 +39,8 @@ class hubSyncCron {
 
 
 	public static function initAndRun() {
-		self::initILIAS();
+		require_once(dirname(__FILE__) . '/../class.hub.php');
+		hub::initILIAS();
 		$cronJob = new self();
 		if ($cronJob->origin_id) {
 			$cronJob->runSingleOrigin();
@@ -48,25 +49,6 @@ class hubSyncCron {
 		}
 	}
 
-
-	/*public static function initILIAS() {
-		require_once(dirname(__FILE__) . '/../class.hub.php');
-		chdir(Hub::getRootPath());
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			require_once('./Services/Context/classes/class.ilContext.php');
-			ilContext::init(ilContext::CONTEXT_CRON);
-			require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
-			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
-		} else {
-			require_once('./Services/Authentication/classes/class.ilAuthFactory.php');
-			ilAuthFactory::setContext(ilAuthFactory::CONTEXT_CRON);
-		}
-		$_COOKIE['ilClientId'] = $_SERVER['argv'][3];
-		$_POST['username'] = $_SERVER['argv'][1];
-		$_POST['password'] = $_SERVER['argv'][2];
-		require_once('./include/inc.header.php');
-		self::includes();
-	}*/
 
 	private static function includes() {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
@@ -77,6 +59,8 @@ class hubSyncCron {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubDurationLogger.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Notification/class.hubOriginException.php');
+		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
+		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php');
 	}
 
 
@@ -108,6 +92,11 @@ class hubSyncCron {
 	 */
 	public function run() {
 		self::includes();
+
+//		hubCourse::updateDB();
+//		hubUser::updateDB();
+//		hubCategory::updateDB();
+//		hubMembership::updateDB();
 		$this->log->write('New Sync initiated', hubLog::L_PROD);
 		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
 		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
@@ -116,11 +105,9 @@ class hubSyncCron {
 		try {
 			if ($this->syncUsageType(hub::OBJECTTYPE_USER)) {
 				hubDurationLogger::start('build_users', false);
-				$class = hub::getObjectClassname(hub::OBJECTTYPE_USER);
 				if (hubUser::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				};
-				hubUser::logCounts();
 				hubDurationLogger::log('build_users');
 			}
 		} catch (Exception $e) {
@@ -134,7 +121,6 @@ class hubSyncCron {
 				if (hubCategory::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubCategory::logCounts();
 				hubDurationLogger::log('build_categories');
 			}
 		} catch (Exception $e) {
@@ -148,7 +134,6 @@ class hubSyncCron {
 				if (hubCourse::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubCourse::logCounts();
 				hubDurationLogger::log('build_courses');
 			}
 		} catch (Exception $e) {
@@ -162,7 +147,6 @@ class hubSyncCron {
 				if (hubMembership::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubMembership::logCounts();
 				hubDurationLogger::log('build_memberships');
 			}
 		} catch (Exception $e) {
