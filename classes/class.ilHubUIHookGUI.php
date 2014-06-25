@@ -5,7 +5,7 @@ require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
  * Class ilHubUIHookGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
@@ -72,8 +72,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 				'hubOriginGUI'
 			), 'index');
 
-//			$link = '';
-
+			//			$link = '';
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (! in_array('CtrlMainMenu', $plugins)) {

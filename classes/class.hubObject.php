@@ -12,7 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubObject
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 abstract class hubObject extends ActiveRecord {
 
@@ -164,8 +164,10 @@ abstract class hubObject extends ActiveRecord {
 		$hist->setDeleted(false);
 		$hist->update();
 		if (self::exists(get_class($this), $this->getExtId())) {
+			$this->setCreationDate(date(DATE_ATOM));
 			parent::update();
 		} else {
+			$this->setCreationDate(date(DATE_ATOM));
 			parent::create();
 		}
 	}
@@ -230,11 +232,18 @@ abstract class hubObject extends ActiveRecord {
 	/**
 	 * @var int
 	 *
-	 * @db_has_field            false
+	 * @db_has_field            true
 	 * @db_fieldtype            integer
 	 * @db_length               1
 	 */
 	protected $ext_status = NULL;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field            true
+	 * @db_fieldtype            datetime
+	 */
+	protected $creation_date = NULL;
 
 
 	/**
@@ -324,19 +333,20 @@ abstract class hubObject extends ActiveRecord {
 		return $this->shortlink;
 	}
 
-	//
-	// Helper
-	//
 
-	public static function logCounts() {
-		//		$created = get_called_class() . ': Created: ' . hubCounter::getCount(hubCounter::CREATED);
-		//		hubLog::getInstance()->write($created, hubLog::L_PROD);
-		//		$updated = get_called_class() . ': Updated: ' . hubCounter::getCount(hubCounter::UPDATED);
-		//		hubLog::getInstance()->write($updated, hubLog::L_PROD);
-		//		$deleted = get_called_class() . ': Deleted: ' . hubCounter::getCount(hubCounter::DELETED);
-		//		hubLog::getInstance()->write($deleted, hubLog::L_PROD);
-		//		$ignored = get_called_class() . ': Ignored: ' . hubCounter::getCount(hubCounter::IGNORED);
-		//		hubLog::getInstance()->write($ignored, hubLog::L_PROD);
+	/**
+	 * @param int $creation_date
+	 */
+	public function setCreationDate($creation_date) {
+		$this->creation_date = $creation_date;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getCreationDate() {
+		return $this->creation_date;
 	}
 }
 

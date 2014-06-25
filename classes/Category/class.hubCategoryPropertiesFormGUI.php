@@ -6,7 +6,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * Class hubOriginFormGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 
@@ -65,10 +65,10 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_calendar'), hubCategoryFields::F_UPDATE_CALENDAR);
-//		$this->addItem($cb);
+		//		$this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
-//		$this->addItem($cb);
+		//		$this->addItem($cb);
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');

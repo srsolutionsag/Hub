@@ -7,7 +7,7 @@ require_once('./Services/Component/classes/class.ilComponent.php');
  * Class hubConfig
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  */
 class hubConfig extends ActiveRecord {

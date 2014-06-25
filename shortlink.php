@@ -2,7 +2,9 @@
 /**
  * Shortlink
  *
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
+ *
+ * @version 1.1.04
  */
 
 chdir(substr(__FILE__, 0, strpos(__FILE__, '/Customizing')));

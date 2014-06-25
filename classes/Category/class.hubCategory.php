@@ -9,7 +9,7 @@ require_once('./Services/Repository/classes/class.ilRepUtil.php');
  * Class hubCategory
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  */
 class hubCategory extends hubRepositoryObject {
@@ -185,12 +185,12 @@ class hubCategory extends hubRepositoryObject {
 	/**
 	 * FSX TODO
 	 */
-	private  function updateSorting() {
+	private function updateSorting() {
 		/**
 		 * @var $sorting ilContainerSorting
 		 */
 		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
-//		$sorting->sortItems(array());
+		//		$sorting->sortItems(array());
 
 	}
 

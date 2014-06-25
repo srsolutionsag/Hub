@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  *
  * @revision $r$
  */
@@ -117,8 +117,6 @@ class hubSyncHistory extends ActiveRecord {
 
 		return arObjectCache::get($class_name, $primary_key);
 	}
-
-
 
 
 	public function update() {

@@ -8,7 +8,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.1.03
+ * @version 1.1.04
  */
 class hubCourse extends hubRepositoryObject {
 
@@ -190,7 +190,7 @@ class hubCourse extends hubRepositoryObject {
 		$key = hubCourseFields::F_NODE_NOPARENT;
 		$base_node_ilias = ($this->props()->get($key) ? $this->props()->get($key) : 1);
 		if ($this->getParentIdType() == self::PARENT_ID_TYPE_EXTERNAL_ID) {
-			if ($this->props()->get(hubCourseFields::ORIGIN_LINK)) {
+			if ($this->props()->get(hubCourseFields::F_ORIGIN_LINK)) {
 				/**
 				 * @var $obj hubCategory
 				 */
