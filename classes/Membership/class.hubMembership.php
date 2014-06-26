@@ -47,6 +47,7 @@ class hubMembership extends hubObject {
 	protected $object_type = '';
 
 
+
 	/**
 	 * @param $ext_id_usr
 	 * @param $ext_id_container
@@ -91,7 +92,7 @@ class hubMembership extends hubObject {
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
 					if (! hubSyncCron::getDryRun()) {
-						// $hubMembership->updateMembership();
+						$hubMembership->updateMembership();
 					}
 					hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
 					break;
@@ -106,7 +107,7 @@ class hubMembership extends hubObject {
 					break;
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $hubMembership->getExtId(), 'Membership newly delivered:');
+					// hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $hubMembership->getExtId(), 'Membership newly delivered:');
 					if (! hubSyncCron::getDryRun()) {
 						$hubMembership->createMembership();
 					}
