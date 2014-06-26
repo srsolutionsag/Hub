@@ -89,7 +89,7 @@ abstract class hubObject extends ActiveRecord {
 
 		$class_name = get_called_class();
 		if (! arObjectCache::isCached($class_name, $primary_key)) {
-			$obj = arFactory::getInstance($class_name, 0);
+			$obj = arFactory::getInstance($class_name, $primary_key);
 			$obj->setExtId($primary_key);
 			$obj->storeObjectToCache();
 		}
@@ -101,7 +101,7 @@ abstract class hubObject extends ActiveRecord {
 	/**
 	 * @return mixed
 	 *
-	 * @desciprion Build get Status of Hisory an build your ILIAS-Objects
+	 * @desciprion Build get Status of History an build your ILIAS-Objects
 	 */
 	abstract public static function buildILIASObjects();
 
@@ -119,14 +119,6 @@ abstract class hubObject extends ActiveRecord {
 	 */
 	public function props() {
 		return hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function loadObjectProperties() {
-		// $this->object_properties = hubOriginObjectProperties::getInstance($this->getSrHubOriginId());
 	}
 
 
@@ -168,6 +160,7 @@ abstract class hubObject extends ActiveRecord {
 			parent::update();
 		} else {
 			$this->setCreationDate(date(DATE_ATOM));
+			self::$existing_ext_ids[get_class($this)] = $this->getExtId();
 			parent::create();
 		}
 	}

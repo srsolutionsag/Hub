@@ -113,6 +113,7 @@ class hubSyncCron {
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
 		}
+		$this->log->write('End Sync Users', hubLog::L_PROD);
 		// Category
 		$this->log->write('Sync Categories', hubLog::L_PROD);
 		try {
@@ -126,6 +127,7 @@ class hubSyncCron {
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
 		}
+		$this->log->write('End Sync Categories', hubLog::L_PROD);
 		// Courses
 		$this->log->write('Sync Courses', hubLog::L_PROD);
 		try {
@@ -139,6 +141,7 @@ class hubSyncCron {
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
 		}
+		$this->log->write('End Courses', hubLog::L_PROD);
 		// Memberships
 		$this->log->write('Sync Memberships', hubLog::L_PROD);
 		try {
@@ -152,6 +155,7 @@ class hubSyncCron {
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
 		}
+		$this->log->write('End Memberships', hubLog::L_PROD);
 		$this->handleMessages();
 		hub::restoreErrorCallback();
 	}
