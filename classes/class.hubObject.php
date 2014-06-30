@@ -25,6 +25,7 @@ abstract class hubObject extends ActiveRecord {
 	const DELETE_MODE_DELETE = 1;
 	const DELETE_MODE_INACTIVE = 2;
 	const DELETE_MODE_ARCHIVE = 3;
+	const DELETE_MODE_TRASH = 4;
 	/**
 	 * @var hubOrigin
 	 */
@@ -104,7 +105,7 @@ abstract class hubObject extends ActiveRecord {
 		$hist->setDeleted(false);
 		$hist->update();
 		if (self::find($this->getExtId())) {
-//			$this->setCreationDate(date(DATE_ATOM));
+			//			$this->setCreationDate(date(DATE_ATOM));
 			parent::update();
 		} else {
 			$this->setCreationDate(date(DATE_ATOM));

@@ -24,7 +24,6 @@ class hubCourseTableGUI extends srModelObjectTableGUI {
 		$hubCourseCollection = hubCourse::orderBy($this->getOrderField(), $this->getOrderDirection());
 		$hubCourseCollection->limit($this->getOffset(), $this->getLimit());
 		$this->setData($hubCourseCollection->getArray());
-		//		echo '<pre>' . print_r($hubCourseCollection->getArray(), 1) . '</pre>';
 	}
 
 
@@ -62,7 +61,7 @@ class hubCourseTableGUI extends srModelObjectTableGUI {
 			$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCourse->getParentId()) . '\'>'
 				. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>');
 
-			$this->addCell($this->pl->txt('list_status_' . $hubSyncHistory->getTemporaryStatus()));
+			$this->addCell($this->pl->txt('common_status_' . $hubSyncHistory->getTemporaryStatus()));
 		}
 
 		return true;

@@ -52,12 +52,12 @@ class hubOriginNotification {
 	protected function buildMessage($sr_hub_origin_id) {
 		$message = 'Common Messages:' . PHP_EOL;
 		$message .= implode(PHP_EOL, self::$messages[$sr_hub_origin_id][self::COMMON]);
-		$message .= PHP_EOL . PHP_EOL . PHP_EOL;
+		$message .= PHP_EOL . PHP_EOL;
 		foreach (self::$messages[$sr_hub_origin_id] as $header => $messages) {
 			if ($header != self::COMMON) {
-				$message .= $header . PHP_EOL . PHP_EOL;
+				$message .= $header . PHP_EOL;
 				$message .= implode(PHP_EOL, $messages);
-				$message .= PHP_EOL . PHP_EOL . PHP_EOL;
+				$message .= PHP_EOL . PHP_EOL;
 			}
 		}
 

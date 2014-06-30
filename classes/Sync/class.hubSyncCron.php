@@ -93,12 +93,10 @@ class hubSyncCron {
 	public function run() {
 		self::includes();
 
-//		hubCourse::updateDB();
-//		hubUser::updateDB();
-//		hubCategory::updateDB();
-//		hubMembership::updateDB();
-
-
+		//		hubCourse::updateDB();
+		//		hubUser::updateDB();
+		//		hubCategory::updateDB();
+		//		hubMembership::updateDB();
 
 		$this->log->write('New Sync initiated', hubLog::L_PROD);
 		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
@@ -107,11 +105,11 @@ class hubSyncCron {
 		$this->log->write('Sync Users', hubLog::L_PROD);
 		try {
 			if ($this->syncUsageType(hub::OBJECTTYPE_USER)) {
-				hubDurationLogger::start('build_users', false);
+				hubDurationLogger2::getInstance('build_users', false)->start();
 				if (hubUser::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				};
-				hubDurationLogger::log('build_users');
+				hubDurationLogger2::getInstance('build_users')->log();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
@@ -121,11 +119,11 @@ class hubSyncCron {
 		$this->log->write('Sync Categories', hubLog::L_PROD);
 		try {
 			if ($this->syncUsageType(hub::OBJECTTYPE_CATEGORY)) {
-				hubDurationLogger::start('build_categories', false);
+				hubDurationLogger2::getInstance('build_categories', false)->start();
 				if (hubCategory::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubDurationLogger::log('build_categories');
+				hubDurationLogger2::getInstance('build_categories')->log();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
@@ -135,11 +133,11 @@ class hubSyncCron {
 		$this->log->write('Sync Courses', hubLog::L_PROD);
 		try {
 			if ($this->syncUsageType(hub::OBJECTTYPE_COURSE)) {
-				hubDurationLogger::start('build_courses', false);
+				hubDurationLogger2::getInstance('build_courses', false)->start();
 				if (hubCourse::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubDurationLogger::log('build_courses');
+				hubDurationLogger2::getInstance('build_courses')->log();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
@@ -149,11 +147,11 @@ class hubSyncCron {
 		$this->log->write('Sync Memberships', hubLog::L_PROD);
 		try {
 			if ($this->syncUsageType(hub::OBJECTTYPE_MEMBERSHIP)) {
-				hubDurationLogger::start('build_memberships', false);
+				hubDurationLogger2::getInstance('build_memberships', false)->start();
 				if (hubMembership::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, new hubOrigin(), ! self::getDryRun());
 				}
-				hubDurationLogger::log('build_memberships');
+				hubDurationLogger2::getInstance('build_memberships')->log();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
@@ -204,7 +202,7 @@ class hubSyncCron {
 		 * @var $originObject hubOrigin
 		 */
 		try {
-			hubDurationLogger::start('overall_origin_' . $origin->getId(), false);
+			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();
 			$originObject = $origin->getObject();
 			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {
 				$this->writeLastUpdate($origin);
@@ -216,21 +214,21 @@ class hubSyncCron {
 			}
 			$this->log->write('Sync-Class: ' . get_class($originObject), hubLog::L_PROD);
 			if ($originObject->connect()) {
-				hubDurationLogger::start('parse_data_origin_' . $origin->getId(), false);
+				hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId(), false)->start();
 				if ($originObject->parseData()) {
 					$data = $originObject->getData();
 					if ($originObject->compareDataWithExisting(count($data))) {
-						hubDurationLogger::log('parse_data_origin_' . $origin->getId());
+						hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId())->log();
 						if ($originObject->getChecksum() === count($data) OR $originObject->getChecksum() == 0) {
-							hubDurationLogger::start('build_ext_objects_origin_' . $origin->getId(), false);
+							hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId(), false)->start();
 							if ($originObject->buildEntries()) {
-								hubDurationLogger::log('build_ext_objects_origin_' . $origin->getId());
+								hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId())->log();
 								$this->writeLastUpdate($origin);
-								hubDurationLogger::start('init_status_' . $origin->getId(), false);
+								hubDurationLogger2::getInstance('init_status_' . $origin->getId(), false)->start();
 								if (! hubSyncHistory::initStatus($origin->getId())) {
 									throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, ! self::getDryRun());
 								}
-								hubDurationLogger::log('init_status_' . $origin->getId());
+								hubDurationLogger2::getInstance('init_status_' . $origin->getId())->log();
 								$originObject->afterSync();
 
 								return true;
@@ -261,7 +259,7 @@ class hubSyncCron {
 			hub::sendFailure(implode('<br>', $this->messages), true);
 		}
 		hubOrigin::sendSummaries();
-		if (self::getDryRun() OR ! hub::isCli()) {
+		if (! hub::isCli()) {
 			ilUtil::sendInfo(hubOriginNotification::getSummaryString(), false);
 		}
 	}
@@ -273,8 +271,8 @@ class hubSyncCron {
 	private function writeLastUpdate(hubOrigin $origin) {
 		$time = new DateTime();
 		$origin->setLastUpdate($time->format(DateTime::ISO8601));
-		$origin->setDuration(hubDurationLogger::stop('overall_origin_' . $origin->getId()));
-		hubDurationLogger::log('overall_origin_' . $origin->getId());
+		$origin->setDuration(hubDurationLogger2::getInstance('overall_origin_' . $origin->getId())->get());
+		hubDurationLogger2::getInstance('overall_origin_' . $origin->getId())->log();
 		if (! self::getDryRun()) {
 			$origin->update();
 		}

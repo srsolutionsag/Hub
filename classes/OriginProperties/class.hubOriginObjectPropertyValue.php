@@ -91,7 +91,7 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 	 * @param string $prop_value
 	 */
 	public function setPropertyValue($prop_value) {
-		$this->property_value = $prop_value;
+		$this->property_value = json_encode($prop_value);
 	}
 
 
@@ -99,7 +99,7 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 	 * @return string
 	 */
 	public function getPropertyValue() {
-		return $this->property_value;
+		return json_decode($this->property_value, true);
 	}
 
 

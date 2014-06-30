@@ -143,7 +143,7 @@ class hubOriginObjectProperties {
 	 * @return mixed
 	 */
 	public function getByKey($key) {
-		return $this->get($key);
+		return $this->get($key, true);
 	}
 
 
