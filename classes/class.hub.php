@@ -86,6 +86,19 @@ class hub {
 
 
 	/**
+	 * @param string $message
+	 * @param bool   $keep
+	 */
+	public static function sendFailure($message, $keep = false) {
+		if (self::isCli()) {
+			echo $message;
+		} else {
+			ilUtil::sendFailure($message, $keep);
+		}
+	}
+
+
+	/**
 	 * @description ATTENTION: Does not yet work...
 	 */
 	public static function initErrorCallback() {
@@ -99,10 +112,9 @@ class hub {
 	 */
 	public static function fatalErrorHandler() {
 		$e = (object)error_get_last();
-		var_dump($e); // FSX
 		if (($e->type === E_ERROR) || ($e->type === E_USER_ERROR)) {
-			echo $error_message = 'hub FatalError:' . $e->message . ' in ' . $e->file . ' (Line ' . $e->line . ')';
-			hubLog::getInstance()->write($error_message);
+			// echo $error_message = 'hub FatalError:' . $e->message . ' in ' . $e->file . ' (Line ' . $e->line . ')';
+			// hubLog::getInstance()->write($error_message);
 
 			throw new hubOriginException(hubOriginException::OTHER, new hubOrigin(), true);
 		}

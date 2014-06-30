@@ -97,6 +97,9 @@ class hubSyncCron {
 //		hubUser::updateDB();
 //		hubCategory::updateDB();
 //		hubMembership::updateDB();
+
+
+
 		$this->log->write('New Sync initiated', hubLog::L_PROD);
 		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
 		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
@@ -255,7 +258,7 @@ class hubSyncCron {
 
 	private function handleMessages() {
 		if (count($this->messages) > 0) {
-			ilUtil::sendFailure(implode('<br>', $this->messages), true);
+			hub::sendFailure(implode('<br>', $this->messages), true);
 		}
 		hubOrigin::sendSummaries();
 		if (self::getDryRun() OR ! hub::isCli()) {

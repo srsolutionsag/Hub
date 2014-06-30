@@ -175,7 +175,7 @@ class hubOrigin extends ActiveRecord {
 			return $originObject;
 		}
 		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
-			ilUtil::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
+			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
 		}
 
 		return $this;

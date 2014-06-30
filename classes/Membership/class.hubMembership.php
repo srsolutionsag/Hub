@@ -47,7 +47,6 @@ class hubMembership extends hubObject {
 	protected $object_type = '';
 
 
-
 	/**
 	 * @param $ext_id_usr
 	 * @param $ext_id_container
@@ -60,13 +59,7 @@ class hubMembership extends hubObject {
 		/**
 		 * @var $hubMembership hubMembership
 		 */
-		// $hubMembership = hubMembership::findOrGetInstance($ext_id);
-		if (self::exists('hubMembership', $ext_id)) {
-			$hubMembership = hubMembership::find($ext_id);
-		} else {
-			$hubMembership = new self($ext_id);
-		}
-
+		$hubMembership = hubMembership::findOrGetInstance($ext_id);
 		$hubMembership->setExtIdCourse($ext_id_container);
 		$hubMembership->setExtIdUsr($ext_id_usr);
 
@@ -107,7 +100,6 @@ class hubMembership extends hubObject {
 					break;
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
-					// hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $hubMembership->getExtId(), 'Membership newly delivered:');
 					if (! hubSyncCron::getDryRun()) {
 						$hubMembership->createMembership();
 					}
@@ -151,11 +143,12 @@ class hubMembership extends hubObject {
 				$this->participants = new ilGroupParticipants(ilObject2::_lookupObjId($this->getContainerId()));
 				break;
 		}
-
-		foreach ($this->participants->getRoles() as $role) {
-			if (strpos(ilObject::_lookupTitle($role), 'il_' . $this->object_type . '_' . $appendix) === 0) {
-				$this->ilias_role_id = $role;
-				break;
+		if ($this->participants instanceof ilParticipants) {
+			foreach ($this->participants->getRoles() as $role) {
+				if (strpos(ilObject::_lookupTitle($role), 'il_' . $this->object_type . '_' . $appendix) === 0) {
+					$this->ilias_role_id = $role;
+					break;
+				}
 			}
 		}
 

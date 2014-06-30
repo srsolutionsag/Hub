@@ -57,15 +57,15 @@ class hubUser extends hubObject {
 						$hubUser->deleteUser();
 					}
 					hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
+//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubUser->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
+//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
 					break;
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubUser->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
+//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
 					if (! hubSyncCron::getDryRun()) {
 						$hubUser->updateUser();
 					}
@@ -653,21 +653,29 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param hubOrigin $origin
+	 * @param $field_name
+	 *
+	 * @return string
 	 */
-	public function updateInto(hubOrigin $origin) {
-		$temp = $this->ilias_roles;
-		if (is_array($this->ilias_roles)) {
-			$this->ilias_roles = implode(',', $this->ilias_roles);
+	public function sleep($field_name) {
+		switch ($field_name) {
+			case 'ilias_roles':
+				return implode(',', $this->ilias_roles);
 		}
-		parent::updateInto($origin);
-		$this->ilias_roles = $temp;
 	}
 
 
-	public function read() {
-		parent::read();
-		$this->ilias_roles = @explode(',', $this->ilias_roles);
+	/**
+	 * @param $field_name
+	 * @param $field_value
+	 *
+	 * @return array
+	 */
+	public function wakeUp($field_name, $field_value) {
+		switch ($field_name) {
+			case 'ilias_roles':
+				return explode(',', $field_value);
+		}
 	}
 
 

@@ -59,6 +59,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @param $class
 	 * @param $ext_id
 	 *
+	 * @deprecated
 	 * @return bool
 	 */
 	public static function exists($class, $ext_id) {
@@ -76,9 +77,46 @@ abstract class hubObject extends ActiveRecord {
 
 
 	/**
-	 * @param $primary_key
+	 * @param hubOrigin $origin
+	 */
+	public function update(hubOrigin $origin) {
+		$this->updateInto($origin);
+	}
+
+
+	/**
+	 * @param hubOrigin $origin
+	 */
+	public function create(hubOrigin $origin) {
+		$this->updateInto($origin);
+	}
+
+
+	/**
+	 * @param hubOrigin $origin
 	 *
-	 * @internal param array $add_constructor_args
+	 * @return bool
+	 */
+	public function updateInto(hubOrigin $origin) {
+		$this->setSrHubOriginId($origin->getId());
+		$this->updateDeliveryDate();
+		$hist = $this->getHistoryObject();
+		$hist->setDeleted(false);
+		$hist->update();
+		if (self::find($this->getExtId())) {
+//			$this->setCreationDate(date(DATE_ATOM));
+			parent::update();
+		} else {
+			$this->setCreationDate(date(DATE_ATOM));
+			parent::create();
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * @param $primary_key
 	 *
 	 * @return hubObject
 	 */
@@ -86,15 +124,40 @@ abstract class hubObject extends ActiveRecord {
 		/**
 		 * @var $obj hubObject
 		 */
-
 		$class_name = get_called_class();
 		if (! arObjectCache::isCached($class_name, $primary_key)) {
-			$obj = arFactory::getInstance($class_name, $primary_key);
-			$obj->setExtId($primary_key);
-			$obj->storeObjectToCache();
+			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
+				arFactory::getInstance($class_name, $primary_key);
+			} else {
+				return NULL;
+			}
 		}
 
 		return arObjectCache::get($class_name, $primary_key);
+	}
+
+
+	/**
+	 * @param $primary_key
+	 *
+	 * @return hubObject
+	 */
+	public static function findOrGetInstance($primary_key) {
+		/**
+		 * @var $obj hubObject
+		 */
+		$obj = self::find($primary_key);
+		if ($obj !== NULL) {
+			return $obj;
+		} else {
+			$class_name = get_called_class();
+			$obj = arFactory::getInstance($class_name, 0);
+			$obj->setExtId($primary_key);
+
+			//			$obj->storeObjectToCache();
+
+			return $obj;
+		}
 	}
 
 
@@ -127,42 +190,6 @@ abstract class hubObject extends ActiveRecord {
 	 */
 	public function getHistoryObject() {
 		return hubSyncHistory::getInstance($this);
-	}
-
-
-	/**
-	 * @param hubOrigin $origin
-	 */
-	public function update(hubOrigin $origin) {
-		$this->updateInto($origin);
-	}
-
-
-	/**
-	 * @param hubOrigin $origin
-	 */
-	public function create(hubOrigin $origin) {
-		$this->updateInto($origin);
-	}
-
-
-	/**
-	 * @param hubOrigin $origin
-	 */
-	public function updateInto(hubOrigin $origin) {
-		$this->setSrHubOriginId($origin->getId());
-		$this->updateDeliveryDate();
-		$hist = $this->getHistoryObject();
-		$hist->setDeleted(false);
-		$hist->update();
-		if (self::exists(get_class($this), $this->getExtId())) {
-			$this->setCreationDate(date(DATE_ATOM));
-			parent::update();
-		} else {
-			$this->setCreationDate(date(DATE_ATOM));
-			self::$existing_ext_ids[get_class($this)] = $this->getExtId();
-			parent::create();
-		}
 	}
 
 
