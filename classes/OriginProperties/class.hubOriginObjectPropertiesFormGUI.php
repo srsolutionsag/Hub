@@ -88,7 +88,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		 * @var ilRadioGroupInputGUI $subItem
 		 * @var ilRadioOption        $op
 		 */
-		if (! $item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI) {
+		if (self::hasValue($item)) {
 			$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
 			if ($item instanceof ilRadioGroupInputGUI) {
 				foreach ($item->getOptions() as $op) {
@@ -97,8 +97,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 					}
 				}
 			} else {
-				foreach ($item->getSubItems() as $subItem) {
-					$this->personalizeOneField($subItem);
+				if (self::hasSubitems($item)) {
+					foreach ($item->getSubItems() as $subItem) {
+						$this->personalizeOneField($subItem);
+					}
 				}
 			}
 		}
@@ -162,14 +164,18 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @return ilPropertyFormGUI
 	 */
 	public function appendToForm(ilPropertyFormGUI $form_gui) {
-		foreach ($this->getItems() as $item) {
-			if ($this->origin->getId() AND get_class($item) != 'ilFormSectionHeaderGUI') {
-				$item->setDisabled($this->locked);
-				foreach ($item->getSubItems() as $subitem) {
-					$subitem->setDisabled($this->locked);
+		if ($this->origin->getId()) {
+			foreach ($this->getItems() as $item) {
+				if(self::hasValue($item)) {
+					$item->setDisabled($this->locked);
 				}
+				if (self::hasSubitems($item)) {
+					foreach ($item->getSubItems() as $subitem) {
+						$subitem->setDisabled($this->locked);
+					}
+				}
+				$form_gui->addItem($item);
 			}
-			$form_gui->addItem($item);
 		}
 
 		return $form_gui;
@@ -212,38 +218,74 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		 * @var $subItem ilCheckboxInputGUI
 		 */
 		foreach ($this->getItems() as $item) {
-			if (! $item instanceof ilFormSectionHeaderGUI) {
-				$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
-				if ($value) {
-					$array[$item->getPostVar()] = $value;
-				}
-				if ($item instanceof ilRadioGroupInputGUI) {
-					foreach ($item->getOptions() as $op) {
-						foreach ($op->getSubItems() as $subItem) {
-							$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
-							if ($value) {
-								$array[$subItem->getPostVar()] = $value;
-							}
-						}
-					}
-				} else {
-					foreach ($item->getSubItems() as $subItem) {
-						$value = $this->origin_properties->getByShortPrefix($subItem->getPostVar());
-						if ($value) {
-							$array[$subItem->getPostVar()] = $value;
-						}
-						foreach ($subItem->getSubItems() as $sub_subitem) {
-							$value = $this->origin_properties->getByShortPrefix($sub_subitem->getPostVar());
-							if ($value) {
-								$array[$sub_subitem->getPostVar()] = $value;
-							}
-						}
-					}
-				}
-			}
+			$this->returnValuesOfItem($item, $array);
 		}
 
 		return $array;
+	}
+
+
+	/**
+	 * @param $item
+	 * @param $array
+	 */
+	public function returnValuesOfItem($item, &$array) {
+		if (self::hasValue($item)) {
+			$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
+			$array[$item->getPostVar()] = $value;
+			foreach (self::getSubItems($item) as $subtitem) {
+				$this->returnValuesOfItem($subtitem, $array);
+			}
+		}
+	}
+
+
+	/**
+	 * @param $item
+	 *
+	 * @return bool
+	 */
+	public static function hasSubitems($item) {
+		return (! $item instanceof ilFormSectionHeaderGUI AND ! $item instanceof ilRadioGroupInputGUI AND ! $item instanceof ilMultiSelectInputGUI);
+	}
+
+
+	/**
+	 * @param $item
+	 *
+	 * @return bool
+	 */
+	public static function hasValue($item) {
+		return (! $item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI);
+	}
+
+
+	/**
+	 * @param $item
+	 *
+	 * @return array
+	 */
+	public static function getSubItems($item) {
+		$return = array();
+		if (self::hasSubitems($item)) {
+			return $item->getSubItems();
+		} elseif ($item instanceof ilRadioGroupInputGUI) {
+			foreach ($item->getOptions() as $op) {
+				$return[] = $op->getSubItems();
+			}
+		}
+
+		return $return;
+	}
+
+
+	protected function fillValueByItem($item) {
+		if (self::hasValue($item)) {
+			$this->origin_properties->setByKey($item->getPostVar(), $this->getInput($item->getPostVar()));
+			foreach (self::getSubItems($item) as $subtitem) {
+				$this->fillValueByItem($subtitem);
+			}
+		}
 	}
 
 
@@ -252,23 +294,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 */
 	protected function fillObjectValues() {
 		foreach ($this->getItems() as $item) {
-			if (get_class($item) != 'ilFormSectionHeaderGUI') {
-				$this->origin_properties->setByKey($item->getPostVar(), $this->getInput($item->getPostVar()));
-				if (get_class($item) == 'ilRadioGroupInputGUI') {
-					foreach ($item->getOptions() as $op) {
-						foreach ($op->getSubItems() as $subItem) {
-							$this->origin_properties->setByKey($subItem->getPostVar(), $this->getInput($subItem->getPostVar()));
-						}
-					}
-				} else {
-					foreach ($item->getSubItems() as $subItem) {
-						$this->origin_properties->setByKey($subItem->getPostVar(), $this->getInput($subItem->getPostVar()));
-						foreach ($subItem->getSubItems() as $sub_subitem) {
-							$this->origin_properties->setByKey($sub_subitem->getPostVar(), $this->getInput($sub_subitem->getPostVar()));
-						}
-					}
-				}
-			}
+			$this->fillValueByItem($item);
 		}
 	}
 

@@ -32,6 +32,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		$this->addColumn($this->pl->txt('origin_table_header_usage_type'));
 		$this->addColumn($this->pl->txt('origin_table_header_last_update'));
 		$this->addColumn($this->pl->txt('origin_table_header_duration'));
+		$this->addColumn($this->pl->txt('origin_table_header_duration_objects'));
 		$this->addColumn($this->pl->txt('origin_table_header_count'));
 		$this->addColumn($this->pl->txt('common_actions'));
 	}
@@ -112,7 +113,9 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		$this->addCell($this->pl->txt('origin_form_field_usage_type_' . $a_set['usage_type']));
 		$this->addCell($a_set['last_update']);
 		$duration = $a_set['duration'] ? $a_set['duration'] : 0;
+		$duration_objects = $a_set['duration_objects'] ? $a_set['duration_objects'] : 0;
 		$this->addCell($duration . ' s.');
+		$this->addCell($duration_objects . ' s.');
 		$this->addCell($hubOrigin->getCountOfHubObjects());
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $a_set['id']);
 		$actions = new ilAdvancedSelectionListGUI();

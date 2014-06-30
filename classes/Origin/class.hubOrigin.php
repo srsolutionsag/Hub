@@ -50,6 +50,9 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function addSummary() {
+		hubOriginNotification::addMessage($this->getId(), 'Duration read Data: ' . $this->getDuration(), 'Durations');
+		hubOriginNotification::addMessage($this->getId(), 'Duration build Objects: ' . $this->getDurationObjects(), 'Durations');
+
 		$created = 'Total Created: ' . hubCounter::getCountCreated($this->getId());
 		hubOriginNotification::addMessage($this->getId(), $created);
 		$updated = 'Total Updated: ' . hubCounter::getCountUpdated($this->getId());
@@ -65,6 +68,12 @@ class hubOrigin extends ActiveRecord {
 
 	public static function sendSummaries() {
 		foreach (self::get() as $hubOrigin) {
+			$hubDurationLogger = hubDurationLogger2::getInstance('obj_origin_' . $hubOrigin->getId());
+			$hubDurationLogger->stop();
+			if ($duration = $hubDurationLogger->get()) {
+				$hubOrigin->setDurationObjects($duration);
+				$hubOrigin->update();
+			}
 			$hubOrigin->sendSummary();
 		}
 	}
@@ -381,6 +390,42 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * This method is executed after the ILIAS object is created
+	 *
+	 * @param hubObject $hub_object
+	 *
+	 * @return \hubObject
+	 */
+	public function afterObjectCreation(hubObject $hub_object) {
+		return $hub_object;
+	}
+
+
+	/**
+	 * This method is executed after the ILIAS object is updated
+	 *
+	 * @param hubObject $hub_object
+	 *
+	 * @return \hubObject
+	 */
+	public function afterObjectUpdate(hubObject $hub_object) {
+		return $hub_object;
+	}
+
+
+	/**
+	 * This method is executed after the ILIAS object is deleted
+	 *
+	 * @param hubObject $hub_object
+	 *
+	 * @return \hubObject
+	 */
+	public function afterObjectDeletion(hubObject $hub_object) {
+		return $hub_object;
+	}
+
+
+	/**
 	 * @param ilPropertyFormGUI $form_gui
 	 *
 	 * @return ilPropertyFormGUI
@@ -501,6 +546,14 @@ class hubOrigin extends ActiveRecord {
 	 * @db_length           8
 	 */
 	protected $duration = 0;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           8
+	 */
+	protected $duration_objects = 0;
 
 
 	/**
@@ -713,6 +766,22 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function getData() {
 		return $this->data;
+	}
+
+
+	/**
+	 * @param int $duration_objects
+	 */
+	public function setDurationObjects($duration_objects) {
+		$this->duration_objects = $duration_objects;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getDurationObjects() {
+		return $this->duration_objects;
 	}
 }
 

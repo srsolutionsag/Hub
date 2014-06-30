@@ -55,3 +55,10 @@ hubCategory::updateDB();
 hubMembership::updateDB();
 hubCourse::updateDB();
 ?>
+<#7>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourse.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
+hubCourse::updateDB();
+hubOrigin::updateDB();
+?>

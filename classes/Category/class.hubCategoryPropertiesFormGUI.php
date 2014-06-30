@@ -47,6 +47,16 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_create_icon'), hubCategoryFields::CREATE_ICON);
 		$this->addItem($cb);
+		if (hubConfig::is44() OR hubConfig::is45()) {
+			//
+			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_CALENDAR), hubCategoryFields::F_SET_CALENDAR);
+			$this->addItem($cb);
+			//
+			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_SORTING), hubCategoryFields::F_SET_SORTING);
+			$this->addItem($cb);
+			//
+		}
+
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' UPDATED');
@@ -63,13 +73,15 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_icon'), hubCategoryFields::UPDATE_ICON);
 		$this->addItem($cb);
-		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_calendar'), hubCategoryFields::F_UPDATE_CALENDAR);
-		//		$this->addItem($cb);
-		//
-		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
-		//		$this->addItem($cb);
-		//
+		if (hubConfig::is44() OR hubConfig::is45()) {
+			//
+			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_calendar'), hubCategoryFields::F_UPDATE_CALENDAR);
+			$this->addItem($cb);
+			//
+			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
+			$this->addItem($cb);
+			//
+		}
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('common_on_status') . ' DELETED');
 		$this->addItem($h);

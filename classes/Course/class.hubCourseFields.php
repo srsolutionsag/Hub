@@ -28,6 +28,7 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 	const F_DELETED_ICON = 'deleted_icon';
 	const F_SEND_NOTIFICATION = 'send_notification';
 	const F_NOT_BODY = 'notification_body';
+	const F_NOT_SUBJECT = 'notification_subject';
 
 
 	/**
@@ -39,6 +40,22 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 		$return .= ']';
 
 		return strtoupper($return);
+	}
+
+
+	/**
+	 * @param hubCourse $hubCourse
+	 *
+	 * @return string
+	 */
+	public static function getReplacedText(hubCourse $hubCourse) {
+		$body = $hubCourse->props()->get(self::F_NOT_BODY);
+		$hubCourse_array = $hubCourse->__asArray();
+		foreach (self::$notification_placeholder as $ph) {
+			$body = str_ireplace('[' . $ph . ']', $hubCourse_array[$ph], $body);
+		}
+
+		return $body;
 	}
 }
 

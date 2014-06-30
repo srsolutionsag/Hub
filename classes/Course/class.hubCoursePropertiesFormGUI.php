@@ -23,10 +23,13 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 	 * @description build FormElements
 	 */
 	protected function initForm() {
+		//		$this->pl->updateLanguageFiles();
 		// Shortlink appendix
 		$shortlink = $this->getItemByPostVar(hubCourseFields::F_SHORTLINK);
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_check_online'), hubCourseFields::F_SL_CHECK_ONLINE);
 		$msg = new ilTextAreaInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_MSG_NOT_ONLINE), hubCourseFields::F_MSG_NOT_ONLINE);
+		$msg->setRows(2);
+		$msg->setCols(100);
 		$cb->addSubItem($msg);
 		$shortlink->addSubItem($cb);
 		//
@@ -44,8 +47,13 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($cb);
 		//
 		$send_mail = new ilCheckboxInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_SEND_NOTIFICATION), hubCourseFields::F_SEND_NOTIFICATION);
+		$send_mail->setInfo($this->pl->txt('crs_prop_' . hubCourseFields::F_SEND_NOTIFICATION . '_info'));
+		$notification_subject = new ilTextInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_SUBJECT), hubCourseFields::F_NOT_SUBJECT);
+		$send_mail->addSubItem($notification_subject);
 		$notification_body = new ilTextAreaInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_BODY), hubCourseFields::F_NOT_BODY);
 		$notification_body->setInfo(hubCourseFields::getPlaceHolderStrings());
+		$notification_body->setRows(6);
+		$notification_body->setCols(100);
 		$send_mail->addSubItem($notification_body);
 		$this->addItem($send_mail);
 		//
@@ -82,6 +90,9 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$delete->addOption($opt_inactive);
 		//
 		$opt_delete = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_delete'), hubCourse::DELETE_MODE_DELETE);
+		$delete->addOption($opt_delete);
+		//
+		$opt_delete = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_trash'), hubCourse::DELETE_MODE_TRASH);
 		$delete->addOption($opt_delete);
 		//
 		$this->addItem($delete);

@@ -94,6 +94,8 @@ class hubCategory extends hubRepositoryObject {
 			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
 				continue;
 			}
+			$duration_id = 'obj_origin_' . $hubCategory->getSrHubOriginId();
+			hubDurationLogger2::getInstance($duration_id)->resume();
 			$existing_ref_id = 0;
 			switch ($hubCategory->props()->get(hubCategoryFields::SYNCFIELD)) {
 				case 'title':
@@ -144,6 +146,7 @@ class hubCategory extends hubRepositoryObject {
 			$hubOrigin::afterObjectModification($hubCategory);
 			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
 			$hubOriginObj->afterObjectInit($hubCategory);
+			hubDurationLogger2::getInstance($duration_id)->pause();
 			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== ''
 			) {
 				self::buildForParentId($hubCategory->getExtId());

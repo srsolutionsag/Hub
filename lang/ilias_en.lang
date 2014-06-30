@@ -50,6 +50,13 @@ com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
 com_prop_mark_deleted_text#:#(gelöscht)
 com_prop_shortlink#:#Shortlink aktivieren
 com_prop_use_ext_status#:#Externes Statusmodell verwenden
+common_status_1#:#New
+common_status_2#:#Delivered
+common_status_3#:#Not delivered
+common_status_4#:#Deleted in ILIAS
+common_status_5#:#Newly delivered
+common_status_6#:#Already deleted
+common_status_7#:#in Trash
 common_actions#:#Aktionen
 common_activate#:#Aktivieren
 common_deactivate#:#Deaktivieren
@@ -63,6 +70,7 @@ crs_prop_create_icon#:#Icon erstellen
 crs_prop_delete_mode#:#Löschverhalten
 crs_prop_delete_mode_delete#:#Kurs löschen
 crs_prop_delete_mode_inactive#:#Kurs offline setzen
+crs_prop_delete_mode_trash#:#Move to Trash
 crs_prop_delete_mode_none#:#Keine Aktion
 crs_prop_header_icon#:#Icon-Einstellungen
 crs_prop_header_object#:#Objekt-Einstellungen
@@ -72,6 +80,12 @@ crs_prop_reactivate#:#Wieder online setzen
 crs_prop_update_description#:#Beschreibung aktualisieren
 crs_prop_update_icon#:#Icon aktualisieren
 crs_prop_update_title#:#Titel aktualisieren
+crs_prop_check_online#:#Check online-status of course
+crs_prop_msg_not_online#:#Message if course offline
+crs_prop_notification_subject#:#Subject
+crs_prop_notification_body#:#Body
+crs_prop_send_notification#:#Activate notification
+crs_prop_send_notification_info#:#Beim Erstellen des Kurses wird eine Mail an die Adressen im Objekt-Feld notification_email verschickt.
 hub_categories#:#Kategorien
 hub_conf#:#Einstellungen
 hub_courses#:#Kurse
@@ -152,8 +166,9 @@ origin_table_button_import#:#Anbindung importieren
 origin_table_button_run#:#Synchronisierung starten
 origin_table_header_active#:#Aktiv
 origin_table_header_count#:#Anzahl
+origin_table_header_duration_objects#:#Building Objects
 origin_table_header_description#:#Beschreibung
-origin_table_header_duration#:#Dauer
+origin_table_header_duration#:#Read Data
 origin_table_header_last_update#:#Letzte Synchronisierung
 origin_table_header_title#:#Titel
 origin_table_header_usage_type#:#Verwendung
