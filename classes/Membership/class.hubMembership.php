@@ -76,6 +76,9 @@ class hubMembership extends hubObject {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 				continue;
 			}
+			$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
+			hubDurationLogger2::getInstance($duration_id)->resume();
+
 			switch ($hubMembership->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					if (! hubSyncCron::getDryRun()) {
@@ -110,6 +113,7 @@ class hubMembership extends hubObject {
 			$hubOrigin::afterObjectModification($hubMembership);
 			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId());
 			$hubOriginObj->afterObjectInit($hubMembership);
+			hubDurationLogger2::getInstance($duration_id)->resume();
 		}
 
 		return true;

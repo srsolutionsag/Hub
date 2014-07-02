@@ -37,6 +37,8 @@ class hubUser extends hubObject {
 			if (! hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
 				continue;
 			}
+			$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
+			hubDurationLogger2::getInstance($duration_id)->resume();
 			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
@@ -74,6 +76,7 @@ class hubUser extends hubObject {
 			$hubUser->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubUser);
+			hubDurationLogger2::getInstance($duration_id)->pause();
 		}
 
 		return true;
