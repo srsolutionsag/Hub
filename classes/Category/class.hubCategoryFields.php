@@ -21,10 +21,12 @@ class hubCategoryFields extends hubOriginObjectPropertiesFields {
 	const DELETE = 'delete';
 	const DELETED_ICON = 'deleted_icon';
 	const ARCHIVE_NODE = 'archive_node';
-	const F_UPDATE_CALENDAR = 'update_calendar';
-	const F_SET_CALENDAR = 'set_calendar';
+	const F_UPDATE_NEWS = 'update_news';
+	const F_SET_NEWS = 'set_news';
 	const F_UPDATE_SORTING = 'update_sorting';
 	const F_SET_SORTING = 'set_sorting';
+	const F_UPDATE_INFOPAGE = 'update_infopage';
+	const F_SET_INFOPAGE = 'set_infopage';
 }
 
 ?>
