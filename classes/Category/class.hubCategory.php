@@ -4,6 +4,7 @@ require_once('./Modules/Category/classes/class.ilObjCategory.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategoryFields.php');
 require_once('./Services/Container/classes/class.ilContainerSorting.php');
 require_once('./Services/Repository/classes/class.ilRepUtil.php');
+require_once('./Services/Object/classes/class.ilObjectServiceSettingsGUI.php');
 
 /**
  * Class hubCategory
@@ -193,6 +194,7 @@ class hubCategory extends hubRepositoryObject {
 		 * @var $sorting ilContainerSorting
 		 */
 		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
+		//		$sorting->getSortMode()
 		//		$sorting->sortItems(array());
 
 	}
@@ -202,8 +204,11 @@ class hubCategory extends hubRepositoryObject {
 		$update = false;
 		$this->moveObject();
 		if ($this->props()->get(hubCategoryFields::UPDATE_TITLE)) {
+			global $lng;
 			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitle());
+			$this->ilias_object->removeTranslations();
+			$this->ilias_object->addTranslation($this->getTitle(), $this->getDescription(), $lng->getDefaultLanguage(), true);
 			$update = true;
 		}
 		if ($this->props()->get(hubCategoryFields::UPDATE_DESCRIPTION)) {
@@ -215,6 +220,17 @@ class hubCategory extends hubRepositoryObject {
 			$this->initObject();
 			$this->updateIcon();
 		}
+		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
+			if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
+				$this->initObject();
+				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+			}
+			if ($this->props()->get(hubCategoryFields::F_UPDATE_INFOPAGE)) {
+				$this->initObject();
+				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
+			}
+		}
+
 		if ($update) {
 			$this->ilias_object->setOrderType($this->getOrderType());
 			$this->ilias_object->setImportId($this->returnImportId());
@@ -265,9 +281,12 @@ class hubCategory extends hubRepositoryObject {
 
 
 	private function createCategory() {
+		global $lng;
 		$this->ilias_object = new ilObjCategory();
 		$this->ilias_object->setOrderType($this->getOrderType());
 		$this->ilias_object->setTitle($this->getTitle());
+		$this->ilias_object->removeTranslations();
+		$this->ilias_object->addTranslation($this->getTitle(), $this->getDescription(), $lng->getDefaultLanguage(), true);
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
 		$this->ilias_object->setOwner(6);
@@ -278,6 +297,16 @@ class hubCategory extends hubRepositoryObject {
 		$this->ilias_object->setPermissions($node);
 		if ($this->props()->get(hubCategoryFields::CREATE_ICON)) {
 			$this->updateIcon();
+		}
+		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
+			if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {
+				$this->initObject();
+				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+			}
+			if ($this->props()->get(hubCategoryFields::F_SET_INFOPAGE)) {
+				$this->initObject();
+				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
+			}
 		}
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getRefId());

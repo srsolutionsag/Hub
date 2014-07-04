@@ -51,7 +51,7 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 			. $hubCategory->getTitle() . '</a>');
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCategory->getParentId()) . '\'>'
 			. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCategory->getParentId())) . '</a>');
-		$this->addCell($this->pl->txt('list_status_' . $hubSyncHistory->getTemporaryStatus()));
+		$this->addCell($this->pl->txt('common_status_' . $hubSyncHistory->getTemporaryStatus()));
 
 		return true;
 	}
