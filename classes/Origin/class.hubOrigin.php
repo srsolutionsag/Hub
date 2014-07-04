@@ -648,6 +648,16 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * @return string
+	 */
+	public function getShortDescription() {
+		$pos = strpos($this->description, ' ', 50);
+
+		return substr($this->description, 0, $pos) . ' ...';
+	}
+
+
+	/**
 	 * @param \DateTime $last_update
 	 */
 	public function setLastUpdate($last_update) {

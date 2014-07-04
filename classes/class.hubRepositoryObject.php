@@ -17,6 +17,7 @@ abstract class hubRepositoryObject extends hubObject {
 	 * @db_has_field        true
 	 * @db_fieldtype        text
 	 * @db_length           2048
+	 * @con_index           true
 	 */
 	protected $title = '';
 	/**
@@ -34,6 +35,7 @@ abstract class hubRepositoryObject extends hubObject {
 	 * @db_is_notnull       true
 	 * @db_fieldtype        text
 	 * @db_length           128
+	 * @con_index           true
 	 */
 	protected $parent_id = 0;
 	/**

@@ -93,7 +93,6 @@ class hubSyncHistory extends ActiveRecord {
 	}
 
 
-
 	/**
 	 * @param $primary_key
 	 *
@@ -297,6 +296,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @db_has_field           true
 	 * @db_fieldtype           integer
 	 * @db_length              8
+	 * @con_index              true
 	 */
 	protected $ilias_id;
 	/**
@@ -313,6 +313,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @db_has_field           true
 	 * @db_fieldtype           integer
 	 * @db_length              4
+	 * @con_index              true
 	 */
 	protected $sr_hub_origin_id;
 	/**
