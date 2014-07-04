@@ -82,6 +82,10 @@ class hubOriginGUI {
 
 
 	public function index() {
+		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
+		hubIcon::installDB();
+		$hubIcon = new hubIcon();
+		$hubIcon->getArConnector()->updateIndices($hubIcon);
 		if (ilHubAccess::checkAccess()) {
 			$tableGui = new hubOriginTableGUI($this, 'index');
 			$this->tpl->setContent($tableGui->getHTML());

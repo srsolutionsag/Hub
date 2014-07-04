@@ -62,3 +62,8 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 hubCourse::updateDB();
 hubOrigin::updateDB();
 ?>
+<#8>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
+hubIcon::installDB();
+?>

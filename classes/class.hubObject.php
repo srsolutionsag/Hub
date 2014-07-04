@@ -231,6 +231,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @db_has_field           true
 	 * @db_fieldtype           float
 	 * @db_length              8
+	 * @con_index              true
 	 */
 	protected $delivery_date_micro;
 	/**
@@ -240,6 +241,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @db_fieldtype            integer
 	 * @db_is_notnull           true
 	 * @db_length               8
+	 * @con_index               true
 	 */
 	protected $sr_hub_origin_id;
 	/**
@@ -248,6 +250,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @db_has_field        true
 	 * @db_fieldtype        text
 	 * @db_length           256
+	 * @con_index           true
 	 */
 	protected $shortlink = '';
 	/**

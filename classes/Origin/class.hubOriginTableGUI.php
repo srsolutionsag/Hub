@@ -26,9 +26,9 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 	 * @description returns false, if automatic columns are needed, otherwise implement your columns
 	 */
 	protected function initTableColumns() {
+		$this->addColumn($this->pl->txt('origin_table_header_active'));
 		$this->addColumn($this->pl->txt('origin_table_header_title'));
 		$this->addColumn($this->pl->txt('origin_table_header_description'));
-		$this->addColumn($this->pl->txt('origin_table_header_active'));
 		$this->addColumn($this->pl->txt('origin_table_header_usage_type'));
 		$this->addColumn($this->pl->txt('origin_table_header_last_update'));
 		$this->addColumn($this->pl->txt('origin_table_header_duration'));
@@ -107,22 +107,25 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		 * @var $hubOrigin hubOrigin
 		 */
 		$hubOrigin = hubOrigin::find($a_set['id']);
-		$this->addCell($hubOrigin->getTitle());
-		$this->addCell($hubOrigin->getDescription());
-		$this->addCell($hubOrigin->getActive());
-		$this->addCell($this->pl->txt('origin_form_field_usage_type_' . $a_set['usage_type']));
-		$this->addCell($a_set['last_update']);
-		$duration = $a_set['duration'] ? $a_set['duration'] : 0;
-		$duration_objects = $a_set['duration_objects'] ? $a_set['duration_objects'] : 0;
+		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
+		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png')) : ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
+		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
+		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate') : $this->ctrl->getLinkTarget($this->parent_obj, 'activate');
+		$this->addCell('<a href=\'' . $img_link . '\'>' . $img . '</a>');
+		$this->addCell('<a href=\'' . $this->ctrl->getLinkTarget($this->parent_obj, 'edit') . '\'>' . $hubOrigin->getTitle() . '</a>');
+		$this->addCell($hubOrigin->getShortDescription());
+		$this->addCell($this->pl->txt('origin_form_field_usage_type_' . $hubOrigin->getUsageType()));
+		$this->addCell($hubOrigin->getLastUpdate());
+		$duration = $hubOrigin->getDuration() ? $hubOrigin->getDuration() : 0;
+		$duration_objects = $hubOrigin->getDurationObjects() ? $hubOrigin->getDurationObjects() : 0;
 		$this->addCell($duration . ' s.');
 		$this->addCell($duration_objects . ' s.');
 		$this->addCell($hubOrigin->getCountOfHubObjects());
-		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $a_set['id']);
 		$actions = new ilAdvancedSelectionListGUI();
 		$actions->setId('actions_' . self::$num);
 		$actions->setListTitle($this->pl->txt('common_actions'));
 		$actions->addItem($this->pl->txt('common_edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, 'edit'));
-		if ($a_set['active']) {
+		if ($hubOrigin->getActive()) {
 			$actions->addItem($this->pl->txt('common_deactivate'), 'deactivate', $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate'));
 		} else {
 			$actions->addItem($this->pl->txt('common_activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, 'activate'));
