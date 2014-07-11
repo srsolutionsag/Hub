@@ -651,9 +651,13 @@ class hubOrigin extends ActiveRecord {
 	 * @return string
 	 */
 	public function getShortDescription() {
-		$pos = strpos($this->description, ' ', 50);
+		if (count($this->description) > 70) {
+			$pos = strpos($this->description, ' ', 50);
 
-		return substr($this->description, 0, $pos) . ' ...';
+			return substr($this->description, 0, $pos) . ' ...';
+		} else {
+			return $this->description;
+		}
 	}
 
 
