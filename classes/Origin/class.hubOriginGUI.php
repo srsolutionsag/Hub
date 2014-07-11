@@ -49,12 +49,12 @@ class hubOriginGUI {
 	 * @param $parent_gui
 	 */
 	public function __construct($parent_gui) {
-		global $tpl, $ilCtrl, $ilToolbar, $lng;
+		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
 		$this->tpl = $tpl;
 		$this->ctrl = $ilCtrl;
 		$this->parent = $parent_gui;
 		$this->toolbar = $ilToolbar;
-		$this->tabs_gui = $this->parent->tabs_gui;
+		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
 		if ($_GET['hrl'] == 'true') {
@@ -72,13 +72,60 @@ class hubOriginGUI {
 	public function executeCommand() {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
-			$this->{$cmd}();
+			$next_class = $this->ctrl->getNextClass($this);
+//			$next_class = $next_class ? $next_class : 'hubOriginGUI';
+			$this->tpl->getStandardTemplate();
+			$this->setSubtabs($next_class);
+			switch ($next_class) {
+				case '':
+					if ($cmd != 'index') {
+						$this->tabs_gui->addSubTab('common', 'Einstellungen', $this->ctrl->getLinkTarget($this));
+						$this->tabs_gui->addSubTab('icons', 'Icons', $this->ctrl->getLinkTargetByClass('hubIconGUI'));
+					}
+					$this->performCommand($cmd);
+					break;
+				default:
+					require_once($this->ctrl->lookupClassPath($next_class));
+					if (! $cmd) {
+						$this->ctrl->setCmd('index');
+					}
+					$gui = new $next_class($this);
+					$this->ctrl->forwardCommand($gui);
+					break;
+			}
 
 			return true;
 		} else {
 			return false;
 		}
 	}
+
+
+
+	/**
+	 * @param $next_class
+	 */
+	private function setSubtabs($next_class) {
+		switch ($next_class) {
+			case 'huborigingui';
+				$this->tabs->setTabActive('hub_origins');
+				break;
+		}
+	}
+
+
+	private function setTitleAndDescription() {
+	}
+
+
+	/**
+	 * @param $cmd
+	 */
+	private function performCommand($cmd) {
+		$this->{$cmd}();
+	}
+
+
 
 
 	public function index() {
