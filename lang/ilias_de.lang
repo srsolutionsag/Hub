@@ -42,6 +42,12 @@ cat_prop_syncfield_none#:#Kein Feld
 cat_prop_syncfield_title#:#Titel
 cat_prop_update_description#:#Beschreibung aktualisieren
 cat_prop_update_icon#:#Icon updaten
+cat_prop_set_news#:#Nachrichten setzen
+cat_prop_update_news#:#Nachrichten aktualisieren
+cat_prop_set_infopage#:#Info-Reiter setzen
+cat_prop_update_infopage#:#Info-Reiter aktualisieren
+cat_prop_set_sorting#:#Sortierung setzen
+cat_prop_update_sorting#:#Sortierung aktualisieren
 cat_prop_update_title#:#Name aktualisieren
 com_prop_check_amount#:#Mengenvergleich
 com_prop_check_amount_info#:#Fehler, wenn weniger als X% der bestehenden Datensätzen geliefert werden
