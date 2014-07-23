@@ -67,3 +67,37 @@ hubOrigin::updateDB();
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
 hubIcon::installDB();
 ?>
+<#9>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
+/**
+ * @var $hubOrigin hubOrigin
+ */
+hubIcon::resetDB();
+hubIcon::initDir();
+foreach (hubOrigin::get() as $hubOrigin) {
+	if ($hubOrigin->props()->getIconPath()) {
+		$hubIcon = new hubIcon();
+		$hubIcon->setSizeType(hubIcon::SIZE_SMALL);
+		$hubIcon->setSrHubOriginId($hubOrigin->getId());
+		$hubIcon->setUsageType(hubIcon::USAGE_OBJECT);
+		$hubIcon->create();
+		$hubIcon->importFromPath($hubOrigin->props()->getIconPath());
+		//
+		$hubIcon = new hubIcon();
+		$hubIcon->setSizeType(hubIcon::SIZE_MEDIUM);
+		$hubIcon->setSrHubOriginId($hubOrigin->getId());
+		$hubIcon->setUsageType(hubIcon::USAGE_OBJECT);
+		$hubIcon->create();
+		$hubIcon->importFromPath($hubOrigin->props()->getIconPath());
+		//
+		$hubIcon = new hubIcon();
+		$hubIcon->setSizeType(hubIcon::SIZE_LARGE);
+		$hubIcon->setSrHubOriginId($hubOrigin->getId());
+		$hubIcon->setUsageType(hubIcon::USAGE_OBJECT);
+		$hubIcon->create();
+		$hubIcon->importFromPath($hubOrigin->props()->getIconPath());
+	}
+}
+?>

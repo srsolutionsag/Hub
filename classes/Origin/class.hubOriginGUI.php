@@ -56,7 +56,7 @@ class hubOriginGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		if ($_GET['hrl'] == 'true') {
 			$this->pl->updateLanguageFiles();
 		}
@@ -73,15 +73,12 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
 			$next_class = $this->ctrl->getNextClass($this);
-//			$next_class = $next_class ? $next_class : 'hubOriginGUI';
 			$this->tpl->getStandardTemplate();
-			$this->setSubtabs($next_class);
+			$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $_GET['origin_id']);
+			$this->ctrl->saveParameter($this, 'origin_id');
+			$this->setTabs($next_class, $cmd);
 			switch ($next_class) {
 				case '':
-					if ($cmd != 'index') {
-						$this->tabs_gui->addSubTab('common', 'Einstellungen', $this->ctrl->getLinkTarget($this));
-						$this->tabs_gui->addSubTab('icons', 'Icons', $this->ctrl->getLinkTargetByClass('hubIconGUI'));
-					}
 					$this->performCommand($cmd);
 					break;
 				default:
@@ -101,14 +98,24 @@ class hubOriginGUI {
 	}
 
 
-
 	/**
 	 * @param $next_class
+	 * @param $cmd
 	 */
-	private function setSubtabs($next_class) {
+	private function setTabs($next_class, $cmd) {
+		if ($_GET['origin_id']) {
+			$this->tabs_gui->clearTargets();
+			$this->tabs_gui->setBackTarget($this->pl->txt('common_back'), $this->ctrl->getLinkTarget($this, 'back'));
+			$this->tabs_gui->addSubTab('common', $this->pl->txt('origin_subtab_settings'), $this->ctrl->getLinkTarget($this, 'edit'));
+			$this->tabs_gui->addSubTab('icons', $this->pl->txt('origin_subtab_icons_obj'), $this->ctrl->getLinkTargetByClass('hubIconGUI'));
+		}
+
 		switch ($next_class) {
-			case 'huborigingui';
-				$this->tabs->setTabActive('hub_origins');
+			case 'hubicongui';
+				$this->tabs_gui->setSubTabActive('icons');
+				break;
+			default:
+				$this->tabs_gui->setSubTabActive('common');
 				break;
 		}
 	}
@@ -126,13 +133,8 @@ class hubOriginGUI {
 	}
 
 
-
-
 	public function index() {
-		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
-		hubIcon::installDB();
-		$hubIcon = new hubIcon();
-		$hubIcon->getArConnector()->updateIndices($hubIcon);
+		//		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
 		if (ilHubAccess::checkAccess()) {
 			$tableGui = new hubOriginTableGUI($this, 'index');
 			$this->tpl->setContent($tableGui->getHTML());
@@ -214,6 +216,12 @@ class hubOriginGUI {
 			$form->fillForm();
 			$this->tpl->setContent($form->getHTML());
 		}
+	}
+
+
+	protected function back() {
+		$this->ctrl->setParameter($this, 'origin_id', NULL);
+		$this->ctrl->redirect($this);
 	}
 
 

@@ -108,6 +108,7 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		 */
 		$hubOrigin = hubOrigin::find($a_set['id']);
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
+		$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $hubOrigin->getId());
 		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png')) : ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
 		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
 		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate') : $this->ctrl->getLinkTarget($this->parent_obj, 'activate');
