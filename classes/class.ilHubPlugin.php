@@ -10,10 +10,28 @@ require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php
 class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 	/**
+	 * @var ilHubPlugin
+	 */
+	protected static $instance;
+
+
+	/**
 	 * @return string
 	 */
 	function getPluginName() {
 		return 'Hub';
+	}
+
+
+	/**
+	 * @return ilHubPlugin
+	 */
+	public static function getInstance() {
+		if (! isset(self::$instance)) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
 

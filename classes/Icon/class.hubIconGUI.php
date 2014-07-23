@@ -1,4 +1,7 @@
 <?php
+require_once('class.hubIconFormGUI.php');
+require_once('class.hubIcon.php');
+require_once('class.hubIconCollection.php');
 
 /**
  * Class hubIconGUI
@@ -10,6 +13,16 @@
  * @ilCtrl_IsCalledBy hubIconGUI : hubOriginGUI
  */
 class hubIconGUI {
+
+	/**
+	 * @var hubOrigin
+	 */
+	protected $origin;
+	/**
+	 * @var hubIconCollection
+	 */
+	protected $hubIconCollection;
+
 
 	/**
 	 * @param $parent_gui
@@ -29,6 +42,8 @@ class hubIconGUI {
 		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}
+		$this->origin = hubOrigin::find($_GET['origin_id']);
+		$this->hubIconCollection = hubIconCollection::getInstance($this->origin);
 	}
 
 
@@ -62,7 +77,52 @@ class hubIconGUI {
 
 
 	public function index() {
+		$hubIconFormGUI = new hubIconFormGUI($this, $this->hubIconCollection);
 
+		if ($this->origin->getUsageType() == hub::OBJECTTYPE_COURSE) {
+			$dep1 = new hubIconFormGUI($this, hubIconCollection::getInstance($this->origin, hubIcon::USAGE_FIRST_DEPENDENCE));
+			$dep2 = new hubIconFormGUI($this, hubIconCollection::getInstance($this->origin, hubIcon::USAGE_SECOND_DEPENDENCE));
+			$dep3 = new hubIconFormGUI($this, hubIconCollection::getInstance($this->origin, hubIcon::USAGE_THIRD_DEPENDENCE));
+
+			$this->tpl->setContent($hubIconFormGUI->getHTML() . $dep1->getHTML() . $dep2->getHTML() . $dep3->getHTML());
+		} else {
+			$this->tpl->setContent($hubIconFormGUI->getHTML());
+		}
+	}
+
+
+	public function save() {
+		$this->saveCollection($this->hubIconCollection);
+	}
+
+
+	public function saveFirstDep() {
+		$this->saveCollection(hubIconCollection::getInstance($this->origin, hubIcon::USAGE_FIRST_DEPENDENCE));
+	}
+
+
+	public function saveSecondDep() {
+		$this->saveCollection(hubIconCollection::getInstance($this->origin, hubIcon::USAGE_SECOND_DEPENDENCE));
+	}
+
+
+	public function saveThirdDep() {
+		$this->saveCollection(hubIconCollection::getInstance($this->origin, hubIcon::USAGE_THIRD_DEPENDENCE));
+	}
+
+
+	/**
+	 * @param hubIconCollection $hubIconCollection
+	 */
+	protected function saveCollection(hubIconCollection $hubIconCollection) {
+		$hubIconFormGUI = new hubIconFormGUI($this, $hubIconCollection);
+		if ($hubIconFormGUI->save()) {
+			ilUtil::sendSuccess($this->pl->txt('icons_saved'), true);
+			$this->ctrl->redirect($this, 'index');
+		} else {
+			$hubIconFormGUI->setValuesByPost();
+			$this->tpl->setContent($hubIconFormGUI->getHTML());
+		}
 	}
 }
 

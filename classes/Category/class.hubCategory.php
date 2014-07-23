@@ -218,7 +218,7 @@ class hubCategory extends hubRepositoryObject {
 		}
 		if ($this->props()->get(hubCategoryFields::UPDATE_ICON)) {
 			$this->initObject();
-			$this->updateIcon();
+			$this->updateIcon($this->ilias_object);
 		}
 		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
 			if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
@@ -296,7 +296,7 @@ class hubCategory extends hubRepositoryObject {
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
 		if ($this->props()->get(hubCategoryFields::CREATE_ICON)) {
-			$this->updateIcon();
+			$this->updateIcon($this->ilias_object);
 		}
 		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
 			if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {

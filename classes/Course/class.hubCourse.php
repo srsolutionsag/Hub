@@ -108,22 +108,28 @@ class hubCourse extends hubRepositoryObject {
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
 		if ($this->props()->get(hubCourseFields::F_CREATE_ICON)) {
-			$this->updateIcon();
+			$this->updateIcon($this->ilias_object);
 			$this->ilias_object->update();
 		}
+
+		// Notification
+		if ($this->props()->get(hubCourseFields::F_SEND_NOTIFICATION)) {
+			global $ilSetting;
+			$mail = new ilMimeMail();
+			$mail->autoCheck(false);
+			$mail->From($ilSetting->get('admin_email'));
+			$mail->To($this->getNotificationEmail());
+			$body = hubCourseFields::getReplacedText($this);
+			$mail->Subject($this->props()->get(hubCourseFields::F_NOT_SUBJECT));
+			$mail->Body($body);
+			$mail->Send();
+		}
+
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getRefId());
 		$history->setIliasIdType(self::ILIAS_ID_TYPE_REF_ID);
 		$history->update();
 	}
-
-
-	/**
-	 * @var int
-	 *
-	 * @description Delete after Tests, only 10 Mails will be sent
-	 */
-	protected static $count_mails = 0;
 
 
 	public function updateCourse() {
@@ -142,7 +148,7 @@ class hubCourse extends hubRepositoryObject {
 		}
 		if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
 			$this->initObject();
-			$this->updateIcon();
+			$this->updateIcon($this->ilias_object);
 			$update = true;
 		}
 		if ($this->props()->get(hubCourseFields::F_REACTIVATE)) {
@@ -153,20 +159,6 @@ class hubCourse extends hubRepositoryObject {
 		if ($update) {
 			$this->updateAdditionalFields();
 			$this->ilias_object->update();
-		}
-
-		// Notification
-		if ($this->props()->get(hubCourseFields::F_SEND_NOTIFICATION) AND self::$count_mails < 5) {
-			global $ilSetting;
-			$mail = new ilMimeMail();
-			$mail->autoCheck(false);
-			$mail->From($ilSetting->get('admin_email'));
-			$mail->To($this->getNotificationEmail());
-			$body = hubCourseFields::getReplacedText($this);
-			$mail->Subject($this->props()->get(hubCourseFields::F_NOT_SUBJECT));
-			$mail->Body($body);
-			$mail->Send();
-			self::$count_mails ++;
 		}
 
 		//
@@ -292,6 +284,8 @@ class hubCourse extends hubRepositoryObject {
 	/**
 	 * @param $deph
 	 *
+	 * @deprecated
+	 *
 	 * @return bool
 	 */
 	protected function lookupDependenceCategory($deph) {
@@ -314,13 +308,19 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
+	 * @var array
+	 */
+	protected static $updated_dependency_nodes = array();
+
+
+	/**
 	 * @param $title
 	 * @param $parent_id
-	 * @param $deph
+	 * @param $depth
 	 *
 	 * @return int
 	 */
-	private function buildDependeceCategory($title, $parent_id, $deph) {
+	private function buildDependeceCategory($title, $parent_id, $depth) {
 		/**
 		 * @var $tree      ilTree
 		 * @var $rbacadmin ilRbacAdmin
@@ -329,10 +329,27 @@ class hubCourse extends hubRepositoryObject {
 			return $parent_id;
 		}
 		global $tree;
+		switch ($depth) {
+			case 1:
+				$usage = hubIcon::USAGE_FIRST_DEPENDENCE;
+				break;
+			case 2:
+				$usage = hubIcon::USAGE_SECOND_DEPENDENCE;
+				break;
+			case 3:
+				$usage = hubIcon::USAGE_THIRD_DEPENDENCE;
+				break;
+		}
 		foreach ($tree->getChildsByType($parent_id, 'cat') as $child) {
 			if ($child['title'] == $title) {
-				$cat = new ilObjCategory($child['ref_id']);
-				$this->updateImportIdForDependence($cat, $deph);
+				if (! in_array($child['ref_id'], self::$updated_dependency_nodes)) {
+					$cat = new ilObjCategory($child['ref_id']);
+					if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
+						$this->updateIcon($cat, $usage);
+					}
+					$this->updateImportIdForDependence($cat, $depth);
+					self::$updated_dependency_nodes[] = $child['ref_id'];
+				}
 
 				return $child['ref_id'];
 			}
@@ -340,11 +357,15 @@ class hubCourse extends hubRepositoryObject {
 		$cat = new ilObjCategory();
 		$cat->setTitle($title);
 		$cat->create();
-		$this->updateImportIdForDependence($cat, $deph);
+		$this->updateImportIdForDependence($cat, $depth);
 		$cat->addTranslation($title, '', 'DE', true);
 		$cat->createReference();
 		$cat->putInTree($parent_id);
 		$cat->setPermissions($parent_id);
+		if ($this->props()->get(hubCourseFields::F_CREATE_ICON)) {
+			$this->updateIcon($cat, $usage);
+		}
+		self::$updated_dependency_nodes[] = $cat->getRefId();
 
 		return $cat->getRefId();
 	}
