@@ -1,5 +1,6 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Shortlink/class.hubShortlink.php');
 
 /**
  * Class ilHubUIHookGUI
@@ -48,31 +49,11 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
-			/*$ctrlTwo = new ilCtrl();
-			$ctrlTwo->setTargetScript('ilias.php');
-			$a_base_class = $_GET['baseClass'];
-			$cmd = $_GET['cmd'];
-			$cmdClass = $_GET['cmdClass'];
-			$cmdNode = $_GET['cmdNode'];
-			$ctrlTwo->initBaseClass('ilRouterGUI');
-			$link = $ctrlTwo->getLinkTargetByClass(array(
-				'ilRouterGUI',
-				'hubGUI',
-				'hubOriginGUI'
-			), 'index');
-			$_GET['baseClass'] = $a_base_class;
-			$_GET['cmd'] = $cmd;
-			$_GET['cmdClass'] = $cmdClass;
-			$_GET['cmdNode'] = $cmdNode;
-*/
-
 			$link = $this->ctrl->getLinkTargetByClass(array(
 				'ilRouterGUI',
 				'hubGUI',
 				'hubOriginGUI'
 			), 'index');
-
-			//			$link = '';
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (! in_array('CtrlMainMenu', $plugins)) {
@@ -88,6 +69,14 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		return array( 'mode' => ilUIHookPluginGUI::KEEP, 'html' => '' );
+	}
+
+
+	public function gotoHook() {
+		if (preg_match("/hub_(.*)/uim", $_GET['target'], $matches)) {
+			$token = $matches[1];
+			hubShortlink::redirect($token);
+		}
 	}
 }
 
