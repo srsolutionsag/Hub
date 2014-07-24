@@ -26,6 +26,20 @@ class hub {
 	const OBJECTTYPE_MEMBERSHIP = 2;
 	const OBJECTTYPE_COURSE = 3;
 	const OBJECTTYPE_CATEGORY = 4;
+	/**
+	 * @var array
+	 */
+	protected static $support_icons = array( self::OBJECTTYPE_COURSE, self::OBJECTTYPE_CATEGORY );
+
+
+	/**
+	 * @param $type_id
+	 *
+	 * @return bool
+	 */
+	public static function supportsIcons($type_id) {
+		return in_array($type_id, self::$support_icons);
+	}
 
 
 	/**
