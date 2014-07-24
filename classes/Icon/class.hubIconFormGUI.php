@@ -55,19 +55,25 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$small = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_SMALL), hubIcon::PREF_SMALL);
 		$small->setSuffixes(self::$file_types);
 		//		$small->setInfo($this->small->getDeleted());
-		$small->setImage($this->small->getPath());
+		if ($this->small->exists()) {
+			$small->setImage($this->small->getPath());
+		}
 		$this->addItem($small);
 		//
 		$medium = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_MEDIUM), hubIcon::PREF_MEDIUM);
 		$medium->setSuffixes(self::$file_types);
 		//		$medium->setInfo($this->medium->getDeleted());
-		$medium->setImage($this->medium->getPath());
+		if ($this->medium->exists()) {
+			$small->setImage($this->medium->getPath());
+		}
 		$this->addItem($medium);
 		//
 		$large = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_LARGE), hubIcon::PREF_LARGE);
 		$large->setSuffixes(self::$file_types);
 		//		$large->setInfo($this->large->getDeleted());
-		$large->setImage($this->large->getPath());
+		if ($this->large->exists()) {
+			$small->setImage($this->large->getPath());
+		}
 		$this->addItem($large);
 
 		$this->addButtons();

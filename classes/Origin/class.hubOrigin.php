@@ -86,6 +86,14 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * @return bool
+	 */
+	public function supportsIcons() {
+		return hub::supportsIcons($this->getUsageType());
+	}
+
+
+	/**
 	 * @return hubOrigin[]
 	 */
 	public static function get() {

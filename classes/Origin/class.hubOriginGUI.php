@@ -43,6 +43,10 @@ class hubOriginGUI {
 	 * @var ilTemplate
 	 */
 	protected $tpl;
+	/**
+	 * @var hubOrigin
+	 */
+	protected $hubOrigin;
 
 
 	/**
@@ -57,6 +61,7 @@ class hubOriginGUI {
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
 		$this->pl = ilHubPlugin::getInstance();
+		$this->hubOrigin = hubOrigin::findOrGetInstance($_GET['origin_id']);
 		if ($_GET['hrl'] == 'true') {
 			$this->pl->updateLanguageFiles();
 		}
@@ -103,13 +108,16 @@ class hubOriginGUI {
 	 * @param $cmd
 	 */
 	private function setTabs($next_class, $cmd) {
-		if ($_GET['origin_id']) {
+		if ($_GET['origin_id'] AND ($cmd != 'index' OR $next_class != 'huborigingui')) {
+			$this->tpl->setTitle($this->hubOrigin->getTitle());
 			$this->tabs_gui->clearTargets();
 			$this->tabs_gui->setBackTarget($this->pl->txt('common_back'), $this->ctrl->getLinkTarget($this, 'back'));
 			$this->tabs_gui->addSubTab('common', $this->pl->txt('origin_subtab_settings'), $this->ctrl->getLinkTarget($this, 'edit'));
-			$this->tabs_gui->addSubTab('icons', $this->pl->txt('origin_subtab_icons_obj'), $this->ctrl->getLinkTargetByClass('hubIconGUI'));
-		}
 
+			if ($this->hubOrigin->supportsIcons()) {
+				$this->tabs_gui->addSubTab('icons', $this->pl->txt('origin_subtab_icons'), $this->ctrl->getLinkTargetByClass('hubIconGUI'));
+			}
+		}
 		switch ($next_class) {
 			case 'hubicongui';
 				$this->tabs_gui->setSubTabActive('icons');
@@ -144,7 +152,7 @@ class hubOriginGUI {
 
 	public function export() {
 		if (ilHubAccess::checkAccess()) {
-			hubOriginExport::export(hubOrigin::find($_GET['origin_id']));
+			hubOriginExport::export($this->hubOrigin);
 		}
 	}
 
@@ -242,11 +250,13 @@ class hubOriginGUI {
 
 	public function edit() {
 		if (ilHubAccess::checkAccess()) {
+
 			global $ilToolbar;
 			/**
 			 * @var $ilToolbar ilToolbarGUI
+			 * @var $hubOrigin hubOrigin
 			 */
-			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+			$form = new hubOriginFormGUI($this, $this->hubOrigin);
 			$form->fillForm();
 			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, 'export'));
 			$this->tpl->setContent($form->getHTML());
@@ -256,13 +266,9 @@ class hubOriginGUI {
 
 	private function activate() {
 		if (ilHubAccess::checkAccess()) {
-			/**
-			 * @var $hubOrigin hubOrigin
-			 */
-			$hubOrigin = hubOrigin::find($_GET['origin_id']);
-			$hubOrigin->setActive(true);
-			$hubOrigin->update();
-			hubLog::getInstance()->write('Origin activated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			$this->hubOrigin->setActive(true);
+			$this->hubOrigin->update();
+			hubLog::getInstance()->write('Origin activated: ' . $this->hubOrigin->getTitle(), hubLog::L_PROD);
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
 			$this->ctrl->redirect($this, 'index');
 		}
@@ -271,13 +277,9 @@ class hubOriginGUI {
 
 	private function deactivate() {
 		if (ilHubAccess::checkAccess()) {
-			/**
-			 * @var $hubOrigin hubOrigin
-			 */
-			$hubOrigin = hubOrigin::find($_GET['origin_id']);
-			$hubOrigin->setActive(false);
-			$hubOrigin->update();
-			hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
+			$this->hubOrigin->setActive(false);
+			$this->hubOrigin->update();
+			hubLog::getInstance()->write('Origin deactivated: ' . $this->hubOrigin->getTitle(), hubLog::L_PROD);
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
 			$this->ctrl->redirect($this, 'index');
 		}
@@ -321,7 +323,7 @@ class hubOriginGUI {
 	 */
 	public function update($redirect = true) {
 		if (ilHubAccess::checkAccess()) {
-			$form = new hubOriginFormGUI($this, hubOrigin::find($_GET['origin_id']));
+			$form = new hubOriginFormGUI($this, $this->hubOrigin);
 			$form->setValuesByPost();
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('msg_saved'), $redirect);
@@ -356,7 +358,7 @@ class hubOriginGUI {
 
 	public function delete() {
 		if (ilHubAccess::checkAccess()) {
-			$origin = hubOrigin::find($_GET['origin_id']);
+			$origin = hubOrigin::find($this->hubOrigin);
 			$origin->delete();
 			$this->ctrl->redirect($this, 'index');
 		}

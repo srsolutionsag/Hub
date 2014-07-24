@@ -111,6 +111,7 @@ class hubIconGUI {
 	}
 
 
+
 	/**
 	 * @param hubIconCollection $hubIconCollection
 	 */
