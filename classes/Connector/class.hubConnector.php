@@ -20,6 +20,7 @@ class hubConnector extends arConnectorDB {
 	/**
 	 * @return ilDB
 	 */
+
 	public function returnDB() {
 		/*if (parent::returnDB()->tableExists(hubConfig::returnDbTableName())) {
 			if (hubConfig::get(hubConfig::F_DB)) {
