@@ -64,7 +64,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$medium->setSuffixes(self::$file_types);
 		//		$medium->setInfo($this->medium->getDeleted());
 		if ($this->medium->exists()) {
-			$small->setImage($this->medium->getPath());
+			$medium->setImage($this->medium->getPath());
 		}
 		$this->addItem($medium);
 		//
@@ -72,7 +72,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$large->setSuffixes(self::$file_types);
 		//		$large->setInfo($this->large->getDeleted());
 		if ($this->large->exists()) {
-			$small->setImage($this->large->getPath());
+			$large->setImage($this->large->getPath());
 		}
 		$this->addItem($large);
 
