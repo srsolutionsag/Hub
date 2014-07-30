@@ -212,6 +212,7 @@ class hubMembership extends hubObject {
 
 
 	public function updateMembership() {
+		$this->initObject();
 		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
