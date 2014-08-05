@@ -69,8 +69,9 @@ class hubMembership extends hubObject {
 
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubMembership hubMembership
-		 * @var $hubOrigin     hubOrigin
+		 * @var $hubMembership    hubMembership
+		 * @var $hubOrigin        hubOrigin
+		 * @var $hubOriginObj     unibasSLCMMemberships
 		 */
 		foreach (self::get() as $hubMembership) {
 			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
@@ -81,11 +82,19 @@ class hubMembership extends hubObject {
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
 			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
-			if ($overridden_status) {
-				$status = $overridden_status;
-			} else {
-				$status = $hubMembership->getHistoryObject()->getStatus();
+			//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
+			//			if ($overridden_status) {
+			//				$status = $overridden_status;
+			//			} else {
+			//			}
+
+			$status = $hubMembership->getHistoryObject()->getStatus();
+			if ($hubOriginObj->returnActivePeriod()) {
+				$active_period = (string)$hubOriginObj->returnActivePeriod();
+				if ($hubMembership->getPeriod() != $active_period) {
+					// hubLog::getInstance()->write('ignored period');
+					$status = hubSyncHistory::STATUS_IGNORE;
+				}
 			}
 
 			switch ($status) {
