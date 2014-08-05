@@ -25,6 +25,9 @@ class hubMembershipFields extends hubOriginObjectPropertiesFields {
 	const DELETED_SEND_MAIL_ADMIN = 'deleted_send_mail_admin';
 	const DELETED_SEND_MAIL_TUTOR = 'deleted_send_mail_tutor';
 	const DELETED_SEND_MAIL_MEMBER = 'deleted_send_mail_member';
+	const F_SYNC_ONLY = 'sync_only';
+	const F_SYNC_ONLY_PERIOD = 'sync_only_period';
+	const F_SYNC_ONLY_PERIOD_CHOOSER = 'sync_only_period_chooser';
 }
 
 ?>

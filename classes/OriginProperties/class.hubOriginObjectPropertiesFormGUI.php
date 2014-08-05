@@ -37,6 +37,16 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
+	 * @param $var
+	 *
+	 * @return string
+	 */
+	protected function txt($var) {
+		return $this->pl->txt($this->getPrefix() . '_prop_' . $var);
+	}
+
+
+	/**
 	 * @param           $parent_gui
 	 * @param           $usage_type
 	 * @param hubOrigin $origin
@@ -166,7 +176,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	public function appendToForm(ilPropertyFormGUI $form_gui) {
 		if ($this->origin->getId()) {
 			foreach ($this->getItems() as $item) {
-				if(self::hasValue($item)) {
+				if (self::hasValue($item)) {
 					$item->setDisabled($this->locked);
 				}
 				if (self::hasSubitems($item)) {

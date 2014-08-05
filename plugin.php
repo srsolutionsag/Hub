@@ -3,8 +3,8 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 if (! ilHubPlugin::checkPreconditions()) {
 }
 $id = 'hub';
-$version = '1.1.11';
-$ilias_min_version = '4.2.0';
+$version = '1.1.12';
+$ilias_min_version = '4.3.0';
 $ilias_max_version = '4.5.999';
 $responsible = 'Fabian Schmid';
 $responsible_mail = 'fs@studer-raimann.ch';
