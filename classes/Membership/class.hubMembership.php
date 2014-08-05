@@ -78,8 +78,17 @@ class hubMembership extends hubObject {
 			}
 			$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
 			hubDurationLogger2::getInstance($duration_id)->resume();
+			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-			switch ($hubMembership->getHistoryObject()->getStatus()) {
+			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
+			if ($overridden_status) {
+				$status = $overridden_status;
+			} else {
+				$status = $hubMembership->getHistoryObject()->getStatus();
+			}
+
+			switch ($status) {
 				case hubSyncHistory::STATUS_NEW:
 					if (! hubSyncCron::getDryRun()) {
 						$hubMembership->createMembership();
@@ -109,10 +118,9 @@ class hubMembership extends hubObject {
 					break;
 			}
 			$hubMembership->getHistoryObject()->updatePickupDate();
-			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubMembership);
-			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId());
 			$hubOriginObj->afterObjectInit($hubMembership);
+
 			hubDurationLogger2::getInstance($duration_id)->resume();
 		}
 
@@ -205,7 +213,7 @@ class hubMembership extends hubObject {
 			if ($this->props()->get(hubMembershipFields::DESKTOP_NEW)) {
 				ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 			}
-			$this->sendMails('new', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
+			//			 $this->sendMails('new', ilCourseMembershipMailNotification::TYPE);
 			$this->updateIliasId();
 		}
 	}
@@ -225,7 +233,7 @@ class hubMembership extends hubObject {
 				if ($this->props()->get(hubMembershipFields::DESKTOP_UPDATED)) {
 					ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 				}
-				$this->sendMails('updated', ilCourseMembershipMailNotification::TYPE_STATUS_CHANGED);
+				// $this->sendMails('updated', ilCourseMembershipMailNotification::TYPE_STATUS_CHANGED);
 				$this->updateIliasId();
 			}
 		}
@@ -240,7 +248,7 @@ class hubMembership extends hubObject {
 			case self::DELETE_MODE_DELETE:
 				$this->participants->delete($this->getUsrId());
 				$this->participants->updateNotification($this->getUsrId(), false);
-				$this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
+				// $this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
 		}
 		$history = $this->getHistoryObject();
@@ -324,6 +332,14 @@ class hubMembership extends hubObject {
 	 * @db_length           1
 	 */
 	protected $has_notification = false;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        text
+	 * @db_length           64
+	 */
+	protected $period = NULL;
 
 
 	//
@@ -430,6 +446,22 @@ class hubMembership extends hubObject {
 	 */
 	public function getHasNotification() {
 		return $this->has_notification;
+	}
+
+
+	/**
+	 * @param string $period
+	 */
+	public function setPeriod($period) {
+		$this->period = $period;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getPeriod() {
+		return $this->period;
 	}
 }
 
