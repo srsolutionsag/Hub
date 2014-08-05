@@ -22,6 +22,7 @@ class hubSyncHistory extends ActiveRecord {
 	const STATUS_NEWLY_DELIVERED = 5; // 5
 	const STATUS_ALREADY_DELETED = 6;
 	const STATUS_IN_TRASH = self::STATUS_UPDATED; // 7
+	const STATUS_IGNORE = 10;
 	/**
 	 * @var bool
 	 */
@@ -77,14 +78,9 @@ class hubSyncHistory extends ActiveRecord {
 			$obj = self::findOrGetInstance($ext_id);
 			$obj->setSrHubOriginId($sr_hub_origin_id);
 			$obj->setIliasIdType($hubObject::$id_type);
-			//			$wh = array( 'ext_id' => $ext_id, 'sr_hub_origin_id' => $sr_hub_origin_id );
 			if ($obj->is_new) {
 				$obj->create();
 			}
-
-			//			if (! self::where($wh)->hasSets()) {
-			//				$obj->create();
-			//			}
 
 			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
 		}
