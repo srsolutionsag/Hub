@@ -118,6 +118,7 @@ class hub {
 	public static function initErrorCallback() {
 		//		ini_set('display_errors', false);
 		register_shutdown_function('hub::fatalErrorHandler');
+		register_shutdown_function('hub::fatalErrorHandler');
 	}
 
 
@@ -125,6 +126,7 @@ class hub {
 	 * @throws hubOriginException
 	 */
 	public static function fatalErrorHandler() {
+		register_shutdown_function('hub::fatalErrorHandler');
 		$e = (object)error_get_last();
 		if (($e->type === E_ERROR) || ($e->type === E_USER_ERROR)) {
 			// echo $error_message = 'hub FatalError:' . $e->message . ' in ' . $e->file . ' (Line ' . $e->line . ')';
@@ -151,6 +153,7 @@ class hub {
 
 	const CONTEXT_CRON = 1;
 	const CONTEXT_WEB = 2;
+	const CONTEXT_CRON_H = 3;
 
 
 	/**
@@ -174,6 +177,12 @@ class hub {
 				$_POST['username'] = 'anonymous';
 				$_POST['password'] = 'anonymous';
 				break;
+			case self::CONTEXT_CRON_H:
+				$il_context = ilContext::CONTEXT_ICAL;
+				$il_context_auth = ilAuthFactory::CONTEXT_CALENDAR;
+				$_COOKIE['ilClientId'] = $_SERVER['argv'][3];
+				$_POST['username'] = $_SERVER['argv'][1];
+				$_POST['password'] = $_SERVER['argv'][2];
 		}
 
 		if (hubConfig::is44() OR hubConfig::is45()) {

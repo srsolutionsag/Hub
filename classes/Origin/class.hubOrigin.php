@@ -434,6 +434,18 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
+	 * @param hubObject $hub_object
+	 *
+	 * @is executet when getting status of object
+	 *
+	 * @return bool
+	 */
+	public function overrideStatus(hubObject $hub_object) {
+		return false;
+	}
+
+
+	/**
 	 * @param ilPropertyFormGUI $form_gui
 	 *
 	 * @return ilPropertyFormGUI

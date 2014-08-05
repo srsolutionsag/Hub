@@ -646,7 +646,7 @@ class hubUser extends hubObject {
 				$existing_usr_id = self::lookupUsrIdByExtAccount($hubUser->getExternalAccount());
 				break;
 		}
-		if ($existing_usr_id > 6 AND $hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW) {
+		if ($existing_usr_id > 6){//} AND ($hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW)) {
 			$history = $hubUser->getHistoryObject();
 			$history->setIliasId($existing_usr_id);
 			$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);

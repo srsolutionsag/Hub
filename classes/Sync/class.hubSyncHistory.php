@@ -477,4 +477,5 @@ class hubSyncHistory extends ActiveRecord {
 		return $this->already_deleted;
 	}
 }
+
 ?>
