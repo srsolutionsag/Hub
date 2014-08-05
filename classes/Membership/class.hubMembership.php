@@ -116,6 +116,9 @@ class hubMembership extends hubObject {
 						$hubMembership->createMembership();
 					}
 					break;
+				case hubSyncHistory::STATUS_IGNORE:
+					hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+					break;
 			}
 			$hubMembership->getHistoryObject()->updatePickupDate();
 			$hubOrigin::afterObjectModification($hubMembership);
