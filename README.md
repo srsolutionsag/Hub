@@ -9,7 +9,7 @@ An ILIAS-Plugin for middleware-synchronization of external systems to ILIAS. Sev
 * Course-Memberships
 
 ###Requirements
-Nedd the latest version of ILIAS ActiveRecord (https://github.com/studer-raimann/ActiveRecord) and Router-Service ()
+Nedd the latest version of ILIAS ActiveRecord (https://github.com/studer-raimann/ActiveRecord) and Router-Service (https://github.com/studer-raimann/RouterService)
 
 ###Developed by
 studer + raimang ag
