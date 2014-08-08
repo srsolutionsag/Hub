@@ -79,6 +79,14 @@ class hubOrigin extends ActiveRecord {
 	}
 
 
+	/**
+	 * @return null
+	 */
+	public function returnActivePeriod() {
+		return NULL;
+	}
+
+
 	public function sendSummary() {
 		$this->addSummary();
 		hubOriginNotification::send($this);
@@ -185,11 +193,13 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function getObject() {
 		if ($this->getClassFilePath() AND is_file($this->getClassFilePath())) {
-			require_once($this->getClassFilePath());
-			$class = $this->getClassName();
-			$originObject = new $class($this->getId());
+			if (! $this->originObject) {
+				require_once($this->getClassFilePath());
+				$class = $this->getClassName();
+				$this->originObject = new $class($this->getId());
+			}
 
-			return $originObject;
+			return $this->originObject;
 		}
 		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
 			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');

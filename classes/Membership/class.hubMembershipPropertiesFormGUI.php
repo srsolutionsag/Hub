@@ -27,6 +27,10 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->removeItemByPostVar('shortlink');
 
 		$se = new ilSelectInputGUI($this->pl->txt('mem_prop_get_usr_id'), hubMembershipFields::GET_USR_ID_FROM_ORIGIN);
+
+//		$sync_only = new ilCheckboxInputGUI($this->txt(hubMembershipFields::F_SYNC_ONLY), hubMembershipFields::F_SYNC_ONLY);
+//		$sync_only_period_chooser =
+//		$this->addItem($sync_only);
 		/**
 		 * @var $origin hubOrigin
 		 */
