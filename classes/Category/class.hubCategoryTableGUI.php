@@ -46,11 +46,23 @@ class hubCategoryTableGUI extends srModelObjectTableGUI {
 		 */
 		$hubCategory = hubCategory::find($a_set['ext_id']);
 		$hubSyncHistory = hubSyncHistory::getInstance($hubCategory);
+
 		$this->addCell($hubCategory->getExtId());
 		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCategory->getTitlePrefix()
 			. $hubCategory->getTitle() . '</a>');
-		$this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCategory->getParentId()) . '\'>'
-			. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCategory->getParentId())) . '</a>');
+
+        $hubParentCategory    = hubCategory::find($hubCategory->getParentId());
+        if($hubParentCategory)
+        {
+            $hubSyncHistoryParent = hubSyncHistory::getInstance($hubParentCategory);
+            $this->addCell('<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistoryParent->getIliasId()) . '\'>'
+                . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>');
+        }
+        else
+        {
+            $this->addCell("<a target='_blank' href=''></a>");
+        }
+
 		$this->addCell($this->pl->txt('common_status_' . $hubSyncHistory->getTemporaryStatus()));
 
 		return true;
