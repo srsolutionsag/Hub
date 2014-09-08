@@ -374,5 +374,4 @@ abstract class hubObject extends ActiveRecord {
 		return $this->creation_date;
 	}
 }
-
 ?>
