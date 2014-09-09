@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @version           1.1.04
  * @revision          $r:
  *
- * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI
+ * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI, ilUIPluginRouterGUI
  * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI, hubConfGUI
  */
 class hubGUI {

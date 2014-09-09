@@ -50,7 +50,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
 			$link = $this->ctrl->getLinkTargetByClass(array(
-				'ilRouterGUI',
+				ilHubPlugin::getBaseClass(),
 				'hubGUI',
 				'hubOriginGUI'
 			), 'index');
