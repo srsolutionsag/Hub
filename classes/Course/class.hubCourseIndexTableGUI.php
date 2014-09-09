@@ -16,27 +16,55 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
     {
     }
 
-    protected function initFieldsToHide()
-    {
-        $this->setFieldsToHide(
-            array("type", "period", "learning_target", "important_information", "responsible","language","first_dependence","second_dependence","third_dependence","title_prefix","title_extension",
-                "administrators","responsible_email","notification_email","owner","description","parent_id_type","delivery_date_micro","sr_hub_origin_id","ext_status","shortlink","ext_id","id","obj_id", "obj_title"
-            ));
-    }
-
-    protected function initFieldsToSort()
-    {
-        $this->setFieldsToSort( array("title","creation_date"));
-    }
-
-    protected function initFieldsToFilter()
-    {
-        $this->setFieldsToFilter(array("title","parent_id"));
-    }
-
     protected function addActions()
     {
-        $this->addAction('view', $this->txt('details',false), get_class($this->parent_obj), 'view');
+        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
+    }
+
+    protected function customizeFields()
+    {
+        $field = $this->getField("title");
+        $field->setVisible(true);
+        $field->setSortable(true);
+        $field->setHasFilter(true);
+        $field->setPosition(10);
+
+        $field = $this->getField("parent_id");
+        $field->setVisible(true);
+        $field->setHasFilter(true);
+        $field->setPosition(20);
+
+        $field = $this->getField("creation_date");
+        $field->setVisible(true);
+        $field->setSortable(true);
+        $field->setPosition(30);
+
+        $field= new arIndexTableField("status","status","text", 40,true,false,false);
+        $this->addField($field);
+    }
+
+    protected function setArFieldData(arIndexTableField $field, $item, $value)
+    {
+        switch ($field->getName())
+        {
+            case 'title':
+                $hubCourse      = hubCourse::find($item['ext_id']);
+                $hubSyncHistory = hubSyncHistory::find($item['ext_id']);
+                return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix() . $value . '</a>';
+                break;
+            case 'parent_id':
+                $hubCourse = hubCourse::find($item['ext_id']);
+                return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCourse->getParentId()) . '\'>' . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>';
+                break;
+            default:
+                return parent::setArFieldData($field, $item, $value);
+                break;
+        }
+    }
+
+    protected function setCustomFieldData(arIndexTableField $field, $item){
+        $hubSyncHistory = hubSyncHistory::find($item['ext_id']);
+        return $this->txt('common_status_' . $hubSyncHistory->getTemporaryStatus());
     }
 
     protected function addCustomFilterWhere($type, $name, $value)
@@ -50,42 +78,5 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
         }
         return false;
     }
-
-    protected function setTextData(arField $field, $value, $a_set)
-    {
-        if ($field->getName() == 'title')
-        {
-            $hubCourse      = hubCourse::find($a_set['ext_id']);
-            $hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
-            $this->tpl->setVariable('ENTRY_CONTENT', '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix()
-                . $value . '</a>');
-
-        }
-        else if ($field->getName() == 'parent_id')
-        {
-            $hubCourse      = hubCourse::find($a_set['ext_id']);
-            $hubSyncHistory = hubSyncHistory::find($a_set['ext_id']);
-
-            $this->tpl->setVariable('ENTRY_CONTENT', '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCourse->getParentId()) . '\'>'
-                . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>');
-            $this->tpl->parseCurrentBlock();
-            $this->tpl->setVariable('ENTRY_CONTENT', $this->txt('common_status_' . $hubSyncHistory->getTemporaryStatus()));
-
-        }
-        else
-        {
-            parent::setTextData($field, $value, $a_set);
-        }
-
-    }
-    protected function addCustomColumn($key){
-        if($key == "creation_date")
-        {
-            $this->addColumn($this->txt("status",false));
-        }
-        return false;
-    }
-
 }
-
 ?>
