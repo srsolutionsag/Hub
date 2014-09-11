@@ -98,3 +98,4 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($delete);
 	}
 }
+?>
