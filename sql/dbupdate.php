@@ -106,3 +106,8 @@ foreach (hubOrigin::get() as $hubOrigin) {
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php');
 hubMembership::updateDB();
 ?>
+<#11>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourse.php');
+hubCourse::updateDB();
+?>
