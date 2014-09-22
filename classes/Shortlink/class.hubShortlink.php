@@ -60,7 +60,7 @@ class hubShortlink {
 	/**
 	 * @param $ext_id
 	 */
-	private function __construct($ext_id) {
+    protected function __construct($ext_id) {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		hub::initILIAS(hub::CONTEXT_WEB);
 		self::includes();
@@ -79,17 +79,17 @@ class hubShortlink {
 	}
 
 
-	private function redirectToObject() {
+    protected function redirectToObject() {
 		ilUtil::redirect($this->getLink());
 	}
 
 
-	private function redirectToParent() {
+    protected function redirectToParent() {
 		ilUtil::redirect($this->getLink());
 	}
 
 
-	private function redirectToBase() {
+    protected function redirectToBase() {
 		ilUtil::redirect('/login.php');
 	}
 
@@ -97,7 +97,7 @@ class hubShortlink {
 	/**
 	 * @return bool|int
 	 */
-	private function checkShortlink() {
+    protected function checkShortlink() {
 		/**
 		 * @var hubSyncHistory $hubSyncHistory
 		 * @var hubOrigin      $hubOrigin
@@ -310,7 +310,7 @@ class hubShortlink {
 	}
 
 
-	private static function includes() {
+	protected static function includes() {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectProperties.php');
