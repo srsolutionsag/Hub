@@ -1195,6 +1195,7 @@ class hubUser extends hubObject {
 	protected static function cleanName($name) {
 		$upas = array(
 			'ä' => 'ae',
+			'å' => 'ae',
 			'ü' => 'ue',
 			'ö' => 'oe',
 			'Ä' => 'Ae',
