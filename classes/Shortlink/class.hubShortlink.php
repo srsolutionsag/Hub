@@ -104,7 +104,10 @@ class hubShortlink {
 		 * @var hubCourse      $class
 		 * @var hubCourse      $hubObject
 		 * @var ilTree         $tree
+         * @var ilObjUser      $ilUser
 		 */
+        global $ilUser;
+
 		foreach (hub::getObjectTypeClassNames() as $class) {
 			if ($class::where(array( 'shortlink' => $this->getExtId() ))->debug()->hasSets()) {
 				$hubObject = $class::where(array( 'shortlink' => $this->getExtId() ))->first();
@@ -128,7 +131,7 @@ class hubShortlink {
 						$server = ($_SERVER['HTTPS'] == 'on' ? 'http://' : 'http://') . $_SERVER['SERVER_NAME'];
 						$this->initObjectData($hubSyncHistory->getIliasId());
 						if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SL_CHECK_ONLINE)) {
-							if ($this->getIlObject()->getOfflineStatus()) {
+                            if ($this->getIlObject()->getOfflineStatus()&& !$this->getIlObject()->getMemberObject()->isAdmin($ilUser->getId())) {
 								ilUtil::sendInfo($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_MSG_NOT_ONLINE), true);
 								$link =
 									$server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getParentType() . '_' . $this->getParentId() . '.html';
