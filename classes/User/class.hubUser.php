@@ -25,6 +25,10 @@ class hubUser extends hubObject {
 	 */
 	public $ilias_object;
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_USER;
 
 	/**
 	 * @return bool

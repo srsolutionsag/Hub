@@ -46,6 +46,10 @@ class hubMembership extends hubObject {
 	 */
 	protected $object_type = '';
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_ROLE;
 
 	/**
 	 * @param $ext_id_usr
