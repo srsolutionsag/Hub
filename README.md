@@ -14,10 +14,11 @@ Download the full Documentation here: https://github.com/studer-raimann/Hub/blob
 ###Requirements
 Nedd the latest version of ILIAS ActiveRecord (https://github.com/studer-raimann/ActiveRecord) and Router-Service (https://github.com/studer-raimann/RouterService)
 
-###Developed by
-studer + raimang ag
-Waldeggstrasse 72
-3097 Liebefeld
+###Contact
+studer + raimann ag  
+Waldeggstrasse 72  
+3097 Liebefeld  
+Switzerland 
 
-info@studer-raimann.ch
-www.studer-raimann.ch
+info@studer-raimann.ch  
+www.studer-raimann.ch  
