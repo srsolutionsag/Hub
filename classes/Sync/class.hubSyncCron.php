@@ -158,6 +158,8 @@ class hubSyncCron {
 		}
 		$this->log->write('End Memberships', hubLog::L_PROD);
 		$this->handleMessages();
+        $this->log->write("++++++++++++++++++++++++++++ Summary: ++++++++++++++++++++++++++++\n".str_replace('<br />', '', hubOriginNotification::getSummaryString()), hubLog::L_PROD);
+        $this->log->write('++++++++++++++++++++++++++++ End Summary: ++++++++++++++++++++++++++++', hubLog::L_PROD);
 		hub::restoreErrorCallback();
 	}
 
