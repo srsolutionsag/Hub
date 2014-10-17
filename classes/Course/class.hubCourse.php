@@ -111,6 +111,8 @@ class hubCourse extends hubRepositoryObject {
 		$node = $this->getDependecesNode();
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
+        $this->updateAdditionalFields();
+        $this->ilias_object->updateSettings();
 		if ($this->props()->get(hubCourseFields::F_CREATE_ICON)) {
 			$this->updateIcon($this->ilias_object);
 			$this->ilias_object->update();
