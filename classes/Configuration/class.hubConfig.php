@@ -28,10 +28,15 @@ class hubConfig extends ActiveRecord {
 	const F_ASYNC_CLI_PHP = 'async_cli_php';
 	const F_ADMIN_ROLES = 'admin_roles';
 	const F_IMPORT_EXPORT = 'import_export';
+    const F_MSG_SHORTLINK_NOT_FOUND = 'msg_shortlink_not_found';
+    const F_MSG_SHORTLINK_NOT_ACTIVE = 'msg_shortlink_not_active';
+    const F_MSG_SHORTLINK_NO_ILIAS_ID = 'msg_shortlink_no_ilias_id';
+
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const ILIAS_43 = 43;
 	const ILIAS_44 = 44;
 	const ILIAS_45 = 45;
+
 	/**
 	 * @var array
 	 */

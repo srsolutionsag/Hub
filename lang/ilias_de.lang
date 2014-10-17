@@ -12,11 +12,18 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
+admin_msg_shortlink_not_active#:#Shortlinks nicht aktiviert Meldung
+admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden
+admin_msg_shortlink_no_ilias_id#:#Keine ILIAS-ID für Objekt Meldung
+admin_msg_shortlink_no_ilias_id_info#:#Meldung falls für das entsprechende Hub Objekt keine entsprechende ILIAS-ID existiert
+admin_msg_shortlink_not_found#:#Ungültiger Shortlink Meldung
+admin_msg_shortlink_not_found_info#:#Meldung falls Objekt (noch) nicht vorhanden wenn Zugriff via Shortlink erfolgt
 admin_origins_path#:#Pfad des origins-Verzeichnis 
 admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet
 admin_password_email_body#:#E-Mail-Body beim versenden von Passwörtern
 admin_roles#:#Rollen
 admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
+admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
 admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
 admin_form_button_cancel#:#Abbrechen
@@ -52,6 +59,7 @@ cat_prop_update_title#:#Name aktualisieren
 com_prop_check_amount#:#Mengenvergleich
 com_prop_check_amount_info#:#Fehler, wenn weniger als X% der bestehenden Datensätzen geliefert werden
 com_prop_check_amount_percentage#:#Prozentwert
+com_prop_force_login#:#Login erfordern
 com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
 com_prop_mark_deleted_text#:#(gelöscht)
 com_prop_shortlink#:#Shortlink aktivieren
