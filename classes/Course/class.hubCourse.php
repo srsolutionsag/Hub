@@ -17,6 +17,10 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	public $ilias_object;
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
 
 	/**
 	 * @return string

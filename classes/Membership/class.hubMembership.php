@@ -46,6 +46,10 @@ class hubMembership extends hubObject {
 	 */
 	protected $object_type = '';
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_ROLE;
 
 	/**
 	 * @param $ext_id_usr
@@ -237,7 +241,16 @@ class hubMembership extends hubObject {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
 				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
-					$this->participants->add($this->getUsrId(), $this->getContainerRole());
+                    if($this->participants->isAssigned($this->getUsrId()))
+                    {
+                        $this->participants->updateRoleAssignments($this->getUsrId(), array($this->ilias_role_id));
+                    }
+                    else
+                    {
+                        $this->participants->add($this->getUsrId(), $this->getContainerRole());
+                    }
+
+
 				}
 				if ($this->props()->get(hubMembershipFields::UPDATE_NOTIFICATION)) {
 					$this->participants->updateNotification($this->getUsrId(), (bool)$this->getHasNotification());
