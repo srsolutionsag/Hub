@@ -5,7 +5,7 @@ require_once('class.hubCourseIndexTableGUI.php');
 require_once('class.hubCourseDisplayGUI.php');
 
 /**
- * GUI-Class hubCourse
+ * GUI-Class hubCourseGUI
  *
  * @author            Timon Amstutz <timon.amstutz@ilub.unibe.ch>
  * @version           1.1.04
@@ -14,5 +14,3 @@ require_once('class.hubCourseDisplayGUI.php');
 class hubCourseGUI  extends arGUI {
 
 }
-
-?>

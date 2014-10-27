@@ -58,5 +58,3 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 		return $body;
 	}
 }
-
-?>
