@@ -12,8 +12,7 @@ require_once('./Services/Link/classes/class.ilLink.php');
  */
 class hubCourseIndexTableGUI extends arIndexTableGUI {
 
-    protected function initToolbar()
-    {
+    protected function initToolbar(){
     }
 
     protected function beforeGetData(){
@@ -44,9 +43,9 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
         $field->setTxt("view_field_".$field->getName());
         $field->setVisible(true);
         $field->setSortable(true);
-        $field->setPosition(30);
+        $field->setPosition(40);
 
-        $field= new arIndexTableField("status","view_field_status", 40,true,false,false,false);
+        $field= new arIndexTableField("status","view_field_status", 30,true,false,false,false);
         $this->addField($field);
     }
 

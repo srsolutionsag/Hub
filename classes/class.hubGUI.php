@@ -56,8 +56,8 @@ class hubGUI {
 		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
 		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
 		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
-        //$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
-		//		$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
+        $this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
+		//$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
 		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass('hubConfGUI', 'index'));
 		switch ($next_class) {
 			case 'huborigingui';
@@ -73,7 +73,7 @@ class hubGUI {
 				$this->tabs->setTabActive('hub_categories');
 				break;
             case 'hubmembershipgui';
-                $this->tabs->setTabActive('hub_membership');
+                $this->tabs->setTabActive('hub_memberships');
                 break;
 			case 'hubloggui';
 				$this->tabs->setTabActive('log');

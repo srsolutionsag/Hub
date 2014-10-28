@@ -45,9 +45,9 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
         $field->setTxt("view_field_".$field->getName());
         $field->setVisible(true);
         $field->setSortable(true);
-        $field->setPosition(30);
+        $field->setPosition(40);
 
-        $field = new arIndexTableField("status", "view_field_status", true, 40, true, false, false);
+        $field = new arIndexTableField("status", "view_field_status", 30, true, false, false);
         $this->addField($field);
     }
 

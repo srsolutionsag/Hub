@@ -213,11 +213,15 @@ usr_prop_update_email#:#E-Mail aktualisieren
 usr_prop_update_firstname#:#Vorname aktualisieren
 usr_prop_update_lastname#:#Nachname aktualisieren
 usr_prop_update_login#:#Loginname aktualisieren
+view_hubcategory_index#:#Kategorien
+view_hubcourse_index#:#Kurse
+view_hubmembership_index#:#Mitglieddschaften
 view_field_creation_date#:#Erstellungsdatum
 view_field_delivery_date_micro#:#Zustellungsdatum
 view_field_ext_id#:#Externe ID
 view_field_owner#:#Besitzer
 view_field_first_dependence#:#Erste Abhängigkeit
+view_field_ilias_object#:#Kursname
 view_field_notification_email#:#Benachrichtungsmail
 view_field_order_type#:#Sortierung
 view_field_parent_id#:#Parentobjekt
@@ -231,6 +235,7 @@ view_field_shortlink#:#Shortlink
 view_field_sr_hub_origin_id#:#Anbindung
 view_field_status#:#Status
 view_field_title#:#Titel
+view_field_user_name#:#Benutzername
 icon_form_title_dep_1#:#Icons für erste Vorkategorie
 icon_form_title_dep_2#:#Icons für zweite Vorkategorie
 icon_form_title_dep_3#:#Icons für dritte Vorkategorie
