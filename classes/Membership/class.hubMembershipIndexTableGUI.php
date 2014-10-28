@@ -16,7 +16,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     }
 
     protected function beforeGetData(){
-        $this->setDefaultOrderField("usr_id");
+        $this->setDefaultOrderField("sr_hub_membership.usr_id");
     }
 
     protected function addActions(){
@@ -35,7 +35,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
         $field->setTxt("view_field_user_name");
         $field->setVisible(true);
         $field->setSortable(false);
-        $field->setHasFilter(false);
+        $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("container_id");
@@ -81,6 +81,37 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
             default:
                 return parent::setArFieldData($field, $item, $value);
                 break;
+        }
+    }
+
+    /**
+     * @param arIndexTableField $field
+     */
+    protected function addFilterField(arIndexTableField $field)
+    {
+        if($field->getName()=="usr_id"){
+            include_once("./Services/Form/classes/class.ilTextInputGUI.php");
+            $this->addFilterItemToForm(new ilTextInputGUI($this->txt($field->getTxt()), $field->getName()));
+        }
+        else{
+            parent::addFilterField($field);
+        }
+    }
+
+    /**
+     * @param string $type
+     * @param string $name
+     * @param mixed $value
+     */
+    protected function addFilterWhere($type, $name, $value)
+    {
+        if($name == "usr_id")
+        {
+            $this->active_record_list->innerjoin("usr_data","usr_id","usr_id",array("usr_id"),"=");
+            $this->active_record_list->where("(usr_data.firstname like '%" . $value . "%' OR usr_data.lastname like '%" . $value . "%' OR usr_data.title like '%" . $value . "%') ");
+        }
+        else{
+            parent::addFilterWhere($type, $name, $value);
         }
     }
 
