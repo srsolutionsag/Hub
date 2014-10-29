@@ -73,7 +73,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
 
 	public function gotoHook() {
-		if (preg_match("/hub_(.*)/uim", $_GET['target'], $matches)) {
+		if (preg_match("/(^uihk_hub_.*)/uim", $_GET['target'], $matches)) {
 			$token = $matches[1];
 			hubShortlink::redirect($token,false);
 		}
