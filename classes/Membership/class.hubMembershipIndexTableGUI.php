@@ -15,11 +15,12 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     protected function initToolbar(){
     }
 
-    protected function beforeGetData(){
-        $this->setDefaultOrderField("sr_hub_membership.usr_id");
+    protected function addActions(){
+        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
     }
 
-    protected function addActions(){
+    protected function beforeGetData(){
+        $this->setDefaultOrderField("sr_hub_membership.usr_id");
     }
 
     public function customizeFields()
@@ -28,7 +29,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
         $field->setTxt("view_field_".$field->getName());
         $field->setVisible(true);
         $field->setHasFilter(true);
-        $field->setSortable(false);
+        $field->setSortable(true);
         $field->setPosition(0);
 
         $field = $this->getField("usr_id");
@@ -48,7 +49,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
         $field = $this->getField("creation_date");
         $field->setTxt("view_field_".$field->getName());
         $field->setVisible(true);
-        $field->setSortable(false);
+        $field->setSortable(true);
         $field->setPosition(30);
 
     }
@@ -108,7 +109,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
         if($name == "usr_id")
         {
             $this->active_record_list->innerjoin("usr_data","usr_id","usr_id",array("usr_id"),"=");
-            $this->active_record_list->where("(usr_data.firstname like '%" . $value . "%' OR usr_data.lastname like '%" . $value . "%' OR usr_data.title like '%" . $value . "%') ");
+            $this->active_record_list->where("(usr_data.login like '%" . $value . "%' OR usr_data.firstname like '%" . $value . "%' OR usr_data.lastname like '%" . $value . "%' OR usr_data.title like '%" . $value . "%') ");
         }
         else{
             parent::addFilterWhere($type, $name, $value);

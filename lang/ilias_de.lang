@@ -215,14 +215,16 @@ usr_prop_update_lastname#:#Nachname aktualisieren
 usr_prop_update_login#:#Loginname aktualisieren
 view_hubcategory_index#:#Kategorien
 view_hubcourse_index#:#Kurse
-view_hubmembership_index#:#Mitglieddschaften
+view_hubmembership_index#:#Mitgliedschaften
 view_field_creation_date#:#Erstellungsdatum
+view_field_container_role#:#Rolle in Objekt
 view_field_delivery_date_micro#:#Zustellungsdatum
 view_field_ext_id#:#Externe ID
 view_field_owner#:#Besitzer
 view_field_first_dependence#:#Erste Abhängigkeit
 view_field_ilias_object#:#Kursname
 view_field_notification_email#:#Benachrichtungsmail
+view_field_container_id#:#Objektname
 view_field_order_type#:#Sortierung
 view_field_parent_id#:#Parentobjekt
 view_field_parent_id_type#:#Parent ID Typ
