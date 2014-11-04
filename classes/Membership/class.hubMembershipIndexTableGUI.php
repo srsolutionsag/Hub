@@ -92,7 +92,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     {
         if($field->getName()=="usr_id"){
             include_once("./Services/Form/classes/class.ilTextInputGUI.php");
-            $this->addFilterItem(new ilTextInputGUI($this->txt($field->getTxt()), $field->getName()));
+            $this->addFilterItemToForm(new ilTextInputGUI($this->txt($field->getTxt()), $field->getName()));
         }
         else{
             parent::addFilterField($field);
