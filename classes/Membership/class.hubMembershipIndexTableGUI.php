@@ -34,21 +34,21 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
         $field = $this->getField("usr_id");
         $field->setTxt("view_field_user_name");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(false);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("container_id");
         $field->setTxt("view_field_ilias_object");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(false);
         $field->setHasFilter(false);
         $field->setPosition(15);
 
         $field = $this->getField("creation_date");
         $field->setTxt("view_field_".$field->getName());
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(false);
         $field->setPosition(30);

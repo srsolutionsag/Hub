@@ -31,19 +31,19 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
     {
         $field = $this->getField("title");
         $field->setTxt("view_field_".$field->getName());
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("parent_id");
         $field->setTxt("view_field_".$field->getName());
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setPosition(20);
 
         $field = $this->getField("creation_date");
         $field->setTxt("view_field_".$field->getName());
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setPosition(40);
 
