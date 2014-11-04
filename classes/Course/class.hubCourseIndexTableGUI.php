@@ -99,7 +99,7 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
         {
             $this->active_record_list->innerjoin("object_reference","parent_id","ref_id",array("obj_id"),"=",true);
             $this->active_record_list->innerjoin("object_data","object_reference.obj_id","obj_id", array("title AS obj_title"), "=", true);
-            $this->active_record_list->where("object_datssdfa.title like '%" . $value . "%'");
+            $this->active_record_list->where("object_data.title like '%" . $value . "%'");
         }
         else{
             parent::addFilterWhere($filter, $name, $value);
