@@ -19,9 +19,9 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
         $this->setDefaultOrderField("title");
     }
 
-    protected function addActions()
+    protected function initActions()
     {
-        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
+        $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
     }
 
     public function customizeFields()
@@ -89,11 +89,11 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
     }
 
     /**
-     * @param string $type
-     * @param string $name
-     * @param mixed $value
+     * @param ilFormPropertyGUI $filter
+     * @param $name
+     * @param $value
      */
-    protected function addFilterWhere($type, $name, $value)
+    protected function initFilterWhere(ilFormPropertyGUI $filter, $name, $value)
     {
         if($name == "parent_id")
         {
@@ -102,7 +102,7 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
             $this->active_record_list->where("object_data.title like '%" . $value . "%'");
         }
         else{
-            parent::addFilterWhere($type, $name, $value);
+            parent::addFilterWhere($filter, $name, $value);
         }
     }
 }

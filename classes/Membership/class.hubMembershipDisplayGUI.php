@@ -69,9 +69,6 @@ class hubMembershipDisplayGUI extends arDisplayGUI
             case 'container_id':
                 return '<a target=\'_blank\' href=\'' . ilLink::_getLink($this->ar->getContainerId()) . '\'>' . ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getContainerId())). '</a>';
                 break;
-            case 'sr_hub_origin_id':
-                return hubOrigin::find($this->ar->getSrHubOriginId())->getTitle();
-                break;
             case 'delivery_date_micro':
                 return date("Y-m-d H:i:s", $value);
                 break;

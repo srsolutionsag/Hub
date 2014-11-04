@@ -12,11 +12,11 @@ require_once('./Services/Link/classes/class.ilLink.php');
  */
 class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
-    protected function initToolbar(){
-    }
+    protected function initActions()
+    {
+        global $lng;
 
-    protected function addActions(){
-        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
+        $this->addAction(new arIndexTableAction('view', $lng->txt('view'), get_class($this->parent_obj), 'view'));
     }
 
     protected function beforeGetData(){
@@ -27,7 +27,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     {
         $field = $this->getField("ext_id");
         $field->setTxt("view_field_".$field->getName());
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setHasFilter(true);
         $field->setSortable(true);
         $field->setPosition(0);
@@ -50,6 +50,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
         $field->setTxt("view_field_".$field->getName());
         $field->setVisible(true);
         $field->setSortable(true);
+        $field->setHasFilter(false);
         $field->setPosition(30);
 
     }
@@ -92,7 +93,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     {
         if($field->getName()=="usr_id"){
             include_once("./Services/Form/classes/class.ilTextInputGUI.php");
-            $this->addFilterItemToForm(new ilTextInputGUI($this->txt($field->getTxt()), $field->getName()));
+            $this->addFilterItem(new ilTextInputGUI($this->txt($field->getTxt()), $field->getName()));
         }
         else{
             parent::addFilterField($field);
@@ -100,11 +101,11 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
     }
 
     /**
-     * @param string $type
-     * @param string $name
-     * @param mixed $value
+     * @param ilFormPropertyGUI $filter
+     * @param $name
+     * @param $value
      */
-    protected function addFilterWhere($type, $name, $value)
+    protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value)
     {
         if($name == "usr_id")
         {
@@ -112,7 +113,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
             $this->active_record_list->where("(usr_data.login like '%" . $value . "%' OR usr_data.firstname like '%" . $value . "%' OR usr_data.lastname like '%" . $value . "%' OR usr_data.title like '%" . $value . "%') ");
         }
         else{
-            parent::addFilterWhere($type, $name, $value);
+            parent::addFilterWhere($filter, $name, $value);
         }
     }
 

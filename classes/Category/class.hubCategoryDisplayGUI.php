@@ -74,8 +74,7 @@ class hubCategoryDisplayGUI extends arDisplayGUI
                 if ($hubParentCategory)
                 {
                     $hubSyncHistoryParent = hubSyncHistory::getInstance($hubParentCategory);
-                    return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistoryParent->getIliasId()) . '\'>'
-                    . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
+                    return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistoryParent->getIliasId()) . '\'>'. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
                 } else
                 {
                     return "<a target='_blank' href=''></a>";

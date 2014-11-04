@@ -22,9 +22,9 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
     {
     }
 
-    protected function addActions()
+    protected function initActions()
     {
-        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
+        $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
     }
 
     protected function customizeFields()
