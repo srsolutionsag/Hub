@@ -1,7 +1,4 @@
 <?php
-require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
-if (! ilHubPlugin::checkPreconditions()) {
-}
 $id = 'hub';
 $version = '1.1.19';
 $ilias_min_version = '4.3.0';
