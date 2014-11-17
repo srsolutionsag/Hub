@@ -11,14 +11,6 @@ require_once('./Services/Link/classes/class.ilLink.php');
  *
  */
 class hubCourseIndexTableGUI extends arIndexTableGUI {
-
-    protected function initToolbar(){
-    }
-
-    protected function beforeGetData(){
-        $this->setDefaultOrderField("title");
-    }
-
     protected function initActions()
     {
         $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
@@ -26,23 +18,28 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
     public function customizeFields()
     {
+        $this->getFields()->setTxtPrefix("view_field_");
+
         $field = $this->getField("title");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("parent_id");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setHasFilter(true);
         $field->setPosition(20);
 
         $field = $this->getField("creation_date");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setSortable(true);
+        $field->setPosition(40);
+
+        $field = $this->getField("view_mode");
+        $field->setVisibleDefault(false);
+        $field->setSortable(true);
+        $field->setHasFilter(true);
         $field->setPosition(40);
 
         $field= new arIndexTableField("status","view_field_status", 30,true,false,false,false);

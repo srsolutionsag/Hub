@@ -223,6 +223,8 @@ view_field_ext_id#:#Externe ID
 view_field_owner#:#Besitzer
 view_field_first_dependence#:#Erste Abhängigkeit
 view_field_ilias_object#:#Kursname
+view_field_important_information#:#Important Information
+view_field_sub_limitation_type#:#Subscription Type
 view_field_notification_email#:#Benachrichtungsmail
 view_field_container_id#:#Objektname
 view_field_order_type#:#Sortierung
@@ -238,6 +240,7 @@ view_field_sr_hub_origin_id#:#Anbindung
 view_field_status#:#Status
 view_field_title#:#Titel
 view_field_user_name#:#Benutzername
+view_field_view_mode#:#View Mode
 icon_form_title_dep_1#:#Icons for first Categorie
 icon_form_title_dep_2#:#Icons for second Categorie
 icon_form_title_dep_3#:#Icons for third Categorie

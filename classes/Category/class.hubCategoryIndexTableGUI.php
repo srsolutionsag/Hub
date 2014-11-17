@@ -13,15 +13,6 @@ include_once('./Services/Link/classes/class.ilLink.php');
  *
  */
 class hubCategoryIndexTableGUI extends arIndexTableGUI {
-
-    protected function beforeGetData(){
-        $this->setDefaultOrderField("title");
-    }
-
-    protected function initToolbar()
-    {
-    }
-
     protected function initActions()
     {
         $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
@@ -29,20 +20,19 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
 
     protected function customizeFields()
     {
+        $this->getFields()->setTxtPrefix("view_field_");
+
         $field = $this->getField("title");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("parent_id");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setPosition(20);
 
         $field = $this->getField("creation_date");
-        $field->setTxt("view_field_".$field->getName());
         $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setPosition(40);

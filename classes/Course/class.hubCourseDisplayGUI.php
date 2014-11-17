@@ -25,20 +25,17 @@ class hubCourseDisplayGUI extends arDisplayGUI
     }
     public function customizeFields()
     {
+        $this->getFields()->setTxtPrefix("view_field_");
         $field = $this->getField("title");
         $field->setVisible(false);
 
-        foreach($this->getFields() as $field){
+        foreach($this->getFieldsAsArray() as $field){
             /**
              * @var arDisplayField $field
              */
-
-            $getFunction = ActiveRecord::_toCamelCase("get".$field->getName());
-            if($this->ar->$getFunction())
+            $getFunction = $field->getGetFunctionName();
+            if(!$this->ar->$getFunction())
             {
-                $field->setTxt("view_field_".$field->getName());
-            }
-            else{
                 $field->setVisible(false);
             }
         }
