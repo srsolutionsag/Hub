@@ -99,7 +99,7 @@ crs_prop_check_online#:#Check online-status of course
 crs_prop_msg_not_online#:#Message if course offline
 crs_prop_notification_subject#:#Subject
 crs_prop_notification_body#:#Body
-crs_prop_notification_from#:#Absender
+crs_prop_notification_from#:#From
 crs_prop_send_notification#:#Activate notification
 crs_prop_send_notification_info#:#Beim Erstellen des Kurses wird eine Mail an die Adressen im Objekt-Feld notification_email verschickt.
 hub_categories#:#Kategorien
