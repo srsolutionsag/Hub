@@ -94,6 +94,7 @@ crs_prop_node_noparent#:#Node-ID, wenn keine Parent-ID gefunden
 crs_prop_reactivate#:#Wieder online setzen
 crs_prop_update_description#:#Beschreibung aktualisieren
 crs_prop_update_icon#:#Icon aktualisieren
+crs_prop_update_responsible#:#Verantwortlicher aktualisieren
 crs_prop_update_title#:#Titel aktualisieren
 crs_prop_check_online#:#Check online-status of course
 crs_prop_msg_not_online#:#Message if course offline

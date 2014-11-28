@@ -157,6 +157,12 @@ class hubCourse extends hubRepositoryObject {
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
+        if ($this->props()->get(hubCourseFields::F_UPDATE_RESPONSIBLE)) {
+            $this->initObject();
+            $this->ilias_object->setContactResponsibility($this->getResponsible());
+            $this->ilias_object->setContactEmail($this->getResponsibleEmail());
+            $update = true;
+        }
 		if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
 			$this->initObject();
 			$this->updateIcon($this->ilias_object);
@@ -168,7 +174,7 @@ class hubCourse extends hubRepositoryObject {
 			$update = true;
 		}
 		if ($update) {
-			$this->updateAdditionalFields();
+            $this->ilias_object->setOwner($this->getOwner());
 			$this->ilias_object->update();
 		}
 

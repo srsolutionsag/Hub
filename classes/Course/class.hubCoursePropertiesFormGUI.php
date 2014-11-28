@@ -71,6 +71,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_description'), hubCourseFields::F_UPDATE_DESCRIPTION);
 		$this->addItem($cb);
+        $cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_responsible'), hubCourseFields::F_UPDATE_RESPONSIBLE);
+        $this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_icon'), hubCourseFields::F_UPDATE_ICON);
 		$this->addItem($cb);
