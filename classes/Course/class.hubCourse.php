@@ -123,7 +123,13 @@ class hubCourse extends hubRepositoryObject {
 			global $ilSetting;
 			$mail = new ilMimeMail();
 			$mail->autoCheck(false);
-			$mail->From($ilSetting->get('admin_email'));
+            if($this->props()->get(hubCourseFields::F_NOT_FROM)){
+                $mail->From($this->props()->get(hubCourseFields::F_NOT_FROM));
+            }
+            else{
+                $mail->From($ilSetting->get('admin_email'));
+            }
+
 			$mail->To($this->getNotificationEmail());
 			$body = hubCourseFields::getReplacedText($this);
 			$mail->Subject($this->props()->get(hubCourseFields::F_NOT_SUBJECT));

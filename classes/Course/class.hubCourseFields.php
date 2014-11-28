@@ -29,7 +29,7 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 	const F_SEND_NOTIFICATION = 'send_notification';
 	const F_NOT_BODY = 'notification_body';
 	const F_NOT_SUBJECT = 'notification_subject';
-
+    const F_NOT_FROM = 'notification_from';
 
 	/**
 	 * @return string

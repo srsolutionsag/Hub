@@ -55,6 +55,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$notification_body->setRows(6);
 		$notification_body->setCols(100);
 		$send_mail->addSubItem($notification_body);
+        $notification_from = new ilTextInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_FROM), hubCourseFields::F_NOT_FROM);
+        $send_mail->addSubItem($notification_from);
 		$this->addItem($send_mail);
 		//
 		$h = new ilFormSectionHeaderGUI();
