@@ -71,19 +71,17 @@ class hubSyncHistory extends ActiveRecord {
 			return new self($ext_id);
 		}
 
-		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
-			/**
-			 * @var $obj hubSyncHistory
-			 */
-			$obj = self::findOrGetInstance($ext_id);
-			$obj->setSrHubOriginId($sr_hub_origin_id);
-			$obj->setIliasIdType($hubObject::$id_type);
-			if ($obj->is_new) {
-				$obj->create();
-			}
+        /**
+         * @var $obj hubSyncHistory
+         */
+        $obj = self::findOrGetInstance($ext_id);
+        $obj->setSrHubOriginId($sr_hub_origin_id);
+        $obj->setIliasIdType($hubObject::$id_type);
+        if ($obj->is_new) {
+            $obj->create();
+        }
 
-			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
-		}
+        self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
 
 		return self::$cache[$sr_hub_origin_id][$ext_id];
 	}
@@ -136,6 +134,8 @@ class hubSyncHistory extends ActiveRecord {
 					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
 			$ilDB->query($sql);
+            arObjectCache::purgeAll(new hubSyncHistory());
+            hubSyncHistory::get();
 
 			self::$loaded[$sr_hub_origin_id] = true;
 		}
