@@ -17,6 +17,10 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	public $ilias_object;
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
 
 	/**
 	 * @return string
@@ -174,6 +178,7 @@ class hubCourse extends hubRepositoryObject {
 		}
 		$this->ilias_object->setContactResponsibility($this->getResponsible());
 		$this->ilias_object->setContactEmail($this->getResponsibleEmail());
+		$this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
 		$this->ilias_object->setOwner($this->getOwner());
 	}
 
@@ -378,6 +383,35 @@ class hubCourse extends hubRepositoryObject {
 	}
 
 
+	protected function moveObject() {
+		if ($this->props()->get(hubCourseFields::F_MOVE)) {
+			global $tree, $rbacadmin;
+			$this->initObject();
+			$dependecesNode = $this->getDependecesNode();
+			if ($tree->isDeleted($this->ilias_object->getRefId())) {
+				hubLog::getInstance()->write('Course restored: ' . $this->getExtId());
+				$ilRepUtil = new ilRepUtil();
+				$ilRepUtil->restoreObjects($dependecesNode, array( $this->ilias_object->getRefId() ));
+			}
+			try {
+				$ref_id = $this->ilias_object->getRefId();
+				$old_parent = $tree->getParentId($ref_id);
+				if ($old_parent != $dependecesNode) {
+					$str = 'Moving Course ' . $this->getExtId() . ' from ' . $old_parent . ' to ' . $dependecesNode;
+					$tree->moveTree($ref_id, $dependecesNode);
+					$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
+					hubLog::getInstance()->write($str);
+					hubOriginNotification::addMessage($this->getSrHubOriginId(), $str, 'Moved:');
+				}
+			} catch (InvalidArgumentException $e) {
+				$str1 = 'Error moving Course in Tree: ' . $this->getExtId();
+
+				hubLog::getInstance()->write($str1);
+			}
+		}
+	}
+
+
 
 	//
 	// Fields
@@ -502,6 +536,30 @@ class hubCourse extends hubRepositoryObject {
 	 * @db_length           8
 	 */
 	protected $owner = 6;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           1
+	 */
+	protected $sub_limitation_type = 0;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           1
+	 */
+	protected $view_mode = 0;
+	/**
+	 * @var int
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        integer
+	 * @db_length           8
+	 */
+	protected $didactic_template_id = 0;
 
 
 	//
@@ -731,32 +789,51 @@ class hubCourse extends hubRepositoryObject {
 	}
 
 
-	protected function moveObject() {
-		if ($this->props()->get(hubCourseFields::F_MOVE)) {
-			global $tree, $rbacadmin;
-			$this->initObject();
-			$dependecesNode = $this->getDependecesNode();
-			if ($tree->isDeleted($this->ilias_object->getRefId())) {
-				hubLog::getInstance()->write('Course restored: ' . $this->getExtId());
-				$ilRepUtil = new ilRepUtil();
-				$ilRepUtil->restoreObjects($dependecesNode, array( $this->ilias_object->getRefId() ));
-			}
-			try {
-				$ref_id = $this->ilias_object->getRefId();
-				$old_parent = $tree->getParentId($ref_id);
-				if ($old_parent != $dependecesNode) {
-					$str = 'Moving Course ' . $this->getExtId() . ' from ' . $old_parent . ' to ' . $dependecesNode;
-					$tree->moveTree($ref_id, $dependecesNode);
-					$rbacadmin->adjustMovedObjectPermissions($ref_id, $old_parent);
-					hubLog::getInstance()->write($str);
-					hubOriginNotification::addMessage($this->getSrHubOriginId(), $str, 'Moved:');
-				}
-			} catch (InvalidArgumentException $e) {
-				$str1 = 'Error moving Course in Tree: ' . $this->getExtId();
+	/**
+	 * @param int $sub_limitation_type
+	 */
+	public function setSubLimitationType($sub_limitation_type) {
+		$this->sub_limitation_type = $sub_limitation_type;
+	}
 
-				hubLog::getInstance()->write($str1);
-			}
-		}
+
+	/**
+	 * @return int
+	 */
+	public function getSubLimitationType() {
+		return $this->sub_limitation_type;
+	}
+
+
+	/**
+	 * @param int $view_mode
+	 */
+	public function setViewMode($view_mode) {
+		$this->view_mode = $view_mode;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getViewMode() {
+		return $this->view_mode;
+	}
+
+
+	/**
+	 * @param int $didactic_template_id
+	 */
+	public function setDidacticTemplateId($didactic_template_id) {
+		$this->didactic_template_id = $didactic_template_id;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getDidacticTemplateId() {
+		return $this->didactic_template_id;
 	}
 }
 

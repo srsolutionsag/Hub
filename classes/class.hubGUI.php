@@ -104,21 +104,28 @@ class hubGUI {
 		$this->setTabs($next_class);
 		$this->setTitleAndDescription();
 		switch ($next_class) {
-			case '':
-				$this->performCommand($cmd);
+            case '':
+                $this->performCommand($cmd);
+                break;
+            case 'hubcoursegui':
+                require_once($this->ctrl->lookupClassPath($next_class));
+                $gui = new hubCourseGUI("hubCourse", $this->pl);
+                break;
+            case 'hubcategorygui':
+                require_once($this->ctrl->lookupClassPath($next_class));
+                $gui = new hubCategoryGUI("hubCategory", $this->pl);
 				break;
 			default:
 				require_once($this->ctrl->lookupClassPath($next_class));
-				if (! $cmd) {
-					$this->ctrl->setCmd('index');
-				}
 				$gui = new $next_class($this);
-				$this->ctrl->forwardCommand($gui);
 				break;
 		}
-
+        if (!$cmd)
+        {
+            $this->ctrl->setCmd('index');
+        }
+        $this->ctrl->forwardCommand($gui);
 		return true;
 	}
 }
-
 ?>

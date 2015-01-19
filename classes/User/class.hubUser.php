@@ -25,6 +25,10 @@ class hubUser extends hubObject {
 	 */
 	public $ilias_object;
 
+    /**
+     * @var int
+     */
+    public static $id_type = self::ILIAS_ID_TYPE_USER;
 
 	/**
 	 * @return bool
@@ -1195,6 +1199,7 @@ class hubUser extends hubObject {
 	protected static function cleanName($name) {
 		$upas = array(
 			'ä' => 'ae',
+			'å' => 'ae',
 			'ü' => 'ue',
 			'ö' => 'oe',
 			'Ä' => 'Ae',

@@ -60,7 +60,7 @@ class hubShortlink {
 	/**
 	 * @param $ext_id
 	 */
-	private function __construct($ext_id) {
+    protected function __construct($ext_id) {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		hub::initILIAS(hub::CONTEXT_WEB);
 		self::includes();
@@ -79,17 +79,17 @@ class hubShortlink {
 	}
 
 
-	private function redirectToObject() {
+    protected function redirectToObject() {
 		ilUtil::redirect($this->getLink());
 	}
 
 
-	private function redirectToParent() {
+    protected function redirectToParent() {
 		ilUtil::redirect($this->getLink());
 	}
 
 
-	private function redirectToBase() {
+    protected function redirectToBase() {
 		ilUtil::redirect('/login.php');
 	}
 
@@ -97,14 +97,17 @@ class hubShortlink {
 	/**
 	 * @return bool|int
 	 */
-	private function checkShortlink() {
+    protected function checkShortlink() {
 		/**
 		 * @var hubSyncHistory $hubSyncHistory
 		 * @var hubOrigin      $hubOrigin
 		 * @var hubCourse      $class
 		 * @var hubCourse      $hubObject
 		 * @var ilTree         $tree
+         * @var ilObjUser      $ilUser
 		 */
+        global $ilUser;
+
 		foreach (hub::getObjectTypeClassNames() as $class) {
 			if ($class::where(array( 'shortlink' => $this->getExtId() ))->debug()->hasSets()) {
 				$hubObject = $class::where(array( 'shortlink' => $this->getExtId() ))->first();
@@ -128,7 +131,7 @@ class hubShortlink {
 						$server = ($_SERVER['HTTPS'] == 'on' ? 'http://' : 'http://') . $_SERVER['SERVER_NAME'];
 						$this->initObjectData($hubSyncHistory->getIliasId());
 						if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SL_CHECK_ONLINE)) {
-							if ($this->getIlObject()->getOfflineStatus()) {
+                            if ($this->getIlObject()->getOfflineStatus()&& !$this->getIlObject()->getMemberObject()->isAdmin($ilUser->getId())) {
 								ilUtil::sendInfo($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_MSG_NOT_ONLINE), true);
 								$link =
 									$server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getParentType() . '_' . $this->getParentId() . '.html';
@@ -310,7 +313,7 @@ class hubShortlink {
 	}
 
 
-	private static function includes() {
+	protected static function includes() {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectProperties.php');
