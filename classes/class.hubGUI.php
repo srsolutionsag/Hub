@@ -39,6 +39,9 @@ class hubGUI {
 	public function __construct() {
 		global $tpl, $ilCtrl, $ilToolbar, $ilTabs, $ilAccess;
 		$this->tpl = $tpl;
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->getStandardTemplate();
+		}
 		$this->ctrl = $ilCtrl;
 		$this->toolbar = $ilToolbar;
 		$this->tabs = $ilTabs;

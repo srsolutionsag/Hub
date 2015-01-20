@@ -116,7 +116,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return ctrlmmEntryCtrl[]
 	 */
 	public static function getMenuEntries($id = 0) {
-		$entries = array();
+		$entries[$id] = array();
         $entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
