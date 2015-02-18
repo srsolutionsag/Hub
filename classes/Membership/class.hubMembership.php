@@ -135,7 +135,9 @@ class hubMembership extends hubObject {
 			}
 			$hubMembership->getHistoryObject()->updatePickupDate();
 			$hubOrigin::afterObjectModification($hubMembership);
-			$hubOriginObj->afterObjectInit($hubMembership);
+            if (! hubSyncCron::getDryRun()) {
+                $hubOriginObj->afterObjectInit($hubMembership);
+            }
 
 			hubDurationLogger2::getInstance($duration_id)->resume();
 		}
