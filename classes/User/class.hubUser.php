@@ -36,6 +36,7 @@ class hubUser extends hubObject {
 	public static function buildILIASObjects() {
 		/**
 		 * @var $hubUser hubUser
+         * @var $hubOrigin hubOrigin
 		 */
 		foreach (self::get() as $hubUser) {
 			if (! hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
@@ -43,6 +44,8 @@ class hubUser extends hubObject {
 			}
 			$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
 			hubDurationLogger2::getInstance($duration_id)->resume();
+            $hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
+            $hubOriginObj = $hubOrigin::find($hubUser->getSrHubOriginId());
 			self::lookupExisting($hubUser);
 			switch ($hubUser->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
@@ -78,8 +81,9 @@ class hubUser extends hubObject {
 					break;
 			}
 			$hubUser->getHistoryObject()->updatePickupDate();
-			$hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
-			$hubOrigin::afterObjectModification($hubUser);
+            if (! hubSyncCron::getDryRun()) {
+                $hubOriginObj->afterObjectInit($hubUser);
+            }
 			hubDurationLogger2::getInstance($duration_id)->pause();
 		}
 
