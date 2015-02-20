@@ -67,11 +67,11 @@ class hubSyncHistory extends ActiveRecord {
 		$ext_id = $hubObject->getExtId();
 		$sr_hub_origin_id = $hubObject->getSrHubOriginId();
 
-		if (! $ext_id OR ! $sr_hub_origin_id) {
+		if (!$ext_id OR !$sr_hub_origin_id) {
 			return new self($ext_id);
 		}
 
-		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
+		if (!isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
 			/**
 			 * @var $obj hubSyncHistory
 			 */
@@ -99,7 +99,7 @@ class hubSyncHistory extends ActiveRecord {
 		 * @var $obj hubSyncHistory
 		 */
 		$class_name = get_called_class();
-		if (! arObjectCache::isCached($class_name, $primary_key)) {
+		if (!arObjectCache::isCached($class_name, $primary_key)) {
 			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
 				arFactory::getInstance($class_name, $primary_key);
 			} else {
@@ -127,7 +127,7 @@ class hubSyncHistory extends ActiveRecord {
 		 * @var $hubObject hubCategory
 		 * @var $ilDB      ilDB
 		 */
-		if (! self::$loaded[$sr_hub_origin_id]) {
+		if (!self::$loaded[$sr_hub_origin_id]) {
 			global $ilDB;
 			$class = hubOrigin::getUsageClass($sr_hub_origin_id);
 			$sql = 'UPDATE sr_hub_sync_history hist
@@ -149,7 +149,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @throws Exception
 	 */
 	public function getStatus() {
-		if (! self::isLoaded($this->getSrHubOriginId())) {
+		if (!self::isLoaded($this->getSrHubOriginId())) {
 			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
 				. print_r(hubLog::getBackTrace(), 1));
 		} else {
@@ -189,7 +189,9 @@ class hubSyncHistory extends ActiveRecord {
 				return $res->obj_id;
 				break;
 			case hubObject::ILIAS_ID_TYPE_REF_ID:
-				$sql = 'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = ' . $ilDB->quote($hubObject->returnImportId());
+				$sql =
+					'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = '
+					. $ilDB->quote($hubObject->returnImportId());
 				$res = $ilDB->fetchObject($ilDB->query($sql));
 
 				return $res->ref_id;
@@ -231,6 +233,12 @@ class hubSyncHistory extends ActiveRecord {
 	}
 
 
+	public function update() {
+		parent::update();
+		arObjectCache::purge($this);
+	}
+
+
 	/**
 	 * @return string
 	 * @description Return the Name of your Database Table
@@ -260,7 +268,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return bool
 	 */
 	private function isDeletedInILIAS() {
-		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == hubObject::ILIAS_ID_TYPE_REF_ID ? true : false));
+		return !ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == hubObject::ILIAS_ID_TYPE_REF_ID ? true : false));
 	}
 
 
