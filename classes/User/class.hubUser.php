@@ -147,7 +147,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
 		$this->ilias_object->setDepartment($this->getDepartment());
 		$this->ilias_object->setFax($this->getFax());
-		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
+//		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
 		$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
 		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
 		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
@@ -275,7 +275,7 @@ class hubUser extends hubObject {
 			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
 			$this->ilias_object->setDepartment($this->getDepartment());
 			$this->ilias_object->setFax($this->getFax());
-			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
+//			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
 			$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
 			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
 			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());

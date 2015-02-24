@@ -1,5 +1,6 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
+require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
 
 /**
  * Class ilHubPlugin
@@ -116,7 +117,13 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return ctrlmmEntryCtrl[]
 	 */
 	public static function getMenuEntries($id = 0) {
-		$entries[$id] = array();
+
+        global $rbacreview, $ilUser;
+        if (!$rbacreview->isAssigned($ilUser->getId(), hubConfig::get(hubConfig::F_ADMIN_ROLES))) {
+            return array();
+        }
+
+        $entries[$id] = array();
         $entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
