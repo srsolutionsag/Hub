@@ -134,8 +134,8 @@ class hubSyncHistory extends ActiveRecord {
 					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
 			$ilDB->query($sql);
-			arObjectCache::purgeAll(new hubSyncHistory());
-			hubSyncHistory::get();
+//			arObjectCache::purgeAll(new hubSyncHistory());
+//			hubSyncHistory::get();
 
 			self::$loaded[$sr_hub_origin_id] = true;
 		}

@@ -202,7 +202,8 @@ class hubOrigin extends ActiveRecord {
 			return $this->originObject;
 		}
 		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
-			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
+			$this->buildFoldersAndFiles();
+			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . ' does not exist');
 		}
 
 		return $this;
@@ -263,8 +264,11 @@ class hubOrigin extends ActiveRecord {
 	 */
 	private function buildFoldersAndFiles() {
 		$dir_name = self::getOriginsPathForUsageType($this->getUsageType()) . $this->getClassName();
-		if (! file_exists($dir_name) AND is_writable($dir_name)) {
-			mkdir($dir_name);
+
+		if (! file_exists($dir_name)) {
+			$ret = ilUtil::makeDirParents($dir_name);
+//			var_dump($ret); // FSX
+//			mkdir($dir_name);
 			chmod($dir_name, 0755);
 		} else {
 			return false;

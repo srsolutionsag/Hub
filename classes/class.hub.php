@@ -58,7 +58,7 @@ class hub {
 	 */
 	public static function getObjectClassname($object_type_id) {
 		if (! in_array($object_type_id, array_keys(self::$object_types)) AND $object_type_id != 0) {
-			throw new Exception('$object_type_id ' . $object_type_id . 'does not exists');
+			throw new Exception('$object_type_id ' . $object_type_id . ' does not exists');
 		}
 
 		return self::$object_types[$object_type_id];

@@ -103,10 +103,7 @@ class hubCourse extends hubRepositoryObject {
 		$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
-		$this->ilias_object->setImportantInformation($this->getIm());
-		if ($this->props()->get(hubCourseFields::F_ACTIVATE)) {
-			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
-		}
+		$this->ilias_object->setImportantInformation($this->getImportantInformation());
 		$this->updateAdditionalFields();
 		$this->ilias_object->create();
 		$this->ilias_object->createReference();
@@ -115,6 +112,11 @@ class hubCourse extends hubRepositoryObject {
 		$this->ilias_object->setPermissions($node);
         $this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
         $this->ilias_object->updateSettings();
+		if ($this->props()->get(hubCourseFields::F_ACTIVATE)) {
+			$this->ilias_object->setOfflineStatus(false);
+			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
+			$this->ilias_object->update();
+		}
 		if ($this->props()->get(hubCourseFields::F_CREATE_ICON)) {
 			$this->updateIcon($this->ilias_object);
 			$this->ilias_object->update();
@@ -172,6 +174,7 @@ class hubCourse extends hubRepositoryObject {
 		}
 		if ($this->props()->get(hubCourseFields::F_REACTIVATE)) {
 			$this->initObject();
+			$this->ilias_object->setOfflineStatus(false);
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 			$update = true;
 		}
