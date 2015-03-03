@@ -10,7 +10,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @revision          $r:
  *
  * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI, ilUIPluginRouterGUI
- * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI, hubConfGUI
+ * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI, hubConfGUI, hubMembershipGUI
  */
 class hubGUI {
 
@@ -59,7 +59,8 @@ class hubGUI {
 		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
 		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
 		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
-		//		$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
+		$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
+		//$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
 		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass('hubConfGUI', 'index'));
 		switch ($next_class) {
 			case 'huborigingui';
@@ -73,6 +74,9 @@ class hubGUI {
 				break;
 			case 'hubcategorygui';
 				$this->tabs->setTabActive('hub_categories');
+				break;
+			case 'hubmembershipgui';
+				$this->tabs->setTabActive('hub_memberships');
 				break;
 			case 'hubloggui';
 				$this->tabs->setTabActive('log');
@@ -107,28 +111,33 @@ class hubGUI {
 		$this->setTabs($next_class);
 		$this->setTitleAndDescription();
 		switch ($next_class) {
-            case '':
-                $this->performCommand($cmd);
-                break;
-            case 'hubcoursegui':
-                require_once($this->ctrl->lookupClassPath($next_class));
-                $gui = new hubCourseGUI("hubCourse", $this->pl);
-                break;
-            case 'hubcategorygui':
-                require_once($this->ctrl->lookupClassPath($next_class));
-                $gui = new hubCategoryGUI("hubCategory", $this->pl);
+			case '':
+				$this->performCommand($cmd);
+				break;
+			case 'hubcoursegui':
+				require_once($this->ctrl->lookupClassPath($next_class));
+				$gui = new hubCourseGUI("hubCourse", $this->pl);
+				break;
+			case 'hubcategorygui':
+				require_once($this->ctrl->lookupClassPath($next_class));
+				$gui = new hubCategoryGUI("hubCategory", $this->pl);
+				break;
+			case 'hubmembershipgui':
+				require_once($this->ctrl->lookupClassPath($next_class));
+				$gui = new hubMembershipGUI("hubMembership", $this->pl);
 				break;
 			default:
 				require_once($this->ctrl->lookupClassPath($next_class));
 				$gui = new $next_class($this);
 				break;
 		}
-        if (!$cmd)
-        {
-            $this->ctrl->setCmd('index');
-        }
-        $this->ctrl->forwardCommand($gui);
+		if (!$cmd) {
+			$this->ctrl->setCmd('index');
+		}
+		$this->ctrl->forwardCommand($gui);
+
 		return true;
 	}
 }
+
 ?>

@@ -2,31 +2,29 @@
 require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Views/Display/class.arDisplayGUI.php');
 require_once('./Services/User/classes/class.ilObjUser.php');
 /**
- * GUI-Class hubCourseDisplayGUI
+ * GUI-Class hubMembershipDisplayGUI
  *
  * @author            Timon Amstutz <timon.amstutz@ilub.unibe.ch>
  * @version           $Id:
  *
  */
-class hubCourseDisplayGUI extends arDisplayGUI
+class hubMembershipDisplayGUI extends arDisplayGUI
 {
     /**
-     * @var hubCourse $ar
+     * @var hubMembership $ar
      */
     protected $ar;
 
     public function setTitle(){
-        /**
-         * @var hubCourse $hubCourse
-         */
-        $hubCourse      = hubCourse::find($this->ar->getExtId());
-        $hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
-        $this->title =  '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . '</a>';
+        $user = new ilObjUser($this->ar->getUsrId());
+        $this->title =  $user->getPublicName();
     }
+
     public function customizeFields()
     {
         $this->getFields()->setTxtPrefix("view_field_");
-        $field = $this->getField("title");
+
+        $field = $this->getField("usr_id");
         $field->setVisible(false);
 
         foreach($this->getFieldsAsArray() as $field){
@@ -40,14 +38,9 @@ class hubCourseDisplayGUI extends arDisplayGUI
             }
         }
 
-        $field = $this->getField("parent_id");
-        $field->setPosition(-30);
 
-        $field = $this->getField("first_dependence");
+        $field = $this->getField("ext_id");
         $field->setPosition(-20);
-
-        $field = $this->getField("second_dependence");
-        $field->setPosition(-10);
 
         $field = $this->getField("creation_date");
         $field->setPosition(10);
@@ -55,7 +48,7 @@ class hubCourseDisplayGUI extends arDisplayGUI
         $field = $this->getField("delivery_date_micro");
         $field->setPosition(20);
 
-        $field= new arDisplayField("status","view_field_status", -1,true,true);
+        $field= new arDisplayField("status","view_field_status", -10,true,true);
         $this->addField($field);
     }
 
@@ -66,24 +59,13 @@ class hubCourseDisplayGUI extends arDisplayGUI
      */
     protected function setArFieldData(arDisplayField $field, $value)
     {
+        /**
+         * ilObject $ilObject
+         */
         switch ($field->getName())
         {
-            case 'title':
-                $hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
-                return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $this->ar->getTitlePrefix() . $value . '</a>';
-                break;
-            case 'parent_id':
-                return '<a target=\'_blank\' href=\'' . ilLink::_getLink($this->ar->getParentId()) . '\'>' . ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getParentId())) . '</a>';
-                break;
-            case 'sr_hub_origin_id':
-                return hubOrigin::find($this->ar->getSrHubOriginId())->getTitle();
-                break;
-            case 'creation_date':
-                return $value;
-                break;
-            case 'owner':
-                $user = new ilObjUser($this->ar->getOwner());
-                return $user->getPublicName();
+            case 'container_id':
+                return '<a target=\'_blank\' href=\'' . ilLink::_getLink($this->ar->getContainerId()) . '\'>' . ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getContainerId())). '</a>';
                 break;
             case 'delivery_date_micro':
                 return date("Y-m-d H:i:s", $value);
