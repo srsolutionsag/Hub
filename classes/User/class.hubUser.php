@@ -24,63 +24,84 @@ class hubUser extends hubObject {
 	 * @var ilObjUser
 	 */
 	public $ilias_object;
+	/**
+	 * @var int
+	 */
+	public static $id_type = self::ILIAS_ID_TYPE_USER;
 
-    /**
-     * @var int
-     */
-    public static $id_type = self::ILIAS_ID_TYPE_USER;
 
 	/**
 	 * @return bool
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubUser hubUser
+		 * @var $hubUser   hubUser
+		 * @var $hubOrigin hubOrigin
 		 */
-		foreach (self::get() as $hubUser) {
-			if (! hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
-				continue;
+
+		$count = self::count();
+		$steps = 1000;
+		$step = 0;
+		$hasSets = true;
+		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		while ($hasSets) {
+			$start = $step * $steps;
+			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
+			$hubUsers = self::limit($start, $steps)->get();
+			if (!count($hubUsers)) {
+				$hasSets = false;
 			}
-			$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
-			hubDurationLogger2::getInstance($duration_id)->resume();
-			self::lookupExisting($hubUser);
-			switch ($hubUser->getHistoryObject()->getStatus()) {
-				case hubSyncHistory::STATUS_NEW:
-					if (! hubSyncCron::getDryRun()) {
-						$hubUser->createUser();
-					}
-					hubCounter::incrementCreated($hubUser->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User created:');
-					break;
-				case hubSyncHistory::STATUS_UPDATED:
-					if (! hubSyncCron::getDryRun()) {
-						$hubUser->updateUser();
-					}
-					hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_DELETED:
-					if (! hubSyncCron::getDryRun()) {
-						$hubUser->deleteUser();
-					}
-					hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
-//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
-					break;
-				case hubSyncHistory::STATUS_ALREADY_DELETED:
-					hubCounter::incrementIgnored($hubUser->getSrHubOriginId());
-//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
-					break;
-				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
-					hubCounter::incrementNewlyDelivered($hubUser->getSrHubOriginId());
-//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
-					if (! hubSyncCron::getDryRun()) {
-						$hubUser->updateUser();
-					}
-					break;
+			foreach ($hubUsers as $hubUser) {
+				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
+					continue;
+				}
+				$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
+				hubDurationLogger2::getInstance($duration_id)->resume();
+				$hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
+				$hubOriginObj = $hubOrigin::find($hubUser->getSrHubOriginId());
+				self::lookupExisting($hubUser);
+				switch ($hubUser->getHistoryObject()->getStatus()) {
+					case hubSyncHistory::STATUS_NEW:
+						if (!hubSyncCron::getDryRun()) {
+							$hubUser->createUser();
+						}
+						hubCounter::incrementCreated($hubUser->getSrHubOriginId());
+						hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User created:');
+						break;
+					case hubSyncHistory::STATUS_UPDATED:
+						if (!hubSyncCron::getDryRun()) {
+							$hubUser->updateUser();
+						}
+						hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_DELETED:
+						if (!hubSyncCron::getDryRun()) {
+							$hubUser->deleteUser();
+						}
+						hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
+						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
+						break;
+					case hubSyncHistory::STATUS_ALREADY_DELETED:
+						hubCounter::incrementIgnored($hubUser->getSrHubOriginId());
+						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User ignored:');
+						break;
+					case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+						hubCounter::incrementNewlyDelivered($hubUser->getSrHubOriginId());
+						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
+						if (!hubSyncCron::getDryRun()) {
+							$hubUser->updateUser();
+						}
+						break;
+				}
+				$hubUser->getHistoryObject()->updatePickupDate();
+				if (!hubSyncCron::getDryRun()) {
+					$hubOriginObj->afterObjectInit($hubUser);
+				}
+				hubDurationLogger2::getInstance($duration_id)->pause();
+				arObjectCache::purge($hubUser);
+				$hubUser = NULL;
 			}
-			$hubUser->getHistoryObject()->updatePickupDate();
-			$hubOrigin = hubOrigin::getClassnameForOriginId($hubUser->getSrHubOriginId());
-			$hubOrigin::afterObjectModification($hubUser);
-			hubDurationLogger2::getInstance($duration_id)->pause();
+			$step ++;
 		}
 
 		return true;
@@ -146,7 +167,7 @@ class hubUser extends hubObject {
 	 * @return bool
 	 */
 	private function updateLogin() {
-		if (! $this->ilias_object) {
+		if (!$this->ilias_object) {
 			return false;
 		}
 		switch ($this->props()->get(hubUserFields::F_LOGIN_FIELD)) {
@@ -296,7 +317,7 @@ class hubUser extends hubObject {
 	 * @description Assign roles stored in field ilias_roles to ilias user object
 	 */
 	private function assignRoles() {
-		if (! $this->ilias_object) {
+		if (!$this->ilias_object) {
 			return false;
 		}
 		/**
@@ -318,7 +339,7 @@ class hubUser extends hubObject {
 	 * @return bool
 	 */
 	private function updateExternalAuth() {
-		if (! $this->ilias_object) {
+		if (!$this->ilias_object) {
 			return false;
 		}
 		$auth_mode = '';
@@ -650,7 +671,7 @@ class hubUser extends hubObject {
 				$existing_usr_id = self::lookupUsrIdByExtAccount($hubUser->getExternalAccount());
 				break;
 		}
-		if ($existing_usr_id > 6){//} AND ($hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW)) {
+		if ($existing_usr_id > 6) {//} AND ($hubUser->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW)) {
 			$history = $hubUser->getHistoryObject();
 			$history->setIliasId($existing_usr_id);
 			$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);

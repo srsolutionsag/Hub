@@ -55,6 +55,9 @@ class hubOriginGUI {
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
 		$this->tpl = $tpl;
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->getStandardTemplate();
+		}
 		$this->ctrl = $ilCtrl;
 		$this->parent = $parent_gui;
 		$this->toolbar = $ilToolbar;
@@ -78,7 +81,7 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
 			$next_class = $this->ctrl->getNextClass($this);
-			$this->tpl->getStandardTemplate();
+//			$this->tpl->getStandardTemplate();
 			$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $_GET['origin_id']);
 			$this->ctrl->saveParameter($this, 'origin_id');
 			$this->setTabs($next_class, $cmd);
@@ -94,6 +97,10 @@ class hubOriginGUI {
 					$gui = new $next_class($this);
 					$this->ctrl->forwardCommand($gui);
 					break;
+			}
+
+			if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+				$this->tpl->show();
 			}
 
 			return true;

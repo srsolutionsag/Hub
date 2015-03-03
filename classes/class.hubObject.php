@@ -67,7 +67,7 @@ abstract class hubObject extends ActiveRecord {
 		/**
 		 * @var $class hubMembership
 		 */
-		if (! self::$loaded[$class]) {
+		if (!self::$loaded[$class]) {
 			$class::get();
 			self::$existing_ext_ids[$class] = array_values($class::getArray(NULL, 'ext_id'));
 			self::$loaded[$class] = true;
@@ -127,7 +127,7 @@ abstract class hubObject extends ActiveRecord {
 		 * @var $obj hubObject
 		 */
 		$class_name = get_called_class();
-		if (! arObjectCache::isCached($class_name, $primary_key)) {
+		if (!arObjectCache::isCached($class_name, $primary_key)) {
 			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
 				arFactory::getInstance($class_name, $primary_key);
 			} else {
@@ -155,8 +155,7 @@ abstract class hubObject extends ActiveRecord {
 			$class_name = get_called_class();
 			$obj = arFactory::getInstance($class_name, 0);
 			$obj->setExtId($primary_key);
-
-			//			$obj->storeObjectToCache();
+			$obj->is_new = true;
 
 			return $obj;
 		}
@@ -169,6 +168,35 @@ abstract class hubObject extends ActiveRecord {
 	 * @desciprion Build get Status of History an build your ILIAS-Objects
 	 */
 	abstract public static function buildILIASObjects();
+
+
+	/**
+	 * @return bool
+	 *
+	 * @description Currently all hubObject-Classes implement an own buildILIASObjects. in a future version we would like to do some
+	 * base staff in the base class
+	 */
+	protected function buildILIASObjectsBase() {
+		$count = self::count();
+		$steps = 1000;
+		$step = 0;
+		$hasSets = true;
+		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		while ($hasSets) {
+			$start = $step * $steps;
+			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
+			$hubObjects = self::limit($start, $steps)->get();
+			if (!count($hubObjects)) {
+				$hasSets = false;
+			}
+			foreach ($hubObjects as $hubObject) {
+				//
+			}
+			$step ++;
+		}
+
+		return true;
+	}
 
 
 	/**
@@ -374,4 +402,5 @@ abstract class hubObject extends ActiveRecord {
 		return $this->creation_date;
 	}
 }
+
 ?>
