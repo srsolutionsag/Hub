@@ -11,40 +11,53 @@ require_once('./Services/Link/classes/class.ilLink.php');
  *
  */
 class hubCourseIndexTableGUI extends arIndexTableGUI {
-
-    protected function initToolbar()
+    protected function initActions()
     {
+        $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
     }
 
-    protected function addActions()
+    public function customizeFields()
     {
-        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
-    }
+        $this->getFields()->setTxtPrefix("view_field_");
 
-    protected function customizeFields()
-    {
         $field = $this->getField("title");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("parent_id");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setHasFilter(true);
         $field->setPosition(20);
 
         $field = $this->getField("creation_date");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
-        $field->setPosition(30);
+        $field->setPosition(40);
 
-        $field= new arIndexTableField("status","status","text", 40,true,false,false);
+        $field = $this->getField("view_mode");
+        $field->setVisibleDefault(false);
+        $field->setSortable(true);
+        $field->setHasFilter(true);
+        $field->setPosition(40);
+
+        $field= new arIndexTableField("status","view_field_status", 30,true,false,false,false);
         $this->addField($field);
     }
 
+    /**
+     * @param arIndexTableField $field
+     * @param array $item
+     * @param mixed $value
+     * @return string
+     */
     protected function setArFieldData(arIndexTableField $field, $item, $value)
     {
+        /**
+         * @var hubCourse $hubCourse
+         */
+
         switch ($field->getName())
         {
             case 'title':
@@ -62,21 +75,31 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
         }
     }
 
+    /**
+     * @param arIndexTableField $field
+     * @param $item
+     * @return string
+     */
     protected function setCustomFieldData(arIndexTableField $field, $item){
         $hubSyncHistory = hubSyncHistory::find($item['ext_id']);
         return $this->txt('common_status_' . $hubSyncHistory->getTemporaryStatus());
     }
 
-    protected function addCustomFilterWhere($type, $name, $value)
+    /**
+     * @param ilFormPropertyGUI $filter
+     * @param $name
+     * @param $value
+     */
+    protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value)
     {
         if($name == "parent_id")
         {
             $this->active_record_list->innerjoin("object_reference","parent_id","ref_id",array("obj_id"),"=",true);
             $this->active_record_list->innerjoin("object_data","object_reference.obj_id","obj_id", array("title AS obj_title"), "=", true);
             $this->active_record_list->where("object_data.title like '%" . $value . "%'");
-            return true;
         }
-        return false;
+        else{
+            parent::addFilterWhere($filter, $name, $value);
+        }
     }
 }
-?>

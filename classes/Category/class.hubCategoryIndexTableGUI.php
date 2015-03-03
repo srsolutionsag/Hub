@@ -6,41 +6,38 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 include_once('./Services/Link/classes/class.ilLink.php');
 
 /**
- * TableGUI hubCategoryTableGUI
+ * TableGUI hubCategoryIndexTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 1.1.04
  *
  */
 class hubCategoryIndexTableGUI extends arIndexTableGUI {
-    protected function initToolbar()
+    protected function initActions()
     {
-    }
-
-    protected function addActions()
-    {
-        $this->addAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view');
+        $this->addAction(new arIndexTableAction('view', $this->txt('details', false), get_class($this->parent_obj), 'view'));
     }
 
     protected function customizeFields()
     {
+        $this->getFields()->setTxtPrefix("view_field_");
+
         $field = $this->getField("title");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
         $field->setHasFilter(true);
         $field->setPosition(10);
 
         $field = $this->getField("parent_id");
-        $field->setVisible(true);
-        $field->setTxt("parent");
+        $field->setVisibleDefault(true);
         $field->setPosition(20);
 
         $field = $this->getField("creation_date");
-        $field->setVisible(true);
+        $field->setVisibleDefault(true);
         $field->setSortable(true);
-        $field->setPosition(30);
+        $field->setPosition(40);
 
-        $field = new arIndexTableField("status", "status", "text", 40, true, false, false);
+        $field = new arIndexTableField("status", "view_field_status", 30, true, false, false);
         $this->addField($field);
     }
 

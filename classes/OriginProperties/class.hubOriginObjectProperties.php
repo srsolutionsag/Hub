@@ -75,7 +75,7 @@ class hubOriginObjectProperties {
 		if ($sr_hub_origin_id == 0) {
 			return new self(0);
 		}
-		if (! isset(self::$cache[$sr_hub_origin_id])) {
+		if (!isset(self::$cache[$sr_hub_origin_id])) {
 			self::$cache[$sr_hub_origin_id] = new self($sr_hub_origin_id);
 		}
 
@@ -123,8 +123,6 @@ class hubOriginObjectProperties {
 
 	/**
 	 * @param      $key
-	 *
-	 * @internal param bool $short_prefix
 	 *
 	 * @return mixed
 	 */

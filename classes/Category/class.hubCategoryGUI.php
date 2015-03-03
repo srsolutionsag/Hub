@@ -5,7 +5,7 @@ require_once('class.hubCategoryIndexTableGUI.php');
 require_once('class.hubCategoryDisplayGUI.php');
 
 /**
- * GUI-Class hubCourse
+ * GUI-Class hubCategoryGUI
  *
  * @author            Timon Amstutz <timon.amstutz@ilub.unibe.ch>
  * @version           1.1.04
@@ -15,4 +15,3 @@ class hubCategoryGUI extends arGUI
 {
 
 }
-?>

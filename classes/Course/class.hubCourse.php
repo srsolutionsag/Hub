@@ -103,16 +103,20 @@ class hubCourse extends hubRepositoryObject {
 		$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
-		$this->ilias_object->setImportantInformation($this->getIm());
-		if ($this->props()->get(hubCourseFields::F_ACTIVATE)) {
-			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
-		}
+		$this->ilias_object->setImportantInformation($this->getImportantInformation());
 		$this->updateAdditionalFields();
 		$this->ilias_object->create();
 		$this->ilias_object->createReference();
 		$node = $this->getDependecesNode();
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
+        $this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
+        $this->ilias_object->updateSettings();
+		if ($this->props()->get(hubCourseFields::F_ACTIVATE)) {
+			$this->ilias_object->setOfflineStatus(false);
+			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
+			$this->ilias_object->update();
+		}
 		if ($this->props()->get(hubCourseFields::F_CREATE_ICON)) {
 			$this->updateIcon($this->ilias_object);
 			$this->ilias_object->update();
@@ -123,7 +127,13 @@ class hubCourse extends hubRepositoryObject {
 			global $ilSetting;
 			$mail = new ilMimeMail();
 			$mail->autoCheck(false);
-			$mail->From($ilSetting->get('admin_email'));
+            if($this->props()->get(hubCourseFields::F_NOT_FROM)){
+                $mail->From($this->props()->get(hubCourseFields::F_NOT_FROM));
+            }
+            else{
+                $mail->From($ilSetting->get('admin_email'));
+            }
+
 			$mail->To($this->getNotificationEmail());
 			$body = hubCourseFields::getReplacedText($this);
 			$mail->Subject($this->props()->get(hubCourseFields::F_NOT_SUBJECT));
@@ -144,14 +154,19 @@ class hubCourse extends hubRepositoryObject {
 		if ($this->props()->get(hubCourseFields::F_UPDATE_TITLE)) {
 			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
-			$this->ilias_object->setDescription($this->getDescription());
-			$update = true;
+            $update = true;
 		}
 		if ($this->props()->get(hubCourseFields::F_UPDATE_DESCRIPTION)) {
 			$this->initObject();
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
+        if ($this->props()->get(hubCourseFields::F_UPDATE_RESPONSIBLE)) {
+            $this->initObject();
+            $this->ilias_object->setContactResponsibility($this->getResponsible());
+            $this->ilias_object->setContactEmail($this->getResponsibleEmail());
+            $update = true;
+        }
 		if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
 			$this->initObject();
 			$this->updateIcon($this->ilias_object);
@@ -159,11 +174,12 @@ class hubCourse extends hubRepositoryObject {
 		}
 		if ($this->props()->get(hubCourseFields::F_REACTIVATE)) {
 			$this->initObject();
+			$this->ilias_object->setOfflineStatus(false);
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 			$update = true;
 		}
 		if ($update) {
-			$this->updateAdditionalFields();
+            $this->ilias_object->setOwner($this->getOwner());
 			$this->ilias_object->update();
 		}
 
@@ -180,7 +196,6 @@ class hubCourse extends hubRepositoryObject {
 		}
 		$this->ilias_object->setContactResponsibility($this->getResponsible());
 		$this->ilias_object->setContactEmail($this->getResponsibleEmail());
-		$this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
 		$this->ilias_object->setOwner($this->getOwner());
 	}
 
