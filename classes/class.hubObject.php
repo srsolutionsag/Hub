@@ -56,6 +56,12 @@ abstract class hubObject extends ActiveRecord {
 	protected static $existing_ext_ids = array();
 
 
+	public function __destruct() {
+		$this->ilias_object = NULL;
+		$this->hubOrigin = NULL;
+	}
+
+
 	/**
 	 * @param $class
 	 * @param $ext_id

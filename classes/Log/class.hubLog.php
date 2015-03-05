@@ -68,7 +68,7 @@ class hubLog {
 	public static function getBackTrace() {
 		$return = '';
 		foreach (debug_backtrace() as $bt) {
-			if (! in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' )) AND ! in_array($bt['class'], array(
+			if (!in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' )) AND !in_array($bt['class'], array(
 					'hub',
 					'ilCtrl',
 					'ilObjectPluginGUI',
@@ -85,29 +85,11 @@ class hubLog {
 	}
 
 
-	public function __destruct() {
-		/*if (is_writable(self::getFilePath())) {
-			if (! self::DIRECT AND ! self::DISABLE) {
-				$this->hub_log->write(self::getHeader('New Request'), self::L_WARN);
-				foreach (self::$messages as $m) {
-					if ($m->getLevel() === self::L_PROD) {
-						// $this->il_log->write($m->getMessage());
-					}
-					// $this->hub_log->write($m->getMessage(), self::getLevel($m->getLevel()));
-				}
-				$this->hub_log->write(self::getHeader('Request ended'), self::L_WARN);
-			} elseif (! self::DISABLE) {
-				$this->hub_log->write(self::getHeader('Request ended'), self::L_WARN);
-			}
-		}*/
-	}
-
-
 	/**
 	 * @return hubLog
 	 */
 	public static function getInstance() {
-		if (! isset(self::$cache)) {
+		if (!isset(self::$cache)) {
 			self::$cache = new self();
 		}
 		$obj =& self::$cache;
@@ -122,7 +104,9 @@ class hubLog {
 	 * @return string
 	 */
 	protected function getHeader($text) {
-		return $text . ' ' . str_repeat('+', 50 - strlen($text)) . ' ' . date('d.m.Y - H:i:s');
+		$date = '[' . date('d.m.Y - H:i:s') . ']';
+
+		return $text . ' ' . str_repeat('+', hubLogMessage::LENGTH - strlen($text) - strlen($date)) . ' ' . $date;
 	}
 
 
@@ -131,13 +115,14 @@ class hubLog {
 	 * @param $level
 	 */
 	public function write($message, $level = self::L_DEBUG) {
-		if (! self::$header_written) {
+		if (!self::$header_written) {
 			$this->hub_log->write(self::getHeader('New Request'), self::L_WARN);
 			self::$header_written = true;
 		}
-		array_push(self::$messages, hubLogMessage::get($message, $level));
-		if (self::DIRECT AND ! self::DISABLE) {
-			$this->hub_log->write($message);
+		$hubLogMessage = hubLogMessage::get($message, $level);
+		array_push(self::$messages, $hubLogMessage);
+		if (self::DIRECT AND !self::DISABLE) {
+			$this->hub_log->write($hubLogMessage->renderMessage());
 		}
 	}
 
@@ -163,6 +148,7 @@ class hubLog {
 
 class hubLogMessage {
 
+	const LENGTH = 100;
 	/**
 	 * @var int
 	 */
@@ -171,6 +157,14 @@ class hubLogMessage {
 	 * @var string
 	 */
 	protected $message = '';
+	/**
+	 * @var int
+	 */
+	protected $memory_peak = 0;
+	/**
+	 * @var int
+	 */
+	protected $memory = 0;
 
 
 	/**
@@ -180,6 +174,67 @@ class hubLogMessage {
 	protected function __construct($message, $level) {
 		$this->setLevel($level);
 		$this->setMessage(($message));
+		$this->setMemoryPeak(memory_get_peak_usage());
+		$this->setMemory(memory_get_usage());
+	}
+
+
+	/**
+	 * @param        $bytes
+	 * @param string $unit
+	 * @param int    $decimals
+	 *
+	 * @return string
+	 */
+	protected static function formatBytes($bytes, $unit = "", $decimals = 2) {
+		$units = array(
+			'B' => 0,
+			'KB' => 1,
+			'MB' => 2,
+			'GB' => 3,
+			'TB' => 4,
+			'PB' => 5,
+			'EB' => 6,
+			'ZB' => 7,
+			'YB' => 8
+		);
+
+		$value = 0;
+		if ($bytes > 0) {
+			// Generate automatic prefix by bytes
+			// If wrong prefix given
+			if (!array_key_exists($unit, $units)) {
+				$pow = floor(log($bytes) / log(1024));
+				$unit = array_search($pow, $units);
+			}
+
+			// Calculate byte value by prefix
+			$value = ($bytes / pow(1024, floor($units[$unit])));
+		}
+
+		// If decimals is not numeric or decimals is less than 0
+		// then set default value
+		if (!is_numeric($decimals) || $decimals < 0) {
+			$decimals = 2;
+		}
+
+		// Format output
+		return sprintf('%.' . $decimals . 'f ' . $unit, $value);
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function renderMessage() {
+		$max = self::formatBytes($this->getMemoryPeak(), 'MB', 0);
+		$cur = self::formatBytes($this->getMemory(), 'MB', 0);
+
+		$memory_info = '[Cur: ' . $cur . ', Max:' . $max . ']';
+		$message = $this->getMessage();
+		$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+
+		return $message . $fill . $memory_info;
 	}
 
 
@@ -225,6 +280,38 @@ class hubLogMessage {
 	 */
 	public function getLevel() {
 		return $this->level;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getMemoryPeak() {
+		return $this->memory_peak;
+	}
+
+
+	/**
+	 * @param int $memory_peak
+	 */
+	public function setMemoryPeak($memory_peak) {
+		$this->memory_peak = $memory_peak;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getMemory() {
+		return $this->memory;
+	}
+
+
+	/**
+	 * @param int $memory
+	 */
+	public function setMemory($memory) {
+		$this->memory = $memory;
 	}
 }
 

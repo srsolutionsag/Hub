@@ -100,6 +100,7 @@ class hubUser extends hubObject {
 				hubDurationLogger2::getInstance($duration_id)->pause();
 				arObjectCache::purge($hubUser);
 				$hubUser = NULL;
+				$hubOriginObj = NULL;
 			}
 			$step ++;
 		}

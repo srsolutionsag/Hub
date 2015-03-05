@@ -38,6 +38,13 @@ class hubOrigin extends ActiveRecord {
 	protected $ar_safe_read = false;
 
 
+	public function __destruct() {
+		$this->object_properties = NULL;
+		$this->log = NULL;
+		$this->conf = NULL;
+	}
+
+
 	/**
 	 * @param int $id
 	 */
@@ -267,8 +274,8 @@ class hubOrigin extends ActiveRecord {
 
 		if (! file_exists($dir_name)) {
 			$ret = ilUtil::makeDirParents($dir_name);
-//			var_dump($ret); // FSX
-//			mkdir($dir_name);
+			//			var_dump($ret); // FSX
+			//			mkdir($dir_name);
 			chmod($dir_name, 0755);
 		} else {
 			return false;

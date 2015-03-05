@@ -44,16 +44,15 @@ class hubSyncHistory extends ActiveRecord {
 		parent::__construct($ext_id, new hubConnector());
 	}
 
-
-	public static function preloadObjects() {
-		/**
-		 * @var $hubSyncHistory hubSyncHistory
-		 */
-		foreach (parent::preloadObjects() as $hubSyncHistory) {
-			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
-		}
-	}
-
+	//
+	//	public static function preloadObjects() {
+	//		/**
+	//		 * @var $hubSyncHistory hubSyncHistory
+	//		 */
+	//		foreach (parent::preloadObjects() as $hubSyncHistory) {
+	//			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
+	//		}
+	//	}
 
 	/**
 	 * @param hubObject $hubObject
@@ -67,7 +66,7 @@ class hubSyncHistory extends ActiveRecord {
 		$ext_id = $hubObject->getExtId();
 		$sr_hub_origin_id = $hubObject->getSrHubOriginId();
 
-		if (!$ext_id OR !$sr_hub_origin_id) {
+		if (! $ext_id OR ! $sr_hub_origin_id) {
 			return new self($ext_id);
 		}
 
@@ -81,35 +80,35 @@ class hubSyncHistory extends ActiveRecord {
 			$obj->create();
 		}
 
-		self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
+		//		self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
+		//
+		//		return self::$cache[$sr_hub_origin_id][$ext_id];
 
-		return self::$cache[$sr_hub_origin_id][$ext_id];
+		return $obj;
 	}
 
 
-	/**
-	 * @param $primary_key
-	 *
-	 * @return hubSyncHistory
-	 */
-	public static function find($primary_key) {
-		/**
-		 * @var $obj hubSyncHistory
-		 */
-		$class_name = get_called_class();
-		if (!arObjectCache::isCached($class_name, $primary_key)) {
-			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
-				arFactory::getInstance($class_name, $primary_key);
-			} else {
-				return NULL;
-			}
-		}
-
-		return arObjectCache::get($class_name, $primary_key);
-	}
-
-
-
+	//	/**
+	//	 * @param $primary_key
+	//	 *
+	//	 * @return hubSyncHistory
+	//	 */
+	//	public static function find($primary_key) {
+	//		return parent::
+	////		/**
+	////		 * @var $obj hubSyncHistory
+	////		 */
+	////		$class_name = get_called_class();
+	////		if (!arObjectCache::isCached($class_name, $primary_key)) {
+	////			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
+	////				arFactory::getInstance($class_name, $primary_key);
+	////			} else {
+	////				return NULL;
+	////			}
+	////		}
+	////
+	////		return arObjectCache::get($class_name, $primary_key);
+	//	}
 
 	//
 	// Workflow
@@ -125,7 +124,7 @@ class hubSyncHistory extends ActiveRecord {
 		 * @var $hubObject hubCategory
 		 * @var $ilDB      ilDB
 		 */
-		if (!self::$loaded[$sr_hub_origin_id]) {
+		if (! self::$loaded[$sr_hub_origin_id]) {
 			global $ilDB;
 			$class = hubOrigin::getUsageClass($sr_hub_origin_id);
 			$sql = 'UPDATE sr_hub_sync_history hist
@@ -134,8 +133,8 @@ class hubSyncHistory extends ActiveRecord {
 					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
 			$ilDB->query($sql);
-//			arObjectCache::purgeAll(new hubSyncHistory());
-//			hubSyncHistory::get();
+			//			arObjectCache::purgeAll(new hubSyncHistory());
+			//			hubSyncHistory::get();
 
 			self::$loaded[$sr_hub_origin_id] = true;
 		}
@@ -149,7 +148,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @throws Exception
 	 */
 	public function getStatus() {
-		if (!self::isLoaded($this->getSrHubOriginId())) {
+		if (! self::isLoaded($this->getSrHubOriginId())) {
 			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
 				. print_r(hubLog::getBackTrace(), 1));
 		} else {
@@ -268,7 +267,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return bool
 	 */
 	private function isDeletedInILIAS() {
-		return !ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == hubObject::ILIAS_ID_TYPE_REF_ID ? true : false));
+		return ! ilObject2::_exists($this->getIliasId(), ($this->getIliasIdType() == hubObject::ILIAS_ID_TYPE_REF_ID ? true : false));
 	}
 
 

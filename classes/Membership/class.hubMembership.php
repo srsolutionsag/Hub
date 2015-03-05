@@ -50,6 +50,14 @@ class hubMembership extends hubObject {
 	public static $id_type = self::ILIAS_ID_TYPE_ROLE;
 
 
+	public function __destruct() {
+		$this->members_object = NULL;
+		$this->object_type = NULL;
+		$this->participants = NULL;
+		parent::__destruct();
+	}
+
+
 	/**
 	 * @param $ext_id_usr
 	 * @param $ext_id_container
@@ -150,15 +158,17 @@ class hubMembership extends hubObject {
 						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
 						break;
 				}
+
 				$hubMembership->getHistoryObject()->updatePickupDate();
 				$hubOrigin::afterObjectModification($hubMembership);
 				if (!hubSyncCron::getDryRun()) {
 					$hubOriginObj->afterObjectInit($hubMembership);
+					arObjectCache::purge($hubMembership->getHistoryObject());
 				}
-
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				arObjectCache::purge($hubMembership);
 				$hubMembership = NULL;
+				$hubOriginObj = NULL;
 			}
 			$step ++;
 		}
