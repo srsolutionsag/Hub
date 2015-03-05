@@ -73,7 +73,7 @@ abstract class hubObject extends ActiveRecord {
 		/**
 		 * @var $class hubMembership
 		 */
-		if (!self::$loaded[$class]) {
+		if (! self::$loaded[$class]) {
 			$class::get();
 			self::$existing_ext_ids[$class] = array_values($class::getArray(NULL, 'ext_id'));
 			self::$loaded[$class] = true;
@@ -95,6 +95,13 @@ abstract class hubObject extends ActiveRecord {
 	 * @param hubOrigin $origin
 	 */
 	public function create(hubOrigin $origin) {
+		static $count;
+		$count ++;
+		if ($count == 1000) {
+			arObjectCache::flush(get_class($this));
+			arObjectCache::flush('hubSyncHistory');
+			$count = 0;
+		}
 		$this->updateInto($origin);
 	}
 
@@ -133,7 +140,7 @@ abstract class hubObject extends ActiveRecord {
 		 * @var $obj hubObject
 		 */
 		$class_name = get_called_class();
-		if (!arObjectCache::isCached($class_name, $primary_key)) {
+		if (! arObjectCache::isCached($class_name, $primary_key)) {
 			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
 				arFactory::getInstance($class_name, $primary_key);
 			} else {
@@ -145,28 +152,27 @@ abstract class hubObject extends ActiveRecord {
 	}
 
 
-	/**
-	 * @param $primary_key
-	 *
-	 * @return hubObject
-	 */
-	public static function findOrGetInstance($primary_key) {
-		/**
-		 * @var $obj hubObject
-		 */
-		$obj = self::find($primary_key);
-		if ($obj !== NULL) {
-			return $obj;
-		} else {
-			$class_name = get_called_class();
-			$obj = arFactory::getInstance($class_name, 0);
-			$obj->setExtId($primary_key);
-			$obj->is_new = true;
-
-			return $obj;
-		}
-	}
-
+	//	/**
+	//	 * @param $primary_key
+	//	 *
+	//	 * @return hubObject
+	//	 */
+	//	public static function findOrGetInstance($primary_key) {
+	//		/**
+	//		 * @var $obj hubObject
+	//		 */
+	//		$obj = self::find($primary_key);
+	//		if ($obj !== NULL) {
+	//			return $obj;
+	//		} else {
+	//			$class_name = get_called_class();
+	//			$obj = arFactory::getInstance($class_name, 0);
+	//			$obj->setExtId($primary_key);
+	//			$obj->is_new = true;
+	//
+	//			return $obj;
+	//		}
+	//	}
 
 	/**
 	 * @return mixed
@@ -192,7 +198,7 @@ abstract class hubObject extends ActiveRecord {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
 			$hubObjects = self::limit($start, $steps)->get();
-			if (!count($hubObjects)) {
+			if (! count($hubObjects)) {
 				$hasSets = false;
 			}
 			foreach ($hubObjects as $hubObject) {
