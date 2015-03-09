@@ -46,9 +46,10 @@ class hubUser extends hubObject {
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
 		while ($hasSets) {
 			$start = $step * $steps;
-			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
+			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubUsers = self::limit($start, $steps)->get();
 			if (!count($hubUsers)) {
+            	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
 				$hasSets = false;
 			}
 			foreach ($hubUsers as $hubUser) {
@@ -101,7 +102,7 @@ class hubUser extends hubObject {
 				arObjectCache::purge($hubUser);
 				$hubUser = NULL;
 			}
-			$step ++;
+			$step++;
 		}
 
 		return true;
@@ -136,7 +137,7 @@ class hubUser extends hubObject {
 		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
 			$this->sendPasswordMail();
 		}
-		$this->ilias_object->setInstitution($this->getInstitution());
+// 		$this->ilias_object->setInstitution($this->getInstitution());
 		$this->ilias_object->setStreet($this->getStreet());
 		$this->ilias_object->setCity($this->getCity());
 		$this->ilias_object->setZipcode($this->getZipcode());

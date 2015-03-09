@@ -112,6 +112,7 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('build_users')->log();
 			}
 		} catch (Exception $e) {
+			$this->log->write("!!!! Exception !!!!" . $e->getMessage());
 			$this->messages[] = $e->getMessage();
 		}
 		$this->log->write('End Sync Users', hubLog::L_PROD);
