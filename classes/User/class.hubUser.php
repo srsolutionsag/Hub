@@ -48,6 +48,7 @@ class hubUser extends hubObject {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubUsers = self::limit($start, $steps)->get();
+			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
 			if (!count($hubUsers)) {
             	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
 				$hasSets = false;
@@ -265,7 +266,7 @@ class hubUser extends hubObject {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
-			$this->ilias_object->setInstitution($this->getInstitution());
+// 			$this->ilias_object->setInstitution($this->getInstitution());
 			$this->ilias_object->setStreet($this->getStreet());
 			$this->ilias_object->setCity($this->getCity());
 			$this->ilias_object->setZipcode($this->getZipcode());
