@@ -46,9 +46,11 @@ class hubUser extends hubObject {
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
 		while ($hasSets) {
 			$start = $step * $steps;
-			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
+			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubUsers = self::limit($start, $steps)->get();
+			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
 			if (!count($hubUsers)) {
+            	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
 				$hasSets = false;
 			}
 			foreach ($hubUsers as $hubUser) {
@@ -102,7 +104,7 @@ class hubUser extends hubObject {
 				$hubUser = NULL;
 				$hubOriginObj = NULL;
 			}
-			$step ++;
+			$step++;
 		}
 
 		return true;
@@ -137,23 +139,23 @@ class hubUser extends hubObject {
 		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
 			$this->sendPasswordMail();
 		}
-		$this->ilias_object->setInstitution($this->getInstitution());
-		$this->ilias_object->setStreet($this->getStreet());
-		$this->ilias_object->setCity($this->getCity());
-		$this->ilias_object->setZipcode($this->getZipcode());
+// 		$this->ilias_object->setInstitution($this->getInstitution());
+//		$this->ilias_object->setStreet($this->getStreet());
+//		$this->ilias_object->setCity($this->getCity());
+//		$this->ilias_object->setZipcode($this->getZipcode());
 		$this->ilias_object->setCountry($this->getCountry());
 		$this->ilias_object->setSelectedCountry($this->getSelCountry());
-		$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-		$this->ilias_object->setPhoneHome($this->getPhoneHome());
-		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-		$this->ilias_object->setDepartment($this->getDepartment());
-		$this->ilias_object->setFax($this->getFax());
-		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
+//		$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
+//		$this->ilias_object->setPhoneHome($this->getPhoneHome());
+//		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
+//		$this->ilias_object->setDepartment($this->getDepartment());
+//		$this->ilias_object->setFax($this->getFax());
+//		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
 		$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-		$this->ilias_object->setMatriculation($this->getMatriculation());
-		$this->ilias_object->setGender($this->getGender());
+//		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
+//		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
+//		$this->ilias_object->setMatriculation($this->getMatriculation());
+//		$this->ilias_object->setGender($this->getGender());
 		$this->ilias_object->saveAsNew();
 		$this->ilias_object->writePrefs();
 		$this->assignRoles();
@@ -265,23 +267,23 @@ class hubUser extends hubObject {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
-			$this->ilias_object->setInstitution($this->getInstitution());
-			$this->ilias_object->setStreet($this->getStreet());
-			$this->ilias_object->setCity($this->getCity());
-			$this->ilias_object->setZipcode($this->getZipcode());
+// 			$this->ilias_object->setInstitution($this->getInstitution());
+//			$this->ilias_object->setStreet($this->getStreet());
+//			$this->ilias_object->setCity($this->getCity());
+//			$this->ilias_object->setZipcode($this->getZipcode());
 			$this->ilias_object->setCountry($this->getCountry());
 			$this->ilias_object->setSelectedCountry($this->getSelCountry());
-			$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-			$this->ilias_object->setPhoneHome($this->getPhoneHome());
-			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-			$this->ilias_object->setDepartment($this->getDepartment());
-			$this->ilias_object->setFax($this->getFax());
-			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
-			$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-			$this->ilias_object->setMatriculation($this->getMatriculation());
-			$this->ilias_object->setGender($this->getGender());
+//			$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
+//			$this->ilias_object->setPhoneHome($this->getPhoneHome());
+//			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
+//			$this->ilias_object->setDepartment($this->getDepartment());
+//			$this->ilias_object->setFax($this->getFax());
+//			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
+//			$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
+//			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
+//			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
+//			$this->ilias_object->setMatriculation($this->getMatriculation());
+//			$this->ilias_object->setGender($this->getGender());
 			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
 			}
