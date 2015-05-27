@@ -1,5 +1,6 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
+hub::loadActiveRecord();
 require_once('./include/inc.ilias_version.php');
 require_once('./Services/Component/classes/class.ilComponent.php');
 

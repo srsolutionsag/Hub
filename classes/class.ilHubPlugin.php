@@ -48,19 +48,11 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		/**
 		 * @var $ilCtrl ilCtrl
 		 */
-		$path = strstr(__FILE__, 'Services', true) . 'Libraries/ActiveRecord/';
-		global $ilCtrl;
 		if (self::getBaseClass() == false) {
 			ilUtil::sendFailure('hub needs ILIAS >= 4.5 OR for ILIAS < 4.5 ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);
 
 			return false;
 		}
-		if (! is_file($path . 'class.ActiveRecord.php') OR ! is_file($path . 'class.ActiveRecordList.php')) {
-			ilUtil::sendFailure('hub needs ActiveRecord (https://github.com/studer-raimann/ActiveRecord) ', true);
-
-			return false;
-		}
-
 		return true;
 	}
 
