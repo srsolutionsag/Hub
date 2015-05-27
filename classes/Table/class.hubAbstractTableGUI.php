@@ -1,5 +1,6 @@
 
 <?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 require_once('./Services/Table/classes/class.ilTable2GUI.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
 /**
@@ -68,8 +69,14 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
             $this->initStandardTableColumns();
         }
         if ($this->initTableRowTemplate() === false) {
-            $this->setRowTemplate('tpl.std_row_template.html', strstr(dirname(__FILE__), 'Customizing'));
+            if(hub::is50()){
+                $this->setRowTemplate('tpl.std_row_template.html', 'Services/ActiveRecord');
+            }else{
+                $this->setRowTemplate('tpl.std_row_template.html', 'Customizing');
+            }
         }
+
+
     }
     /**
      * @return bool
