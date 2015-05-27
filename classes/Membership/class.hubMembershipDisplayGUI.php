@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Views/Display/class.arDisplayGUI.php');
+require_once(hub::pathToActiveRecord().'/Views/Display/class.arDisplayGUI.php');
 require_once('./Services/User/classes/class.ilObjUser.php');
 
 /**

@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Views/class.arGUI.php');
+require_once(hub::pathToActiveRecord().'/Views/class.arGUI.php');
 require_once('class.hubMembership.php');
 require_once('class.hubMembershipIndexTableGUI.php');
 require_once('class.hubMembershipDisplayGUI.php');

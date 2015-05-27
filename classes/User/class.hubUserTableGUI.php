@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.srModelObjectTableGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Table/class.hubAbstractTableGUI.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
 require_once('class.hubUser.php');
 
@@ -10,7 +10,7 @@ require_once('class.hubUser.php');
  * @version 1.1.04
  *
  */
-class hubUserTableGUI extends srModelObjectTableGUI {
+class hubUserTableGUI extends hubAbstractTableGUI {
 
 	protected function initTableData() {
 		$this->setData(hubUser::getArray());

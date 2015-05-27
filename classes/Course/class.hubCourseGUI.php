@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/Views/class.arGUI.php');
+require_once(hub::pathToActiveRecord().'/Views/class.arGUI.php');
 require_once('class.hubCourse.php');
 require_once('class.hubCourseIndexTableGUI.php');
 require_once('class.hubCourseDisplayGUI.php');
