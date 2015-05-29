@@ -202,7 +202,7 @@ class hub {
         require_once(hub::pathToActiveRecord().'/class.ActiveRecord.php');
         if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
             require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-        } elseif (self::is50()) {
+        } elseif (hubConfig::is50()) {
             require_once('./Services/ActiveRecord/class.ActiveRecord.php');
         } else {
             throw new ilPluginException('Please install ActiveRecord');
@@ -212,7 +212,7 @@ class hub {
     public static function pathToActiveRecord(){
         if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
             return './Customizing/global/plugins/Libraries/ActiveRecord';
-        } elseif (self::is50()) {
+        } elseif (hubConfig::is50()) {
             return './Services/ActiveRecord';
         } else {
             throw new ilPluginException('Please install ActiveRecord');
