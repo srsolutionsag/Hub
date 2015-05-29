@@ -22,7 +22,7 @@ class hubCourseGUI  extends arGUI {
          */
         $display_gui = new $display_gui_class($this, $this->ar->find($id));
         $this->tpl->setContent($display_gui->getHtml());
-        if(hub::is50()){
+        if(hubConfig::is50()){
             $this->tpl->show();
         }
     }

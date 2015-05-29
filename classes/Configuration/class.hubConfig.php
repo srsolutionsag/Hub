@@ -37,6 +37,7 @@ class hubConfig extends ActiveRecord {
 	const ILIAS_43 = 43;
 	const ILIAS_44 = 44;
 	const ILIAS_45 = 45;
+    const ILIAS_50 = 50;
 
 	/**
 	 * @var array
@@ -65,6 +66,9 @@ class hubConfig extends ActiveRecord {
 	 * @return int
 	 */
 	public static function getILIASVersion() {
+        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
+            return self::ILIAS_50;
+        }
 		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.5.000')) {
 			return self::ILIAS_45;
 		}
@@ -109,6 +113,14 @@ class hubConfig extends ActiveRecord {
 	public static function is45() {
 		return self::getILIASVersion() >= self::ILIAS_45;
 	}
+
+
+    /**
+     * @return bool
+     */
+    public static function is50() {
+        return self::getILIASVersion() >= self::ILIAS_50;
+    }
 
 
 	/**

@@ -194,30 +194,6 @@ class hub {
 		require_once('./include/inc.header.php');
 	}
 
-    const ILIAS_44 = 44;
-    const ILIAS_50 = 50;
-
-    /**
-     * @return int
-     */
-    public static function getILIASVersion() {
-        require_once('./Services/Component/classes/class.ilComponent.php');
-        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
-            return self::ILIAS_50;
-        }
-        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.3.999')) {
-            return self::ILIAS_44;
-        }
-
-        return 0;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function is50() {
-        return self::getILIASVersion() >= self::ILIAS_50;
-    }
 
     /**
      * @throws ilPluginException
