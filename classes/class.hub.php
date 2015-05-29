@@ -201,6 +201,7 @@ class hub {
      * @return int
      */
     public static function getILIASVersion() {
+        require_once('./Services/Component/classes/class.ilComponent.php');
         if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
             return self::ILIAS_50;
         }
