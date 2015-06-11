@@ -3,7 +3,6 @@
 require_once('./Services/Component/classes/class.ilPluginConfigGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfigFormGUI.php');
 
-
 /**
  * Hub Configuration
  *

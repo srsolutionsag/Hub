@@ -83,7 +83,9 @@ class hubOriginGUI {
 			$next_class = $this->ctrl->getNextClass($this);
 //			$this->tpl->getStandardTemplate();
 			$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $_GET['origin_id']);
-			$this->ctrl->saveParameter($this, 'origin_id');
+            if($cmd != 'delete'){
+                $this->ctrl->saveParameter($this, 'origin_id');
+            }
 			$this->setTabs($next_class, $cmd);
 			switch ($next_class) {
 				case '':
@@ -352,7 +354,7 @@ class hubOriginGUI {
 
 	public function confirmDelete() {
 		if (ilHubAccess::checkAccess()) {
-			$this->ctrl->saveParameter($this, 'origin_id');
+            $this->ctrl->clearParameters($this);
 			$conf = new ilConfirmationGUI();
 			$conf->setFormAction($this->ctrl->getFormAction($this));
 			$conf->setHeaderText($this->pl->txt('msg_confirm_delete_origin'));
@@ -365,7 +367,7 @@ class hubOriginGUI {
 
 	public function delete() {
 		if (ilHubAccess::checkAccess()) {
-			$origin = hubOrigin::find($this->hubOrigin);
+			$origin = hubOrigin::find($this->hubOrigin->getId());
 			$origin->delete();
 			$this->ctrl->redirect($this, 'index');
 		}
