@@ -281,7 +281,7 @@ class hubOrigin extends ActiveRecord {
 			return false;
 		}
 		if (! file_exists($this->getClassFilePath())) {
-			$template = file_get_contents(self::getOriginsPath() . 'class.hubOriginTemplate.tpl');
+			$template = file_get_contents('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins/class.hubOriginTemplate.tpl');
 			$template = sprintf($template, hub::getObjectClassname($this->getUsageType()), $this->getClassName());
 			file_put_contents($this->getClassFilePath(), $template);
 			chmod($this->getClassFilePath(), 0755);
