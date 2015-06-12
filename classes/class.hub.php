@@ -2,6 +2,7 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 
+
 /**
  * Class hub
  *
@@ -201,6 +202,7 @@ class hub {
      * @return int
      */
     public static function getILIASVersion() {
+        require_once('./include/inc.ilias_version.php');
         require_once './Services/Component/classes/class.ilComponent.php';
         if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
             return self::ILIAS_50;
