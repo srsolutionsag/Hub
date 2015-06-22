@@ -232,8 +232,11 @@ class hubLogMessage {
 
 		$memory_info = '[Cur: ' . $cur . ', Max:' . $max . ']';
 		$message = $this->getMessage();
-		$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
 
+        $fill = 2;
+        if(hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2 > 0){
+            $fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+        }
 		return $message . $fill . $memory_info;
 	}
 
