@@ -222,7 +222,6 @@ class hubCourse extends hubRepositoryObject {
 					if($this->ilias_object) {
 						$this->ilias_object->delete();
 					}
-					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_TRASH:
 					global $tree;
