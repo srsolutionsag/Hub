@@ -13,4 +13,8 @@ require_once('class.hubMembershipDisplayGUI.php');
  */
 class hubMembershipGUI extends arGUI
 {
+    function executeCommand() {
+        parent::executeCommand();
+        $this->tpl->show();
+    }
 }

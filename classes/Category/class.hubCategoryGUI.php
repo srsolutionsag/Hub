@@ -13,4 +13,8 @@ require_once('class.hubCategoryDisplayGUI.php');
  */
 class hubCategoryGUI extends arGUI
 {
+    function executeCommand() {
+        parent::executeCommand();
+        $this->tpl->show();
+    }
 }
