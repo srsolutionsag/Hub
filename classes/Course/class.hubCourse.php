@@ -65,12 +65,14 @@ class hubCourse extends hubRepositoryObject {
 					hubCounter::incrementUpdated($hubCourse->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
+                    global $tree;
+                    $path = $tree->getPathId($history->getIliasId());
 					if (! hubSyncCron::getDryRun()) {
 						$hubCourse->deleteCourse();
 						$hubOriginObj->afterObjectDeletion($hubCourse);
 					}
 					hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses deleted:');
+					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title . ' :: ' . implode('/', $path), 'Courses deleted with ref_id path:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
@@ -217,8 +219,9 @@ class hubCourse extends hubRepositoryObject {
 					$this->ilias_object->update();
 					break;
 				case self::DELETE_MODE_DELETE:
-					$this->ilias_object->delete();
-					$hist->setIliasId(NULL);
+					if($this->ilias_object) {
+						$this->ilias_object->delete();
+					}
 					break;
 				case self::DELETE_MODE_TRASH:
 					global $tree;
