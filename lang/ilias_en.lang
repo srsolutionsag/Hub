@@ -126,6 +126,8 @@ hub_users_table_title#:#Benutzerkonten
 mem_prop_add_notification#:#Benachrichtigung aktivieren (wenn gewünscht)
 mem_prop_delete_mode#:#Löschverhalten
 mem_prop_delete_mode_delete#:#Mitgliedschaft beenden
+mem_prop_delete_mode_delete_or_inactive#:#Mitgliedschaft beenden oder Zugriff sperren
+mem_prop_delete_mode_delete_or_inactive_info#:#Wenn das Mitglied bereits Aktivitäten im Kurs hatte, wird der Zugriff gesperrt, <br>ansonsten wird die Mitgliedschaft beendet.
 mem_prop_delete_mode_inactive#:#Zugriff sperren
 mem_prop_delete_mode_none#:#Mitgliedschaft bestehen lassen
 mem_prop_deleted_send_mail_admin#:#Admin
