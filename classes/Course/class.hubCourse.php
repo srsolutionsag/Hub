@@ -231,10 +231,10 @@ class hubCourse extends hubRepositoryObject {
 					$tree->saveSubTree($this->ilias_object->getRefId(), true);
 					break;
 			}
-			$hist->setAlreadyDeleted(true);
-			$hist->setDeleted(true);
-			$hist->update();
 		}
+        $hist->setAlreadyDeleted(true);
+        $hist->setDeleted(true);
+        $hist->update();
 	}
 
 
