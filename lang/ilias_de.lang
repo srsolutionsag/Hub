@@ -12,6 +12,13 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
+admin_membership#:#Kursteilnehmer
+admin_membership_activate#:#Benachrichtigung aktivieren
+admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren
+admin_membership_mail_subject#:#Betreff Benachrichtigungs-Mail
+admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden.
+admin_membership_mail_msg#:#Inhalt Benachrichtigungs-Mail
+admin_membership_mail_msg_info#:#Es können folgende Platzhalter verwendet werden: <br>[FIRSTNAME][LASTNAME][LOGIN][COURSE_LINK][COURSE_TITLE][VALIDITY_START][VALIDITY_END]
 admin_msg_shortlink_not_active#:#Shortlinks nicht aktiviert Meldung
 admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden
 admin_msg_shortlink_no_ilias_id#:#Keine ILIAS-ID für Objekt Meldung
@@ -26,6 +33,8 @@ admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
 admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
 admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
+admin_user_creation#:#Benutzererstellung
+admin_user_creation_standard_role#:#Rolle bei Benutzererstellung
 admin_form_button_cancel#:#Abbrechen
 admin_form_button_save#:#Speichern
 admin_form_title#:#Einstellungen
@@ -84,6 +93,8 @@ crs_prop_activate#:#Online setzen
 crs_prop_create_icon#:#Icon erstellen
 crs_prop_delete_mode#:#Löschverhalten
 crs_prop_delete_mode_delete#:#Kurs löschen
+crs_prop_delete_mode_delete_or_inactive#:#Kurs löschen oder offline setzen
+crs_prop_delete_mode_delete_or_inactive_info#:#Wenn bereits Aktivitäten im Kurs stattfanden wird er offline gesetzt, sonst gelöscht
 crs_prop_delete_mode_inactive#:#Kurs offline setzen
 crs_prop_delete_mode_trash#:#In Papierkorb verschieben
 crs_prop_delete_mode_none#:#Keine Aktion
@@ -115,6 +126,8 @@ hub_users_table_title#:#Benutzerkonten
 mem_prop_add_notification#:#Benachrichtigung aktivieren (wenn gewünscht)
 mem_prop_delete_mode#:#Löschverhalten
 mem_prop_delete_mode_delete#:#Mitgliedschaft beenden
+mem_prop_delete_mode_delete_or_inactive#:#Mitgliedschaft beenden oder Zugriff sperren
+mem_prop_delete_mode_delete_or_inactive_info#:#Wenn das Mitglied bereits Aktivitäten im Kurs hatte, wird der Zugriff gesperrt, <br>ansonsten wird die Mitgliedschaft beendet.
 mem_prop_delete_mode_inactive#:#Zugriff sperren
 mem_prop_delete_mode_none#:#Mitgliedschaft bestehen lassen
 mem_prop_deleted_send_mail_admin#:#Admin

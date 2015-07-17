@@ -151,6 +151,7 @@ class hubMembership extends hubObject {
 						hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
 						hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
 							$hubMembership->createMembership();
 						}
 						break;
@@ -262,6 +263,7 @@ class hubMembership extends hubObject {
 			if ($this->props()->get(hubMembershipFields::DESKTOP_NEW)) {
 				ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 			}
+			$this->setMembershipInactive(false);
 			//			 $this->sendMails('new', ilCourseMembershipMailNotification::TYPE);
 			$this->updateIliasId();
 		}
@@ -305,11 +307,40 @@ class hubMembership extends hubObject {
                 }
 				// $this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
+			case self::DELETE_MODE_DELETE_OR_INACTIVE:
+				if ($this->hasActivities()) {
+					$this->setMembershipInactive();
+				} else {
+					if($this->participants){
+						$this->participants->delete($this->getUsrId());
+						$this->participants->updateNotification($this->getUsrId(), false);
+					}
+				}
 		}
 		$history = $this->getHistoryObject();
 		$history->setDeleted(true);
 		$history->setAlreadyDeleted(true);
 		$history->update();
+	}
+
+	protected function hasActivities() {
+		global $ilDB;
+		$query = $ilDB->query('SELECT * FROM catch_write_events WHERE usr_id = ' . $ilDB->quote($this->getUsrId(), 'integer'));
+		if ($ilDB->numRows($query)) {
+			return true;
+		}
+		return false;
+	}
+
+	protected function setMembershipInactive($inactive = true) {
+		$course = new ilObjCourse($this->getContainerId());
+
+		global $ilDB;
+		$sql = 'UPDATE obj_members
+			SET blocked = ' . $ilDB->quote((int) $inactive, 'integer') . '
+			WHERE usr_id = ' . $ilDB->quote($this->getUsrId(), 'integer') . '
+			AND obj_id = ' . $ilDB->quote(ilObject2::_lookupObjId($this->getContainerId()));
+		$ilDB->query($sql);
 	}
 
 

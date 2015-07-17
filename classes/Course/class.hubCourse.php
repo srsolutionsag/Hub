@@ -82,7 +82,11 @@ class hubCourse extends hubRepositoryObject {
 					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
 					if (! hubSyncCron::getDryRun()) {
-						$hubCourse->updateCourse();
+						if (ilObjCourse::_lookupDeletedDate($hubCourse->getHistoryObject()->getIliasId())) {
+							$hubCourse->createCourse();
+						} else {
+							$hubCourse->reactivateCourse();
+						}
 					}
 					break;
 			}
@@ -208,21 +212,13 @@ class hubCourse extends hubRepositoryObject {
 			$this->initObject();
 			switch ($this->props()->get(hubCourseFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					hubLog::getInstance()->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
-					$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_OFFLINE);
-					if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
-						$icon = $this->props()->getIconPath('_deleted');
-						if ($icon) {
-							$this->ilias_object->saveIcons($icon, $icon, $icon);
-						}
-					}
-					$this->ilias_object->update();
+					$this->setCourseInactive();
 					break;
 				case self::DELETE_MODE_DELETE:
 					if($this->ilias_object) {
+						hubLog::getInstance()->write('Delete Course: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
 						$this->ilias_object->delete();
 					}
-					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_TRASH:
 					global $tree;
@@ -231,11 +227,31 @@ class hubCourse extends hubRepositoryObject {
 					 */
 					$tree->saveSubTree($this->ilias_object->getRefId(), true);
 					break;
+				case self::DELETE_MODE_DELETE_OR_INACTIVE:
+					if($this->hasActivities()) {
+						$this->setCourseInactive();
+					} else {
+						hubLog::getInstance()->write('Delete Course: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+						$this->ilias_object->delete();
+					}
+					break;
 			}
 			$hist->setAlreadyDeleted(true);
 			$hist->setDeleted(true);
 			$hist->update();
 		}
+	}
+
+	/**
+	 * @return bool true if any user did anything in this course
+	 */
+	private function hasActivities() {
+		global $ilDB;
+		$query = $ilDB->query('SELECT * FROM catch_write_events WHERE obj_id = ' . $ilDB->quote(ilObject2::_lookupObjId($this->ilias_object->getRefId()), 'integer'));
+		if ($ilDB->numRows($query)) {
+			return true;
+		}
+		return false;
 	}
 
 
@@ -855,6 +871,37 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	public function getDidacticTemplateId() {
 		return $this->didactic_template_id;
+	}
+
+	/**
+	 * set course offline
+	 */
+	protected function setCourseInactive()
+	{
+		hubLog::getInstance()->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+		$this->ilias_object->setOfflineStatus(true);
+		if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
+			$icon = $this->props()->getIconPath('_deleted');
+			if ($icon) {
+				$this->ilias_object->saveIcons($icon, $icon, $icon);
+			}
+		}
+		$this->ilias_object->update();
+	}
+
+	/**
+	 * set course online and set deleted & already deleted to false
+	 */
+	public function reactivateCourse()
+	{
+		$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId(), true);
+		$this->ilias_object->setOfflineStatus(false);
+		$this->ilias_object->update();
+
+		$history = $this->getHistoryObject();
+		$history->setAlreadyDeleted(false);
+		$history->setDeleted(false);
+		$history->update();
 	}
 }
 

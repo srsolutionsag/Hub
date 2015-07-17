@@ -12,6 +12,13 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
+admin_membership#:#Kursteilnehmer
+admin_membership_activate#:#Benachrichtigung aktivieren
+admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren
+admin_membership_mail_subject#:#Betreff Benachrichtigungs-Mail
+admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden.
+admin_membership_mail_msg#:#Inhalt Benachrichtigungs-Mail
+admin_membership_mail_msg_info#:#Es können folgende Platzhalter verwendet werden: <br>[FIRSTNAME][LASTNAME][LOGIN][COURSE_LINK][COURSE_TITLE][VALIDITY_START][VALIDITY_END]
 admin_msg_shortlink_not_active#:#Shortlinks nicht aktiviert Meldung
 admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden
 admin_msg_shortlink_no_ilias_id#:#Keine ILIAS id für Objekt Meldung
@@ -38,6 +45,8 @@ cat_prop_delete_mode#:#Löschverhalten
 cat_prop_delete_mode_archive#:#In Kategorie archivieren
 cat_prop_delete_mode_archive_node#:#Ref-ID Archiv
 cat_prop_delete_mode_delete#:#Kategorie löschen
+crs_prop_delete_mode_delete_or_inactive#:#Kurs löschen oder offline setzen
+crs_prop_delete_mode_delete_or_inactive_info#:#Wenn bereits Aktivitäten im Kurs stattfanden, wird er offline gesetzt, ansonsten gelöscht
 cat_prop_delete_mode_inactive#:#Kategorie mit Text "%s" ergänzen
 cat_prop_delete_mode_none#:#Keine Aktion
 cat_prop_header_base#:#Basis-Node Einstellungen

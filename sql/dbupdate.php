@@ -111,3 +111,18 @@ hubMembership::updateDB();
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourse.php');
 hubCourse::updateDB();
 ?>
+<#12>
+<?php
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
+hubConfig::set(hubConfig::F_MMAIL_ACTIVE, true);
+hubConfig::set(hubConfig::F_MMAIL_SUBJECT, 'Neue Kursmitgliedschaft');
+hubConfig::set(hubConfig::F_MMAIL_MSG,
+	'Hallo [FIRSTNAME] [LASTNAME],
+
+Sie wurden in ILIAS in folgendem Kurs eingeschrieben: [COURSE_TITLE]
+
+Der Kurs ist gültig vom [VALIDITY_START] bis zum [VALIDITY_END].
+
+Klicken Sie auf folgenden Link, um direkt zum Kurs zu gelangen: [COURSE_LINK]');
+hubConfig::set(hubConfig::F_STANDARD_ROLE, 'SAT_G_Member');
+?>
