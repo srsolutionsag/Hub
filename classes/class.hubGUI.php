@@ -126,6 +126,10 @@ class hubGUI {
 				require_once($this->ctrl->lookupClassPath($next_class));
 				$gui = new hubMembershipGUI("hubMembership", $this->pl);
 				break;
+            case 'hubusergui':
+                require_once($this->ctrl->lookupClassPath($next_class));
+                $gui = new hubUserGUI("hubUser", $this->pl);
+                break;
 			default:
 				require_once($this->ctrl->lookupClassPath($next_class));
 				$gui = new $next_class($this);
