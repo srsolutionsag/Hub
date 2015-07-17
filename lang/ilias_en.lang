@@ -33,6 +33,8 @@ admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
 admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
 admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
+admin_user_creation#:#Benutzererstellung
+admin_user_creation_standard_role#:#Rolle bei Benutzererstellung
 admin_form_button_cancel#:#Abbrechen
 admin_form_button_save#:#Speichern
 admin_form_title#:#Einstellungen
