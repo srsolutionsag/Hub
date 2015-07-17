@@ -203,8 +203,8 @@ class hubCourse extends hubRepositoryObject {
 
 
 	protected function deleteCourse() {
+        $hist = $this->getHistoryObject();
 		if ($this->props()->get(hubCourseFields::F_DELETE)) {
-			$hist = $this->getHistoryObject();
 			$this->initObject();
 			switch ($this->props()->get(hubCourseFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
