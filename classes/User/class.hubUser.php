@@ -155,7 +155,7 @@ class hubUser extends hubObject {
 //		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
 //		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
 //		$this->ilias_object->setMatriculation($this->getMatriculation());
-//		$this->ilias_object->setGender($this->getGender());
+		$this->ilias_object->setGender($this->getGender());
 		$this->ilias_object->saveAsNew();
 		$this->ilias_object->writePrefs();
 		$this->assignRoles();
@@ -283,7 +283,7 @@ class hubUser extends hubObject {
 //			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
 //			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
 //			$this->ilias_object->setMatriculation($this->getMatriculation());
-//			$this->ilias_object->setGender($this->getGender());
+			$this->ilias_object->setGender($this->getGender());
 			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
 			}
