@@ -135,6 +135,8 @@ class hubSyncHistory extends ActiveRecord {
 			$ilDB->query($sql);
 			//			arObjectCache::purgeAll(new hubSyncHistory());
 			//			hubSyncHistory::get();
+                arObjectCache::flush(new hubSyncHistory());
+                hubSyncHistory::get();
 
 			self::$loaded[$sr_hub_origin_id] = true;
 		}
