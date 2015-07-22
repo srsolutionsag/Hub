@@ -44,9 +44,9 @@ class hubSyncCron {
 		$cronJob = new self();
 		if ($cronJob->activateDeactivateOrigins) {
 			$cronJob->activateDeactivateOrigins();
-		} else {
-			$cronJob->run();
 		}
+
+		$cronJob->run();
 	}
 
 	protected function activateDeactivateOrigins() {
