@@ -13,7 +13,7 @@ class hubSyncCron {
 	/**
 	 * @var int|bool
 	 */
-	protected $origin_id;
+	protected $activateDeactivateOrigins;
 	/**
 	 * @var array
 	 */
@@ -33,7 +33,7 @@ class hubSyncCron {
 		 */
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
-		$this->origin_id = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;
+		$this->activateDeactivateOrigins = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;
 		$this->log = hubLog::getInstance();
 	}
 
@@ -42,10 +42,28 @@ class hubSyncCron {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		hub::initILIAS();
 		$cronJob = new self();
-		if ($cronJob->origin_id) {
-			$cronJob->runSingleOrigin();
+		if ($cronJob->activateDeactivateOrigins) {
+			$cronJob->activateDeactivateOrigins();
 		} else {
 			$cronJob->run();
+		}
+	}
+
+	protected function activateDeactivateOrigins() {
+		if ($_SERVER['argv'][4] == 'activate') {
+			$active = true;
+		} elseif ($_SERVER['argv'][4] == 'deactivate') {
+			$active = false;
+		} else {
+			return;
+		}
+
+		$origin_ids = array_slice($_SERVER['argv'], 5);
+		foreach($origin_ids as $id) {
+			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
+			$origin = hubOrigin::find($id);
+			$origin->setActive($active);
+			$origin->update();
 		}
 	}
 
@@ -78,7 +96,7 @@ class hubSyncCron {
 				if ($class::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, $origin, ! self::getDryRun());
 				};
-				$class::logCounts();
+//				$class::logCounts();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();
