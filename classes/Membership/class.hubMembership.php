@@ -489,6 +489,9 @@ class hubMembership extends hubObject {
 	 * @return string
 	 */
 	public function getExtIdUsr() {
+		if (!$this->ext_id_usr && $this->ext_id) {
+			$this->ext_id_usr = substr($this->ext_id, 0, strpos($this->ext_id, '###'));
+		}
 		return $this->ext_id_usr;
 	}
 
