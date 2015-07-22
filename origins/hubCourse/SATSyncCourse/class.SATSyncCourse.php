@@ -193,11 +193,12 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
         $this->updateValidity($hub_object);
     }
 
-    protected function copyLearningProgress(hubCourse $hub_object) {
-        $data = $this->data[$hub_object->getExtId()];
-        $from_ref_id = $data->template_id;
-        $to_ref_id = $hub_object->getHistoryObject()->getIliasId();
-
+    protected function copyLearningProgress(hubCourse $hub_object = null, $from_ref_id = 0, $to_ref_id = 0) {
+        if($hub_object) {
+            $data = $this->data[$hub_object->getExtId()];
+            $from_ref_id = $data->template_id;
+            $to_ref_id = $hub_object->getHistoryObject()->getIliasId();
+        }
         //copy settings
         $settings_old = new ilLPObjSettings(ilObject2::_lookupObjId($from_ref_id));
         $settings_new = new ilLPObjSettings(ilObject2::_lookupObjId($to_ref_id));
@@ -205,12 +206,12 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
         $settings_new->setVisits($settings_old->getVisits());
         $settings_new->update();
 
-        //copy collection
-        $collection_old = new ilLPCollections(ilObject2::_lookupObjId($from_ref_id));
-        $collection_new = new ilLPCollections(ilObject2::_lookupObjId($to_ref_id));
-        foreach ($collection_old->getItems() as $item) {
-            $collection_new->add($item);
-        }
+//        //copy collection
+//        $collection_old = new ilLPCollections(ilObject2::_lookupObjId($from_ref_id));
+//        $collection_new = new ilLPCollections(ilObject2::_lookupObjId($to_ref_id));
+//        foreach ($collection_old->getItems() as $item) {
+//            $collection_new->add($item);
+//        }
     }
 
     /**
@@ -353,28 +354,37 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
         $copied_objects = array();
         $items = $this->getSubItems($_obj);
 
+        //LP collection
+        $collection_old = new ilLPCollections(ilObject2::_lookupObjId($from_ref_id));
+
         foreach ($items as $item) {
             $child_ref_id = $item['ref_id'];
-            $type = $item['type'];
+            $child_type = $item['type'];
             // First check if we are allowed to copy/link the item at all
-            if (!$this->allowedCopyType($type)) {
-                $this->log->write("Skipping copying object with type [{$type}], not allowed to copy");
+            if (!$this->allowedCopyType($child_type)) {
+                $this->log->write("Skipping copying object with type [{$child_type}], not allowed to copy");
                 continue;
             }
             // Start copying item
-                $class = ilObjectFactory::getClassByType($type);
+                $class = ilObjectFactory::getClassByType($child_type);
                 /** @var ilObject $obj */
                 /** @var ilObject $new_obj */
                 $obj = new $class($child_ref_id);
                 try {
                     $new_obj = $obj->cloneObject($to_ref_id);
-                    $copied_objects[$child_ref_id] = array('new_ref_id' => $new_obj->getRefId(), 'type' => $type, 'obj' => $obj, 'new_obj' => $new_obj);
-                    if ($type == 'fold') {
+                    if ($type == 'crs') {
+                        //copy lp-collection (entry if child-obj is determining the LP or not)
+                        if (in_array($child_ref_id, $collection_old->getItems())) {
+                            $this->copyLPItem(ilObject2::_lookupObjId($from_ref_id), $child_ref_id, ilObject2::_lookupObjId($to_ref_id), $new_obj->getRefId());
+                        }
+                    }
+                    $copied_objects[$child_ref_id] = array('new_ref_id' => $new_obj->getRefId(), 'type' => $child_type, 'obj' => $obj, 'new_obj' => $new_obj);
+                    if ($child_type == 'fold') {
                         // If it is a folder, we need to copy also its content -> call this function recursive (with original mode)
                         $this->copyContainerContent($child_ref_id, $new_obj->getRefId());
                     }
                 } catch (Exception $e) {
-                    $this->log->write("Exception while copying container content [ref_id=$child_ref_id, type=$type, message={$e->getMessage()}]");
+                    $this->log->write("Exception while copying container content [ref_id=$child_ref_id, type=$child_type, message={$e->getMessage()}]");
                 }
         }
         $this->afterCopyingObjects($_obj, $_new_obj, $copied_objects);
@@ -382,6 +392,23 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
         //enable mathjax again (if it was before)
         if($mathjax_enabled){
             $mathJaxSetting->set('enable', 1);
+        }
+    }
+
+    protected function copyLPItem($old_obj_id, $old_item_id, $new_obj_id, $new_item_id) {
+        global $ilDB;
+        $query = $ilDB->query('SELECT grouping_id, num_obligatory, active
+              FROM ut_lp_collections
+              WHERE obj_id = ' . $ilDB->quote($old_obj_id, 'integer') . ' AND item_id = ' . $ilDB->quote($old_item_id, 'integer'));
+
+        if($res = $ilDB->fetchAssoc($query)) {
+            $ilDB->insert('ut_lp_collections', array(
+            'obj_id' => array('integer', $new_obj_id),
+            'item_id' => array('integer', $new_item_id),
+            'grouping_id' => array('integer', $res['grouping_id']),
+            'num_obligatory' => array('integer', $res['num_obligatory']),
+            'active' => array('integer', $res['active']),
+            ));
         }
     }
 
