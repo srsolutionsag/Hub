@@ -153,7 +153,7 @@ class hubUser extends hubObject {
 //		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
 		$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
 //		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-//		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
+		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
 //		$this->ilias_object->setMatriculation($this->getMatriculation());
 //		$this->ilias_object->setGender($this->getGender());
 		$this->ilias_object->saveAsNew();
