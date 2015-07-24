@@ -307,7 +307,7 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
                 $new_obj = $obj->cloneObject($to_ref_id);
 
                 // copy LP Determinating items
-                if ($obj->getType() == 'sahs') {
+                if ($_obj->getType() == 'crs') {
                     $this->copyLPItems($_obj->getId(), $obj->getRefId(), $_new_obj->getId(), $new_obj->getRefId());
                 }
 
