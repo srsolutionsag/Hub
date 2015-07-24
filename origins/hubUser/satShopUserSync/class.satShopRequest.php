@@ -43,7 +43,7 @@ class satShopRequest {
 	/**
 	 * @var int
 	 */
-	protected $crs_ref_id = 0;
+	protected $crs_ref_ids = 0;
 	/**
 	 * @var array
 	 */
@@ -84,7 +84,7 @@ class satShopRequest {
 	 * @return array
 	 */
 	public function getCrsRefIds() {
-		return $this->crs_ref_id;
+		return $this->crs_ref_ids;
 	}
 
 
