@@ -333,14 +333,8 @@ class hubMembership extends hubObject {
 	}
 
 	protected function setMembershipInactive($inactive = true) {
-		$course = new ilObjCourse($this->getContainerId());
-
-		global $ilDB;
-		$sql = 'UPDATE obj_members
-			SET blocked = ' . $ilDB->quote((int) $inactive, 'integer') . '
-			WHERE usr_id = ' . $ilDB->quote($this->getUsrId(), 'integer') . '
-			AND obj_id = ' . $ilDB->quote(ilObject2::_lookupObjId($this->getContainerId()));
-		$ilDB->query($sql);
+		$participants = new ilCourseParticipants(ilObject2::_lookupObjId($this->getContainerId()));
+		$participants->updateBlocked($this->getUsrId(), $inactive);
 	}
 
 
