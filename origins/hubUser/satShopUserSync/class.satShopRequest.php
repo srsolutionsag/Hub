@@ -255,6 +255,7 @@ class satShopRequest {
 					WHERE keyword = ' . $ilDB->quote(self::SHOPID_PREFIX . $shop_id, 'text') . '
 					AND obj_type = ' . $ilDB->quote('crs', 'text');
 			$set = $ilDB->query($sql);
+			self::$ref_id_cache[$shop_id] = array();
 			while ($ref_id = $ilDB->fetchObject($set)) {
 				self::$ref_id_cache[$shop_id][] = $ref_id->ref_id;
 			}
