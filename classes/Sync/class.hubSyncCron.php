@@ -11,9 +11,9 @@
 class hubSyncCron {
 
 	/**
-	 * @var string|int|bool
+	 * @var int|bool
 	 */
-	protected $activateDeactivateOrigins;
+	protected $origin_id;
 	/**
 	 * @var array
 	 */
@@ -33,7 +33,7 @@ class hubSyncCron {
 		 */
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
-		$this->activateDeactivateOrigins = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;
+		$this->origin_id = $_SERVER['argv'][4] ? $_SERVER['argv'][4] : false;
 		$this->log = hubLog::getInstance();
 	}
 
@@ -42,31 +42,10 @@ class hubSyncCron {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
 		hub::initILIAS();
 		$cronJob = new self();
-		if (is_string($cronJob->activateDeactivateOrigins)) {
-			$cronJob->activateDeactivateOrigins();
-			$cronJob->run();
-		} elseif (is_numeric($cronJob->activateDeactivateOrigins)) {
+		if ($cronJob->origin_id) {
 			$cronJob->runSingleOrigin();
 		} else {
 			$cronJob->run();
-		}
-	}
-
-	protected function activateDeactivateOrigins() {
-		if ($_SERVER['argv'][4] == 'activate') {
-			$active = true;
-		} elseif ($_SERVER['argv'][4] == 'deactivate') {
-			$active = false;
-		} else {
-			return;
-		}
-
-		$origin_ids = array_slice($_SERVER['argv'], 5);
-		foreach($origin_ids as $id) {
-			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
-			$origin = hubOrigin::find($id);
-			$origin->setActive($active);
-			$origin->update();
 		}
 	}
 
@@ -228,6 +207,9 @@ class hubSyncCron {
 		try {
 			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();
 			$originObject = $origin->getObject();
+			if (!$originObject->isActive()) {
+				return true;
+			}
 			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {
 				$this->writeLastUpdate($origin);
 				if (! hubSyncHistory::initStatus($origin->getId())) {

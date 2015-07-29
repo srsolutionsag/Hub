@@ -125,4 +125,5 @@ Der Kurs ist gültig vom [VALIDITY_START] bis zum [VALIDITY_END].
 
 Klicken Sie auf folgenden Link, um direkt zum Kurs zu gelangen: [COURSE_LINK]');
 hubConfig::set(hubConfig::F_STANDARD_ROLE, 'SAT_G_Member');
+hubConfig::set(hubConfig::F_ARTEMIS_TIME, '03:05');
 ?>

@@ -36,6 +36,7 @@ class hubConfig extends ActiveRecord {
 	const F_MMAIL_SUBJECT = 'membership_mail_subject';
 	const F_MMAIL_MSG = 'membership_mail_msg';
 	const F_STANDARD_ROLE = 'standard_role';
+	const F_ARTEMIS_TIME = 'artemis_time';
 
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const ILIAS_43 = 43;

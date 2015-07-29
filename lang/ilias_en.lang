@@ -12,6 +12,9 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
+admin_artemis#:#ARTEMIS Synchronisation
+admin_artemis_time#:#Zeitpunkt der Synchronisation
+admin_artemis_time_info#:#HH:MM
 admin_membership#:#Kursteilnehmer
 admin_membership_activate#:#Benachrichtigung aktivieren
 admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren

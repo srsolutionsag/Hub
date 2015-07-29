@@ -838,6 +838,14 @@ class hubOrigin extends ActiveRecord {
 	public function getDurationObjects() {
 		return $this->duration_objects;
 	}
+
+	/**
+	 * @return bool
+	 * @description is necessary for SAT, bc the cronjob runs every minute (for SAT Shop origins) but the ARTEMIS-origins are only active one time a day
+	 */
+	public function isActive() {
+		return true;
+	}
 }
 
 ?>
