@@ -64,13 +64,6 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
         return is_readable($this->conf()->getFilePath());
     }
 
-    public function isActive() {
-        if (date("H:i") == hubConfig::get(hubConfig::F_ARTEMIS_TIME)) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * @description read your Data an save in Class
      * @throws hubOriginException

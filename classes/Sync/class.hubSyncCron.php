@@ -207,7 +207,7 @@ class hubSyncCron {
 		try {
 			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();
 			$originObject = $origin->getObject();
-			if (!$originObject->isActive()) {
+			if ($originObject->isAsleep()) {
 				return true;
 			}
 			if ($origin->getConfType() == hubOrigin::CONF_TYPE_EXTERNAL) {

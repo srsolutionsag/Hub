@@ -841,10 +841,13 @@ class hubOrigin extends ActiveRecord {
 
 	/**
 	 * @return bool
-	 * @description is necessary for SAT, bc the cronjob runs every minute (for SAT Shop origins) but the ARTEMIS-origins are only active one time a day
+	 * @description checks if the current time is in the origin's execution time (if cofigured)
 	 */
-	public function isActive() {
-		return true;
+	public function isAsleep() {
+		if ($this->conf()->getExecTime() && $this->conf()->getExecTime() != date("H:i")) {
+			return true;
+		}
+		return false;
 	}
 }
 

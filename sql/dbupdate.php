@@ -125,5 +125,14 @@ Der Kurs ist gültig vom [VALIDITY_START] bis zum [VALIDITY_END].
 
 Klicken Sie auf folgenden Link, um direkt zum Kurs zu gelangen: [COURSE_LINK]');
 hubConfig::set(hubConfig::F_STANDARD_ROLE, 'SAT_G_Member');
-hubConfig::set(hubConfig::F_ARTEMIS_TIME, '03:05');
+?>
+<#13>
+<?php
+global $ilDB;
+if (!$ilDB->tableColumnExists('sr_hub_origin_conf', 'exec_time')) {
+	$ilDB->addTableColumn('sr_hub_origin_conf', 'exec_time',
+		array('type' => 'text',
+				'length' => 10,
+				'notnull' => false));
+}
 ?>

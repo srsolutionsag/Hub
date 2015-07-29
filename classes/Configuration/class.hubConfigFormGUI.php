@@ -46,14 +46,6 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$this->addItem($cb);
 
 		$h = new ilFormSectionHeaderGUI();
-		$h->setTitle($this->pl->txt('admin_artemis'));
-		$this->addItem($h);
-
-		$tm = new ilTextInputGUI($this->pl->txt('admin_artemis_time'), hubConfig::F_ARTEMIS_TIME);
-		$tm->setInfo($this->pl->txt('admin_artemis_time_info'));
-		$this->addItem($tm);
-
-		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_membership'));
 		$this->addItem($h);
 

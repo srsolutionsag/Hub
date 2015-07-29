@@ -12,9 +12,6 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
-admin_artemis#:#ARTEMIS Synchronisation
-admin_artemis_time#:#Zeitpunkt der Synchronisation
-admin_artemis_time_info#:#HH:MM
 admin_membership#:#Kursteilnehmer
 admin_membership_activate#:#Benachrichtigung aktivieren
 admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren
@@ -182,6 +179,8 @@ origin_form_field_conf_type_file#:#Datei oder Verzeichnis
 origin_form_field_conf_type_file_info#:#Daten werden aus einer Datei gelesen
 origin_form_field_conf_type_file_path#:#Pfad zur Datei
 origin_form_field_description#:#Beschreibung
+origin_form_field_exec_time#:#Zeitpunkt der Synchronisation
+origin_form_field_exec_time_info#:#Format: HH:MM <br>Falls nicht leer, wird die Anbindung nur zu dieser bestimmten Zeit <br> ausgeführt (wenn der Cronjob zu dieser Zeit durchläuft) und ansonsten ignoriert
 origin_form_field_id#:#ID
 origin_form_field_notification_email#:#Benachrichtigung bei Fehler
 origin_form_field_summary_email#:#E-Mailadressen für Zusammenfassung

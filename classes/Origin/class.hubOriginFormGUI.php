@@ -160,6 +160,10 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			$this->addItem($ro);
 		}
 
+		$t = new ilTextInputGUI($this->pl->txt('origin_form_field_exec_time'), 'exec_time');
+		$t->setInfo($this->pl->txt('origin_form_field_exec_time_info'));
+		$this->addItem($t);
+
 		//
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('origin_form_header_notification'));
@@ -205,6 +209,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->origin->conf()->setSrvSearchBase($this->getInput('db_search_base'));
 		$this->origin->conf()->setNotificationEmail($this->getInput('notification_email'));
 		$this->origin->conf()->setSummaryEmail($this->getInput('summary_email'));
+		$this->origin->conf()->setExecTime($this->getInput('exec_time'));
 
 		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
 		$objectProperitesFormGUI->fillObject();
@@ -254,6 +259,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			'db_search_base' => $this->origin->conf()->getSrvSearchBase(),
 			'notification_email' => $this->origin->conf()->getNotificationEmail(),
 			'summary_email' => $this->origin->conf()->getSummaryEmail(),
+			'exec_time' => $this->origin->conf()->getExecTime(),
 		);
 		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
 		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);
