@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class createTemplateListCron
+ * Class templateSyncCron
  *
  * @author  Theodor Truffer <tt@studer-raimann.ch>
  */
-class createTemplateListCron{
+class templateSyncCron{
 
     const DELIMITER = ';';
 
