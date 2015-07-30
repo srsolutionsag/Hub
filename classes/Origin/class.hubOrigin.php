@@ -165,7 +165,13 @@ class hubOrigin extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getOriginsForUsage($usage_type_id) {
-		return self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
+		$origins = self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
+		foreach($origins as $key => $origin) {
+			if ($origin->isAsleep()) {
+				unset($origins[$key]);
+			}
+		}
+		return $origins;
 	}
 
 
