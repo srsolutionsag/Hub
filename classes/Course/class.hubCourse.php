@@ -34,11 +34,17 @@ class hubCourse extends hubRepositoryObject {
 	 * @return bool
 	 */
 	public static function buildILIASObjects() {
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_COURSE);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
+		$activeCourses = self::where(array("sr_hub_origin_id" => $active_origin_ids));
 		/**
 		 * @var $hubCourse    hubCourse
 		 * @var $hubOrigin    hubOrigin
 		 */
-		foreach (self::get() as $hubCourse) {
+		foreach ($activeCourses->get() as $hubCourse) {
 			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
 				continue;
 			}

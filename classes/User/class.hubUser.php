@@ -44,16 +44,22 @@ class hubUser extends hubObject {
 		$step = 0;
 		$hasSets = true;
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_USER);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
+		$activeUsers = self::where(array("sr_hub_origin_id" => $active_origin_ids));
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubUsers = self::limit($start, $steps)->get();
-			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
-			if (!count($hubUsers)) {
+			$hubUsers = $activeUsers->limit($start, $steps);
+			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . $hubUsers->count());
+			if ($hubUsers->count() == 0) {
             	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
 				$hasSets = false;
 			}
-			foreach ($hubUsers as $hubUser) {
+			foreach ($hubUsers->get() as $hubUser) {
 				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
 					continue;
 				}
