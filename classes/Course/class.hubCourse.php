@@ -39,13 +39,12 @@ class hubCourse extends hubRepositoryObject {
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
 		}
-		$activeCourses = self::where(array("sr_hub_origin_id" => $active_origin_ids));
 		/**
 		 * @var $hubCourse    hubCourse
 		 * @var $hubOrigin    hubOrigin
 		 */
-		foreach ($activeCourses->get() as $hubCourse) {
-			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
+		foreach (self::get() as $hubCourse) {
+			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId()) || !in_array($hubCourse->getSrHubOriginId(), $active_origin_ids)) {
 				continue;
 			}
 			$id = 'obj_origin_' . $hubCourse->getSrHubOriginId();

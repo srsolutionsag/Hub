@@ -49,18 +49,17 @@ class hubUser extends hubObject {
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
 		}
-		$activeUsers = self::where(array("sr_hub_origin_id" => $active_origin_ids));
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubUsers = $activeUsers->limit($start, $steps);
-			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . $hubUsers->count());
-			if ($hubUsers->count() == 0) {
+			$hubUsers = self::limit($start, $steps)->get();
+			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
+			if (!count($hubUsers)) {
             	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
 				$hasSets = false;
 			}
-			foreach ($hubUsers->get() as $hubUser) {
-				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
+			foreach ($hubUsers as $hubUser) {
+				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId()) || !in_array($hubUser->getSrHubOriginId(), $active_origin_ids)) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
