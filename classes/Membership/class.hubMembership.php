@@ -90,14 +90,23 @@ class hubMembership extends hubObject {
 		$hasSets = true;
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
 		//		hubSyncCron::setDryRun(true);
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_MEMBERSHIP);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
+		$activeMemberships = self::where(array("sr_hub_origin_id" => $active_origin_ids)); //explode?
+
+		hubLog::getInstance()->write(var_dump($activeMemberships->limit(100, 1)->count()));
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubMemberships = self::limit($start, $steps)->get();
-			if (!count($hubMemberships)) {
+			$hubMemberships = $activeMemberships->limit($start, $steps);
+			var_dump($hubMemberships->count());
+			if ($hubMemberships->count() == 0) {
 				$hasSets = false;
 			}
-			foreach ($hubMemberships as $hubMembership) {
+			foreach ($hubMemberships->get() as $hubMembership) {
 				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
 					continue;
 				}
