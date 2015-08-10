@@ -65,6 +65,18 @@ class hubIconCollection {
 			$return->setLarge($large_list->first());
 		}
 
+        $svg_list = hubIcon::where($where)->where(array( 'size_type' => hubIcon::SIZE_SVG ));
+        if (! $svg_list->hasSets()) {
+            $svg = new hubIcon();
+            $svg->setSizeType(hubIcon::SIZE_SVG);
+            $svg->setSrHubOriginId($hubOrigin->getId());
+            $svg->setUsageType($usage);
+            $svg->create();
+            $return->setSvg($svg);
+        } else {
+            $return->setSvg($svg_list->first());
+        }
+
 		return $return;
 	}
 
@@ -81,7 +93,10 @@ class hubIconCollection {
 	 * @var hubIcon
 	 */
 	protected $large;
-
+    /**
+     * @var hubIcon
+     */
+    protected $svg;
 
 	/**
 	 * @param \hubIcon $large
@@ -145,6 +160,22 @@ class hubIconCollection {
 	public function getUsageType() {
 		return $this->usage_type;
 	}
+
+    /**
+     * @param \hubIcon $svg
+     */
+    public function setSvg($svg)
+    {
+        $this->svg = $svg;
+    }
+
+    /**
+     * @return \hubIcon
+     */
+    public function getSvg()
+    {
+        return $this->svg;
+    }
 
 
 }

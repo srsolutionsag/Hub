@@ -77,25 +77,64 @@ abstract class hubRepositoryObject extends hubObject {
 		 * @var $hubOrigin hubOrigin
 		 */
 		if ($hubOrigin) {
-			$hubIconCollection = hubIconCollection::getInstance($hubOrigin, $usage);
-			$small = $hubIconCollection->getSmall()->getPath();
-			$medium = $hubIconCollection->getMedium()->getPath();
-			$large = $hubIconCollection->getLarge()->getPath();
-			if ($small AND $medium AND $large) {
-				$ilias_object->saveIcons($large, $medium, $small);
-			} else {
-				if (! $small) {
-					$ilias_object->removeTinyIcon();
-				}
-				if (! $medium) {
-					$ilias_object->removeSmallIcon();
-				}
-				if (! $large) {
-					$ilias_object->removeBigIcon();
-				}
+            $hubIconCollection = hubIconCollection::getInstance($hubOrigin, $usage);
+            if(!hub::is50()){
+                $small = $hubIconCollection->getSmall()->getPath();
+                $medium = $hubIconCollection->getMedium()->getPath();
+                $large = $hubIconCollection->getLarge()->getPath();
+                if ($small AND $medium AND $large) {
+                    $ilias_object->saveIcons($large, $medium, $small);
+                } else {
+                    if (! $small) {
+                        $ilias_object->removeTinyIcon();
+                    }
+                    if (! $medium) {
+                        $ilias_object->removeSmallIcon();
+                    }
+                    if (! $large) {
+                        $ilias_object->removeBigIcon();
+                    }
 
-				return false;
-			}
+                    return false;
+                }
+            }
+            else{
+                $svg = $hubIconCollection->getSvg()->getPath();
+                if ($svg) {
+
+                    /**
+                     * Amstutz: This part is an almost exact copy of ilContainer->saveIcons($icon). This is necessary
+                     * since saveIcons treats the icons like uploads of a form, which would fail in this case.
+                     * @Todo: saveIcons would need an additional parameter indicating if the new icon is uploaded or already exists
+                     * on the file system.
+                     * */
+                    $ilias_object->createContainerDirectory();
+                    $cont_dir = $ilias_object->getContainerDirectory();
+
+                    $file_name = "";
+                    if ($svg != "")
+                    {
+                        $file_name = $cont_dir."/icon_custom.svg";
+                        //This is the key part with the addition "copy" param
+                        ilUtil::moveUploadedFile($svg, "icon_custom.svg", $file_name,true, "copy");
+                    }
+
+                    if ($file_name != "" && is_file($file_name))
+                    {
+                        ilContainer::_writeContainerSetting($ilias_object->getId(), "icon_custom", 1);
+                    }
+                    else
+                    {
+                        ilContainer::_writeContainerSetting($ilias_object->getId(), "icon_custom", 0);
+                    }
+                } else {
+                    if (! $svg) {
+                        $ilias_object->removeIcon();
+                    }
+                    return false;
+                }
+            }
+
 		} else {
 			return false;
 		}

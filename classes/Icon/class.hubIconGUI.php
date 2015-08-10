@@ -118,7 +118,7 @@ class hubIconGUI {
 	protected function saveCollection(hubIconCollection $hubIconCollection) {
 		$hubIconFormGUI = new hubIconFormGUI($this, $hubIconCollection);
 		if ($hubIconFormGUI->save()) {
-			ilUtil::sendSuccess($this->pl->txt('icons_saved'), true);
+			ilUtil::sendSuccess($this->pl->txt('icon_icons_saved'), true);
 			$this->ctrl->redirect($this, 'index');
 		} else {
 			$hubIconFormGUI->setValuesByPost();

@@ -13,6 +13,11 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 	 * @var array
 	 */
 	protected static $file_types = array( 'png' );
+
+    /**
+     * @var array
+     */
+    protected static $file_types_50 = array( 'svg' );
 	/**
 	 * @var ilHubConfigGUI
 	 */
@@ -37,6 +42,8 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$this->large = $hubIconCollection->getLarge();
 		$this->medium = $hubIconCollection->getMedium();
 		$this->small = $hubIconCollection->getSmall();
+        $this->svg = $hubIconCollection->getSvg();
+
 		$this->initForm();
 	}
 
@@ -52,29 +59,39 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 	protected function initForm() {
 		$this->setTitelAndDescription();
 
-		$small = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_SMALL), hubIcon::PREF_SMALL);
-		$small->setSuffixes(self::$file_types);
-		//		$small->setInfo($this->small->getDeleted());
-		if ($this->small->exists()) {
-			$small->setImage($this->small->getPath());
-		}
-		$this->addItem($small);
-		//
-		$medium = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_MEDIUM), hubIcon::PREF_MEDIUM);
-		$medium->setSuffixes(self::$file_types);
-		//		$medium->setInfo($this->medium->getDeleted());
-		if ($this->medium->exists()) {
-			$medium->setImage($this->medium->getPath());
-		}
-		$this->addItem($medium);
-		//
-		$large = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_LARGE), hubIcon::PREF_LARGE);
-		$large->setSuffixes(self::$file_types);
-		//		$large->setInfo($this->large->getDeleted());
-		if ($this->large->exists()) {
-			$large->setImage($this->large->getPath());
-		}
-		$this->addItem($large);
+        if(hub::is50()){
+            $svg = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_SVG), hubIcon::PREF_SVG);
+            $svg->setSuffixes(self::$file_types_50);
+            if ($this->svg->exists()) {
+                $svg->setImage($this->svg->getPath());
+            }
+            $this->addItem($svg);
+        } else{
+            $small = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_SMALL), hubIcon::PREF_SMALL);
+            $small->setSuffixes(self::$file_types);
+            //		$small->setInfo($this->small->getDeleted());
+            if ($this->small->exists()) {
+                $small->setImage($this->small->getPath());
+            }
+            $this->addItem($small);
+            //
+            $medium = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_MEDIUM), hubIcon::PREF_MEDIUM);
+            $medium->setSuffixes(self::$file_types);
+            //		$medium->setInfo($this->medium->getDeleted());
+            if ($this->medium->exists()) {
+                $medium->setImage($this->medium->getPath());
+            }
+            $this->addItem($medium);
+            //
+            $large = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_LARGE), hubIcon::PREF_LARGE);
+            $large->setSuffixes(self::$file_types);
+            //		$large->setInfo($this->large->getDeleted());
+            if ($this->large->exists()) {
+                $large->setImage($this->large->getPath());
+            }
+            $this->addItem($large);
+        }
+
 
 		$this->addButtons();
 	}
@@ -84,13 +101,19 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		if (! $this->checkInput()) {
 			return false;
 		}
-		$this->import(hubIcon::PREF_SMALL);
-		$this->import(hubIcon::PREF_MEDIUM);
-		$this->import(hubIcon::PREF_LARGE);
 
-		$this->delete(hubIcon::PREF_SMALL);
-		$this->delete(hubIcon::PREF_MEDIUM);
-		$this->delete(hubIcon::PREF_LARGE);
+        if(hub::is50()){
+            $this->import(hubIcon::PREF_SVG);
+            $this->delete(hubIcon::PREF_SVG);
+        }else{
+            $this->import(hubIcon::PREF_SMALL);
+            $this->import(hubIcon::PREF_MEDIUM);
+            $this->import(hubIcon::PREF_LARGE);
+
+            $this->delete(hubIcon::PREF_SMALL);
+            $this->delete(hubIcon::PREF_MEDIUM);
+            $this->delete(hubIcon::PREF_LARGE);
+        }
 
 		return true;
 	}

@@ -255,4 +255,6 @@ icon_form_title_obj#:#Icons für Objekt
 icon_title_small#:#Klein
 icon_title_medium#:#Mittel
 icon_title_large#:#Gross
+icon_title_svg#:#SVG-Icon
 icon_form_button_save#:#Speichern
+icon_icons_saved#:#Die Icons wurden gespeichert.

@@ -12,14 +12,89 @@ class hubIcon extends ActiveRecord {
 	const SIZE_SMALL = 1;
 	const SIZE_MEDIUM = 2;
 	const SIZE_LARGE = 3;
+    const SIZE_SVG = 4;
 	const USAGE_OBJECT = 1;
 	const USAGE_FIRST_DEPENDENCE = 2;
 	const USAGE_SECOND_DEPENDENCE = 3;
 	const USAGE_THIRD_DEPENDENCE = 4;
+
+    const PREF_SVG = 'svg';
 	const PREF_SMALL = 'small';
 	const PREF_MEDIUM = 'medium';
 	const PREF_LARGE = 'large';
 	const PREF_DEP = 'dep';
+
+
+    /**
+     * @var int
+     *
+     * @con_has_field          true
+     * @con_is_unique          true
+     * @con_is_primary         true
+     * @con_is_notnull         true
+     * @con_fieldtype          integer
+     * @con_length             4
+     * @con_sequence           true
+     */
+    protected $id = 0;
+    /**
+     * @var int
+     *
+     * @con_has_field          true
+     * @con_fieldtype          integer
+     * @con_length             8
+     * @con_index              true
+     */
+    protected $sr_hub_origin_id = 0;
+    /**
+     * @var string
+     *
+     * @con_has_field          true
+     * @con_fieldtype          text
+     * @con_length             64
+     */
+    protected $name = '';
+    /**
+     * @var string
+     *
+     * @con_has_field          true
+     * @con_fieldtype          text
+     * @con_length             128
+     */
+    protected $suffix = 'png';
+    /**
+     * @var int
+     *
+     * @con_has_field          true
+     * @con_fieldtype          integer
+     * @con_length             1
+     */
+    protected $size_type = self::SIZE_LARGE;
+    /**
+     * @var int
+     *
+     * @con_has_field          true
+     * @con_fieldtype          integer
+     * @con_length             1
+     */
+    protected $usage_type = self::USAGE_OBJECT;
+    /**
+     * @var int
+     *
+     * @con_has_field          true
+     * @con_fieldtype          integer
+     * @con_length             4
+     */
+    protected $version = 1;
+    /**
+     * @var bool
+     *
+     * @con_has_field          true
+     * @con_fieldtype          integer
+     * @con_length             1
+     */
+    protected $deleted = false;
+
 	/**
 	 * @var array
 	 */
@@ -27,7 +102,7 @@ class hubIcon extends ActiveRecord {
 		self::SIZE_SMALL => self::PREF_SMALL,
 		self::SIZE_MEDIUM => self::PREF_MEDIUM,
 		self::SIZE_LARGE => self::PREF_LARGE,
-		self::SIZE_LARGE => self::PREF_LARGE,
+		self::SIZE_SVG => self::PREF_SVG,
 	);
 	/**
 	 * @var array
@@ -39,6 +114,17 @@ class hubIcon extends ActiveRecord {
 		self::USAGE_THIRD_DEPENDENCE => 'dep_3',
 	);
 
+
+    /**
+     * @param int         $primary_key
+     * @param arConnector $connector
+     */
+    public function __construct($primary_key = 0, arConnector $connector = NULL) {
+        if(hub::is50()){
+            $this->setSuffix("svg");
+        }
+        parent::__construct($primary_key, $connector);
+    }
 
 	/**
 	 * @param $type
@@ -124,77 +210,6 @@ class hubIcon extends ActiveRecord {
 	public function exists() {
 		return is_file($this->getPath());
 	}
-
-
-	/**
-	 * @var int
-	 *
-	 * @con_has_field          true
-	 * @con_is_unique          true
-	 * @con_is_primary         true
-	 * @con_is_notnull         true
-	 * @con_fieldtype          integer
-	 * @con_length             4
-	 * @con_sequence           true
-	 */
-	protected $id = 0;
-	/**
-	 * @var int
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          integer
-	 * @con_length             8
-	 * @con_index              true
-	 */
-	protected $sr_hub_origin_id = 0;
-	/**
-	 * @var string
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          text
-	 * @con_length             64
-	 */
-	protected $name = '';
-	/**
-	 * @var string
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          text
-	 * @con_length             128
-	 */
-	protected $suffix = 'png';
-	/**
-	 * @var int
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          integer
-	 * @con_length             1
-	 */
-	protected $size_type = self::SIZE_LARGE;
-	/**
-	 * @var int
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          integer
-	 * @con_length             1
-	 */
-	protected $usage_type = self::USAGE_OBJECT;
-	/**
-	 * @var int
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          integer
-	 * @con_length             4
-	 */
-	protected $version = 1;
-	/**
-	 * @var bool
-	 *
-	 * @con_has_field          true
-	 * @con_fieldtype          integer
-	 * @con_length             1
-	 */
-	protected $deleted = false;
 
 
 	/**
