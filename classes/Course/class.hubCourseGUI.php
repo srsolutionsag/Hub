@@ -14,6 +14,8 @@ require_once('class.hubCourseDisplayGUI.php');
 class hubCourseGUI  extends arGUI {
     function executeCommand() {
         parent::executeCommand();
-        $this->tpl->show();
+        if(hubConfig::is50()){
+            $this->tpl->show();
+        }
     }
 }

@@ -15,6 +15,8 @@ class hubMembershipGUI extends arGUI
 {
     function executeCommand() {
         parent::executeCommand();
-        $this->tpl->show();
+        if(hubConfig::is50()){
+            $this->tpl->show();
+        }
     }
 }
