@@ -141,9 +141,7 @@ class hubUser extends hubObject {
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
-		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
-			$this->sendPasswordMail();
-		}
+
 // 		$this->ilias_object->setInstitution($this->getInstitution());
 //		$this->ilias_object->setStreet($this->getStreet());
 //		$this->ilias_object->setCity($this->getCity());
@@ -163,7 +161,11 @@ class hubUser extends hubObject {
 //		$this->ilias_object->setGender($this->getGender());
 		$this->ilias_object->saveAsNew();
 		$this->ilias_object->writePrefs();
+
 		$this->assignRoles();
+		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
+			$this->sendPasswordMail();
+		}
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getId());
 		$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
@@ -229,17 +231,15 @@ class hubUser extends hubObject {
 
 
 	protected function sendPasswordMail() {
-		global $ilSetting, $ilDB, $ilCtrl;
-		$sql = 'SELECT role.title
-					FROM object_data as user
-					INNER JOIN usr_data ON (user.obj_id = usr_data.usr_id)
-					INNER JOIN rbac_ua ON (rbac_ua.usr_id = user.obj_id)
-					INNER JOIN object_data as role ON (role.obj_id = rbac_ua.rol_id)
-					WHERE usr_data.login = ' . $ilDB->quote($this->getLogin(), 'text');
+		global $ilSetting, $ilDB;
+		$sql = "SELECT container_id as ref_id
+					FROM  sr_hub_membership
+					WHERE ext_id LIKE '" . $this->getExtId() . "%'";
 		$query = $ilDB->query($sql);
+
 		$crs_ref_ids = array();
 		while($set = $ilDB->fetchAssoc($query)){
-			$crs_ref_ids[] = substr($set['title'], strrpos($set['title'], '_') + 1);
+			$crs_ref_ids[] = $set['ref_id'];
 		}
 
 		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);
@@ -262,7 +262,7 @@ class hubUser extends hubObject {
 				'[PASSWORD]' => $this->getPasswd(),
 				'[LOGIN]' => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
-				'[COURSE_LINK]' => implode(' <br>', $crs_links),
+				'[COURSE_LINK]' => implode(', ', $crs_links),
 			));
 			$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
 			$mail->Body($body);
