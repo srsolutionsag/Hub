@@ -19,20 +19,20 @@ admin_membership_mail_subject#:#Betreff Benachrichtigungs-Mail
 admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden.
 admin_membership_mail_msg#:#Inhalt Benachrichtigungs-Mail
 admin_membership_mail_msg_info#:#Es können folgende Platzhalter verwendet werden: <br>[FIRSTNAME][LASTNAME][LOGIN][COURSE_LINK][COURSE_TITLE][VALIDITY_START][VALIDITY_END]
-admin_msg_shortlink_not_active#:#Shortlinks nicht aktiviert Meldung
+admin_msg_shortlink_not_active#:#'Shortlinks nicht aktiviert'-Meldung
 admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden
-admin_msg_shortlink_no_ilias_id#:#Keine ILIAS id für Objekt Meldung
+admin_msg_shortlink_no_ilias_id#:#'Keine ILIAS-ID für Objekt'-Meldung
 admin_msg_shortlink_no_ilias_id_info#:#Meldung falls für das entsprechende Hub Objekt keine entsprechende ILIAS-ID existiert
-admin_msg_shortlink_not_found#:#Ungültiger Shortlink Meldung
+admin_msg_shortlink_not_found#:#'Ungültiger Shortlink'-Meldung
 admin_msg_shortlink_not_found_info#:#Meldung falls Objekt (noch) nicht vorhanden wenn Zugriff via Shortlink erfolgt
-admin_origins_path#:#Pfad des origins-Verzeichnis 
+admin_origins_path#:#Pfad des origins-Verzeichnis
 admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet
 admin_password_email_body#:#E-Mail-Body beim versenden von Passwörtern
 admin_roles#:#Rollen
 admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
 admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
-admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
+admin_use_async_info#:#Asynchrone Synchronisation über das GUI ermöglichen. Benötigt einen ILIAS Benutzer.
 admin_user_creation#:#Benutzererstellung
 admin_user_creation_standard_role#:#Rolle bei Benutzererstellung
 admin_form_button_cancel#:#Abbrechen
@@ -150,9 +150,9 @@ mem_prop_updated_send_mail_member#:#Mitglied
 mem_prop_updated_send_mail_title#:#Statuswechsel-Mail versenden an:
 mem_prop_updated_send_mail_tutor#:#Tutor
 msg_confirm_delete_origin#:#Möchten Sie die Anbindung definitv löschen?
-msg_origin_activated#:#Anbindung aktiviert
-msg_origin_deactivated#:#Anbindung deaktiviert
-msg_saved#:#Gespeichert
+msg_origin_activated#:#Anbindung aktiviert.
+msg_origin_deactivated#:#Anbindung deaktiviert.
+msg_saved#:#Gespeichert.
 origin_subtab_icons#:#Icons
 origin_subtab_settings#:#Settings
 origin_form_button_create#:#Speichern
