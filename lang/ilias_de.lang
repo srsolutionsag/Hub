@@ -16,7 +16,7 @@ admin_membership#:#Kursteilnehmer
 admin_membership_activate#:#Benachrichtigung aktivieren
 admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren
 admin_membership_mail_subject#:#Betreff Benachrichtigungs-Mail
-admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden.
+admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden
 admin_membership_mail_msg#:#Inhalt Benachrichtigungs-Mail
 admin_membership_mail_msg_info#:#Es können folgende Platzhalter verwendet werden: <br>[FIRSTNAME][LASTNAME][LOGIN][COURSE_LINK][COURSE_TITLE][VALIDITY_START][VALIDITY_END]
 admin_msg_shortlink_not_active#:#'Shortlinks nicht aktiviert'-Meldung
