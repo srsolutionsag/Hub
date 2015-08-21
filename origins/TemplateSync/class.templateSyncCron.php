@@ -52,6 +52,9 @@ class templateSyncCron{
     }
 
     public function run(){
+        global $tree;
+
+        require_once './Services/Object/classes/class.ilObject2.php';
         $this->log->write('Start synchronisation of templates');
         $config = parse_ini_file('config.ini');
         $client_id = $this->buildClientId($config);
@@ -73,6 +76,14 @@ class templateSyncCron{
                         continue;
                     }
                 }
+
+                $parent = $tree->getParentId($res['ref_id']);
+                while ($tree->getParentId($parent) != 1) {
+                    $parent = $tree->getParentId($parent);
+                }
+                $obj_id = ilObject2::_lookupObjId($parent);
+                $res['category'] = ilObject2::_lookupTitle($obj_id);
+
                 unset($res['validity_unlimited']);
                 if (sizeof($res) == sizeof(self::$fields))
                 {
@@ -100,16 +111,13 @@ class templateSyncCron{
     protected function buildQuery()
     {
         $sql = "SELECT '' AS client_id, object_reference.ref_id, object_data.title, crs_items.timing_start AS valid_from,
-                  crs_items.timing_end AS valid_to, crs_items.timing_type AS validity_unlimited, od_parent.title as category,
+                  crs_items.timing_end AS valid_to, crs_items.timing_type AS validity_unlimited,
                   object_data.description, values_before.value AS days_before, values_after.value AS days_after
                 FROM il_meta_keyword
                 INNER JOIN object_reference ON object_reference.obj_id = il_meta_keyword.obj_id
                 INNER JOIN object_data ON object_data.obj_id = il_meta_keyword.obj_id
                 INNER JOIN crs_items ON crs_items.obj_id = object_reference.ref_id
                 INNER JOIN crs_settings ON crs_settings.obj_id = il_meta_keyword.obj_id
-                INNER JOIN tree ON tree.child = object_reference.ref_id
-                INNER JOIN object_reference AS or_parent ON or_parent.ref_id = tree.parent
-                INNER JOIN object_data AS od_parent ON od_parent.obj_id = or_parent.obj_id
                 INNER JOIN adv_mdf_definition AS definition_before ON definition_before.title = " . $this->db->quote('DAYS_BEFORE', 'text') . "
                 LEFT JOIN adv_md_values AS values_before ON values_before.obj_id = object_reference.obj_id AND values_before.field_id = definition_before.field_id
                 INNER JOIN adv_mdf_definition AS definition_after ON definition_after.title = " . $this->db->quote('DAYS_AFTER', 'text') . "
