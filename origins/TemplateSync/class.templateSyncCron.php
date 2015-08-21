@@ -89,7 +89,7 @@ class templateSyncCron{
             }
             $this->log->write('Templates synchronisation finished successfully');
         }else{
-            $this->log_write("FAILURE: could not open file {$file} for writing");
+            $this->log->write("FAILURE: could not open file {$file} for writing");
         }
     }
 
