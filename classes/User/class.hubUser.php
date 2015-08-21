@@ -229,7 +229,19 @@ class hubUser extends hubObject {
 
 
 	protected function sendPasswordMail() {
-		global $ilSetting;
+		global $ilSetting, $ilDB, $ilCtrl;
+		$sql = 'SELECT role.title
+					FROM object_data as user
+					INNER JOIN usr_data ON (user.obj_id = usr_data.usr_id)
+					INNER JOIN rbac_ua ON (rbac_ua.usr_id = user.obj_id)
+					INNER JOIN object_data as role ON (role.obj_id = rbac_ua.rol_id)
+					WHERE usr_data.login = ' . $ilDB->quote($this->getLogin(), 'text');
+		$query = $ilDB->query($sql);
+		$crs_ref_ids = array();
+		while($set = $ilDB->fetchAssoc($query)){
+			$crs_ref_ids[] = substr($set['title'], strrpos($set['title'], '_') + 1);
+		}
+
 		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);
 		if ($mail_field) {
 			$mail = new ilMimeMail();
@@ -241,10 +253,16 @@ class hubUser extends hubObject {
 			$format = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_DATE_FORMAT);
 			$format = $format ? $format : DATE_ISO8601;
 
+			$crs_links = array();
+			foreach($crs_ref_ids as $ref_id) {
+				$crs_links[] = ilUtil::_getHttpPath().'/goto.php?target=crs_'.$ref_id;
+			}
+
 			$body = strtr($body, array(
 				'[PASSWORD]' => $this->getPasswd(),
 				'[LOGIN]' => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
+				'[COURSE_LINK]' => implode(' <br>', $crs_links),
 			));
 			$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
 			$mail->Body($body);

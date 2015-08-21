@@ -68,7 +68,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$subject = new ilTextInputGUI($this->pl->txt('usr_prop_password_mail_subject'), hubUserFields::F_PASSWORD_MAIL_SUBJECT);
 		$send_password->addSubItem($subject);
 		$mail_body = new ilTextareaInputGUI($this->pl->txt('usr_prop_password_mail_body'), hubUserFields::F_PASSWORD_MAIL_BODY);
-		$mail_body->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD], [VALID_UNTIL]');
+		$mail_body->setInfo($this->pl->txt('usr_prop_password_mail_placeholders') . ': [LOGIN], [PASSWORD], [VALID_UNTIL], [COURSE_LINK]');
 		$mail_body->setCols(80);
 		$mail_body->setRows(15);
 		$send_password->addSubItem($mail_body);
