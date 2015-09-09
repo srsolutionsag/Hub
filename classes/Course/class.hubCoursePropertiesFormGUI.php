@@ -55,6 +55,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$notification_body->setRows(6);
 		$notification_body->setCols(100);
 		$send_mail->addSubItem($notification_body);
+        $notification_from = new ilTextInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_FROM), hubCourseFields::F_NOT_FROM);
+        $send_mail->addSubItem($notification_from);
 		$this->addItem($send_mail);
 		//
 		$h = new ilFormSectionHeaderGUI();
@@ -69,6 +71,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_description'), hubCourseFields::F_UPDATE_DESCRIPTION);
 		$this->addItem($cb);
+        $cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_responsible'), hubCourseFields::F_UPDATE_RESPONSIBLE);
+        $this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_icon'), hubCourseFields::F_UPDATE_ICON);
 		$this->addItem($cb);
@@ -98,3 +102,4 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($delete);
 	}
 }
+?>

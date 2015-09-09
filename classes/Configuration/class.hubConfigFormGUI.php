@@ -69,6 +69,22 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), hubConfig::F_IMPORT_EXPORT);
 		$this->addItem($cb);
 
+        $h = new ilFormSectionHeaderGUI();
+        $h->setTitle($this->pl->txt('admin_shortlink'));
+        $this->addItem($h);
+
+        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_found'), hubConfig::F_MSG_SHORTLINK_NOT_FOUND);
+        $ti->setInfo($this->pl->txt('admin_msg_shortlink_not_found_info'));
+        $this->addItem($ti);
+
+        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_no_ilias_id'), hubConfig::F_MSG_SHORTLINK_NO_ILIAS_ID);
+        $ti->setInfo($this->pl->txt('admin_msg_shortlink_no_ilias_id_info'));
+        $this->addItem($ti);
+
+        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_active'), hubConfig::F_MSG_SHORTLINK_NOT_ACTIVE);
+        $ti->setInfo($this->pl->txt('admin_msg_shortlink_not_active'));
+        $this->addItem($ti);
+
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_header_db'));
 		$this->addItem($h);

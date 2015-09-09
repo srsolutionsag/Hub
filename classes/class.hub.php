@@ -2,6 +2,7 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 
+
 /**
  * Class hub
  *
@@ -58,7 +59,7 @@ class hub {
 	 */
 	public static function getObjectClassname($object_type_id) {
 		if (! in_array($object_type_id, array_keys(self::$object_types)) AND $object_type_id != 0) {
-			throw new Exception('$object_type_id ' . $object_type_id . 'does not exists');
+			throw new Exception('$object_type_id ' . $object_type_id . ' does not exists');
 		}
 
 		return self::$object_types[$object_type_id];
@@ -193,4 +194,56 @@ class hub {
 		}
 		require_once('./include/inc.header.php');
 	}
+
+    const ILIAS_44 = 44;
+    const ILIAS_50 = 50;
+
+    /**
+     * @return int
+     */
+    public static function getILIASVersion() {
+        require_once('./include/inc.ilias_version.php');
+        require_once './Services/Component/classes/class.ilComponent.php';
+        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
+            return self::ILIAS_50;
+        }
+        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.3.999')) {
+            return self::ILIAS_44;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function is50() {
+        return self::getILIASVersion() >= self::ILIAS_50;
+    }
+
+    /**
+     * @throws ilPluginException
+     */
+    public static function loadActiveRecord() {
+        require_once(hub::pathToActiveRecord().'/class.ActiveRecord.php');
+        if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
+            require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+        } elseif (hub::is50()) {
+            require_once('./Services/ActiveRecord/class.ActiveRecord.php');
+        } else {
+            throw new ilPluginException('Please install ActiveRecord');
+        }
+    }
+
+    public static function pathToActiveRecord(){
+        if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
+            return './Customizing/global/plugins/Libraries/ActiveRecord';
+        } elseif (hub::is50()) {
+            return './Services/ActiveRecord';
+        } else {
+            throw new ilPluginException('Please install ActiveRecord');
+        }
+    }
+
+
 }

@@ -38,6 +38,13 @@ class hubOrigin extends ActiveRecord {
 	protected $ar_safe_read = false;
 
 
+	public function __destruct() {
+		$this->object_properties = NULL;
+		$this->log = NULL;
+		$this->conf = NULL;
+	}
+
+
 	/**
 	 * @param int $id
 	 */
@@ -202,7 +209,8 @@ class hubOrigin extends ActiveRecord {
 			return $this->originObject;
 		}
 		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
-			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . 'does not exist');
+			$this->buildFoldersAndFiles();
+			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . ' does not exist');
 		}
 
 		return $this;
@@ -263,14 +271,17 @@ class hubOrigin extends ActiveRecord {
 	 */
 	private function buildFoldersAndFiles() {
 		$dir_name = self::getOriginsPathForUsageType($this->getUsageType()) . $this->getClassName();
-		if (! file_exists($dir_name) AND is_writable($dir_name)) {
-			mkdir($dir_name);
+
+		if (! file_exists($dir_name)) {
+			$ret = ilUtil::makeDirParents($dir_name);
+			//			var_dump($ret); // FSX
+			//			mkdir($dir_name);
 			chmod($dir_name, 0755);
 		} else {
 			return false;
 		}
 		if (! file_exists($this->getClassFilePath())) {
-			$template = file_get_contents(self::getOriginsPath() . 'class.hubOriginTemplate.tpl');
+			$template = file_get_contents('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins/class.hubOriginTemplate.tpl');
 			$template = sprintf($template, hub::getObjectClassname($this->getUsageType()), $this->getClassName());
 			file_put_contents($this->getClassFilePath(), $template);
 			chmod($this->getClassFilePath(), 0755);

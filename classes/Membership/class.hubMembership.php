@@ -24,7 +24,6 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_CRS_TUTOR = 3;
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
-
 	/**
 	 * @var ilCourseParticipant
 	 */
@@ -45,6 +44,18 @@ class hubMembership extends hubObject {
 	 * @var string
 	 */
 	protected $object_type = '';
+	/**
+	 * @var int
+	 */
+	public static $id_type = self::ILIAS_ID_TYPE_ROLE;
+
+
+	public function __destruct() {
+		$this->members_object = NULL;
+		$this->object_type = NULL;
+		$this->participants = NULL;
+		parent::__destruct();
+	}
 
 
 	/**
@@ -73,67 +84,93 @@ class hubMembership extends hubObject {
 		 * @var $hubOrigin        hubOrigin
 		 * @var $hubOriginObj     unibasSLCMMemberships
 		 */
-		foreach (self::get() as $hubMembership) {
-			if (! hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
-				continue;
+		$count = self::count();
+		$steps = 1000;
+		$step = 0;
+		$hasSets = true;
+		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		//		hubSyncCron::setDryRun(true);
+		while ($hasSets) {
+			$start = $step * $steps;
+			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
+			$hubMemberships = self::limit($start, $steps)->get();
+			if (!count($hubMemberships)) {
+				$hasSets = false;
 			}
-			$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
-			hubDurationLogger2::getInstance($duration_id)->resume();
-			$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
-			$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
-
-			//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
-			//			if ($overridden_status) {
-			//				$status = $overridden_status;
-			//			} else {
-			//			}
-
-			$status = $hubMembership->getHistoryObject()->getStatus();
-			if ($hubOriginObj->returnActivePeriod()) {
-				$active_period = (string)$hubOriginObj->returnActivePeriod();
-				if ($hubMembership->getPeriod() != $active_period) {
-					// hubLog::getInstance()->write('ignored period');
-					$status = hubSyncHistory::STATUS_IGNORE;
+			foreach ($hubMemberships as $hubMembership) {
+				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
+					continue;
 				}
-			}
+				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
+				hubDurationLogger2::getInstance($duration_id)->resume();
+				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-			switch ($status) {
-				case hubSyncHistory::STATUS_NEW:
-					if (! hubSyncCron::getDryRun()) {
-						$hubMembership->createMembership();
-					}
-					hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_UPDATED:
-					if (! hubSyncCron::getDryRun()) {
-						$hubMembership->updateMembership();
-					}
-					hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_DELETED:
-					if (! hubSyncCron::getDryRun()) {
-						$hubMembership->deleteMembership();
-					}
-					hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_ALREADY_DELETED:
-					hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
-					hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
-					if (! hubSyncCron::getDryRun()) {
-						$hubMembership->createMembership();
-					}
-					break;
-				case hubSyncHistory::STATUS_IGNORE:
-					hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-					break;
-			}
-			$hubMembership->getHistoryObject()->updatePickupDate();
-			$hubOrigin::afterObjectModification($hubMembership);
-			$hubOriginObj->afterObjectInit($hubMembership);
+				//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
+				//			if ($overridden_status) {
+				//				$status = $overridden_status;
+				//			} else {
+				//			}
 
-			hubDurationLogger2::getInstance($duration_id)->resume();
+				$status = $hubMembership->getHistoryObject()->getStatus();
+				if ($hubOriginObj->returnActivePeriod()) {
+					$active_period = (string)$hubOriginObj->returnActivePeriod();
+					if ($hubMembership->getPeriod() != $active_period) {
+						//						 hubLog::getInstance()->write('ignored period');
+						$status = hubSyncHistory::STATUS_IGNORE;
+					}
+				}
+				//				hubLog::getInstance()->write('Status: ' . $status);
+				switch ($status) {
+					case hubSyncHistory::STATUS_NEW:
+						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
+						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->createMembership();
+						}
+						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_UPDATED:
+						//						hubLog::getInstance()->write('Update Membership: ' . $hubMembership->getExtId());
+						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->updateMembership();
+						}
+						hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_DELETED:
+						hubLog::getInstance()->write('Delete Membership: ' . $hubMembership->getExtId());
+						hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
+						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->deleteMembership();
+						}
+						hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_ALREADY_DELETED:
+						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+						hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
+						hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
+						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->createMembership();
+						}
+						break;
+					case hubSyncHistory::STATUS_IGNORE:
+						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+						break;
+				}
+
+				$hubMembership->getHistoryObject()->updatePickupDate();
+				$hubOrigin::afterObjectModification($hubMembership);
+				if (!hubSyncCron::getDryRun()) {
+					$hubOriginObj->afterObjectInit($hubMembership);
+					arObjectCache::purge($hubMembership->getHistoryObject());
+				}
+				hubDurationLogger2::getInstance($duration_id)->resume();
+				arObjectCache::purge($hubMembership);
+				$hubMembership = NULL;
+				$hubOriginObj = NULL;
+			}
+			$step ++;
 		}
 
 		return true;
@@ -176,7 +213,7 @@ class hubMembership extends hubObject {
 			}
 		}
 
-		if (! $this->getUsrId()) {
+		if (!$this->getUsrId()) {
 			//	if ($this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN)) {
 			//		$where = array(
 			//			'sr_hub_origin_id' => $this->props()->get(hubMembershipFields::GET_USR_ID_FROM_ORIGIN),
@@ -190,7 +227,7 @@ class hubMembership extends hubObject {
 			/**
 			 * @var $hubUser hubUser
 			 */
-			if ($hubUser) {
+			if ($hubUser instanceof hubUser) {
 				$usr_id = $hubUser->getHistoryObject()->getIliasId();
 				if ($usr_id) {
 					$this->setUsrId($usr_id);
@@ -237,7 +274,11 @@ class hubMembership extends hubObject {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
 				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
-					$this->participants->add($this->getUsrId(), $this->getContainerRole());
+					if ($this->participants->isAssigned($this->getUsrId())) {
+						//						$this->participants->updateRoleAssignments($this->getUsrId(), array( $this->ilias_role_id ));
+					} else {
+						$this->participants->add($this->getUsrId(), $this->getContainerRole());
+					}
 				}
 				if ($this->props()->get(hubMembershipFields::UPDATE_NOTIFICATION)) {
 					$this->participants->updateNotification($this->getUsrId(), (bool)$this->getHasNotification());
@@ -258,8 +299,10 @@ class hubMembership extends hubObject {
 			case self::DELETE_MODE_INACTIVE:
 				break;
 			case self::DELETE_MODE_DELETE:
-				$this->participants->delete($this->getUsrId());
-				$this->participants->updateNotification($this->getUsrId(), false);
+                if($this->participants){
+                    $this->participants->delete($this->getUsrId());
+                    $this->participants->updateNotification($this->getUsrId(), false);
+                }
 				// $this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
 		}
@@ -280,7 +323,7 @@ class hubMembership extends hubObject {
 			case self::CONT_ROLE_CRS_ADMIN:
 			case self::CONT_ROLE_GRP_ADMIN:
 				$send = $this->props()->get($prefix . '_send_mail_admin');
-				if (! $this->getHasNotification()) {
+				if (!$this->getHasNotification()) {
 					$send = false;
 				}
 				break;
@@ -352,8 +395,6 @@ class hubMembership extends hubObject {
 	 * @db_length           64
 	 */
 	protected $period = NULL;
-
-
 	//
 	// Setter & Getter
 	//

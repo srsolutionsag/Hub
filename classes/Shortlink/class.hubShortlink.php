@@ -4,6 +4,8 @@
  * Class hubShortlink
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Timon Amstutz <timon.amstutz@ilub.unibe.ch>
+ *
  * @version 1.1.04
  */
 class hubShortlink {
@@ -19,10 +21,6 @@ class hubShortlink {
 	 * @var int
 	 */
 	protected $sr_hub_origin_id;
-	/**
-	 * @var string
-	 */
-	protected $link = '';
 	/**
 	 * @var ilObjCourse
 	 */
@@ -48,8 +46,18 @@ class hubShortlink {
 	 */
 	protected $parent_type;
 
+    /**
+     * @var hubObject
+     */
+    protected $hub_object;
 
-	/**
+    /**
+     * @var string
+     */
+    protected $server = "";
+
+
+    /**
 	 * @param $ext_id
 	 */
 	public static function redirect($ext_id) {
@@ -60,94 +68,164 @@ class hubShortlink {
 	/**
 	 * @param $ext_id
 	 */
-	private function __construct($ext_id) {
+    protected function __construct($ext_id, $init_ilias = true) {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
-		hub::initILIAS(hub::CONTEXT_WEB);
+        if($init_ilias){
+            hub::initILIAS(hub::CONTEXT_WEB);
+        }
 		self::includes();
 		$this->setExtId($ext_id);
-		switch ($this->checkShortlink()) {
-			case self::REDIRECT_BASE:
-				$this->redirectToBase();
-				break;
-			case self::REDIRECT_PARENT:
-				$this->redirectToParent();
-				break;
-			case self::REDIRECT_OBJECT:
-				$this->redirectToObject();
-				break;
-		}
+        $this->setServer();
+        $this->doRedirect();
+	}
+
+    protected function doRedirect(){
+        /**
+         * @var ilObjUser      $ilUser
+         */
+        global $ilUser;
+
+
+        if($this->checkRedirectBase()){
+            $this->redirectToBase();
+        }
+
+        if($this->getOriginObjectProperties()->get(hubOriginObjectPropertiesFields::F_FORCE_LOGIN) && $ilUser->getLogin() == "anonymous"){
+            $this->redirectToLogin();
+        }
+
+        if($this->checkRedirectParent()){
+            $this->redirectToParent();
+        }
+        else{
+            $this->redirectToObject();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkRedirectBase()
+    {
+        if(!$this->initHubObject() || !$this->getSyncHistory() || !$this->getSyncHistory()->getSrHubOriginId()){
+            ilUtil::sendInfo(hubConfig::get(hubConfig::F_MSG_SHORTLINK_NOT_FOUND), true);
+            return true;
+        }
+
+        if(!$this->getOriginObjectProperties()->get(hubOriginObjectPropertiesFields::F_SHORTLINK)){
+            ilUtil::sendInfo(hubConfig::get(hubConfig::F_MSG_SHORTLINK_NOT_ACTIVE), true);
+            return true;
+        }
+
+        if (!$this->getSyncHistory()->getIliasId()){
+            ilUtil::sendInfo(hubConfig::get(hubConfig::F_MSG_SHORTLINK_NO_ILIAS_ID), true);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkRedirectParent()
+    {
+        /**
+         * @var ilObjUser      $ilUser
+         */
+        global $ilUser;
+
+        $this->initObjectData($this->getSyncHistory()->getIliasId());
+        if ($this->getOriginObjectProperties()->get(hubOriginObjectPropertiesFields::F_SL_CHECK_ONLINE)) {
+            if ($this->getIlObject()->getOfflineStatus()&& !$this->getIlObject()->getMemberObject()->isAdmin($ilUser->getId())) {
+                ilUtil::sendInfo($this->getOriginObjectProperties()->get(hubOriginObjectPropertiesFields::F_MSG_NOT_ONLINE), true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function initHubObject()
+    {
+        foreach (hub::getObjectTypeClassNames() as $class) {
+            if ($class::where(array( 'shortlink' => $this->getExtId() ))->debug()->hasSets()) {
+                $this->setHubObject($class::where(array( 'shortlink' => $this->getExtId() ))->first());
+                break;
+            }
+        }
+        if (! $this->getHubObject()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return hubSyncHistory
+     */
+    protected function getSyncHistory(){
+        return hubSyncHistory::getInstance($this->getHubObject());
+    }
+
+    /**
+     * @return hubOriginObjectProperties
+     */
+    protected function getOriginObjectProperties(){
+        return hubOriginObjectProperties::getInstance($this->getHubObject()->getSrHubOriginId());
+    }
+
+    /**
+     * @param string $server
+     */
+    public function setServer()
+    {
+        $this->server = ($_SERVER['HTTPS'] == 'on' ? 'http://' : 'http://') . $_SERVER['SERVER_NAME'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getServer()
+    {
+        return $this->server;
+    }
+
+
+    protected function redirectToObject() {
+        $link = $this->getServer() . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getType() . '_' . $this->getRefId() . '.html';
+        ilUtil::redirect($link);
 	}
 
 
-	private function redirectToObject() {
-		ilUtil::redirect($this->getLink());
+    protected function redirectToParent() {
+        $link = $this->getServer() . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getParentType() . '_' . $this->getParentId() . '.html';
+        ilUtil::redirect($link);
 	}
 
 
-	private function redirectToParent() {
-		ilUtil::redirect($this->getLink());
+    protected function redirectToBase() {
+        /**
+         * @var ilObjUser      $ilUser
+         */
+        global $ilUser;
+
+        if($ilUser->getLogin() == "anonymous")
+        {
+            /**
+             * This is done to show the proper message for a user beeing redirected to base. ilUtil::sendInfo works session
+             * based, therefore a login is required to display the message properly.
+             */
+            $this->redirectToLogin();
+        }
+        $link = $this->getServer() . '/index.php';
+		ilUtil::redirect($link);
 	}
 
-
-	private function redirectToBase() {
-		ilUtil::redirect('/login.php');
-	}
-
-
-	/**
-	 * @return bool|int
-	 */
-	private function checkShortlink() {
-		/**
-		 * @var hubSyncHistory $hubSyncHistory
-		 * @var hubOrigin      $hubOrigin
-		 * @var hubCourse      $class
-		 * @var hubCourse      $hubObject
-		 * @var ilTree         $tree
-		 */
-		foreach (hub::getObjectTypeClassNames() as $class) {
-			if ($class::where(array( 'shortlink' => $this->getExtId() ))->debug()->hasSets()) {
-				$hubObject = $class::where(array( 'shortlink' => $this->getExtId() ))->first();
-				break;
-			}
-		}
-		if (! $hubObject) {
-			ilUtil::sendFailure('No Object for this Shortlink found.', true);
-
-			return self::REDIRECT_BASE;
-		}
-		$hubSyncHistory = hubSyncHistory::getInstance($hubObject);
-		if ($hubSyncHistory->getSrHubOriginId()) {
-			$this->setSrHubOriginId($hubSyncHistory->getSrHubOriginId());
-			$hubOriginObjectProperties = hubOriginObjectProperties::getInstance($hubObject->getSrHubOriginId());
-			if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SHORTLINK) AND $hubSyncHistory->getIliasId()) {
-				$hubOrigin = hubOrigin::find($this->getSrHubOriginId());
-				switch ($hubOrigin->getUsageType()) {
-					case hub::OBJECTTYPE_COURSE;
-					case hub::OBJECTTYPE_CATEGORY;
-						$server = ($_SERVER['HTTPS'] == 'on' ? 'http://' : 'http://') . $_SERVER['SERVER_NAME'];
-						$this->initObjectData($hubSyncHistory->getIliasId());
-						if ($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_SL_CHECK_ONLINE)) {
-							if ($this->getIlObject()->getOfflineStatus()) {
-								ilUtil::sendInfo($hubOriginObjectProperties->get(hubOriginObjectPropertiesFields::F_MSG_NOT_ONLINE), true);
-								$link =
-									$server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getParentType() . '_' . $this->getParentId() . '.html';
-								$this->setLink($link);
-
-								return self::REDIRECT_PARENT;
-							}
-						}
-						$link = $server . '/goto_' . urlencode(CLIENT_ID) . '_' . $this->getType() . '_' . $this->getRefId() . '.html';
-						$this->setLink($link);
-
-						return self::REDIRECT_OBJECT;
-				}
-			}
-		}
-
-		return self::REDIRECT_BASE;
-	}
-
+    protected function redirectToLogin(){
+        $link = $this->getServer() . '/login.php?target=uihk_hub_'.$this->getExtId();
+        ilUtil::redirect($link);
+    }
 
 	/**
 	 * @param $ref_id
@@ -162,10 +240,22 @@ class hubShortlink {
 		$this->setParentType(ilObject2::_lookupType($this->getParentId(), true));
 	}
 
+    /**
+     * @param \hubObject $hub_object
+     */
+    public function setHubObject($hub_object)
+    {
+        $this->hub_object = $hub_object;
+    }
 
-	//
-	// Setter & Getter
-	//
+    /**
+     * @return \hubObject
+     */
+    public function getHubObject()
+    {
+        return $this->hub_object;
+    }
+
 	/**
 	 * @param mixed $ext_id
 	 */
@@ -195,22 +285,6 @@ class hubShortlink {
 	 */
 	public function getSrHubOriginId() {
 		return $this->sr_hub_origin_id;
-	}
-
-
-	/**
-	 * @param string $link
-	 */
-	public function setLink($link) {
-		$this->link = $link;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getLink() {
-		return $this->link;
 	}
 
 
@@ -310,7 +384,7 @@ class hubShortlink {
 	}
 
 
-	private static function includes() {
+	protected static function includes() {
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectProperties.php');

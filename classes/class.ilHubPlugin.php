@@ -1,5 +1,6 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
+require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
 
 /**
  * Class ilHubPlugin
@@ -13,6 +14,11 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @var ilHubPlugin
 	 */
 	protected static $instance;
+
+    /**
+     * @var string
+     */
+    protected static $baseClass;
 
 
 	/**
@@ -42,19 +48,11 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		/**
 		 * @var $ilCtrl ilCtrl
 		 */
-		$path = strstr(__FILE__, 'Services', true) . 'Libraries/ActiveRecord/';
-		global $ilCtrl;
-		if ($ilCtrl->lookupClassPath('ilRouterGUI') === NULL) {
-			ilUtil::sendFailure('hub needs ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);
+		if (self::getBaseClass() == false) {
+			ilUtil::sendFailure('hub needs ILIAS >= 4.5 OR for ILIAS < 4.5 ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);
 
 			return false;
 		}
-		if (! is_file($path . 'class.ActiveRecord.php') OR ! is_file($path . 'class.ActiveRecordList.php')) {
-			ilUtil::sendFailure('hub needs ActiveRecord (https://svn.ilias.de/svn/ilias/branches/sr/ActiveRecord) ', true);
-
-			return false;
-		}
-
 		return true;
 	}
 
@@ -111,10 +109,17 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return ctrlmmEntryCtrl[]
 	 */
 	public static function getMenuEntries($id = 0) {
-		$entries = array();
+
+        global $rbacreview, $ilUser;
+        if (!$rbacreview->isAssigned($ilUser->getId(), hubConfig::get(hubConfig::F_ADMIN_ROLES))) {
+            return array();
+        }
+
+        $entries[$id] = array();
+        $entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass('ilRouterGUI,hubGUI,hubOriginGUI');
+			$hub_menu->setGuiClass(self::getBaseClass().',hubGUI,hubOriginGUI');
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
 			if (! function_exists('hubConfig::get')) {
@@ -129,6 +134,32 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 		return $entries[$id];
 	}
+
+    /**
+     * @var string
+     *
+     * In what class the command/ctrl chain should start for this plugin.
+     *
+     * This will return ilRouterGUI for ILIAS <= 4.4 if the corresponding plugin is installed
+     * and ilUIPluginRouterGUI for ILIAS >= 4.5 and false otherwise.
+     *
+     * @return string
+     */
+    public static function getBaseClass() {
+        if(self::$baseClass !== null)
+            return self::$baseClass;
+
+        global $ilCtrl;
+        if($ilCtrl->lookupClassPath('ilUIPluginRouterGUI')) {
+            self::$baseClass = 'ilUIPluginRouterGUI';
+        } elseif($ilCtrl->lookupClassPath('ilRouterGUI')) {
+            self::$baseClass = 'ilRouterGUI';
+        } else {
+            self::$baseClass = false;
+        }
+
+        return self::$baseClass;
+    }
 }
 
 ?>

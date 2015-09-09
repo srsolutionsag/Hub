@@ -1,8 +1,8 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 require_once('./Services/Object/classes/class.ilObject2.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
+hub::loadActiveRecord();
 
 /**
  * Class hubSyncHistory
@@ -44,16 +44,15 @@ class hubSyncHistory extends ActiveRecord {
 		parent::__construct($ext_id, new hubConnector());
 	}
 
-
-	public static function preloadObjects() {
-		/**
-		 * @var $hubSyncHistory hubSyncHistory
-		 */
-		foreach (parent::preloadObjects() as $hubSyncHistory) {
-			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
-		}
-	}
-
+	//
+	//	public static function preloadObjects() {
+	//		/**
+	//		 * @var $hubSyncHistory hubSyncHistory
+	//		 */
+	//		foreach (parent::preloadObjects() as $hubSyncHistory) {
+	//			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
+	//		}
+	//	}
 
 	/**
 	 * @param hubObject $hubObject
@@ -71,47 +70,45 @@ class hubSyncHistory extends ActiveRecord {
 			return new self($ext_id);
 		}
 
-		if (! isset(self::$cache[$sr_hub_origin_id][$ext_id])) {
-			/**
-			 * @var $obj hubSyncHistory
-			 */
-			$obj = self::findOrGetInstance($ext_id);
-			$obj->setSrHubOriginId($sr_hub_origin_id);
-			$obj->setIliasIdType($hubObject::$id_type);
-			if ($obj->is_new) {
-				$obj->create();
-			}
-
-			self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
-		}
-
-		return self::$cache[$sr_hub_origin_id][$ext_id];
-	}
-
-
-	/**
-	 * @param $primary_key
-	 *
-	 * @return hubSyncHistory
-	 */
-	public static function find($primary_key) {
 		/**
 		 * @var $obj hubSyncHistory
 		 */
-		$class_name = get_called_class();
-		if (! arObjectCache::isCached($class_name, $primary_key)) {
-			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
-				arFactory::getInstance($class_name, $primary_key);
-			} else {
-				return NULL;
-			}
+		$obj = self::findOrGetInstance($ext_id);
+		$obj->setSrHubOriginId($sr_hub_origin_id);
+		$obj->setIliasIdType($hubObject::$id_type);
+		if ($obj->is_new) {
+			$obj->create();
 		}
 
-		return arObjectCache::get($class_name, $primary_key);
+		//		self::$cache[$sr_hub_origin_id][$ext_id] = $obj;
+		//
+		//		return self::$cache[$sr_hub_origin_id][$ext_id];
+
+		return $obj;
 	}
 
 
-
+	//	/**
+	//	 * @param $primary_key
+	//	 *
+	//	 * @return hubSyncHistory
+	//	 */
+	//	public static function find($primary_key) {
+	//		return parent::
+	////		/**
+	////		 * @var $obj hubSyncHistory
+	////		 */
+	////		$class_name = get_called_class();
+	////		if (!arObjectCache::isCached($class_name, $primary_key)) {
+	////			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
+	////				arFactory::getInstance($class_name, $primary_key);
+	////			} else {
+	////				return NULL;
+	////			}
+	////		}
+	////
+	////		return arObjectCache::get($class_name, $primary_key);
+	//	}
 
 	//
 	// Workflow
@@ -136,6 +133,8 @@ class hubSyncHistory extends ActiveRecord {
 					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
 			$ilDB->query($sql);
+			//			arObjectCache::purgeAll(new hubSyncHistory());
+			//			hubSyncHistory::get();
 
 			self::$loaded[$sr_hub_origin_id] = true;
 		}
@@ -189,7 +188,9 @@ class hubSyncHistory extends ActiveRecord {
 				return $res->obj_id;
 				break;
 			case hubObject::ILIAS_ID_TYPE_REF_ID:
-				$sql = 'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = ' . $ilDB->quote($hubObject->returnImportId());
+				$sql =
+					'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = '
+					. $ilDB->quote($hubObject->returnImportId());
 				$res = $ilDB->fetchObject($ilDB->query($sql));
 
 				return $res->ref_id;
@@ -228,6 +229,12 @@ class hubSyncHistory extends ActiveRecord {
 	public function updatePickupDate() {
 		$this->setPickupDateMicro(microtime(true));
 		$this->update();
+	}
+
+
+	public function update() {
+		parent::update();
+		arObjectCache::purge($this);
 	}
 
 

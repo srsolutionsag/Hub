@@ -1,12 +1,13 @@
 <?php
 require_once('./Services/Database/classes/class.ilDBMySQL.php');
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectProperties.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Notification/class.hubOriginNotification.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubCounter.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
+hub::loadActiveRecord();
 
 /**
  * Class hubObject
@@ -56,6 +57,12 @@ abstract class hubObject extends ActiveRecord {
 	protected static $existing_ext_ids = array();
 
 
+	public function __destruct() {
+		$this->ilias_object = NULL;
+		$this->hubOrigin = NULL;
+	}
+
+
 	/**
 	 * @param $class
 	 * @param $ext_id
@@ -89,6 +96,13 @@ abstract class hubObject extends ActiveRecord {
 	 * @param hubOrigin $origin
 	 */
 	public function create(hubOrigin $origin) {
+		static $count;
+		$count ++;
+		if ($count == 1000) {
+			arObjectCache::flush(get_class($this));
+			arObjectCache::flush('hubSyncHistory');
+			$count = 0;
+		}
 		$this->updateInto($origin);
 	}
 
@@ -139,29 +153,27 @@ abstract class hubObject extends ActiveRecord {
 	}
 
 
-	/**
-	 * @param $primary_key
-	 *
-	 * @return hubObject
-	 */
-	public static function findOrGetInstance($primary_key) {
-		/**
-		 * @var $obj hubObject
-		 */
-		$obj = self::find($primary_key);
-		if ($obj !== NULL) {
-			return $obj;
-		} else {
-			$class_name = get_called_class();
-			$obj = arFactory::getInstance($class_name, 0);
-			$obj->setExtId($primary_key);
-
-			//			$obj->storeObjectToCache();
-
-			return $obj;
-		}
-	}
-
+	//	/**
+	//	 * @param $primary_key
+	//	 *
+	//	 * @return hubObject
+	//	 */
+	//	public static function findOrGetInstance($primary_key) {
+	//		/**
+	//		 * @var $obj hubObject
+	//		 */
+	//		$obj = self::find($primary_key);
+	//		if ($obj !== NULL) {
+	//			return $obj;
+	//		} else {
+	//			$class_name = get_called_class();
+	//			$obj = arFactory::getInstance($class_name, 0);
+	//			$obj->setExtId($primary_key);
+	//			$obj->is_new = true;
+	//
+	//			return $obj;
+	//		}
+	//	}
 
 	/**
 	 * @return mixed
@@ -169,6 +181,35 @@ abstract class hubObject extends ActiveRecord {
 	 * @desciprion Build get Status of History an build your ILIAS-Objects
 	 */
 	abstract public static function buildILIASObjects();
+
+
+	/**
+	 * @return bool
+	 *
+	 * @description Currently all hubObject-Classes implement an own buildILIASObjects. in a future version we would like to do some
+	 * base staff in the base class
+	 */
+	protected function buildILIASObjectsBase() {
+		$count = self::count();
+		$steps = 1000;
+		$step = 0;
+		$hasSets = true;
+		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		while ($hasSets) {
+			$start = $step * $steps;
+			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
+			$hubObjects = self::limit($start, $steps)->get();
+			if (! count($hubObjects)) {
+				$hasSets = false;
+			}
+			foreach ($hubObjects as $hubObject) {
+				//
+			}
+			$step ++;
+		}
+
+		return true;
+	}
 
 
 	/**

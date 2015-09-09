@@ -1,5 +1,6 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
+hub::loadActiveRecord();
 require_once('./include/inc.ilias_version.php');
 require_once('./Services/Component/classes/class.ilComponent.php');
 
@@ -28,10 +29,16 @@ class hubConfig extends ActiveRecord {
 	const F_ASYNC_CLI_PHP = 'async_cli_php';
 	const F_ADMIN_ROLES = 'admin_roles';
 	const F_IMPORT_EXPORT = 'import_export';
+    const F_MSG_SHORTLINK_NOT_FOUND = 'msg_shortlink_not_found';
+    const F_MSG_SHORTLINK_NOT_ACTIVE = 'msg_shortlink_not_active';
+    const F_MSG_SHORTLINK_NO_ILIAS_ID = 'msg_shortlink_no_ilias_id';
+
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const ILIAS_43 = 43;
 	const ILIAS_44 = 44;
 	const ILIAS_45 = 45;
+    const ILIAS_50 = 50;
+
 	/**
 	 * @var array
 	 */
@@ -59,6 +66,9 @@ class hubConfig extends ActiveRecord {
 	 * @return int
 	 */
 	public static function getILIASVersion() {
+        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
+            return self::ILIAS_50;
+        }
 		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.5.000')) {
 			return self::ILIAS_45;
 		}
@@ -103,6 +113,14 @@ class hubConfig extends ActiveRecord {
 	public static function is45() {
 		return self::getILIASVersion() >= self::ILIAS_45;
 	}
+
+
+    /**
+     * @return bool
+     */
+    public static function is50() {
+        return self::getILIASVersion() >= self::ILIAS_50;
+    }
 
 
 	/**

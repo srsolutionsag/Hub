@@ -1,5 +1,5 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.srModelObjectTableGUI.php');
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Table/class.hubAbstractTableGUI.php');
 require_once('class.hubOrigin.php');
 require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubAsyncSync.php');
@@ -11,7 +11,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @version 1.1.04
  *
  */
-class hubOriginTableGUI extends srModelObjectTableGUI {
+class hubOriginTableGUI extends hubAbstractTableGUI {
 
 	const DEV = true;
 
@@ -109,8 +109,11 @@ class hubOriginTableGUI extends srModelObjectTableGUI {
 		$hubOrigin = hubOrigin::find($a_set['id']);
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
 		$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $hubOrigin->getId());
-		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png')) : ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
-		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
+        if(hubConfig::is50()){
+            $img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.svg')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
+        }else{
+            $img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
+        }
 		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate') : $this->ctrl->getLinkTarget($this->parent_obj, 'activate');
 		$this->addCell('<a href=\'' . $img_link . '\'>' . $img . '</a>');
 		$this->addCell('<a href=\'' . $this->ctrl->getLinkTarget($this->parent_obj, 'edit') . '\'>' . $hubOrigin->getTitle() . '</a>');

@@ -1,7 +1,6 @@
 <?php
-
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
+hub::loadActiveRecord();
 /**
  * Class hubOriginObjectPropertyValue
  *
@@ -66,7 +65,7 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 	 * @var string
 	 * @db_has_field    true
 	 * @db_fieldtype    text
-	 * @db_length       1000
+	 * @db_length       4000
 	 */
 	protected $property_value;
 

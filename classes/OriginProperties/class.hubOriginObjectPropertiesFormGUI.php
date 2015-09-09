@@ -164,6 +164,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), hubOriginObjectPropertiesFields::F_SHORTLINK);
+
+        $subcb = new ilCheckboxInputGUI($this->pl->txt('com_prop_force_login'), hubOriginObjectPropertiesFields::F_FORCE_LOGIN);
+        $cb->addSubItem($subcb);
+
 		$this->addItem($cb);
 	}
 
