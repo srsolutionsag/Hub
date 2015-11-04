@@ -496,8 +496,8 @@ class hubUser extends hubObject {
 	 * @var string
 	 *
 	 * @db_has_field        true
-	 * @db_fieldtype        integer
-	 * @db_length           1
+	 * @db_fieldtype        text
+	 * @db_length           64
 	 */
 	protected $gender;
 	/**

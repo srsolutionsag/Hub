@@ -146,4 +146,13 @@ hubUser::updateDB();
 
 ?>
 
+<#15>
+<?php
+global $ilDB;
+
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
+hubUser::updateDB();
+
+?>
+
 
