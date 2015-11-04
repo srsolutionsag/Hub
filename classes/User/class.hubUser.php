@@ -20,6 +20,10 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_SHIB = 2;
 	const ACCOUNT_TYPE_LDAP = 3;
 	const ACCOUNT_TYPE_RADIUS = 4;
+
+	public $user_properties = array('institution', 'street', 'city', 'zipcode', 'country', 'selectedCountry',
+								    'phoneOffice', 'phoneHome', 'phoneMobile', 'department', 'fax', 'timeLimitOwner',
+									'timeLimitUnlimited', 'timeLimitFrom', 'timeLimitUntil', 'matriculation', 'gender', 'birthday');
 	/**
 	 * @var ilObjUser
 	 */
@@ -124,6 +128,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setDescription($this->getEmail());
 		$this->ilias_object->setImportId($this->returnImportId());
 		$this->ilias_object->create();
+
 		$this->ilias_object->setFirstname($this->getFirstname());
 		$this->ilias_object->setLastname($this->getLastname());
 		$this->ilias_object->setEmail($this->getEmail());
@@ -142,24 +147,17 @@ class hubUser extends hubObject {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
 
- 		$this->ilias_object->setInstitution($this->getInstitution());
-		$this->ilias_object->setStreet($this->getStreet());
-		$this->ilias_object->setCity($this->getCity());
-		$this->ilias_object->setZipcode($this->getZipcode());
-		$this->ilias_object->setCountry($this->getCountry());
-		$this->ilias_object->setSelectedCountry($this->getSelCountry());
-		$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-		$this->ilias_object->setPhoneHome($this->getPhoneHome());
-		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-		$this->ilias_object->setDepartment($this->getDepartment());
-		$this->ilias_object->setFax($this->getFax());
-		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
-		$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-		$this->ilias_object->setMatriculation($this->getMatriculation());
-		$this->ilias_object->setGender($this->getGender());
-		$this->ilias_object->setBirthday($this->getBirthday());
+		foreach($this->user_properties as $user_property) {
+			$setter_name = "get".ucfirst($user_property);
+			$getter_name = "set".ucfirst($user_property);
+
+			if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+				if($this->$getter_name() !== null) {
+					$this->ilias_object->$setter_name($this->$getter_name());
+				}
+			}
+		}
+
 		$this->ilias_object->saveAsNew();
 		$this->ilias_object->writePrefs();
 
@@ -291,24 +289,17 @@ class hubUser extends hubObject {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
- 			$this->ilias_object->setInstitution($this->getInstitution());
-			$this->ilias_object->setStreet($this->getStreet());
-			$this->ilias_object->setCity($this->getCity());
-			$this->ilias_object->setZipcode($this->getZipcode());
-			$this->ilias_object->setCountry($this->getCountry());
-			$this->ilias_object->setSelectedCountry($this->getSelCountry());
-			$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-			$this->ilias_object->setPhoneHome($this->getPhoneHome());
-			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-			$this->ilias_object->setDepartment($this->getDepartment());
-			$this->ilias_object->setFax($this->getFax());
-			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
-			$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-			$this->ilias_object->setMatriculation($this->getMatriculation());
-			$this->ilias_object->setGender($this->getGender());
-			$this->ilias_object->setBirthday($this->getBirthday());
+			foreach($this->user_properties as $user_property) {
+				$setter_name = "get".ucfirst($user_property);
+				$getter_name = "set".ucfirst($user_property);
+
+				if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+					if($this->$getter_name() !== null) {
+						$this->ilias_object->$setter_name($this->$getter_name());
+					}
+				}
+			}
+
 			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
 			}
