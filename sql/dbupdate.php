@@ -136,3 +136,14 @@ if (!$ilDB->tableColumnExists('sr_hub_origin_conf', 'exec_time')) {
 				'notnull' => false));
 }
 ?>
+
+<#14>
+<?php
+global $ilDB;
+
+require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
+hubUser::updateDB();
+
+?>
+
+

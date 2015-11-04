@@ -3,7 +3,7 @@
 //if (! ilHubPlugin::checkPreconditions()) {}
 
 $id = 'hub';
-$version = '1.1.19';
+$version = '1.1.20';
 $ilias_min_version = '4.3.0';
 $ilias_max_version = '5.0.999';
 $responsible = 'Fabian Schmid';
