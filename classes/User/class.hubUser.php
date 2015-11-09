@@ -148,8 +148,8 @@ class hubUser extends hubObject {
 		}
 
 		foreach($this->user_properties as $user_property) {
-			$setter_name = "get".ucfirst($user_property);
-			$getter_name = "set".ucfirst($user_property);
+			$setter_name = "set".ucfirst($user_property);
+			$getter_name = "get".ucfirst($user_property);
 
 			if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
 				if($this->$getter_name() !== null) {
@@ -290,8 +290,8 @@ class hubUser extends hubObject {
 			}
 
 			foreach($this->user_properties as $user_property) {
-				$setter_name = "get".ucfirst($user_property);
-				$getter_name = "set".ucfirst($user_property);
+				$setter_name = "set".ucfirst($user_property);
+				$getter_name = "get".ucfirst($user_property);
 
 				if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
 					if($this->$getter_name() !== null) {
