@@ -27,7 +27,6 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
      * @var array
      */
     protected static $fields_external = array(
-        'client_id',
         'template_id',
         'id',           //ARTEMIS-id
         'course_title',
@@ -123,6 +122,7 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
     */
     public function buildEntries() {
         global $tree;
+
         foreach ($this->data as $data) {
             $ilias_course = new ilObjCourse($data->template_id);
             $hub_course = new hubCourse($data->id);

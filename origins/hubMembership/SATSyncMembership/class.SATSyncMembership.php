@@ -8,15 +8,15 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  *
  *
  * @author  Theodor Truffer <tt@studer-raimann.ch>
-* @version 1.0.0** @revision $r$
-*/
+ * @version 1.0.0** @revision $r$
+ */
 class SATSyncMembership extends hubOrigin implements hubOriginInterface {
 
     const DELIMITER = ';';
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $data = array();
 
     /**
@@ -32,14 +32,9 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
      * @var array
      */
     protected static $fields_external = array(
-        'client_id',
-        'template_id',
         'artemis_id',           //course ARTEMIS-id
         'usr_login',    //login = ARTEMIS-name
         'course_title',
-        'usr_lastname',
-        'usr_firstname',
-        'usr_mail'
     );
 
     /**
@@ -59,9 +54,9 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
     }
 
     /**
-    * @return bool
-    * @description read your Data an save in Class
-    */
+     * @return bool
+     * @description read your Data an save in Class
+     */
     public function parseData() {
         $file = $this->conf()->getFilePath();
         $n_fields = count(self::$fields_external);
@@ -74,7 +69,7 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
                     $msg = "File $file, Line $line: number of columns does not match. Got $count, expected $n_fields";
                     throw new hubOriginException(hubOriginException::PARSE_DATA_FAILED, $this, true, $msg);
                 } else {
-//                    $this->validateRecord($data, $line, $file);
+                    //                    $this->validateRecord($data, $line, $file);
                     $tmp = new stdClass();
                     foreach (self::$fields_external as $i => $name) {
                         $tmp->$name = $data[$i];
@@ -90,9 +85,9 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
     }
 
     /**
-    * @return array
-    * @description return array of Data
-    */
+     * @return array
+     * @description return array of Data
+     */
     public function getData() {
         return $this->data;
     }
@@ -103,9 +98,10 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
     public function afterSync()
     {
         foreach ($this->data as $data) {
-            $hub_membership = hubMembership::getInstance($data->usr_login, $data->artemis_id);
-            if ($hub_membership->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW
-                    && hubConfig::get(hubConfig::F_MMAIL_ACTIVE)) {
+           $hub_membership = hubMembership::getInstance($data->usr_login, $data->artemis_id);
+
+            if (!$hub_membership->is_new && $hub_membership->getHistoryObject()->getStatus() == hubSyncHistory::STATUS_NEW
+                && hubConfig::get(hubConfig::F_MMAIL_ACTIVE)) {
                 $this->sendMembershipMail($hub_membership);
             }
         }
@@ -118,8 +114,8 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
     {
         foreach ($this->data as $data) {
             if(!ilObjUser::_loginExists($data->usr_login)){
-                $this->log->write("User {$data->usr_login} doesn't exist in ilias -> create user");
-                $this->createUser($data);
+                $this->log->write("User {$data->usr_login} doesn't exist in ilias! Please check, if it is in the user-import file");
+                continue;
             }
 
             $hub = hubMembership::getInstance($data->usr_login, $data->artemis_id);
@@ -149,38 +145,6 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
 
         }
         return true;
-    }
-
-    protected function createUser($data)
-    {
-        global $rbacreview, $rbacadmin;
-        $user = new ilObjUser();
-        $user->setLogin($data->usr_login);
-        $user->setFirstname($data->usr_firstname);
-        $user->setLastname($data->usr_lastname);
-        $user->setEmail($data->usr_mail);
-        $user->setActive(true);
-        $password = $this->generatePassword();
-        $user->setPasswd(md5($password), IL_PASSWD_MD5);
-        $user->setTimeLimitUnlimited(true);
-        $user->create();
-        $user->saveAsNew();
-
-        $this->sendPasswordMail($user, $password);
-
-        //Assign role SAT_G_MEMBER (sat-specific)
-        $roles = $rbacreview->getAssignableRoles(false, false, hubConfig::get(hubConfig::F_STANDARD_ROLE));
-        if (sizeof($roles)){
-            $rbacadmin->assignUser($roles[0]["rol_id"], $user->getId());
-        } else {
-            $rbacadmin->assignUser(4, $user->getId());  //Assign standard-role 'User'
-        }
-
-    }
-
-    protected function generatePassword() {
-        $pwds = ilUtil::generatePasswords(1);
-        return $pwds[0];
     }
 
     /**
@@ -225,64 +189,4 @@ class SATSyncMembership extends hubOrigin implements hubOriginInterface {
         return ($ilDB->fetchAssoc($query));
     }
 
-    /**
-     * @param ilObjUser $user
-     */
-    protected function sendPasswordMail(ilObjUser $user, $password) {
-        global $ilSetting,$ilias;
-
-        // Choose language of user
-        $usr_lang = new ilLanguage($user->getLanguage());
-        $usr_lang->loadLanguageModule('crs');
-        $usr_lang->loadLanguageModule('registration');
-
-        include_once "Services/Mail/classes/class.ilMimeMail.php";
-
-        $mmail = new ilMimeMail();
-        $mmail->autoCheck(false);
-        $mmail->From($ilSetting->get('admin_email'));
-        $mmail->To($user->getEmail());
-
-        // mail subject
-        $subject = $usr_lang->txt("reg_mail_subject");
-
-
-        // mail body
-        $body = ($usr_lang->txt("reg_mail_body_salutation")." ".$user->getFullname().",\n\n");
-
-        $body .= ($usr_lang->txt('reg_mail_body_text1')."\n\n");
-
-
-        // Append login info only if password has been chacnged
-        if($_POST['passwd'] != '********')
-        {
-            $body .= $usr_lang->txt("reg_mail_body_text2")."\n".
-                ilUtil::_getHttpPath()."/login.php?client_id=".$ilias->client_id."\n".
-                $usr_lang->txt("login").": ".$user->getLogin()."\n".
-                $usr_lang->txt("passwd").": ".$password."\n\n";
-        }
-        $body .= ($usr_lang->txt("reg_mail_body_text3")."\n");
-        $body .= $user->getProfileAsString($usr_lang);
-
-        $mmail->Subject($subject);
-        $mmail->Body($body);
-        $mmail->Send();
-    }
-
-    protected function getMailBody($type = 'membership', $lng){
-        $body = '';
-        switch($type)
-        {
-            case 'membership':
-                $body .= $lng->txt('login') . ": [LOGIN] \n\n";
-                $body .= $lng->txt('crs_title') . ": [COURSE_TITLE] \n\n";
-                $body .= $lng->txt('ui_uihk_hub_validity') . ": [VALIDITY] \n\n";
-                break;
-            case 'password':
-                $body .= $lng->txt('login') . ": [LOGIN] \n\n";
-                $body .= $lng->txt('password') . ": [PASSWORD] \n\n";
-                break;
-        }
-        return $body;
-    }
 }
