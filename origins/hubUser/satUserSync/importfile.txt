@@ -1,5 +1,0 @@
-"Schmid";"Fabian";"info@fschmid.ch";"AAAA";"F/O,M/CSH,TIG";"0";"m"
-"Raimann";"Marcel";"mr@studer-raimann.ch";"AAAB";"CMD,TIG";"0";"m"
-"Studer";"Martin";"ms@studer-raimann.ch";"AAAC";"CMD,TIG";"0";"m"
-"Karahan";"Zeynep";"zk@studer-raimann.ch";"AAAD";"CMD,TIG";"0";"w"
-"Test";"User";"test@studer-raimann.ch";"AAAE";"CMD,TIG";"0";"w"
