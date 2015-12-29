@@ -129,10 +129,35 @@ class SATSyncCourse extends hubOrigin implements hubOriginInterface {
             $hub_course->setTitle($data->course_title);
             $hub_course->setDescription($ilias_course->getDescription());
             $hub_course->setParentIdType(hubCourse::PARENT_ID_TYPE_REF_ID);
-            $hub_course->setParentId($tree->getParentId($data->template_id));
+            $hub_course->setParentId($this->findCourseCategory($data->template_id));
             $hub_course->create($this);
         }
         return true;
+    }
+
+
+    /**
+     * Return
+     * @param $template_id
+     *
+     * @return int
+     */
+    protected function findCourseCategory($template_id) {
+        global $tree;
+
+        $parent = $tree->getParentId($template_id);
+        while ($tree->getParentId($parent) != 1) {
+            $parent = $tree->getParentId($parent);
+        }
+
+        $top_cat_childs = $tree->getChildsByTypeFilter($parent, array('cat'));
+        foreach($top_cat_childs as $cat_child) {
+            if(strtolower($cat_child['title']) == 'artemis') {
+                return $cat_child['ref_id'];
+            }
+        }
+
+        return $parent;
     }
 
     /**
