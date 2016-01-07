@@ -232,7 +232,16 @@ class hubLogMessage {
 
 		$memory_info = '[Cur: ' . $cur . ', Max:' . $max . ']';
 		$message = $this->getMessage();
-		$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+
+		if(strlen($memory_info) - strlen($message) + 2 < hubLogMessage::LENGTH) {
+			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
+			$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+		}else{
+			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
+			$fill = '  ';
+			$message_array =  explode(' :: ', $message);
+			$message = substr($message_array[0], 0, hubLogMessage::LENGTH - strlen($memory_info) - strlen($message_array[1]) - strlen('... :: ')) . '... :: ' . $message_array[1];
+		}
 
 		return $message . $fill . $memory_info;
 	}
