@@ -100,6 +100,9 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//$ro->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_delete'), hubCourse::DELETE_MODE_DELETE);
 		$ro->addOption($opt);
+		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_delete_or_inactive'), hubCourse::DELETE_MODE_DELETE_OR_INACTIVE);
+		$opt->setInfo($this->pl->txt('mem_prop_delete_mode_delete_or_inactive_info'));
+		$ro->addOption($opt);
 		$this->addItem($ro);
 
 		$h = new ilNonEditableValueGUI($this->pl->txt('mem_prop_deleted_send_mail_title'));

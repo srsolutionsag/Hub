@@ -51,9 +51,9 @@ class hubMembership extends hubObject {
 
 
 	public function __destruct() {
-		$this->members_object = NULL;
-		$this->object_type = NULL;
-		$this->participants = NULL;
+		$this->members_object = null;
+		$this->object_type = null;
+		$this->participants = null;
 		parent::__destruct();
 	}
 
@@ -90,20 +90,31 @@ class hubMembership extends hubObject {
 		$hasSets = true;
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
 		//		hubSyncCron::setDryRun(true);
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_MEMBERSHIP);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubMemberships = self::limit($start, $steps)->get();
 			if (!count($hubMemberships)) {
 				$hasSets = false;
+				continue;
 			}
 			foreach ($hubMemberships as $hubMembership) {
-				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())) {
+				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
+				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
+				) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+				/**
+				 * @var $hubOriginObj hubOrigin
+				 */
 				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
 				//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
@@ -126,6 +137,7 @@ class hubMembership extends hubObject {
 						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->createMembership();
+							$hubOriginObj->afterObjectCreation($hubMembership);
 						}
 						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
 						break;
@@ -133,6 +145,7 @@ class hubMembership extends hubObject {
 						//						hubLog::getInstance()->write('Update Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->updateMembership();
+							$hubOriginObj->afterObjectUpdate($hubMembership);
 						}
 						hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
 						break;
@@ -141,6 +154,7 @@ class hubMembership extends hubObject {
 						hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->deleteMembership();
+							$hubOriginObj->afterObjectDeletion($hubMembership);
 						}
 						hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
 						break;
@@ -151,7 +165,9 @@ class hubMembership extends hubObject {
 						hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
 						hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
+							$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
 							$hubMembership->createMembership();
+							$hubOriginObj->afterObjectDeletion($hubMembership);
 						}
 						break;
 					case hubSyncHistory::STATUS_IGNORE:
@@ -167,8 +183,8 @@ class hubMembership extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				arObjectCache::purge($hubMembership);
-				$hubMembership = NULL;
-				$hubOriginObj = NULL;
+				$hubMembership = null;
+				$hubOriginObj = null;
 			}
 			$step ++;
 		}
@@ -253,7 +269,7 @@ class hubMembership extends hubObject {
 	public function createMembership() {
 		$this->initObject();
 		if ($this->ilias_role_id > 1) {
-			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
+			if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
 			if ($this->getHasNotification() AND $this->props()->get(hubMembershipFields::ADD_NOTIFICATION)) {
@@ -262,6 +278,7 @@ class hubMembership extends hubObject {
 			if ($this->props()->get(hubMembershipFields::DESKTOP_NEW)) {
 				ilObjUser::_addDesktopItem($this->getUsrId(), $this->getContainerId(), $this->object_type);
 			}
+			$this->setMembershipInactive(false);
 			//			 $this->sendMails('new', ilCourseMembershipMailNotification::TYPE);
 			$this->updateIliasId();
 		}
@@ -273,7 +290,7 @@ class hubMembership extends hubObject {
 		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
-				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
+				if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
 					if ($this->participants->isAssigned($this->getUsrId())) {
 						//						$this->participants->updateRoleAssignments($this->getUsrId(), array( $this->ilias_role_id ));
 					} else {
@@ -299,17 +316,43 @@ class hubMembership extends hubObject {
 			case self::DELETE_MODE_INACTIVE:
 				break;
 			case self::DELETE_MODE_DELETE:
-                if($this->participants){
-                    $this->participants->delete($this->getUsrId());
-                    $this->participants->updateNotification($this->getUsrId(), false);
-                }
+				if ($this->participants) {
+					$this->participants->delete($this->getUsrId());
+					$this->participants->updateNotification($this->getUsrId(), false);
+				}
 				// $this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
+			case self::DELETE_MODE_DELETE_OR_INACTIVE:
+				if ($this->hasActivities()) {
+					$this->setMembershipInactive();
+				} else {
+					if ($this->participants) {
+						$this->participants->delete($this->getUsrId());
+						$this->participants->updateNotification($this->getUsrId(), false);
+					}
+				}
 		}
 		$history = $this->getHistoryObject();
 		$history->setDeleted(true);
 		$history->setAlreadyDeleted(true);
 		$history->update();
+	}
+
+
+	protected function hasActivities() {
+		global $ilDB;
+		$query = $ilDB->query('SELECT * FROM catch_write_events WHERE usr_id = ' . $ilDB->quote($this->getUsrId(), 'integer'));
+		if ($ilDB->numRows($query)) {
+			return true;
+		}
+
+		return false;
+	}
+
+
+	protected function setMembershipInactive($inactive = true) {
+		$participants = new ilCourseParticipants(ilObject2::_lookupObjId($this->getContainerId()));
+		$participants->updateBlocked($this->getUsrId(), $inactive);
 	}
 
 
@@ -394,7 +437,7 @@ class hubMembership extends hubObject {
 	 * @db_fieldtype        text
 	 * @db_length           64
 	 */
-	protected $period = NULL;
+	protected $period = null;
 	//
 	// Setter & Getter
 	//
@@ -458,6 +501,10 @@ class hubMembership extends hubObject {
 	 * @return string
 	 */
 	public function getExtIdUsr() {
+		if (!$this->ext_id_usr && $this->ext_id) {
+			$this->ext_id_usr = substr($this->ext_id, 0, strpos($this->ext_id, '###'));
+		}
+
 		return $this->ext_id_usr;
 	}
 

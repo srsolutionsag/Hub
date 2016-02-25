@@ -36,7 +36,7 @@ class hubOriginNotification {
 		$sr_hub_origin_id = $origin->getId();
 		$origin->loadConf();
 		$mail = $origin->conf()->getSummaryEmail();
-		if ($mail AND $origin->getActive()) {
+		if ($mail AND $origin->getActive() AND !$origin->isAsleep()) {
 			$str = self::buildSubject($origin);
 			mail($mail, $str, self::buildMessage($sr_hub_origin_id));
 		}

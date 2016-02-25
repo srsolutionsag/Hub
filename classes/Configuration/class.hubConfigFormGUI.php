@@ -46,6 +46,29 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$this->addItem($cb);
 
 		$h = new ilFormSectionHeaderGUI();
+		$h->setTitle($this->pl->txt('admin_membership'));
+		$this->addItem($h);
+
+		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_membership_activate'), hubCOnfig::F_MMAIL_ACTIVE);
+		$cb->setInfo($this->pl->txt('admin_membership_activate_info'));
+		$this->addItem($cb);
+
+		$mm = new ilTextInputGUI($this->pl->txt('admin_membership_mail_subject'), hubConfig::F_MMAIL_SUBJECT);
+		$mm->setInfo($this->pl->txt('admin_membership_mail_subject_info'));
+		$this->addItem($mm);
+
+		$mm = new ilTextAreaInputGUI($this->pl->txt('admin_membership_mail_msg'), hubConfig::F_MMAIL_MSG);
+		$mm->setInfo($this->pl->txt('admin_membership_mail_msg_info'));
+		$this->addItem($mm);
+
+		$h = new ilFormSectionHeaderGUI();
+		$h->setTitle($this->pl->txt('admin_user_creation'));
+		$this->addItem($h);
+
+		$ti = new ilTextInputGUI($this->pl->txt('admin_user_creation_standard_role'), hubConfig::F_STANDARD_ROLE);
+		$this->addItem($ti);
+
+		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_header_sync'));
 		$this->addItem($h);
 
@@ -87,7 +110,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_header_db'));
-		$this->addItem($h);
+//		$this->addItem($h);
 
 		//
 		// DB

@@ -86,6 +86,29 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @var string
 	 * @db_has_field    true
 	 * @db_fieldtype    text
+	 * @db_length       10
+	 */
+	protected $exec_time;
+
+	/**
+	 * @return string
+	 */
+	public function getExecTime()
+	{
+		return $this->exec_time;
+	}
+
+	/**
+	 * @param string $exec_time
+	 */
+	public function setExecTime($exec_time)
+	{
+		$this->exec_time = $exec_time;
+	}
+	/**
+	 * @var string
+	 * @db_has_field    true
+	 * @db_fieldtype    text
 	 * @db_length       2000
 	 */
 	protected $notification_email;

@@ -70,15 +70,15 @@ class hubSyncCron {
 		$this->log->write('PHP: ' . (hub::isCli() ? 'CLI' : 'WEB'), hubLog::L_PROD);
 		$this->log->write('User: ' . $this->user->getPublicName(), hubLog::L_PROD);
 		// User
-		$this->log->write('Sync single Origin: ' . $this->origin_id, hubLog::L_PROD);
+		$this->log->write('Sync single Origin: ' . $this->activateDeactivateOrigins, hubLog::L_PROD);
 		try {
-			$origin = hubOrigin::find($this->origin_id);
+			$origin = hubOrigin::find($this->activateDeactivateOrigins);
 			if ($this->syncOrigin($origin)) {
-				$class = hubOrigin::getUsageClass($this->origin_id);
+				$class = hubOrigin::getUsageClass($this->activateDeactivateOrigins);
 				if ($class::buildILIASObjects() !== true) {
 					throw new hubOriginException(hubOriginException::BUILD_ILIAS_OBJECTS_FAILED, $origin, ! self::getDryRun());
 				};
-				$class::logCounts();
+//				$class::logCounts();
 			}
 		} catch (Exception $e) {
 			$this->messages[] = $e->getMessage();

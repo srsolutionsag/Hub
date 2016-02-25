@@ -104,6 +104,8 @@ class hubGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
+		global $ilMainMenu;
+		$ilMainMenu->setActive('none');
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
 		$next_class = $next_class ? $next_class : 'hubOriginGUI';

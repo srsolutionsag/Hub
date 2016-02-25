@@ -32,6 +32,10 @@ class hubConfig extends ActiveRecord {
     const F_MSG_SHORTLINK_NOT_FOUND = 'msg_shortlink_not_found';
     const F_MSG_SHORTLINK_NOT_ACTIVE = 'msg_shortlink_not_active';
     const F_MSG_SHORTLINK_NO_ILIAS_ID = 'msg_shortlink_no_ilias_id';
+	const F_MMAIL_ACTIVE = 'membership_mail_active';
+	const F_MMAIL_SUBJECT = 'membership_mail_subject';
+	const F_MMAIL_MSG = 'membership_mail_msg';
+	const F_STANDARD_ROLE = 'standard_role';
 
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const ILIAS_43 = 43;
