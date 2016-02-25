@@ -288,6 +288,11 @@ class hubUser extends hubObject {
 
 	public function updateUser() {
 		if ($this->isUpdateRequired()) {
+			if (ilObject2::_lookupType($this->getHistoryObject()->getIliasId()) != 'usr') {
+				hubLog::getInstance()->write("A UserObject with the ID " . $this->getHistoryObject()->getIliasId() . " doesn't exist");
+
+				return false;
+			}
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->setTitle($this->getFirstname() . ' ' . $this->getLastname());
