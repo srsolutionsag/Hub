@@ -20,10 +20,26 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_SHIB = 2;
 	const ACCOUNT_TYPE_LDAP = 3;
 	const ACCOUNT_TYPE_RADIUS = 4;
-
-	public $user_properties = array('institution', 'street', 'city', 'zipcode', 'country', 'selectedCountry',
-								    'phoneOffice', 'phoneHome', 'phoneMobile', 'department', 'fax', 'timeLimitOwner',
-									'timeLimitUnlimited', 'timeLimitFrom', 'timeLimitUntil', 'matriculation', 'gender', 'birthday');
+	public $user_properties = array(
+		'institution',
+		'street',
+		'city',
+		'zipcode',
+		'country',
+		'selectedCountry',
+		'phoneOffice',
+		'phoneHome',
+		'phoneMobile',
+		'department',
+		'fax',
+		'timeLimitOwner',
+		'timeLimitUnlimited',
+		'timeLimitFrom',
+		'timeLimitUntil',
+		'matriculation',
+		'gender',
+		'birthday',
+	);
 	/**
 	 * @var ilObjUser
 	 */
@@ -57,9 +73,9 @@ class hubUser extends hubObject {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubUsers = self::limit($start, $steps)->get();
-			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
+			hubLog::getInstance()->write("Count for round " . ($step + 1) . ": " . count($hubUsers));
 			if (!count($hubUsers)) {
-            	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
+				hubLog::getInstance()->write("No more sets found, aborting: step=$step");
 				$hasSets = false;
 			}
 			foreach ($hubUsers as $hubUser) {
@@ -110,10 +126,10 @@ class hubUser extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->pause();
 				arObjectCache::purge($hubUser);
-				$hubUser = NULL;
-				$hubOriginObj = NULL;
+				$hubUser = null;
+				$hubOriginObj = null;
 			}
-			$step++;
+			$step ++;
 		}
 
 		return true;
@@ -147,12 +163,12 @@ class hubUser extends hubObject {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
 
-		foreach($this->user_properties as $user_property) {
-			$setter_name = "set".ucfirst($user_property);
-			$getter_name = "get".ucfirst($user_property);
+		foreach ($this->user_properties as $user_property) {
+			$setter_name = "set" . ucfirst($user_property);
+			$getter_name = "get" . ucfirst($user_property);
 
-			if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-				if($this->$getter_name() !== null) {
+			if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+				if ($this->$getter_name() !== null) {
 					$this->ilias_object->$setter_name($this->$getter_name());
 				}
 			}
@@ -213,10 +229,10 @@ class hubUser extends hubObject {
 
 		$ilDB->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
 			'text',
-			'integer'
+			'integer',
 		), array(
 			$this->ilias_object->getLogin(),
-			$this->ilias_object->getId()
+			$this->ilias_object->getId(),
 		));
 
 		return true;
@@ -237,7 +253,7 @@ class hubUser extends hubObject {
 		$query = $ilDB->query($sql);
 
 		$crs_ref_ids = array();
-		while($set = $ilDB->fetchAssoc($query)){
+		while ($set = $ilDB->fetchAssoc($query)) {
 			$crs_ref_ids[] = $set['ref_id'];
 		}
 
@@ -253,13 +269,13 @@ class hubUser extends hubObject {
 			$format = $format ? $format : DATE_ISO8601;
 
 			$crs_links = array();
-			foreach($crs_ref_ids as $ref_id) {
-				$crs_links[] = ilUtil::_getHttpPath().'/goto.php?target=crs_'.$ref_id;
+			foreach ($crs_ref_ids as $ref_id) {
+				$crs_links[] = ilUtil::_getHttpPath() . '/goto.php?target=crs_' . $ref_id;
 			}
 
 			$body = strtr($body, array(
-				'[PASSWORD]' => $this->getPasswd(),
-				'[LOGIN]' => $this->getLogin(),
+				'[PASSWORD]'    => $this->getPasswd(),
+				'[LOGIN]'       => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
 				'[COURSE_LINK]' => implode(', ', $crs_links),
 			));
@@ -289,12 +305,12 @@ class hubUser extends hubObject {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
-			foreach($this->user_properties as $user_property) {
-				$setter_name = "set".ucfirst($user_property);
-				$getter_name = "get".ucfirst($user_property);
+			foreach ($this->user_properties as $user_property) {
+				$setter_name = "set" . ucfirst($user_property);
+				$getter_name = "get" . ucfirst($user_property);
 
-				if(method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-					if($this->$getter_name() !== null) {
+				if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+					if ($this->$getter_name() !== null) {
 						$this->ilias_object->$setter_name($this->$getter_name());
 					}
 				}
@@ -658,7 +674,6 @@ class hubUser extends hubObject {
 	 * @db_fieldtype        date
 	 */
 	protected $birthday;
-
 	/**
 	 * @var int
 	 *
@@ -1139,6 +1154,7 @@ class hubUser extends hubObject {
 		return $this->image;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -1261,21 +1277,21 @@ class hubUser extends hubObject {
 	 */
 	protected static function cleanName($name) {
 		$upas = array(
-			'ä' => 'ae',
-			'å' => 'ae',
-			'ü' => 'ue',
-			'ö' => 'oe',
-			'Ä' => 'Ae',
-			'Ü' => 'Ue',
-			'Ö' => 'Oe',
-			'é' => 'e',
-			'è' => 'e',
-			'ê' => 'e',
-			'Á' => 'A',
+			'ä'  => 'ae',
+			'å'  => 'ae',
+			'ü'  => 'ue',
+			'ö'  => 'oe',
+			'Ä'  => 'Ae',
+			'Ü'  => 'Ue',
+			'Ö'  => 'Oe',
+			'é'  => 'e',
+			'è'  => 'e',
+			'ê'  => 'e',
+			'Á'  => 'A',
 			'\'' => '',
-			' ' => '',
-			'-' => '',
-			'.' => '',
+			' '  => '',
+			'-'  => '',
+			'.'  => '',
 		);
 
 		return strtolower(strtr($name, $upas));
@@ -1287,9 +1303,7 @@ class hubUser extends hubObject {
 	 */
 	protected function isUpdateRequired() {
 		return $this->props()->get(hubUserFields::F_UPDATE_LOGIN) OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME) OR $this->props()
-			->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
-			->get(hubUserFields::F_REACTIVATE_ACCOUNT);
+		                                                                                                                            ->get(hubUserFields::F_UPDATE_LASTNAME)
+		       OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
 }
-
-?>
