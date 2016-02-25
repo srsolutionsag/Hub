@@ -39,9 +39,9 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function __destruct() {
-		$this->object_properties = NULL;
-		$this->log = NULL;
-		$this->conf = NULL;
+		$this->object_properties = null;
+		$this->log = null;
+		$this->conf = null;
 	}
 
 
@@ -90,7 +90,7 @@ class hubOrigin extends ActiveRecord {
 	 * @return null
 	 */
 	public function returnActivePeriod() {
-		return NULL;
+		return null;
 	}
 
 
@@ -151,7 +151,7 @@ class hubOrigin extends ActiveRecord {
 		 * @var $obj hubOrigin
 		 */
 		$obj = self::find($sr_hub_origin_id);
-		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == NULL) {
+		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == null) {
 			return 'hubOrigin';
 		} else {
 			return $obj->getClassname();
@@ -165,12 +165,16 @@ class hubOrigin extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getOriginsForUsage($usage_type_id) {
+		/**
+		 * @var $origin hubOrigin
+		 */
 		$origins = self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
-		foreach($origins as $key => $origin) {
+		foreach ($origins as $key => $origin) {
 			if ($origin->isAsleep()) {
 				unset($origins[$key]);
 			}
 		}
+
 		return $origins;
 	}
 
@@ -206,7 +210,7 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function getObject() {
 		if ($this->getClassFilePath() AND is_file($this->getClassFilePath())) {
-			if (! $this->originObject) {
+			if (!$this->originObject) {
 				require_once($this->getClassFilePath());
 				$class = $this->getClassName();
 				$this->originObject = new $class($this->getId());
@@ -214,7 +218,7 @@ class hubOrigin extends ActiveRecord {
 
 			return $this->originObject;
 		}
-		if (! is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
+		if (!is_file($this->getClassFilePath()) AND $this->getClassName() != self::CLASS_NONE) {
 			$this->buildFoldersAndFiles();
 			hub::sendFailure('ClassFile ' . $this->getClassFilePath() . ' does not exist');
 		}
@@ -278,7 +282,7 @@ class hubOrigin extends ActiveRecord {
 	private function buildFoldersAndFiles() {
 		$dir_name = self::getOriginsPathForUsageType($this->getUsageType()) . $this->getClassName();
 
-		if (! file_exists($dir_name)) {
+		if (!file_exists($dir_name)) {
 			$ret = ilUtil::makeDirParents($dir_name);
 			//			var_dump($ret); // FSX
 			//			mkdir($dir_name);
@@ -286,7 +290,7 @@ class hubOrigin extends ActiveRecord {
 		} else {
 			return false;
 		}
-		if (! file_exists($this->getClassFilePath())) {
+		if (!file_exists($this->getClassFilePath())) {
 			$template = file_get_contents('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins/class.hubOriginTemplate.tpl');
 			$template = sprintf($template, hub::getObjectClassname($this->getUsageType()), $this->getClassName());
 			file_put_contents($this->getClassFilePath(), $template);
@@ -355,7 +359,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @return string
 	 */
-	public static function  getOriginsPathForUsageType($usage_type) {
+	public static function getOriginsPathForUsageType($usage_type) {
 		return self::getOriginsPath() . hub::getObjectClassname($usage_type) . '/';
 	}
 
@@ -389,7 +393,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function loadConf() {
-		if (! isset($this->conf) OR $this->conf->getSrHubOriginId() != $this->getId()) {
+		if (!isset($this->conf) OR $this->conf->getSrHubOriginId() != $this->getId()) {
 			$this->conf = hubOriginConfiguration::conf($this->getId());
 		}
 	}
@@ -406,7 +410,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function loadProps() {
-		if (! isset($this->object_properties) OR $this->object_properties->getSrHubOriginId() != $this->getId()) {
+		if (!isset($this->object_properties) OR $this->object_properties->getSrHubOriginId() != $this->getId()) {
 			$this->object_properties = hubOriginObjectProperties::getInstance($this->getId());
 		}
 	}
@@ -845,6 +849,7 @@ class hubOrigin extends ActiveRecord {
 		return $this->duration_objects;
 	}
 
+
 	/**
 	 * @return bool
 	 * @description checks if the current time is in the origin's execution time (if cofigured)
@@ -853,6 +858,7 @@ class hubOrigin extends ActiveRecord {
 		if ($this->conf()->getExecTime() && $this->conf()->getExecTime() != date("H:i")) {
 			return true;
 		}
+
 		return false;
 	}
 }
