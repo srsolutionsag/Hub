@@ -98,9 +98,9 @@ class hubCourse extends hubRepositoryObject {
 
 			$history->updatePickupDate();
 			$hubOrigin::afterObjectModification($hubCourse);
-            if (! hubSyncCron::getDryRun()) {
-                $hubOriginObj->afterObjectInit($hubCourse);
-            }
+			if (!hubSyncCron::getDryRun()) {
+				$hubOriginObj->afterObjectInit($hubCourse);
+			}
 
 			hubDurationLogger2::getInstance($id)->pause();
 		}

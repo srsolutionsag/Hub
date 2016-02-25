@@ -51,9 +51,9 @@ class hubMembership extends hubObject {
 
 
 	public function __destruct() {
-		$this->members_object = NULL;
-		$this->object_type = NULL;
-		$this->participants = NULL;
+		$this->members_object = null;
+		$this->object_type = null;
+		$this->participants = null;
 		parent::__destruct();
 	}
 
@@ -104,12 +104,17 @@ class hubMembership extends hubObject {
 				continue;
 			}
 			foreach ($hubMemberships as $hubMembership) {
-				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId()) || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
+				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
+				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
+				) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+				/**
+				 * @var $hubOriginObj hubOrigin
+				 */
 				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
 				//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
@@ -174,8 +179,8 @@ class hubMembership extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				arObjectCache::purge($hubMembership);
-				$hubMembership = NULL;
-				$hubOriginObj = NULL;
+				$hubMembership = null;
+				$hubOriginObj = null;
 			}
 			$step ++;
 		}
@@ -260,7 +265,7 @@ class hubMembership extends hubObject {
 	public function createMembership() {
 		$this->initObject();
 		if ($this->ilias_role_id > 1) {
-			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
+			if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
 			if ($this->getHasNotification() AND $this->props()->get(hubMembershipFields::ADD_NOTIFICATION)) {
@@ -281,7 +286,7 @@ class hubMembership extends hubObject {
 		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
-				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
+				if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
 					if ($this->participants->isAssigned($this->getUsrId())) {
 						//						$this->participants->updateRoleAssignments($this->getUsrId(), array( $this->ilias_role_id ));
 					} else {
@@ -307,17 +312,17 @@ class hubMembership extends hubObject {
 			case self::DELETE_MODE_INACTIVE:
 				break;
 			case self::DELETE_MODE_DELETE:
-                if($this->participants){
-                    $this->participants->delete($this->getUsrId());
-                    $this->participants->updateNotification($this->getUsrId(), false);
-                }
+				if ($this->participants) {
+					$this->participants->delete($this->getUsrId());
+					$this->participants->updateNotification($this->getUsrId(), false);
+				}
 				// $this->sendMails('deleted', ilCourseMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION);
 				break;
 			case self::DELETE_MODE_DELETE_OR_INACTIVE:
 				if ($this->hasActivities()) {
 					$this->setMembershipInactive();
 				} else {
-					if($this->participants){
+					if ($this->participants) {
 						$this->participants->delete($this->getUsrId());
 						$this->participants->updateNotification($this->getUsrId(), false);
 					}
@@ -329,14 +334,17 @@ class hubMembership extends hubObject {
 		$history->update();
 	}
 
+
 	protected function hasActivities() {
 		global $ilDB;
 		$query = $ilDB->query('SELECT * FROM catch_write_events WHERE usr_id = ' . $ilDB->quote($this->getUsrId(), 'integer'));
 		if ($ilDB->numRows($query)) {
 			return true;
 		}
+
 		return false;
 	}
+
 
 	protected function setMembershipInactive($inactive = true) {
 		$participants = new ilCourseParticipants(ilObject2::_lookupObjId($this->getContainerId()));
@@ -425,7 +433,7 @@ class hubMembership extends hubObject {
 	 * @db_fieldtype        text
 	 * @db_length           64
 	 */
-	protected $period = NULL;
+	protected $period = null;
 	//
 	// Setter & Getter
 	//
@@ -492,6 +500,7 @@ class hubMembership extends hubObject {
 		if (!$this->ext_id_usr && $this->ext_id) {
 			$this->ext_id_usr = substr($this->ext_id, 0, strpos($this->ext_id, '###'));
 		}
+
 		return $this->ext_id_usr;
 	}
 
