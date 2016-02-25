@@ -114,6 +114,7 @@ class hubCategory extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_NEW:
 					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->createCategory();
+						$hubOriginObj->afterObjectCreation($hubCategory);
 					}
 					hubCounter::incrementCreated($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category created:');
@@ -121,12 +122,14 @@ class hubCategory extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_UPDATED:
 					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->updateCategory();
+						$hubOriginObj->afterObjectUpdate($hubCategory);
 					}
 					hubCounter::incrementUpdated($hubCategory->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
 					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->deleteCategory();
+						$hubOriginObj->afterObjectDeletion($hubCategory);
 					}
 					hubCounter::incrementDeleted($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category deleted:');
@@ -140,14 +143,18 @@ class hubCategory extends hubRepositoryObject {
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category newly delivered:');
 					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->updateCategory();
+						$hubOriginObj->afterObjectUpdate($hubCategory);
 					}
 					break;
 			}
 			$hubCategory->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCategory->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCategory);
-			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
-			$hubOriginObj->afterObjectInit($hubCategory);
+
+			if (!hubSyncCron::getDryRun()) {
+				$hubOriginObj->afterObjectInit($hubCategory);
+			}
+
 			hubDurationLogger2::getInstance($duration_id)->pause();
 			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== null AND $hubCategory->getExtId() !== '') {
 				self::buildForParentId($hubCategory->getExtId());

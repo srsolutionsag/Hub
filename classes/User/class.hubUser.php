@@ -91,6 +91,7 @@ class hubUser extends hubObject {
 					case hubSyncHistory::STATUS_NEW:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->createUser();
+							$hubOriginObj->afterObjectCreation($hubUser);
 						}
 						hubCounter::incrementCreated($hubUser->getSrHubOriginId());
 						hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User created:');
@@ -98,12 +99,14 @@ class hubUser extends hubObject {
 					case hubSyncHistory::STATUS_UPDATED:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->updateUser();
+							$hubOriginObj->afterObjectUpdate($hubUser);
 						}
 						hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
 						break;
 					case hubSyncHistory::STATUS_DELETED:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->deleteUser();
+							$hubOriginObj->afterObjectDeletion($hubUser);
 						}
 						hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
 						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
@@ -117,6 +120,7 @@ class hubUser extends hubObject {
 						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->updateUser();
+							$hubOriginObj->afterObjectUpdate($hubUser);
 						}
 						break;
 				}

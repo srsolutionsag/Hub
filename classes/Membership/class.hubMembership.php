@@ -137,6 +137,7 @@ class hubMembership extends hubObject {
 						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->createMembership();
+							$hubOriginObj->afterObjectCreation($hubMembership);
 						}
 						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
 						break;
@@ -144,6 +145,7 @@ class hubMembership extends hubObject {
 						//						hubLog::getInstance()->write('Update Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->updateMembership();
+							$hubOriginObj->afterObjectUpdate($hubMembership);
 						}
 						hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
 						break;
@@ -152,6 +154,7 @@ class hubMembership extends hubObject {
 						hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->deleteMembership();
+							$hubOriginObj->afterObjectDeletion($hubMembership);
 						}
 						hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
 						break;
@@ -164,6 +167,7 @@ class hubMembership extends hubObject {
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
 							$hubMembership->createMembership();
+							$hubOriginObj->afterObjectDeletion($hubMembership);
 						}
 						break;
 					case hubSyncHistory::STATUS_IGNORE:
