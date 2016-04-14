@@ -159,8 +159,11 @@ class hubSyncCron {
 		}
 		$this->log->write('End Memberships', hubLog::L_PROD);
 		$this->handleMessages();
-        $this->log->write("++++++++++++++++++++++++++++ Summary: ++++++++++++++++++++++++++++\n".str_replace('<br />', '', hubOriginNotification::getSummaryString()), hubLog::L_PROD);
-        $this->log->write('++++++++++++++++++++++++++++ End Summary: ++++++++++++++++++++++++++++', hubLog::L_PROD);
+		$this->log->write('++++++++++++++++++++++++++++ Summary ++++++++++++++++++++++++++++++++', hubLog::L_PROD);
+		foreach(explode('<br />', hubOriginNotification::getSummaryString()) as $resultline){
+			$this->log->write(str_replace("\n", '', $resultline), hubLog::L_PROD);
+		}
+        $this->log->write('++++++++++++++++++++++++++++ End Summary ++++++++++++++++++++++++++++', hubLog::L_PROD);
 		hub::restoreErrorCallback();
 	}
 
