@@ -273,11 +273,10 @@ class hubCourse extends hubRepositoryObject {
 				    wre.obj_id = " . $ilDB->quote(ilObject2::_lookupObjId($this->ilias_object->getRefId()), 'integer');
 
 		$query = $ilDB->query($str);
-
 		$has_sets = $ilDB->numRows($query);
 		hubLog::getInstance()->write('catch_write_events: ' . $has_sets, hubLog::L_DEBUG);
 
-		return ($has_sets ? true : true);
+		return (($has_sets > 0) ? true : false);
 	}
 
 
