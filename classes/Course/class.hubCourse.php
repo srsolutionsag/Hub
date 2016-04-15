@@ -250,22 +250,34 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
-	 * @return bool true if any user did anything in this course
+	 * @return bool true if a member-user did anything in this course
 	 */
 	private function hasActivities() {
 		global $ilDB;
 
-		$str = 'SELECT * FROM catch_write_events WHERE obj_id = ' . $ilDB->quote(ilObject2::_lookupObjId($this->ilias_object->getRefId()), 'integer');
+		$str = "SELECT 
+				    wre.*, dat.*, rbac_ua.*
+				FROM
+				    catch_write_events AS wre
+				        JOIN
+				    obj_members AS mem ON mem.obj_id = wre.obj_id
+				        AND mem.usr_id = wre.usr_id
+				        
+				        JOIN object_reference AS ref ON ref.obj_id = wre.obj_id
+				        
+				        JOIN object_data AS dat ON dat.type = 'role' AND dat.title = CONCAT('il_crs_member_', ref.ref_id)
+				        
+				        JOIN rbac_ua ON rbac_ua.rol_id = dat.obj_id AND rbac_ua.usr_id = wre.usr_id
+				        
+				WHERE
+				    wre.obj_id = " . $ilDB->quote(ilObject2::_lookupObjId($this->ilias_object->getRefId()), 'integer');
+
 		$query = $ilDB->query($str);
 
 		$has_sets = $ilDB->numRows($query);
 		hubLog::getInstance()->write('catch_write_events: ' . $has_sets, hubLog::L_DEBUG);
 
-		if ($has_sets) {
-			return true;
-		}
-
-		return false;
+		return ($has_sets ? true : true);
 	}
 
 
