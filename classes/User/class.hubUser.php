@@ -1233,13 +1233,14 @@ class hubUser extends hubObject {
 			'è' => 'e',
 			'ê' => 'e',
 			'Á' => 'A',
+			'ß' => 'ss',
 			'\'' => '',
 			' ' => '',
 			'-' => '',
 			'.' => '',
 		);
 
-		return strtolower(strtr($name, $upas));
+		return strtolower(self::toASCII(strtr($name, $upas)));
 	}
 
 
@@ -1251,6 +1252,16 @@ class hubUser extends hubObject {
 			->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
 			->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
-}
 
-?>
+
+	/**
+	 * Replace special characters with ASCII characters
+	 * Copied from http://stackoverflow.com/questions/6856885/convert-special-character-i-e-umlaut-to-most-likely-representation-in-ascii 
+	 */
+	static function toASCII( $str )
+	{
+		return strtr(utf8_decode($str),
+				utf8_decode('ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
+				'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+	}
+}
