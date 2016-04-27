@@ -91,7 +91,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 
 
 	protected function initLanguage() {
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 

@@ -32,7 +32,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		$this->ctrl = $ilCtrl;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 

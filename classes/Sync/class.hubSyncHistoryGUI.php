@@ -45,7 +45,7 @@ class hubSyncHistoryGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 

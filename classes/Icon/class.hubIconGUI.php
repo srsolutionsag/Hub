@@ -35,7 +35,7 @@ class hubIconGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}

@@ -46,7 +46,7 @@ class hubGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		//		$this->pl->updateLanguages();
 	}
 

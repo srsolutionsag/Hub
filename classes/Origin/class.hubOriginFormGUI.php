@@ -32,7 +32,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		$this->locked = $this->origin->isLocked();
 		$this->required = ! $disable_required;
 		$this->initForm();
