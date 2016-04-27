@@ -67,7 +67,7 @@ abstract class hubRepositoryObject extends hubObject {
 	/**
 	 * @param \ilObject|\ilObject2 $ilias_object
 	 *
-	 * @param int                  $usage
+	 * @param int $usage
 	 *
 	 * @return bool
 	 */
@@ -84,13 +84,13 @@ abstract class hubRepositoryObject extends hubObject {
 			if ($small AND $medium AND $large) {
 				$ilias_object->saveIcons($large, $medium, $small);
 			} else {
-				if (! $small) {
+				if (!$small) {
 					$ilias_object->removeTinyIcon();
 				}
-				if (! $medium) {
+				if (!$medium) {
 					$ilias_object->removeSmallIcon();
 				}
-				if (! $large) {
+				if (!$large) {
 					$ilias_object->removeBigIcon();
 				}
 

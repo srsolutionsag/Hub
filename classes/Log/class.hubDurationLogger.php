@@ -40,7 +40,7 @@ class hubDurationLogger2 {
 	 * @return hubDurationLogger2
 	 */
 	public static function getInstance($key, $micro = false) {
-		if (! isset(self::$instances[$key])) {
+		if (!isset(self::$instances[$key])) {
 			$hubDurationLogger = new self();
 			$hubDurationLogger->setKey($key);
 			//			$hubDurationLogger->setMicro($micro);
@@ -189,7 +189,7 @@ class hubDurationLogger2 {
 	 */
 	public function get() {
 		if ($this->getStart() == 0) {
-			return NULL;
+			return null;
 		}
 		$this->stop();
 		$full_time = $this->getStop() - $this->getStart();

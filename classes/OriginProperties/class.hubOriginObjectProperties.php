@@ -99,7 +99,7 @@ class hubOriginObjectProperties {
 		}
 
 		$path = hub::getPath() . 'icons/' . hubOrigin::getUsageClass($this->getSrHubOriginId()) . '/'
-			. hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
+		        . hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
 		if (is_file($path)) {
 			return $path;
 		} else {

@@ -46,21 +46,21 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	public function getHTML($a_comp, $a_part, $a_par = array()) {
 		global $ilUser, $rbacreview, $ilCtrl;
 
-        //$ilUser is not necesseraly defined (access for newsfeed etc.)
-        if(!$ilUser){
-            return array();
-        }
+		//$ilUser is not necesseraly defined (access for newsfeed etc.)
+		if (!$ilUser) {
+			return array();
+		}
 		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
 			$link = $this->ctrl->getLinkTargetByClass(array(
 				ilHubPlugin::getBaseClass(),
 				'hubGUI',
-				'hubOriginGUI'
+				'hubOriginGUI',
 			), 'index');
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
-			if (! in_array('CtrlMainMenu', $plugins)) {
+			if (!in_array('CtrlMainMenu', $plugins)) {
 				$mode = ilUIHookPluginGUI::APPEND;
 			} else {
 				$mode = ilUIHookPluginGUI::KEEP;
@@ -68,7 +68,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
 			return array(
 				'mode' => $mode,
-				'html' => '<a href=\'' . $link . '\'>HUB</a>'
+				'html' => '<a href=\'' . $link . '\'>HUB</a>',
 			);
 		}
 
@@ -79,7 +79,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	public function gotoHook() {
 		if (preg_match("/^uihk_hub_(.*)/uim", $_GET['target'], $matches)) {
 			$token = $matches[1];
-			hubShortlink::redirect($token,false);
+			hubShortlink::redirect($token, false);
 		}
 	}
 }

@@ -96,7 +96,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var ilRadioGroupInputGUI $item
 		 * @var ilRadioGroupInputGUI $subItem
-		 * @var ilRadioOption        $op
+		 * @var ilRadioOption $op
 		 */
 		if (self::hasValue($item)) {
 			$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
@@ -148,15 +148,15 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
 		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE);
 		$opt = array(
-			10 => '10%',
-			20 => '20%',
-			30 => '30%',
-			40 => '40%',
-			50 => '50%',
-			60 => '60%',
-			70 => '70%',
-			80 => '80%',
-			90 => '90%',
+			10  => '10%',
+			20  => '20%',
+			30  => '30%',
+			40  => '40%',
+			50  => '50%',
+			60  => '60%',
+			70  => '70%',
+			80  => '80%',
+			90  => '90%',
 			100 => '100%',
 		);
 		$se->setOptions($opt);
@@ -165,8 +165,8 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('com_prop_shortlink'), hubOriginObjectPropertiesFields::F_SHORTLINK);
 
-        $subcb = new ilCheckboxInputGUI($this->pl->txt('com_prop_force_login'), hubOriginObjectPropertiesFields::F_FORCE_LOGIN);
-        $cb->addSubItem($subcb);
+		$subcb = new ilCheckboxInputGUI($this->pl->txt('com_prop_force_login'), hubOriginObjectPropertiesFields::F_FORCE_LOGIN);
+		$cb->addSubItem($subcb);
 
 		$this->addItem($cb);
 	}
@@ -260,7 +260,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public static function hasSubitems($item) {
-		return (! $item instanceof ilFormSectionHeaderGUI AND ! $item instanceof ilRadioGroupInputGUI AND ! $item instanceof ilMultiSelectInputGUI);
+		return (!$item instanceof ilFormSectionHeaderGUI AND !$item instanceof ilRadioGroupInputGUI AND !$item instanceof ilMultiSelectInputGUI);
 	}
 
 
@@ -270,7 +270,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public static function hasValue($item) {
-		return (! $item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI);
+		return (!$item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI);
 	}
 
 
@@ -317,7 +317,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function fillObject() {
-		if (! $this->checkInput()) {
+		if (!$this->checkInput()) {
 			return false;
 		}
 
@@ -329,7 +329,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function saveObject() {
-		if (! $this->fillObject()) {
+		if (!$this->fillObject()) {
 			return false;
 		}
 

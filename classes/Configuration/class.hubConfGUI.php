@@ -51,17 +51,17 @@ class hubConfGUI {
 	 */
 	public function executeCommand() {
 		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->getStandardTemplate();
-        }
+			$this->tpl->getStandardTemplate();
+		}
 
-        $cmd = $this->ctrl->getCmd();
+		$cmd = $this->ctrl->getCmd();
 		$this->performCommand($cmd);
 
-        if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->show();
-        }
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->show();
+		}
 
-        return true;
+		return true;
 	}
 
 

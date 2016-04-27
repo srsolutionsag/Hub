@@ -135,7 +135,7 @@ class hubSyncHistoryTableGUI extends hubAbstractTableGUI {
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');
-		$this->tpl->setVariable('VALUE', $value !== NULL ? $value : '&nbsp;');
+		$this->tpl->setVariable('VALUE', $value !== null ? $value : '&nbsp;');
 		$this->tpl->parseCurrentBlock();
 	}
 }
