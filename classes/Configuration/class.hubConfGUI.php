@@ -43,12 +43,6 @@ class hubConfGUI {
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
-		if ($_GET['rl'] == 'true') {
-			$this->pl->updateLanguages();
-		}
 	}
 
 

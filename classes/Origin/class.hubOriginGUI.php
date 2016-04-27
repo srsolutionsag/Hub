@@ -66,9 +66,7 @@ class hubOriginGUI {
 		$this->lng = $lng;
 		$this->pl = ilHubPlugin::getInstance();
 		$this->hubOrigin = hubOrigin::findOrGetInstance($_GET['origin_id']);
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
+		
 		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}

@@ -36,9 +36,6 @@ class hubIconGUI {
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
 		$this->pl = new ilHubPlugin();
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
 		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}
