@@ -32,9 +32,9 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
 		$this->ctrl->saveParameter($parent_gui, 'origin_id');
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		$this->locked = $this->origin->isLocked();
-		$this->required = ! $disable_required;
+		$this->required = !$disable_required;
 		$this->initForm();
 	}
 
@@ -189,7 +189,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function fillObject() {
-		if (! $this->checkInput()) {
+		if (!$this->checkInput()) {
 			return false;
 		}
 		$this->origin->setTitle($this->getInput('title'));
@@ -222,7 +222,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function saveObject() {
-		if (! $this->fillObject()) {
+		if (!$this->fillObject()) {
 			return false;
 		}
 		if ($this->origin->getId()) {
@@ -242,24 +242,24 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 */
 	public function getValues() {
 		$array = array(
-			'title' => $this->origin->getTitle(),
-			'description' => $this->origin->getDescription(),
-			'matching_key_ilias' => $this->origin->getMatchingKeyIlias(),
+			'title'               => $this->origin->getTitle(),
+			'description'         => $this->origin->getDescription(),
+			'matching_key_ilias'  => $this->origin->getMatchingKeyIlias(),
 			'matching_key_origin' => $this->origin->getMatchingKeyOrigin(),
-			'usage_type' => $this->origin->getUsageType(),
-			'class_name' => $this->origin->getClassName(),
-			'active' => $this->origin->getActive(),
-			'conf_type' => $this->origin->getConfType(),
-			'file_path' => $this->origin->conf()->getFilePath(),
-			'db_username' => $this->origin->conf()->getSrvUsername(),
-			'db_password' => $this->origin->conf()->getSrvPassword(),
-			'db_host' => $this->origin->conf()->getSrvHost(),
-			'db_database' => $this->origin->conf()->getSrvDatabase(),
-			'db_port' => $this->origin->conf()->getSrvPort(),
-			'db_search_base' => $this->origin->conf()->getSrvSearchBase(),
-			'notification_email' => $this->origin->conf()->getNotificationEmail(),
-			'summary_email' => $this->origin->conf()->getSummaryEmail(),
-			'exec_time' => $this->origin->conf()->getExecTime(),
+			'usage_type'          => $this->origin->getUsageType(),
+			'class_name'          => $this->origin->getClassName(),
+			'active'              => $this->origin->getActive(),
+			'conf_type'           => $this->origin->getConfType(),
+			'file_path'           => $this->origin->conf()->getFilePath(),
+			'db_username'         => $this->origin->conf()->getSrvUsername(),
+			'db_password'         => $this->origin->conf()->getSrvPassword(),
+			'db_host'             => $this->origin->conf()->getSrvHost(),
+			'db_database'         => $this->origin->conf()->getSrvDatabase(),
+			'db_port'             => $this->origin->conf()->getSrvPort(),
+			'db_search_base'      => $this->origin->conf()->getSrvSearchBase(),
+			'notification_email'  => $this->origin->conf()->getNotificationEmail(),
+			'summary_email'       => $this->origin->conf()->getSummaryEmail(),
+			'exec_time'           => $this->origin->conf()->getExecTime(),
 		);
 		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
 		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);

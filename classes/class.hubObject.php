@@ -59,8 +59,8 @@ abstract class hubObject extends ActiveRecord {
 
 
 	public function __destruct() {
-		$this->ilias_object = NULL;
-		$this->hubOrigin = NULL;
+		$this->ilias_object = null;
+		$this->hubOrigin = null;
 	}
 
 
@@ -75,9 +75,9 @@ abstract class hubObject extends ActiveRecord {
 		/**
 		 * @var $class hubMembership
 		 */
-		if (! self::$loaded[$class]) {
+		if (!self::$loaded[$class]) {
 			$class::get();
-			self::$existing_ext_ids[$class] = array_values($class::getArray(NULL, 'ext_id'));
+			self::$existing_ext_ids[$class] = array_values($class::getArray(null, 'ext_id'));
 			self::$loaded[$class] = true;
 		}
 
@@ -118,7 +118,7 @@ abstract class hubObject extends ActiveRecord {
 		$this->updateDeliveryDate();
 		$hist = $this->getHistoryObject();
 		$hist->setDeleted(false);
-//		$hist->setAlreadyDeleted(false);
+		//		$hist->setAlreadyDeleted(false);
 		$hist->update();
 		if (self::find($this->getExtId())) {
 			//			$this->setCreationDate(date(DATE_ATOM));
@@ -142,11 +142,11 @@ abstract class hubObject extends ActiveRecord {
 		 * @var $obj hubObject
 		 */
 		$class_name = get_called_class();
-		if (! arObjectCache::isCached($class_name, $primary_key)) {
+		if (!arObjectCache::isCached($class_name, $primary_key)) {
 			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
 				arFactory::getInstance($class_name, $primary_key);
 			} else {
-				return NULL;
+				return null;
 			}
 		}
 
@@ -200,7 +200,7 @@ abstract class hubObject extends ActiveRecord {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . $step + 1 . ", limit=$start,$steps");
 			$hubObjects = self::limit($start, $steps)->get();
-			if (! count($hubObjects)) {
+			if (!count($hubObjects)) {
 				$hasSets = false;
 			}
 			foreach ($hubObjects as $hubObject) {
@@ -303,14 +303,14 @@ abstract class hubObject extends ActiveRecord {
 	 * @db_fieldtype            integer
 	 * @db_length               1
 	 */
-	protected $ext_status = NULL;
+	protected $ext_status = null;
 	/**
 	 * @var int
 	 *
 	 * @db_has_field            true
 	 * @db_fieldtype            timestamp
 	 */
-	protected $creation_date = NULL;
+	protected $creation_date = null;
 
 
 	/**

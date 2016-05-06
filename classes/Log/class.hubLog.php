@@ -74,7 +74,7 @@ class hubLog {
 					'ilObjectPluginGUI',
 					'ilObject2GUI',
 					'ilObjectFactory',
-					'ilObject2'
+					'ilObject2',
 				))
 			) {
 				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
@@ -182,13 +182,13 @@ class hubLogMessage {
 	/**
 	 * @param        $bytes
 	 * @param string $unit
-	 * @param int    $decimals
+	 * @param int $decimals
 	 *
 	 * @return string
 	 */
 	protected static function formatBytes($bytes, $unit = "", $decimals = 2) {
 		$units = array(
-			'B' => 0,
+			'B'  => 0,
 			'KB' => 1,
 			'MB' => 2,
 			'GB' => 3,
@@ -196,7 +196,7 @@ class hubLogMessage {
 			'PB' => 5,
 			'EB' => 6,
 			'ZB' => 7,
-			'YB' => 8
+			'YB' => 8,
 		);
 
 		$value = 0;
@@ -232,9 +232,17 @@ class hubLogMessage {
 
 		$memory_info = '[Cur: ' . $cur . ', Max:' . $max . ']';
 		$message = $this->getMessage();
-		$intend = max(hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2, 0);
 
-		$fill = str_repeat(' ', $intend);
+		if (strlen($memory_info) - strlen($message) + 2 < hubLogMessage::LENGTH) {
+			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
+			$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+		} else {
+			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
+			$fill = '  ';
+			$message_array = explode(' :: ', $message);
+			$message = substr($message_array[0], 0, hubLogMessage::LENGTH - strlen($memory_info) - strlen($message_array[1]) - strlen('... :: '))
+			           . '... :: ' . $message_array[1];
+		}
 
 		return $message . $fill . $memory_info;
 	}

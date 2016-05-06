@@ -45,7 +45,7 @@ class hubUserGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 
@@ -53,18 +53,18 @@ class hubUserGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
-        if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->getStandardTemplate();
-        }
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->getStandardTemplate();
+		}
 
-        $cmd = $this->ctrl->getCmd();
+		$cmd = $this->ctrl->getCmd();
 		$this->performCommand($cmd);
 
-        if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->show();
-        }
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->show();
+		}
 
-        return true;
+		return true;
 	}
 
 

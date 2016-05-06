@@ -21,8 +21,8 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 		 */
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
-		$this->tabs = & $ilTabs;
-		$this->pl = new ilHubPlugin();
+		$this->tabs = &$ilTabs;
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 

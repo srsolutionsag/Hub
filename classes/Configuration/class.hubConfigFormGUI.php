@@ -29,7 +29,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		global $ilCtrl;
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
 	}
@@ -92,25 +92,25 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 		$cb = new ilCheckboxInputGUI($this->pl->txt('admin_import_export'), hubConfig::F_IMPORT_EXPORT);
 		$this->addItem($cb);
 
-        $h = new ilFormSectionHeaderGUI();
-        $h->setTitle($this->pl->txt('admin_shortlink'));
-        $this->addItem($h);
+		$h = new ilFormSectionHeaderGUI();
+		$h->setTitle($this->pl->txt('admin_shortlink'));
+		$this->addItem($h);
 
-        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_found'), hubConfig::F_MSG_SHORTLINK_NOT_FOUND);
-        $ti->setInfo($this->pl->txt('admin_msg_shortlink_not_found_info'));
-        $this->addItem($ti);
+		$ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_found'), hubConfig::F_MSG_SHORTLINK_NOT_FOUND);
+		$ti->setInfo($this->pl->txt('admin_msg_shortlink_not_found_info'));
+		$this->addItem($ti);
 
-        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_no_ilias_id'), hubConfig::F_MSG_SHORTLINK_NO_ILIAS_ID);
-        $ti->setInfo($this->pl->txt('admin_msg_shortlink_no_ilias_id_info'));
-        $this->addItem($ti);
+		$ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_no_ilias_id'), hubConfig::F_MSG_SHORTLINK_NO_ILIAS_ID);
+		$ti->setInfo($this->pl->txt('admin_msg_shortlink_no_ilias_id_info'));
+		$this->addItem($ti);
 
-        $ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_active'), hubConfig::F_MSG_SHORTLINK_NOT_ACTIVE);
-        $ti->setInfo($this->pl->txt('admin_msg_shortlink_not_active'));
-        $this->addItem($ti);
+		$ti = new ilTextInputGUI($this->pl->txt('admin_msg_shortlink_not_active'), hubConfig::F_MSG_SHORTLINK_NOT_ACTIVE);
+		$ti->setInfo($this->pl->txt('admin_msg_shortlink_not_active'));
+		$this->addItem($ti);
 
 		$h = new ilFormSectionHeaderGUI();
 		$h->setTitle($this->pl->txt('admin_header_db'));
-//		$this->addItem($h);
+		//		$this->addItem($h);
 
 		//
 		// DB
@@ -165,7 +165,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function fillObject() {
-		if (! $this->checkInput()) {
+		if (!$this->checkInput()) {
 			return false;
 		}
 
@@ -177,7 +177,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function saveObject() {
-		if (! $this->fillObject()) {
+		if (!$this->fillObject()) {
 			return false;
 		}
 		foreach ($this->getItems() as $item) {

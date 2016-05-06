@@ -21,8 +21,8 @@ class hubOriginNotification {
 	 * @param      $text
 	 * @param null $header
 	 */
-	public static function addMessage($sr_hub_origin_id, $text, $header = NULL) {
-		if (! $header) {
+	public static function addMessage($sr_hub_origin_id, $text, $header = null) {
+		if (!$header) {
 			$header = self::COMMON;
 		}
 		self::$messages[$sr_hub_origin_id][$header][] = $text;

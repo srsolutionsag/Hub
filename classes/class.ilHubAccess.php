@@ -14,13 +14,13 @@ class ilHubAccess {
 	 *
 	 * @return bool
 	 */
-	public static function checkAccess($user_id = NULL) {
+	public static function checkAccess($user_id = null) {
 		global $rbacreview;
 		/**
 		 * @var $ilUser     ilObjUser
 		 * @var $rbacreview ilRbacReview
 		 */
-		if (! $user_id) {
+		if (!$user_id) {
 			global $ilUser;
 			$user_id = $ilUser->getId();
 		}

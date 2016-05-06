@@ -42,13 +42,7 @@ class hubConfGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
-		if ($_GET['rl'] == 'true') {
-			$this->pl->updateLanguages();
-		}
+		$this->pl = ilHubPlugin::getInstance();
 	}
 
 
@@ -57,17 +51,17 @@ class hubConfGUI {
 	 */
 	public function executeCommand() {
 		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->getStandardTemplate();
-        }
+			$this->tpl->getStandardTemplate();
+		}
 
-        $cmd = $this->ctrl->getCmd();
+		$cmd = $this->ctrl->getCmd();
 		$this->performCommand($cmd);
 
-        if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-            $this->tpl->show();
-        }
+		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
+			$this->tpl->show();
+		}
 
-        return true;
+		return true;
 	}
 
 

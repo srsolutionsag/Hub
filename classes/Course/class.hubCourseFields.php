@@ -23,14 +23,15 @@ class hubCourseFields extends hubOriginObjectPropertiesFields {
 	const F_UPDATE_TITLE = 'update_title';
 	const F_UPDATE_DESCRIPTION = 'update_description';
 	const F_UPDATE_ICON = 'update_icon';
-    const F_UPDATE_RESPONSIBLE = 'update_responsible';
+	const F_UPDATE_RESPONSIBLE = 'update_responsible';
 	const F_REACTIVATE = 'reactivate';
 	const F_DELETE = 'delete';
 	const F_DELETED_ICON = 'deleted_icon';
 	const F_SEND_NOTIFICATION = 'send_notification';
 	const F_NOT_BODY = 'notification_body';
 	const F_NOT_SUBJECT = 'notification_subject';
-    const F_NOT_FROM = 'notification_from';
+	const F_NOT_FROM = 'notification_from';
+
 
 	/**
 	 * @return string

@@ -255,7 +255,7 @@ class hubCategory extends hubRepositoryObject {
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
 			switch ($this->props()->get(hubCategoryFields::DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					$ilHubPlugin = new ilHubPlugin();
+					$ilHubPlugin = ilHubPlugin::getInstance();
 					$this->ilias_object->setTitle($this->getTitle() . ' ' . $ilHubPlugin->txt('com_prop_mark_deleted_text'));
 					if ($this->props()->get(hubCategoryFields::DELETED_ICON)) {
 						$icon = $this->props()->getIconPath('_deleted');
