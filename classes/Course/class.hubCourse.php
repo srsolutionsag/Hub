@@ -16,11 +16,11 @@ class hubCourse extends hubRepositoryObject {
 	 * @var ilObjCourse
 	 */
 	public $ilias_object;
+	/**
+	 * @var int
+	 */
+	public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
 
-    /**
-     * @var int
-     */
-    public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
 
 	/**
 	 * @return string
@@ -34,12 +34,17 @@ class hubCourse extends hubRepositoryObject {
 	 * @return bool
 	 */
 	public static function buildILIASObjects() {
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_COURSE);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
 		/**
 		 * @var $hubCourse    hubCourse
 		 * @var $hubOrigin    hubOrigin
 		 */
 		foreach (self::get() as $hubCourse) {
-			if (! hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId())) {
+			if (!hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId()) || !in_array($hubCourse->getSrHubOriginId(), $active_origin_ids)) {
 				continue;
 			}
 			$id = 'obj_origin_' . $hubCourse->getSrHubOriginId();
@@ -50,7 +55,7 @@ class hubCourse extends hubRepositoryObject {
 			$history = $hubCourse->getHistoryObject();
 			switch ($history->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCourse->createCourse();
 						$hubOriginObj->afterObjectCreation($hubCourse);
 					}
@@ -58,21 +63,22 @@ class hubCourse extends hubRepositoryObject {
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses created:');
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCourse->updateCourse();
 						$hubOriginObj->afterObjectUpdate($hubCourse);
 					}
 					hubCounter::incrementUpdated($hubCourse->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-                    global $tree;
-                    $path = $tree->getPathId($history->getIliasId());
-					if (! hubSyncCron::getDryRun()) {
+					global $tree;
+					$path = $tree->getPathId($history->getIliasId());
+					if (!hubSyncCron::getDryRun()) {
 						$hubCourse->deleteCourse();
 						$hubOriginObj->afterObjectDeletion($hubCourse);
 					}
 					hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title . ' :: ' . implode('/', $path), 'Courses deleted with ref_id path:');
+					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title . ' :: '
+					                                                                  . implode('/', $path), 'Courses deleted with ref_id path:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
@@ -81,17 +87,22 @@ class hubCourse extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
-					if (! hubSyncCron::getDryRun()) {
-						$hubCourse->updateCourse();
+					if (!hubSyncCron::getDryRun()) {
+						if (ilObjCourse::_lookupDeletedDate($hubCourse->getHistoryObject()->getIliasId())) {
+							$hubCourse->createCourse();
+						} else {
+							$hubCourse->reactivateCourse();
+						}
 					}
 					break;
 			}
 
+			if (!hubSyncCron::getDryRun()) {
+				$hubOriginObj->afterObjectInit($hubCourse);
+			}
+
 			$history->updatePickupDate();
 			$hubOrigin::afterObjectModification($hubCourse);
-            if (! hubSyncCron::getDryRun()) {
-                $hubOriginObj->afterObjectInit($hubCourse);
-            }
 
 			hubDurationLogger2::getInstance($id)->pause();
 		}
@@ -112,8 +123,8 @@ class hubCourse extends hubRepositoryObject {
 		$node = $this->getDependecesNode();
 		$this->ilias_object->putInTree($node);
 		$this->ilias_object->setPermissions($node);
-        $this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
-        $this->ilias_object->updateSettings();
+		$this->ilias_object->setSubscriptionLimitationType($this->getSubLimitationType());
+		$this->ilias_object->updateSettings();
 		if ($this->props()->get(hubCourseFields::F_ACTIVATE)) {
 			$this->ilias_object->setOfflineStatus(false);
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
@@ -129,12 +140,11 @@ class hubCourse extends hubRepositoryObject {
 			global $ilSetting;
 			$mail = new ilMimeMail();
 			$mail->autoCheck(false);
-            if($this->props()->get(hubCourseFields::F_NOT_FROM)){
-                $mail->From($this->props()->get(hubCourseFields::F_NOT_FROM));
-            }
-            else{
-                $mail->From($ilSetting->get('admin_email'));
-            }
+			if ($this->props()->get(hubCourseFields::F_NOT_FROM)) {
+				$mail->From($this->props()->get(hubCourseFields::F_NOT_FROM));
+			} else {
+				$mail->From($ilSetting->get('admin_email'));
+			}
 
 			$mail->To($this->getNotificationEmail());
 			$body = hubCourseFields::getReplacedText($this);
@@ -156,19 +166,19 @@ class hubCourse extends hubRepositoryObject {
 		if ($this->props()->get(hubCourseFields::F_UPDATE_TITLE)) {
 			$this->initObject();
 			$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
-            $update = true;
+			$update = true;
 		}
 		if ($this->props()->get(hubCourseFields::F_UPDATE_DESCRIPTION)) {
 			$this->initObject();
 			$this->ilias_object->setDescription($this->getDescription());
 			$update = true;
 		}
-        if ($this->props()->get(hubCourseFields::F_UPDATE_RESPONSIBLE)) {
-            $this->initObject();
-            $this->ilias_object->setContactResponsibility($this->getResponsible());
-            $this->ilias_object->setContactEmail($this->getResponsibleEmail());
-            $update = true;
-        }
+		if ($this->props()->get(hubCourseFields::F_UPDATE_RESPONSIBLE)) {
+			$this->initObject();
+			$this->ilias_object->setContactResponsibility($this->getResponsible());
+			$this->ilias_object->setContactEmail($this->getResponsibleEmail());
+			$update = true;
+		}
 		if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
 			$this->initObject();
 			$this->updateIcon($this->ilias_object);
@@ -181,11 +191,10 @@ class hubCourse extends hubRepositoryObject {
 			$update = true;
 		}
 		if ($update) {
-            $this->ilias_object->setOwner($this->getOwner());
+			$this->ilias_object->setOwner($this->getOwner());
 			$this->ilias_object->update();
 		}
 
-		//
 		$history = $this->getHistoryObject();
 		$history->setAlreadyDeleted(false);
 		$history->setDeleted(false);
@@ -193,7 +202,7 @@ class hubCourse extends hubRepositoryObject {
 
 
 	protected function updateAdditionalFields() {
-		if (! $this->ilias_object) {
+		if (!$this->ilias_object) {
 			return false;
 		}
 		$this->ilias_object->setContactResponsibility($this->getResponsible());
@@ -208,18 +217,11 @@ class hubCourse extends hubRepositoryObject {
 			$this->initObject();
 			switch ($this->props()->get(hubCourseFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					hubLog::getInstance()->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
-					$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_OFFLINE);
-					if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
-						$icon = $this->props()->getIconPath('_deleted');
-						if ($icon) {
-							$this->ilias_object->saveIcons($icon, $icon, $icon);
-						}
-					}
-					$this->ilias_object->update();
+					$this->setCourseInactive();
 					break;
 				case self::DELETE_MODE_DELETE:
-					if($this->ilias_object) {
+					if ($this->ilias_object) {
+						hubLog::getInstance()->write('Delete Course: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
 						$this->ilias_object->delete();
 					}
 					break;
@@ -230,11 +232,51 @@ class hubCourse extends hubRepositoryObject {
 					 */
 					$tree->saveSubTree($this->ilias_object->getRefId(), true);
 					break;
+				case self::DELETE_MODE_DELETE_OR_INACTIVE:
+					if ($this->hasActivities()) {
+						hubLog::getInstance()->write('Set Course inactive due to no activities: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+						$this->setCourseInactive();
+					} else {
+						hubLog::getInstance()->write('Delete Course: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+						$this->ilias_object->delete();
+					}
+					break;
 			}
 			$hist->setAlreadyDeleted(true);
 			$hist->setDeleted(true);
 			$hist->update();
 		}
+	}
+
+
+	/**
+	 * @return bool true if a member-user did anything in this course
+	 */
+	private function hasActivities() {
+		global $ilDB;
+
+		$str = "SELECT 
+				    wre.*, dat.*, rbac_ua.*
+				FROM
+				    catch_write_events AS wre
+				        JOIN
+				    obj_members AS mem ON mem.obj_id = wre.obj_id
+				        AND mem.usr_id = wre.usr_id
+				        
+				        JOIN object_reference AS ref ON ref.obj_id = wre.obj_id
+				        
+				        JOIN object_data AS dat ON dat.type = 'role' AND dat.title = CONCAT('il_crs_member_', ref.ref_id)
+				        
+				        JOIN rbac_ua ON rbac_ua.rol_id = dat.obj_id AND rbac_ua.usr_id = wre.usr_id
+				        
+				WHERE
+				    wre.obj_id = " . $ilDB->quote(ilObject2::_lookupObjId($this->ilias_object->getRefId()), 'integer');
+
+		$query = $ilDB->query($str);
+		$has_sets = $ilDB->numRows($query);
+		hubLog::getInstance()->write('catch_write_events: ' . $has_sets, hubLog::L_DEBUG);
+
+		return (($has_sets > 0) ? true : false);
 	}
 
 
@@ -259,7 +301,7 @@ class hubCourse extends hubRepositoryObject {
 				// FSX?
 			}
 		} elseif ($this->getParentIdType() == self::PARENT_ID_TYPE_REF_ID) {
-			if (! $tree->isInTree($this->getParentId())) {
+			if (!$tree->isInTree($this->getParentId())) {
 				return $base_node_ilias;
 			} else {
 				return $this->getParentId();
@@ -274,7 +316,7 @@ class hubCourse extends hubRepositoryObject {
 	 * @return bool
 	 */
 	private function hasDependences() {
-		return $this->getFirstDependence() != NULL OR $this->getSecondDependence() != NULL OR $this->getThirdDependence() != NULL;
+		return $this->getFirstDependence() != null OR $this->getSecondDependence() != null OR $this->getThirdDependence() != null;
 	}
 
 
@@ -350,7 +392,7 @@ class hubCourse extends hubRepositoryObject {
 		 * @var $tree      ilTree
 		 * @var $rbacadmin ilRbacAdmin
 		 */
-		if ($title == NULL) {
+		if ($title == null) {
 			return $parent_id;
 		}
 		global $tree;
@@ -367,7 +409,7 @@ class hubCourse extends hubRepositoryObject {
 		}
 		foreach ($tree->getChildsByType($parent_id, 'cat') as $child) {
 			if ($child['title'] == $title) {
-				if (! in_array($child['ref_id'], self::$updated_dependency_nodes)) {
+				if (!in_array($child['ref_id'], self::$updated_dependency_nodes)) {
 					$cat = new ilObjCategory($child['ref_id']);
 					if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
 						$this->updateIcon($cat, $usage);
@@ -397,7 +439,7 @@ class hubCourse extends hubRepositoryObject {
 
 
 	protected function initObject() {
-		if (! isset($this->ilias_object)) {
+		if (!isset($this->ilias_object)) {
 			$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId());
 		}
 	}
@@ -580,8 +622,6 @@ class hubCourse extends hubRepositoryObject {
 	 * @db_length           8
 	 */
 	protected $didactic_template_id = 0;
-
-
 	//
 	// Setter & Getter
 	//
@@ -854,6 +894,37 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	public function getDidacticTemplateId() {
 		return $this->didactic_template_id;
+	}
+
+
+	/**
+	 * set course offline
+	 */
+	protected function setCourseInactive() {
+		hubLog::getInstance()->write('Set Course inactive: ' . $this->ilias_object->getId(), hubLog::L_DEBUG);
+		$this->ilias_object->setOfflineStatus(true);
+		if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
+			$icon = $this->props()->getIconPath('_deleted');
+			if ($icon) {
+				$this->ilias_object->saveIcons($icon, $icon, $icon);
+			}
+		}
+		$this->ilias_object->update();
+	}
+
+
+	/**
+	 * set course online and set deleted & already deleted to false
+	 */
+	public function reactivateCourse() {
+		$this->ilias_object = new ilObjCourse($this->getHistoryObject()->getIliasId(), true);
+		$this->ilias_object->setOfflineStatus(false);
+		$this->ilias_object->update();
+
+		$history = $this->getHistoryObject();
+		$history->setAlreadyDeleted(false);
+		$history->setDeleted(false);
+		$history->update();
 	}
 }
 

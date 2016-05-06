@@ -12,20 +12,29 @@ admin_db_port#:#Port
 admin_db_user#:#Benutzer
 admin_import_export#:#Import/Export von Anbindungen aktivieren
 admin_lock#:#Einstellungen aktiver Anbindungen sperren
-admin_msg_shortlink_not_active#:#Shortlinks nicht aktiviert Meldung
-admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden
-admin_msg_shortlink_no_ilias_id#:#Keine ILIAS id für Objekt Meldung
-admin_msg_shortlink_no_ilias_id_info#:#Meldung falls für das entsprechende Hub Objekt keine entsprechende ILIAS-ID existiert
-admin_msg_shortlink_not_found#:#Ungültiger Shortlink Meldung
-admin_msg_shortlink_not_found_info#:#Meldung falls Objekt (noch) nicht vorhanden wenn Zugriff via Shortlink erfolgt
-admin_origins_path#:#Pfad des origins-Verzeichnis 
-admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet
+admin_membership#:#Kursteilnehmer
+admin_membership_activate#:#Benachrichtigung aktivieren
+admin_membership_activate_info#:#Benachrichtigung per Email bei neuer Kursteilnehmerschaft aktivieren.
+admin_membership_mail_subject#:#Betreff Benachrichtigungs-Mail
+admin_membership_mail_subject_info#:#Die Platzhalter der Nachricht (unten) können auch hier verwendet werden.
+admin_membership_mail_msg#:#Inhalt Benachrichtigungs-Mail
+admin_membership_mail_msg_info#:#Es können folgende Platzhalter verwendet werden: <br>[FIRSTNAME][LASTNAME][LOGIN][COURSE_LINK][COURSE_TITLE][VALIDITY_START][VALIDITY_END]
+admin_msg_shortlink_not_active#:#'Shortlinks nicht aktiviert'-Meldung
+admin_msg_shortlink_not_active_info#:#Meldung falls Shortlinks für die entsprechende Anbindung nicht aktiviert wurden.
+admin_msg_shortlink_no_ilias_id#:#'Keine ILIAS-ID für Objekt'-Meldung
+admin_msg_shortlink_no_ilias_id_info#:#Meldung falls für das entsprechende Hub Objekt keine entsprechende ILIAS-ID existiert.
+admin_msg_shortlink_not_found#:#'Ungültiger Shortlink'-Meldung
+admin_msg_shortlink_not_found_info#:#Meldung falls Objekt (noch) nicht vorhanden wenn Zugriff via Shortlink erfolgt.
+admin_origins_path#:#Pfad des origins-Verzeichnis
+admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet.
 admin_password_email_body#:#E-Mail-Body beim versenden von Passwörtern
 admin_roles#:#Rollen
-admin_roles_info#:#Rollen-Ids, welche HUB nutzen können
+admin_roles_info#:#Rollen-Ids, welche HUB nutzen können.
 admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
-admin_use_async_info#:#Asynchrone Synchronisationüber das GUI ermöglichen. Benötigt einen ILIAS Benutzer
+admin_use_async_info#:#Asynchrone Synchronisation über das GUI ermöglichen. Benötigt einen ILIAS Benutzer.
+admin_user_creation#:#Benutzererstellung
+admin_user_creation_standard_role#:#Rolle bei Benutzererstellung
 admin_form_button_cancel#:#Abbrechen
 admin_form_button_save#:#Speichern
 admin_form_title#:#Einstellungen
@@ -38,6 +47,8 @@ cat_prop_delete_mode#:#Löschverhalten
 cat_prop_delete_mode_archive#:#In Kategorie archivieren
 cat_prop_delete_mode_archive_node#:#Ref-ID Archiv
 cat_prop_delete_mode_delete#:#Kategorie löschen
+crs_prop_delete_mode_delete_or_inactive#:#Kurs löschen oder offline setzen
+crs_prop_delete_mode_delete_or_inactive_info#:#Wenn bereits Aktivitäten im Kurs stattfanden, wird er offline gesetzt, ansonsten gelöscht.
 cat_prop_delete_mode_inactive#:#Kategorie mit Text "%s" ergänzen
 cat_prop_delete_mode_none#:#Keine Aktion
 cat_prop_header_base#:#Basis-Node Einstellungen
@@ -57,7 +68,7 @@ cat_prop_set_sorting#:#Sortierung setzen
 cat_prop_update_sorting#:#Sortierung aktualisieren
 cat_prop_update_title#:#Name aktualisieren
 com_prop_check_amount#:#Mengenvergleich
-com_prop_check_amount_info#:#Fehler, wenn weniger als X% der bestehenden Datensätzen geliefert werden
+com_prop_check_amount_info#:#Fehler, wenn weniger als X% der bestehenden Datensätzen geliefert werden.
 com_prop_check_amount_percentage#:#Prozentwert
 com_prop_force_login#:#Login erfordern
 com_prop_link_to_origin#:#Verknüpfung mit anderer Anbindung
@@ -115,6 +126,8 @@ hub_users_table_title#:#Benutzerkonten
 mem_prop_add_notification#:#Benachrichtigung aktivieren (wenn gewünscht)
 mem_prop_delete_mode#:#Löschverhalten
 mem_prop_delete_mode_delete#:#Mitgliedschaft beenden
+mem_prop_delete_mode_delete_or_inactive#:#Mitgliedschaft beenden oder Zugriff sperren
+mem_prop_delete_mode_delete_or_inactive_info#:#Wenn das Mitglied bereits Aktivitäten im Kurs hatte, wird der Zugriff gesperrt, <br>ansonsten wird die Mitgliedschaft beendet.
 mem_prop_delete_mode_inactive#:#Zugriff sperren
 mem_prop_delete_mode_none#:#Mitgliedschaft bestehen lassen
 mem_prop_deleted_send_mail_admin#:#Admin
@@ -124,7 +137,7 @@ mem_prop_deleted_send_mail_tutor#:#Tutor
 mem_prop_desktop_new#:#Container auf Schreibtisch
 mem_prop_desktop_updated#:#Container auf Schreibtisch
 mem_prop_get_usr_id#:#User-ID aus anderer Anbindung
-mem_prop_get_usr_id_info#:#Es wird nach Einträgen mit der selben Ext-ID gesucht
+mem_prop_get_usr_id_info#:#Es wird nach Einträgen mit der selben Ext-ID gesucht.
 mem_prop_new_send_mail_admin#:#Admin
 mem_prop_new_send_mail_member#:#Mitglied
 mem_prop_new_send_mail_title#:#Willkommens-Mail versenden an:
@@ -137,9 +150,9 @@ mem_prop_updated_send_mail_member#:#Mitglied
 mem_prop_updated_send_mail_title#:#Statuswechsel-Mail versenden an:
 mem_prop_updated_send_mail_tutor#:#Tutor
 msg_confirm_delete_origin#:#Möchten Sie die Anbindung definitv löschen?
-msg_origin_activated#:#Anbindung aktiviert
-msg_origin_deactivated#:#Anbindung deaktiviert
-msg_saved#:#Gespeichert
+msg_origin_activated#:#Anbindung aktiviert.
+msg_origin_deactivated#:#Anbindung deaktiviert.
+msg_saved#:#Gespeichert.
 origin_subtab_icons#:#Icons
 origin_subtab_settings#:#Settings
 origin_form_button_create#:#Speichern
@@ -155,17 +168,19 @@ origin_form_field_conf_type#:#Verbindungstyp
 origin_form_field_conf_type_db#:#Server
 origin_form_field_conf_type_db_database#:#Datenbank#:#Datenbank
 origin_form_field_conf_type_db_host#:#Host#:#Host
-origin_form_field_conf_type_db_info#:#Die Daten stammen aus einer Serververbindung
+origin_form_field_conf_type_db_info#:#Die Daten stammen aus einer Serververbindung.
 origin_form_field_conf_type_db_password#:#Passwort#:#Passwort
 origin_form_field_conf_type_db_port#:#Port#:#Port
 origin_form_field_conf_type_db_search_base#:#Search-Base#:#Search-Base
 origin_form_field_conf_type_db_username#:#Login-Name#:#Login-Name
 origin_form_field_conf_type_external#:#Extern
-origin_form_field_conf_type_external_info#:#Füllen der Hub-Tabelle durch Fremdsystem
+origin_form_field_conf_type_external_info#:#Füllen der Hub-Tabelle durch Fremdsystem.
 origin_form_field_conf_type_file#:#Datei oder Verzeichnis
-origin_form_field_conf_type_file_info#:#Daten werden aus einer Datei gelesen
+origin_form_field_conf_type_file_info#:#Daten werden aus einer Datei gelesen.
 origin_form_field_conf_type_file_path#:#Pfad zur Datei
 origin_form_field_description#:#Beschreibung
+origin_form_field_exec_time#:#Zeitpunkt der Synchronisation
+origin_form_field_exec_time_info#:#Format: HH:MM <br>Falls nicht leer, wird die Anbindung nur zu dieser bestimmten Zeit <br> ausgeführt (wenn der Cronjob zu dieser Zeit durchläuft) und ansonsten ignoriert.
 origin_form_field_id#:#ID
 origin_form_field_notification_email#:#Benachrichtigung bei Fehler
 origin_form_field_summary_email#:#E-Mailadressen für Zusammenfassung

@@ -46,7 +46,7 @@ class hubGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		//		$this->pl->updateLanguages();
 	}
 
@@ -104,6 +104,8 @@ class hubGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
+		global $ilMainMenu;
+		$ilMainMenu->setActive('none');
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
 		$next_class = $next_class ? $next_class : 'hubOriginGUI';

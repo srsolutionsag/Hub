@@ -20,6 +20,26 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_SHIB = 2;
 	const ACCOUNT_TYPE_LDAP = 3;
 	const ACCOUNT_TYPE_RADIUS = 4;
+	public $user_properties = array(
+		'institution',
+		'street',
+		'city',
+		'zipcode',
+		'country',
+		'selectedCountry',
+		'phoneOffice',
+		'phoneHome',
+		'phoneMobile',
+		'department',
+		'fax',
+		'timeLimitOwner',
+		'timeLimitUnlimited',
+		'timeLimitFrom',
+		'timeLimitUntil',
+		'matriculation',
+		'gender',
+		'birthday',
+	);
 	/**
 	 * @var ilObjUser
 	 */
@@ -44,17 +64,22 @@ class hubUser extends hubObject {
 		$step = 0;
 		$hasSets = true;
 		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_USER);
+		$active_origin_ids = array();
+		foreach ($active_origins as $origin) {
+			$active_origin_ids[] = $origin->getId();
+		}
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubUsers = self::limit($start, $steps)->get();
-			hubLog::getInstance()->write("Count for round " . ($step+1) . ": " . count($hubUsers));
+			hubLog::getInstance()->write("Count for round " . ($step + 1) . ": " . count($hubUsers));
 			if (!count($hubUsers)) {
-            	hubLog::getInstance()->write("No more sets found, aborting: step=$step");    
+				hubLog::getInstance()->write("No more sets found, aborting: step=$step");
 				$hasSets = false;
 			}
 			foreach ($hubUsers as $hubUser) {
-				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId())) {
+				if (!hubSyncHistory::isLoaded($hubUser->getSrHubOriginId()) || !in_array($hubUser->getSrHubOriginId(), $active_origin_ids)) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubUser->getSrHubOriginId();
@@ -66,6 +91,7 @@ class hubUser extends hubObject {
 					case hubSyncHistory::STATUS_NEW:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->createUser();
+							$hubOriginObj->afterObjectCreation($hubUser);
 						}
 						hubCounter::incrementCreated($hubUser->getSrHubOriginId());
 						hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User created:');
@@ -73,12 +99,14 @@ class hubUser extends hubObject {
 					case hubSyncHistory::STATUS_UPDATED:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->updateUser();
+							$hubOriginObj->afterObjectUpdate($hubUser);
 						}
 						hubCounter::incrementUpdated($hubUser->getSrHubOriginId());
 						break;
 					case hubSyncHistory::STATUS_DELETED:
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->deleteUser();
+							$hubOriginObj->afterObjectDeletion($hubUser);
 						}
 						hubCounter::incrementDeleted($hubUser->getSrHubOriginId());
 						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User deleted:');
@@ -92,6 +120,7 @@ class hubUser extends hubObject {
 						//					hubOriginNotification::addMessage($hubUser->getSrHubOriginId(), $hubUser->getEmail(), 'User newly delivered:');
 						if (!hubSyncCron::getDryRun()) {
 							$hubUser->updateUser();
+							$hubOriginObj->afterObjectUpdate($hubUser);
 						}
 						break;
 				}
@@ -101,10 +130,10 @@ class hubUser extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->pause();
 				arObjectCache::purge($hubUser);
-				$hubUser = NULL;
-				$hubOriginObj = NULL;
+				$hubUser = null;
+				$hubOriginObj = null;
 			}
-			$step++;
+			$step ++;
 		}
 
 		return true;
@@ -119,6 +148,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setDescription($this->getEmail());
 		$this->ilias_object->setImportId($this->returnImportId());
 		$this->ilias_object->create();
+
 		$this->ilias_object->setFirstname($this->getFirstname());
 		$this->ilias_object->setLastname($this->getLastname());
 		$this->ilias_object->setEmail($this->getEmail());
@@ -136,29 +166,25 @@ class hubUser extends hubObject {
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
+
+		foreach ($this->user_properties as $user_property) {
+			$setter_name = "set" . ucfirst($user_property);
+			$getter_name = "get" . ucfirst($user_property);
+
+			if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+				if ($this->$getter_name() !== null) {
+					$this->ilias_object->$setter_name($this->$getter_name());
+				}
+			}
+		}
+
+		$this->ilias_object->saveAsNew();
+		$this->ilias_object->writePrefs();
+
+		$this->assignRoles();
 		if ($this->props()->get(hubUserFields::F_SEND_PASSWORD)) {
 			$this->sendPasswordMail();
 		}
-// 		$this->ilias_object->setInstitution($this->getInstitution());
-//		$this->ilias_object->setStreet($this->getStreet());
-//		$this->ilias_object->setCity($this->getCity());
-//		$this->ilias_object->setZipcode($this->getZipcode());
-		$this->ilias_object->setCountry($this->getCountry());
-		$this->ilias_object->setSelectedCountry($this->getSelCountry());
-//		$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-//		$this->ilias_object->setPhoneHome($this->getPhoneHome());
-//		$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-//		$this->ilias_object->setDepartment($this->getDepartment());
-//		$this->ilias_object->setFax($this->getFax());
-//		$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
-		$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-//		$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-//		$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-//		$this->ilias_object->setMatriculation($this->getMatriculation());
-//		$this->ilias_object->setGender($this->getGender());
-		$this->ilias_object->saveAsNew();
-		$this->ilias_object->writePrefs();
-		$this->assignRoles();
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getId());
 		$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
@@ -207,10 +233,10 @@ class hubUser extends hubObject {
 
 		$ilDB->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
 			'text',
-			'integer'
+			'integer',
 		), array(
 			$this->ilias_object->getLogin(),
-			$this->ilias_object->getId()
+			$this->ilias_object->getId(),
 		));
 
 		return true;
@@ -224,7 +250,17 @@ class hubUser extends hubObject {
 
 
 	protected function sendPasswordMail() {
-		global $ilSetting;
+		global $ilSetting, $ilDB;
+		$sql = "SELECT container_id as ref_id
+					FROM  sr_hub_membership
+					WHERE ext_id LIKE '" . $this->getExtId() . "%'";
+		$query = $ilDB->query($sql);
+
+		$crs_ref_ids = array();
+		while ($set = $ilDB->fetchAssoc($query)) {
+			$crs_ref_ids[] = $set['ref_id'];
+		}
+
 		$mail_field = $this->props()->get(hubUserFields::F_SEND_PASSWORD_FIELD);
 		if ($mail_field) {
 			$mail = new ilMimeMail();
@@ -236,10 +272,16 @@ class hubUser extends hubObject {
 			$format = $this->props()->get(hubUserFields::F_PASSWORD_MAIL_DATE_FORMAT);
 			$format = $format ? $format : DATE_ISO8601;
 
+			$crs_links = array();
+			foreach ($crs_ref_ids as $ref_id) {
+				$crs_links[] = ilUtil::_getHttpPath() . '/goto.php?target=crs_' . $ref_id;
+			}
+
 			$body = strtr($body, array(
-				'[PASSWORD]' => $this->getPasswd(),
-				'[LOGIN]' => $this->getLogin(),
+				'[PASSWORD]'    => $this->getPasswd(),
+				'[LOGIN]'       => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
+				'[COURSE_LINK]' => implode(', ', $crs_links),
 			));
 			$mail->Subject($this->props()->get(hubUserFields::F_PASSWORD_MAIL_SUBJECT));
 			$mail->Body($body);
@@ -250,6 +292,11 @@ class hubUser extends hubObject {
 
 	public function updateUser() {
 		if ($this->isUpdateRequired()) {
+			if (ilObject2::_lookupType($this->getHistoryObject()->getIliasId()) != 'usr') {
+				hubLog::getInstance()->write("A UserObject with the ID " . $this->getHistoryObject()->getIliasId() . " doesn't exist");
+
+				return false;
+			}
 			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
 			$this->ilias_object->setImportId($this->returnImportId());
 			$this->ilias_object->setTitle($this->getFirstname() . ' ' . $this->getLastname());
@@ -267,23 +314,17 @@ class hubUser extends hubObject {
 				$this->ilias_object->setEmail($this->getEmail());
 			}
 
-// 			$this->ilias_object->setInstitution($this->getInstitution());
-//			$this->ilias_object->setStreet($this->getStreet());
-//			$this->ilias_object->setCity($this->getCity());
-//			$this->ilias_object->setZipcode($this->getZipcode());
-			$this->ilias_object->setCountry($this->getCountry());
-			$this->ilias_object->setSelectedCountry($this->getSelCountry());
-//			$this->ilias_object->setPhoneOffice($this->getPhoneOffice());
-//			$this->ilias_object->setPhoneHome($this->getPhoneHome());
-//			$this->ilias_object->setPhoneMobile($this->getPhoneMobile());
-//			$this->ilias_object->setDepartment($this->getDepartment());
-//			$this->ilias_object->setFax($this->getFax());
-//			$this->ilias_object->setTimeLimitOwner($this->getTimeLimitOwner());
-//			$this->ilias_object->setTimeLimitUnlimited($this->getTimeLimitUnlimited());
-//			$this->ilias_object->setTimeLimitFrom($this->getTimeLimitFrom());
-//			$this->ilias_object->setTimeLimitUntil($this->getTimeLimitUntil());
-//			$this->ilias_object->setMatriculation($this->getMatriculation());
-//			$this->ilias_object->setGender($this->getGender());
+			foreach ($this->user_properties as $user_property) {
+				$setter_name = "set" . ucfirst($user_property);
+				$getter_name = "get" . ucfirst($user_property);
+
+				if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
+					if ($this->$getter_name() !== null) {
+						$this->ilias_object->$setter_name($this->$getter_name());
+					}
+				}
+			}
+
 			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
 			}
@@ -480,8 +521,8 @@ class hubUser extends hubObject {
 	 * @var string
 	 *
 	 * @db_has_field        true
-	 * @db_fieldtype        integer
-	 * @db_length           1
+	 * @db_fieldtype        text
+	 * @db_length           64
 	 */
 	protected $gender;
 	/**
@@ -635,6 +676,13 @@ class hubUser extends hubObject {
 	 * @db_fieldtype        clob
 	 */
 	protected $image;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        date
+	 */
+	protected $birthday;
 	/**
 	 * @var int
 	 *
@@ -1117,6 +1165,22 @@ class hubUser extends hubObject {
 
 
 	/**
+	 * @return string
+	 */
+	public function getBirthday() {
+		return $this->birthday;
+	}
+
+
+	/**
+	 * @param string $birthday
+	 */
+	public function setBirthday($birthday) {
+		$this->birthday = $birthday;
+	}
+
+
+	/**
 	 * @param int $account_type
 	 */
 	public function setAccountType($account_type) {
@@ -1222,22 +1286,22 @@ class hubUser extends hubObject {
 	 */
 	protected static function cleanName($name) {
 		$upas = array(
-			'ä' => 'ae',
-			'å' => 'ae',
-			'ü' => 'ue',
-			'ö' => 'oe',
-			'Ä' => 'Ae',
-			'Ü' => 'Ue',
-			'Ö' => 'Oe',
-			'é' => 'e',
-			'è' => 'e',
-			'ê' => 'e',
-			'Á' => 'A',
-			'ß' => 'ss',
+			'ä'  => 'ae',
+			'å'  => 'ae',
+			'ü'  => 'ue',
+			'ö'  => 'oe',
+			'Ä'  => 'Ae',
+			'Ü'  => 'Ue',
+			'Ö'  => 'Oe',
+			'é'  => 'e',
+			'è'  => 'e',
+			'ê'  => 'e',
+			'Á'  => 'A',
+			'ß'  => 'ss',
 			'\'' => '',
-			' ' => '',
-			'-' => '',
-			'.' => '',
+			' '  => '',
+			'-'  => '',
+			'.'  => '',
 		);
 
 		return strtolower(self::toASCII(strtr($name, $upas)));
@@ -1249,19 +1313,16 @@ class hubUser extends hubObject {
 	 */
 	protected function isUpdateRequired() {
 		return $this->props()->get(hubUserFields::F_UPDATE_LOGIN) OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME) OR $this->props()
-			->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
-			->get(hubUserFields::F_REACTIVATE_ACCOUNT);
+		                                                                                                                            ->get(hubUserFields::F_UPDATE_LASTNAME)
+		       OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
 
 
 	/**
 	 * Replace special characters with ASCII characters
-	 * Copied from http://stackoverflow.com/questions/6856885/convert-special-character-i-e-umlaut-to-most-likely-representation-in-ascii 
+	 * Copied from http://stackoverflow.com/questions/6856885/convert-special-character-i-e-umlaut-to-most-likely-representation-in-ascii
 	 */
-	static function toASCII( $str )
-	{
-		return strtr(utf8_decode($str),
-				utf8_decode('ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
-				'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+	static function toASCII($str) {
+		return strtr(utf8_decode($str), utf8_decode('ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'), 'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
 	}
 }

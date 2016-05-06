@@ -1,6 +1,7 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 hub::loadActiveRecord();
+
 /**
  * Class hubIcon
  *
@@ -24,19 +25,19 @@ class hubIcon extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $size_prefixes = array(
-		self::SIZE_SMALL => self::PREF_SMALL,
+		self::SIZE_SMALL  => self::PREF_SMALL,
 		self::SIZE_MEDIUM => self::PREF_MEDIUM,
-		self::SIZE_LARGE => self::PREF_LARGE,
-		self::SIZE_LARGE => self::PREF_LARGE,
+		self::SIZE_LARGE  => self::PREF_LARGE,
+		self::SIZE_LARGE  => self::PREF_LARGE,
 	);
 	/**
 	 * @var array
 	 */
 	protected static $foldername = array(
-		self::USAGE_OBJECT => 'obj',
-		self::USAGE_FIRST_DEPENDENCE => 'dep_1',
+		self::USAGE_OBJECT            => 'obj',
+		self::USAGE_FIRST_DEPENDENCE  => 'dep_1',
 		self::USAGE_SECOND_DEPENDENCE => 'dep_2',
-		self::USAGE_THIRD_DEPENDENCE => 'dep_3',
+		self::USAGE_THIRD_DEPENDENCE  => 'dep_3',
 	);
 
 
@@ -58,7 +59,7 @@ class hubIcon extends ActiveRecord {
 
 
 	public static function initDir() {
-		if (! is_dir(self::getIconDirectory())) {
+		if (!is_dir(self::getIconDirectory())) {
 			ilUtil::makeDirParents(self::getIconDirectory());
 		}
 	}
@@ -85,7 +86,7 @@ class hubIcon extends ActiveRecord {
 	 * @throws Exception
 	 */
 	public function importFromPath($path, $mode = 'copy') {
-		if (! $this->getId()) {
+		if (!$this->getId()) {
 			throw new Exception('Cannot upload, please create hubIcon object first');
 		}
 		$this->setVersion($this->getVersion() + 1);

@@ -42,8 +42,8 @@ class hubLogGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $this->parent->tabs_gui;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
-		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
+		$this->pl = ilHubPlugin::getInstance();
+		if (!ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}
 	}
@@ -114,10 +114,10 @@ class hubLogGUI {
 		$line = $_GET['line'] != 'false' ? $_GET['line'] : ($this->getNumberOfLastLine() - 10);
 		header('Content-Type: application/json');
 		echo json_encode(array(
-			'line' => $line,
-			'content' => $this->getLine($line),
-			'get' => $_GET,
-			'next_line' => $line + 1
+			'line'      => $line,
+			'content'   => $this->getLine($line),
+			'get'       => $_GET,
+			'next_line' => $line + 1,
 		));
 		exit;
 	}

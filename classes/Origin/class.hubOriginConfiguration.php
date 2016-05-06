@@ -1,6 +1,7 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 hub::loadActiveRecord();
+
 /**
  * Class hubOriginConfiguration
  *
@@ -86,6 +87,31 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @var string
 	 * @db_has_field    true
 	 * @db_fieldtype    text
+	 * @db_length       10
+	 */
+	protected $exec_time;
+
+
+	/**
+	 * @return string
+	 */
+	public function getExecTime() {
+		return $this->exec_time;
+	}
+
+
+	/**
+	 * @param string $exec_time
+	 */
+	public function setExecTime($exec_time) {
+		$this->exec_time = $exec_time;
+	}
+
+
+	/**
+	 * @var string
+	 * @db_has_field    true
+	 * @db_fieldtype    text
 	 * @db_length       2000
 	 */
 	protected $notification_email;
@@ -108,7 +134,7 @@ class hubOriginConfiguration extends ActiveRecord {
 	 * @return hubOriginConfiguration
 	 */
 	public static function conf($sr_hub_origin_id) {
-		if (! isset(self::$cache[$sr_hub_origin_id])) {
+		if (!isset(self::$cache[$sr_hub_origin_id])) {
 			$where = array( 'sr_hub_origin_id' => $sr_hub_origin_id );
 			if (self::where($where)->hasSets()) {
 				$activeRecord = self::where($where)->first();

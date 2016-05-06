@@ -1,5 +1,5 @@
 <?php
-require_once(hub::pathToActiveRecord().'/Views/Index/class.arIndexTableGUI.php');
+require_once(hub::pathToActiveRecord() . '/Views/Index/class.arIndexTableGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 require_once('./Services/Link/classes/class.ilLink.php');
 
@@ -57,8 +57,8 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param arIndexTableField $field
-	 * @param array             $item
-	 * @param mixed             $value
+	 * @param array $item
+	 * @param mixed $value
 	 *
 	 * @return string
 	 **/
@@ -80,7 +80,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 				$hubMembership = hubMembership::find($item['ext_id']);
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubMembership->getContainerId()) . '\'>'
-				. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubMembership->getContainerId())) . '</a>';
+				       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubMembership->getContainerId())) . '</a>';
 				break;
 			default:
 				return parent::setArFieldData($field, $item, $value);
@@ -109,13 +109,13 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 	 */
 	protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value) {
 		static $set = false;
-//		var_dump($name); // FSX
+		//		var_dump($name); // FSX
 		if ($name == "usr_id" AND !$set) {
 			$set = true;
-//echo "!";
-//			$this->active_record_list->innerjoin("usr_data", "usr_id", "usr_id", array( "*" ), "=");
-//			$this->active_record_list->where("(usr_data.login LIKE '%" . $value . "%' OR usr_data.firstname LIKE '%" . $value
-//				. "%' OR usr_data.lastname LIKE '%" . $value . "%' OR usr_data.title LIKE '%" . $value . "%') ");
+			//echo "!";
+			//			$this->active_record_list->innerjoin("usr_data", "usr_id", "usr_id", array( "*" ), "=");
+			//			$this->active_record_list->where("(usr_data.login LIKE '%" . $value . "%' OR usr_data.firstname LIKE '%" . $value
+			//				. "%' OR usr_data.lastname LIKE '%" . $value . "%' OR usr_data.title LIKE '%" . $value . "%') ");
 		} else {
 			parent::addFilterWhere($filter, $name, $value);
 		}

@@ -92,7 +92,7 @@ class hubCategory extends hubRepositoryObject {
 		 */
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
-			if (! hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
+			if (!hubSyncHistory::isLoaded($hubCategory->getSrHubOriginId())) {
 				continue;
 			}
 			$duration_id = 'obj_origin_' . $hubCategory->getSrHubOriginId();
@@ -109,23 +109,27 @@ class hubCategory extends hubRepositoryObject {
 				$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
 				$history->update();
 			}
+			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
 			switch ($hubCategory->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->createCategory();
+						$hubOriginObj->afterObjectCreation($hubCategory);
 					}
 					hubCounter::incrementCreated($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category created:');
 					break;
 				case hubSyncHistory::STATUS_UPDATED:
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->updateCategory();
+						$hubOriginObj->afterObjectUpdate($hubCategory);
 					}
 					hubCounter::incrementUpdated($hubCategory->getSrHubOriginId());
 					break;
 				case hubSyncHistory::STATUS_DELETED:
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->deleteCategory();
+						$hubOriginObj->afterObjectDeletion($hubCategory);
 					}
 					hubCounter::incrementDeleted($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category deleted:');
@@ -137,19 +141,22 @@ class hubCategory extends hubRepositoryObject {
 				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
 					hubCounter::incrementNewlyDelivered($hubCategory->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCategory->getSrHubOriginId(), $hubCategory->getTitle(), 'Category newly delivered:');
-					if (! hubSyncCron::getDryRun()) {
+					if (!hubSyncCron::getDryRun()) {
 						$hubCategory->updateCategory();
+						$hubOriginObj->afterObjectUpdate($hubCategory);
 					}
 					break;
 			}
 			$hubCategory->getHistoryObject()->updatePickupDate();
 			$hubOrigin = hubOrigin::getClassnameForOriginId($hubCategory->getSrHubOriginId());
 			$hubOrigin::afterObjectModification($hubCategory);
-			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
-			$hubOriginObj->afterObjectInit($hubCategory);
+
+			if (!hubSyncCron::getDryRun()) {
+				$hubOriginObj->afterObjectInit($hubCategory);
+			}
+
 			hubDurationLogger2::getInstance($duration_id)->pause();
-			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== ''
-			) {
+			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== null AND $hubCategory->getExtId() !== '') {
 				self::buildForParentId($hubCategory->getExtId());
 			}
 		}
@@ -248,7 +255,7 @@ class hubCategory extends hubRepositoryObject {
 			$this->ilias_object = new ilObjCategory($this->getHistoryObject()->getIliasId());
 			switch ($this->props()->get(hubCategoryFields::DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
-					$ilHubPlugin = new ilHubPlugin();
+					$ilHubPlugin = ilHubPlugin::getInstance();
 					$this->ilias_object->setTitle($this->getTitle() . ' ' . $ilHubPlugin->txt('com_prop_mark_deleted_text'));
 					if ($this->props()->get(hubCategoryFields::DELETED_ICON)) {
 						$icon = $this->props()->getIconPath('_deleted');
@@ -261,7 +268,7 @@ class hubCategory extends hubRepositoryObject {
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$hist->setIliasId(NULL);
+					$hist->setIliasId(null);
 					break;
 				case self::DELETE_MODE_ARCHIVE:
 					if ($this->props()->get(hubCategoryFields::ARCHIVE_NODE)) {
@@ -340,7 +347,7 @@ class hubCategory extends hubRepositoryObject {
 				}
 			}
 		} elseif ($this->getParentIdType() == self::PARENT_ID_TYPE_REF_ID) {
-			if (! $tree->isInTree($this->getParentId())) {
+			if (!$tree->isInTree($this->getParentId())) {
 				return $base_node_ilias;
 			} else {
 				return (int)$this->getParentId();
@@ -379,7 +386,7 @@ class hubCategory extends hubRepositoryObject {
 
 
 	protected function initObject() {
-		if (! isset($this->ilias_object)) {
+		if (!isset($this->ilias_object)) {
 			$this->ilias_object = ilObjectFactory::getInstanceByRefId($this->getHistoryObject()->getIliasId());
 		}
 	}

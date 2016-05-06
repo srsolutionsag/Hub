@@ -14,11 +14,10 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @var ilHubPlugin
 	 */
 	protected static $instance;
-
-    /**
-     * @var string
-     */
-    protected static $baseClass;
+	/**
+	 * @var string
+	 */
+	protected static $baseClass;
 
 
 	/**
@@ -33,7 +32,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return ilHubPlugin
 	 */
 	public static function getInstance() {
-		if (! isset(self::$instance)) {
+		if (!isset(self::$instance)) {
 			self::$instance = new self();
 		}
 
@@ -53,6 +52,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 			return false;
 		}
+
 		return true;
 	}
 
@@ -66,7 +66,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	public function updateLanguageFiles() {
-		if (! in_array('SimpleXLSX', get_declared_classes())) {
+		if (!in_array('SimpleXLSX', get_declared_classes())) {
 			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/lib/simplexlsx.class.php');
 		}
 		$path = substr(__FILE__, 0, strpos(__FILE__, 'classes')) . 'lang/';
@@ -96,7 +96,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 			$status = file_put_contents($path . 'ilias_' . $lng_key . '.lang', $start . implode(PHP_EOL, $lang));
 		}
 
-		if (! $status) {
+		if (!$status) {
 			ilUtil::sendFailure('Language-Files could not be written');
 		}
 		$this->updateLanguages();
@@ -110,19 +110,19 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 */
 	public static function getMenuEntries($id = 0) {
 
-        global $rbacreview, $ilUser;
-        if (!$rbacreview->isAssigned($ilUser->getId(), hubConfig::get(hubConfig::F_ADMIN_ROLES))) {
-            return array();
-        }
+		global $rbacreview, $ilUser;
+		if (!$rbacreview->isAssigned($ilUser->getId(), hubConfig::get(hubConfig::F_ADMIN_ROLES))) {
+			return array();
+		}
 
-        $entries[$id] = array();
-        $entries[0] = array();
+		$entries[$id] = array();
+		$entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass(self::getBaseClass().',hubGUI,hubOriginGUI');
+			$hub_menu->setGuiClass(self::getBaseClass() . ',hubGUI,hubOriginGUI');
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
-			if (! function_exists('hubConfig::get')) {
+			if (!function_exists('hubConfig::get')) {
 				$hub_menu->setPermission(2);
 			} else {
 				$hub_menu->setPermission(hubConfig::get(hubConfig::F_ADMIN_ROLES));
@@ -135,31 +135,33 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		return $entries[$id];
 	}
 
-    /**
-     * @var string
-     *
-     * In what class the command/ctrl chain should start for this plugin.
-     *
-     * This will return ilRouterGUI for ILIAS <= 4.4 if the corresponding plugin is installed
-     * and ilUIPluginRouterGUI for ILIAS >= 4.5 and false otherwise.
-     *
-     * @return string
-     */
-    public static function getBaseClass() {
-        if(self::$baseClass !== null)
-            return self::$baseClass;
 
-        global $ilCtrl;
-        if($ilCtrl->lookupClassPath('ilUIPluginRouterGUI')) {
-            self::$baseClass = 'ilUIPluginRouterGUI';
-        } elseif($ilCtrl->lookupClassPath('ilRouterGUI')) {
-            self::$baseClass = 'ilRouterGUI';
-        } else {
-            self::$baseClass = false;
-        }
+	/**
+	 * @var string
+	 *
+	 * In what class the command/ctrl chain should start for this plugin.
+	 *
+	 * This will return ilRouterGUI for ILIAS <= 4.4 if the corresponding plugin is installed
+	 * and ilUIPluginRouterGUI for ILIAS >= 4.5 and false otherwise.
+	 *
+	 * @return string
+	 */
+	public static function getBaseClass() {
+		if (self::$baseClass !== null) {
+			return self::$baseClass;
+		}
 
-        return self::$baseClass;
-    }
+		global $ilCtrl;
+		if ($ilCtrl->lookupClassPath('ilUIPluginRouterGUI')) {
+			self::$baseClass = 'ilUIPluginRouterGUI';
+		} elseif ($ilCtrl->lookupClassPath('ilRouterGUI')) {
+			self::$baseClass = 'ilRouterGUI';
+		} else {
+			self::$baseClass = false;
+		}
+
+		return self::$baseClass;
+	}
 }
 
 ?>

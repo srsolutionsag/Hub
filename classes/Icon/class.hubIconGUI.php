@@ -35,11 +35,8 @@ class hubIconGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs_gui = $ilTabs;
 		$this->lng = $lng;
-		$this->pl = new ilHubPlugin();
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
-		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
+		$this->pl = ilHubPlugin::getInstance();
+		if (!ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}
 		$this->origin = hubOrigin::find($_GET['origin_id']);
@@ -61,7 +58,7 @@ class hubIconGUI {
 					break;
 				default:
 					require_once($this->ctrl->lookupClassPath($next_class));
-					if (! $cmd) {
+					if (!$cmd) {
 						$this->ctrl->setCmd('index');
 					}
 					$gui = new $next_class($this);
@@ -111,7 +108,6 @@ class hubIconGUI {
 	}
 
 
-
 	/**
 	 * @param hubIconCollection $hubIconCollection
 	 */
@@ -126,6 +122,5 @@ class hubIconGUI {
 		}
 	}
 }
-
 
 ?>
