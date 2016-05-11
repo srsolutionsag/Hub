@@ -109,7 +109,7 @@ class hubCategory extends hubRepositoryObject {
 				$history->setIliasIdType(self::ILIAS_ID_TYPE_USER);
 				$history->update();
 			}
-			$hubOriginObj = $hubOrigin::find($hubCategory->getSrHubOriginId());
+			$hubOriginObj = hubOrigin::find($hubCategory->getSrHubOriginId());
 			switch ($hubCategory->getHistoryObject()->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					if (!hubSyncCron::getDryRun()) {
