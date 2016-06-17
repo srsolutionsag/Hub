@@ -59,7 +59,7 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 	 * @db_has_field    true
 	 * @db_is_primary   true
 	 * @db_fieldtype    text
-	 * @db_length       256
+	 * @db_length       255
 	 */
 	protected $property_key;
 	/**

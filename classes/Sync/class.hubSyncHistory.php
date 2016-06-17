@@ -289,7 +289,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @db_fieldtype           text
 	 * @db_is_primary          true
 	 * @db_is_notnull          true
-	 * @db_length              256
+	 * @db_length              255
 	 */
 	protected $ext_id;
 	/**
