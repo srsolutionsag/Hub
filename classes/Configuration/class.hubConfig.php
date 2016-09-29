@@ -29,16 +29,18 @@ class hubConfig extends ActiveRecord {
 	const F_ASYNC_CLI_PHP = 'async_cli_php';
 	const F_ADMIN_ROLES = 'admin_roles';
 	const F_IMPORT_EXPORT = 'import_export';
-    const F_MSG_SHORTLINK_NOT_FOUND = 'msg_shortlink_not_found';
-    const F_MSG_SHORTLINK_NOT_ACTIVE = 'msg_shortlink_not_active';
-    const F_MSG_SHORTLINK_NO_ILIAS_ID = 'msg_shortlink_no_ilias_id';
-
+	const F_MSG_SHORTLINK_NOT_FOUND = 'msg_shortlink_not_found';
+	const F_MSG_SHORTLINK_NOT_ACTIVE = 'msg_shortlink_not_active';
+	const F_MSG_SHORTLINK_NO_ILIAS_ID = 'msg_shortlink_no_ilias_id';
+	const F_MMAIL_ACTIVE = 'membership_mail_active';
+	const F_MMAIL_SUBJECT = 'membership_mail_subject';
+	const F_MMAIL_MSG = 'membership_mail_msg';
+	const F_STANDARD_ROLE = 'standard_role';
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const ILIAS_43 = 43;
 	const ILIAS_44 = 44;
 	const ILIAS_45 = 45;
-    const ILIAS_50 = 50;
-
+	const ILIAS_50 = 50;
 	/**
 	 * @var array
 	 */
@@ -66,9 +68,9 @@ class hubConfig extends ActiveRecord {
 	 * @return int
 	 */
 	public static function getILIASVersion() {
-        if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
-            return self::ILIAS_50;
-        }
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
+			return self::ILIAS_50;
+		}
 		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.5.000')) {
 			return self::ILIAS_45;
 		}
@@ -115,12 +117,12 @@ class hubConfig extends ActiveRecord {
 	}
 
 
-    /**
-     * @return bool
-     */
-    public static function is50() {
-        return self::getILIASVersion() >= self::ILIAS_50;
-    }
+	/**
+	 * @return bool
+	 */
+	public static function is50() {
+		return self::getILIASVersion() >= self::ILIAS_50;
+	}
 
 
 	/**
@@ -129,10 +131,10 @@ class hubConfig extends ActiveRecord {
 	 * @return string
 	 */
 	public static function get($name) {
-		if (! isset(self::$cache_loaded[$name])) {
+		if (!isset(self::$cache_loaded[$name])) {
 			$obj = self::find($name);
-			if ($obj === NULL) {
-				self::$cache[$name] = NULL;
+			if ($obj === null) {
+				self::$cache[$name] = null;
 			} else {
 				self::$cache[$name] = $obj->getValue();
 			}
@@ -167,10 +169,10 @@ class hubConfig extends ActiveRecord {
 	 * @return bool
 	 */
 	public static function isImportEnabled() {
-		return hubConfig::get(self::F_IMPORT_EXPORT) AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY)) AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP)) AND
-		is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
-		AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
+		return hubConfig::get(self::F_IMPORT_EXPORT) AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY))
+		                                                 AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP))
+		                                                     AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
+		                                                         AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
 	}
 
 

@@ -46,7 +46,7 @@ class hubGUI {
 		$this->toolbar = $ilToolbar;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
-		$this->pl = new ilHubPlugin();
+		$this->pl = ilHubPlugin::getInstance();
 		//		$this->pl->updateLanguages();
 	}
 
@@ -56,10 +56,10 @@ class hubGUI {
 	 */
 	private function setTabs($next_class) {
 		$this->tabs->addTab('hub_origins', $this->pl->txt('hub_origins'), $this->ctrl->getLinkTargetByClass('hubOriginGUI', 'index'));
-		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
-		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
-		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
-		$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
+//		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
+//		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
+//		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
+//		$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
 		//$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
 		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass('hubConfGUI', 'index'));
 		switch ($next_class) {
@@ -67,19 +67,19 @@ class hubGUI {
 				$this->tabs->setTabActive('hub_origins');
 				break;
 			case 'hubcoursegui';
-				$this->tabs->setTabActive('hub_courses');
+//				$this->tabs->setTabActive('hub_courses');
 				break;
 			case 'hubusergui';
-				$this->tabs->setTabActive('hub_users');
+//				$this->tabs->setTabActive('hub_users');
 				break;
 			case 'hubcategorygui';
-				$this->tabs->setTabActive('hub_categories');
+//				$this->tabs->setTabActive('hub_categories');
 				break;
 			case 'hubmembershipgui';
-				$this->tabs->setTabActive('hub_memberships');
+//				$this->tabs->setTabActive('hub_memberships');
 				break;
 			case 'hubloggui';
-				$this->tabs->setTabActive('log');
+//				$this->tabs->setTabActive('log');
 				break;
 			case 'hubconfgui';
 				$this->tabs->setTabActive('conf');
@@ -104,6 +104,8 @@ class hubGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
+		global $ilMainMenu;
+		$ilMainMenu->setActive('none');
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
 		$next_class = $next_class ? $next_class : 'hubOriginGUI';

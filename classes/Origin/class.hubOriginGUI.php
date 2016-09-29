@@ -20,6 +20,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @author            Fabian Schmid <fs@studer-raimann.ch>
  * @version           1.1.04
  *
+ * @ilCtrl_IsCalledBy hubOriginGUI: ilRouterGUI
  */
 class hubOriginGUI {
 
@@ -65,10 +66,8 @@ class hubOriginGUI {
 		$this->lng = $lng;
 		$this->pl = ilHubPlugin::getInstance();
 		$this->hubOrigin = hubOrigin::findOrGetInstance($_GET['origin_id']);
-		if ($_GET['hrl'] == 'true') {
-			$this->pl->updateLanguageFiles();
-		}
-		if (! ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
+
+		if (!ilHubAccess::checkAccess() OR $this->pl->isActive() == 0) {
 			ilUtil::redirect('/');
 		}
 	}
@@ -81,11 +80,11 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cmd = $this->ctrl->getCmd();
 			$next_class = $this->ctrl->getNextClass($this);
-//			$this->tpl->getStandardTemplate();
+			//			$this->tpl->getStandardTemplate();
 			$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $_GET['origin_id']);
-            if($cmd != 'delete'){
-                $this->ctrl->saveParameter($this, 'origin_id');
-            }
+			if ($cmd != 'delete') {
+				$this->ctrl->saveParameter($this, 'origin_id');
+			}
 			$this->setTabs($next_class, $cmd);
 			switch ($next_class) {
 				case '':
@@ -93,7 +92,7 @@ class hubOriginGUI {
 					break;
 				default:
 					require_once($this->ctrl->lookupClassPath($next_class));
-					if (! $cmd) {
+					if (!$cmd) {
 						$this->ctrl->setCmd('index');
 					}
 					$gui = new $next_class($this);
@@ -178,7 +177,7 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$cron = new hubSyncCron();
 			$cron->run();
-			if (! hub::isCli()) {
+			if (!hub::isCli()) {
 				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->index();
@@ -191,7 +190,7 @@ class hubOriginGUI {
 			$cron = new hubSyncCron();
 			$cron->setDryrun(true);
 			$cron->run();
-			if (! hub::isCli()) {
+			if (!hub::isCli()) {
 				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->index();
@@ -203,7 +202,7 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$async = new hubAsyncSync();
 			$async->run();
-			if (! hub::isCli()) {
+			if (!hub::isCli()) {
 				ilUtil::sendSuccess('Cronjob run');
 			}
 			$this->ctrl->redirect($this, 'index');
@@ -237,7 +236,7 @@ class hubOriginGUI {
 
 
 	protected function back() {
-		$this->ctrl->setParameter($this, 'origin_id', NULL);
+		$this->ctrl->setParameter($this, 'origin_id', null);
 		$this->ctrl->redirect($this);
 	}
 
@@ -248,7 +247,7 @@ class hubOriginGUI {
 			$form->setValuesByPost();
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('success'), true);
-				$this->ctrl->setParameter($this, 'origin_id', NULL);
+				$this->ctrl->setParameter($this, 'origin_id', null);
 				//				$this->ctrl->redirect($this, 'index');
 			} else {
 				$this->tpl->setContent($form->getHTML());
@@ -337,7 +336,7 @@ class hubOriginGUI {
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('msg_saved'), $redirect);
 				hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])->getTitle(), hubLog::L_PROD);
-				$this->ctrl->setParameter($this, 'origin_id', NULL);
+				$this->ctrl->setParameter($this, 'origin_id', null);
 				if ($redirect) {
 					$this->ctrl->redirect($this, 'index');
 				}
@@ -354,7 +353,7 @@ class hubOriginGUI {
 
 	public function confirmDelete() {
 		if (ilHubAccess::checkAccess()) {
-            $this->ctrl->clearParameters($this);
+			$this->ctrl->clearParameters($this);
 			$conf = new ilConfirmationGUI();
 			$conf->setFormAction($this->ctrl->getFormAction($this));
 			$conf->setHeaderText($this->pl->txt('msg_confirm_delete_origin'));

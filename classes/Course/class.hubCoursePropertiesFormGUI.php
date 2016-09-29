@@ -55,8 +55,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$notification_body->setRows(6);
 		$notification_body->setCols(100);
 		$send_mail->addSubItem($notification_body);
-        $notification_from = new ilTextInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_FROM), hubCourseFields::F_NOT_FROM);
-        $send_mail->addSubItem($notification_from);
+		$notification_from = new ilTextInputGUI($this->pl->txt('crs_prop_' . hubCourseFields::F_NOT_FROM), hubCourseFields::F_NOT_FROM);
+		$send_mail->addSubItem($notification_from);
 		$this->addItem($send_mail);
 		//
 		$h = new ilFormSectionHeaderGUI();
@@ -71,8 +71,8 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_description'), hubCourseFields::F_UPDATE_DESCRIPTION);
 		$this->addItem($cb);
-        $cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_responsible'), hubCourseFields::F_UPDATE_RESPONSIBLE);
-        $this->addItem($cb);
+		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_responsible'), hubCourseFields::F_UPDATE_RESPONSIBLE);
+		$this->addItem($cb);
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('crs_prop_update_icon'), hubCourseFields::F_UPDATE_ICON);
 		$this->addItem($cb);
@@ -87,7 +87,7 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$delete = new ilRadioGroupInputGUI($this->pl->txt('crs_prop_delete_mode'), hubCourseFields::F_DELETE);
 		//
-		$opt_none = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_none'), NULL);
+		$opt_none = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_none'), null);
 		$delete->addOption($opt_none);
 
 		$opt_inactive = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_inactive'), hubCourse::DELETE_MODE_INACTIVE);
@@ -96,10 +96,15 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$opt_delete = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_delete'), hubCourse::DELETE_MODE_DELETE);
 		$delete->addOption($opt_delete);
 		//
+		$opt_delete = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_delete_or_inactive'), hubCourse::DELETE_MODE_DELETE_OR_INACTIVE);
+		$opt_delete->setInfo($this->pl->txt('crs_prop_delete_mode_delete_or_inactive_info'));
+		$delete->addOption($opt_delete);
+		//
 		$opt_delete = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_trash'), hubCourse::DELETE_MODE_TRASH);
 		$delete->addOption($opt_delete);
 		//
 		$this->addItem($delete);
 	}
 }
+
 ?>

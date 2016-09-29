@@ -28,9 +28,9 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 
 		$se = new ilSelectInputGUI($this->pl->txt('mem_prop_get_usr_id'), hubMembershipFields::GET_USR_ID_FROM_ORIGIN);
 
-//		$sync_only = new ilCheckboxInputGUI($this->txt(hubMembershipFields::F_SYNC_ONLY), hubMembershipFields::F_SYNC_ONLY);
-//		$sync_only_period_chooser =
-//		$this->addItem($sync_only);
+		//		$sync_only = new ilCheckboxInputGUI($this->txt(hubMembershipFields::F_SYNC_ONLY), hubMembershipFields::F_SYNC_ONLY);
+		//		$sync_only_period_chooser =
+		//		$this->addItem($sync_only);
 		/**
 		 * @var $origin hubOrigin
 		 */
@@ -94,11 +94,14 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($h);
 
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('mem_prop_delete_mode'), hubMembershipFields::DELETE);
-		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_none'), NULL);
+		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_none'), null);
 		$ro->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_inactive'), hubCourse::DELETE_MODE_INACTIVE);
 		//$ro->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_delete'), hubCourse::DELETE_MODE_DELETE);
+		$ro->addOption($opt);
+		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_delete_or_inactive'), hubCourse::DELETE_MODE_DELETE_OR_INACTIVE);
+		$opt->setInfo($this->pl->txt('mem_prop_delete_mode_delete_or_inactive_info'));
 		$ro->addOption($opt);
 		$this->addItem($ro);
 

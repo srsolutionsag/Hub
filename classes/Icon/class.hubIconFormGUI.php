@@ -81,7 +81,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 
 
 	public function save() {
-		if (! $this->checkInput()) {
+		if (!$this->checkInput()) {
 			return false;
 		}
 		$this->import(hubIcon::PREF_SMALL);
