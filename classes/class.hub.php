@@ -223,6 +223,13 @@ class hub {
 		return self::getILIASVersion() >= self::ILIAS_50;
 	}
 
+	public static function loadIlDBMySQL() {
+		if (is_file('./Services/Database/classes/class.ilDBMySQL.php'))	{
+			require_once './Services/Database/classes/class.ilDBMySQL.php';
+		} else {
+			require_once './Services/Database/classes/MDB2/class.ilDBMySQL.php';
+		}
+	}
 
 	/**
 	 * @throws ilPluginException
