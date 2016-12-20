@@ -163,7 +163,7 @@ class hubIcon extends ActiveRecord {
 	 * @con_fieldtype          text
 	 * @con_length             128
 	 */
-	protected $suffix = 'png';
+	protected $suffix = 'svg';
 	/**
 	 * @var int
 	 *
@@ -292,6 +292,7 @@ class hubIcon extends ActiveRecord {
 	 * @return string
 	 */
 	public function getSuffix() {
+		return 'svg';
 		return $this->suffix;
 	}
 
