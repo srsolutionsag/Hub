@@ -235,7 +235,8 @@ class hubLogMessage {
 
 		if (strlen($memory_info) - strlen($message) + 2 < hubLogMessage::LENGTH) {
 			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
-			$fill = str_repeat(' ', hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2);
+			$length = hubLogMessage::LENGTH - strlen($memory_info) - strlen($message) + 2;
+			$fill = str_repeat(' ', ($length > 0 ? $length : 0));
 		} else {
 			// if a message is smaller than hubLogMessage::LENGTH, then fill it up with spaces in order to reach the maximal length (plus two spaces more)
 			$fill = '  ';
