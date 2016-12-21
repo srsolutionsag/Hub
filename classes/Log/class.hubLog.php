@@ -105,8 +105,8 @@ class hubLog {
 	 */
 	protected function getHeader($text) {
 		$date = '[' . date('d.m.Y - H:i:s') . ']';
-
-		return $text . ' ' . str_repeat('+', hubLogMessage::LENGTH - strlen($text) - strlen($date)) . ' ' . $date;
+		$length = hubLogMessage::LENGTH - strlen($text) - strlen($date);
+		return $text . ' ' . str_repeat('+', ($length > 0 ? $length : 0)) . ' ' . $date;
 	}
 
 
