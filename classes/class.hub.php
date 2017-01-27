@@ -197,6 +197,8 @@ class hub {
 
 	const ILIAS_44 = 44;
 	const ILIAS_50 = 50;
+	const ILIAS_51 = 51;
+	const ILIAS_52 = 52;
 
 
 	/**
@@ -205,6 +207,12 @@ class hub {
 	public static function getILIASVersion() {
 		require_once('./include/inc.ilias_version.php');
 		require_once './Services/Component/classes/class.ilComponent.php';
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '5.1.999')) {
+			return self::ILIAS_52;
+		}
+		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '5.0.999')) {
+			return self::ILIAS_51;
+		}
 		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
 			return self::ILIAS_50;
 		}
@@ -215,6 +223,20 @@ class hub {
 		return 0;
 	}
 
+
+	/**
+	 * @return bool
+	 */
+	public static function is52() {
+		return self::getILIASVersion() >= self::ILIAS_52;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function is51() {
+		return self::getILIASVersion() >= self::ILIAS_51;
+	}
 
 	/**
 	 * @return bool
