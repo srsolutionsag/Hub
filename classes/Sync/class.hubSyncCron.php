@@ -40,7 +40,15 @@ class hubSyncCron {
 
 	public static function initAndRun() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
-		hub::initILIAS();
+		if (hub::is52()) { // > 5.2.0
+			require_once './Services/Cron/classes/class.ilCronStartUp.php';
+			$ilCronStartup = new ilCronStartUp($_SERVER['argv'][3], $_SERVER['argv'][1], $_SERVER['argv'][2]);
+			$ilCronStartup->initIlias();
+			$ilCronStartup->authenticate();
+		} else {
+			hub::initILIAS();
+		}
+
 		$cronJob = new self();
 		if ($cronJob->origin_id) {
 			$cronJob->runSingleOrigin();
