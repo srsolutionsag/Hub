@@ -124,7 +124,7 @@ Sie wurden in ILIAS in folgendem Kurs eingeschrieben: [COURSE_TITLE]
 Der Kurs ist gültig vom [VALIDITY_START] bis zum [VALIDITY_END].
 
 Klicken Sie auf folgenden Link, um direkt zum Kurs zu gelangen: [COURSE_LINK]');
-hubConfig::set(hubConfig::F_STANDARD_ROLE, 'SAT_G_Member');
+hubConfig::set(hubConfig::F_STANDARD_ROLE, 'User');
 ?>
 <#13>
 <?php
