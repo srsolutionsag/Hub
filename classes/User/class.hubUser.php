@@ -327,6 +327,9 @@ class hubUser extends hubObject {
 
 			if ($this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT)) {
 				$this->ilias_object->setActive(true);
+				$this->getHistoryObject()->setAlreadyDeleted(false);
+				$this->getHistoryObject()->setDeleted(false);
+				$this->getHistoryObject()->update();
 			}
 			$this->updateExternalAuth();
 			$this->ilias_object->update();
