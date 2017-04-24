@@ -161,8 +161,8 @@ class hubUser extends hubObject {
 		}
 		if ($this->props()->get(hubUserFields::F_CREATE_PASSWORD)) {
 			$this->generatePassword();
-			$password = md5($this->getPasswd());
-			$this->ilias_object->setPasswd($password, IL_PASSWD_MD5);
+			$password = $this->getPasswd();
+			$this->ilias_object->setPasswd($password);
 		} else {
 			$this->ilias_object->setPasswd($this->getPasswd());
 		}
