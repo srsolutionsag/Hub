@@ -567,13 +567,13 @@ class hubCourse extends hubRepositoryObject {
 	 */
 	protected $title_extension = '';
 	/**
-	 * @var array
+	 * @var string
 	 *
 	 * @db_has_field        true
 	 * @db_fieldtype        text
 	 * @db_length           256
 	 */
-	protected $administrators = array();
+	protected $administrators = '';
 	/**
 	 * @var string
 	 *
