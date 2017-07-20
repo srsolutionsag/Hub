@@ -926,6 +926,36 @@ class hubCourse extends hubRepositoryObject {
 		$history->setDeleted(false);
 		$history->update();
 	}
+
+	/**
+	 * @param $field_name
+	 *
+	 * @return mixed|string
+	 */
+	public function sleep($field_name) {
+		switch ($field_name) {
+			case 'administrators':
+				return json_encode($this->administrators);
+			default:
+				return parent::sleep($field_name);
+		}
+	}
+
+
+	/**
+	 * @param $field_name
+	 * @param $field_value
+	 *
+	 * @return mixed
+	 */
+	public function wakeUp($field_name, $field_value) {
+		switch ($field_name) {
+			case 'administrators':
+				return json_decode($field_value, true);
+			default:
+				return parent::wakeUp($field_name, $field_value);
+		}
+	}
 }
 
 ?>
