@@ -190,6 +190,10 @@ class hubCourse extends hubRepositoryObject {
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 			$update = true;
 		}
+        if($this->getImportantInformation() !== $this->ilias_object->getImportantInformation()) {
+            $this->ilias_object->setImportantInformation($this->getImportantInformation());
+            $update = true;
+        }
 		if ($update) {
 			$this->ilias_object->setOwner($this->getOwner());
 			$this->ilias_object->update();
