@@ -116,9 +116,9 @@ class hubCourse extends hubRepositoryObject {
 		$this->ilias_object->setTitle($this->getTitlePrefix() . $this->getTitle() . $this->getTitleExtension());
 		$this->ilias_object->setDescription($this->getDescription());
 		$this->ilias_object->setImportId($this->returnImportId());
-		$this->ilias_object->setImportantInformation($this->getImportantInformation());
 		$this->updateAdditionalFields();
 		$this->ilias_object->create();
+        $this->ilias_object->setImportantInformation($this->getImportantInformation());
 		$this->ilias_object->createReference();
 		$node = $this->getDependecesNode();
 		$this->ilias_object->putInTree($node);
@@ -190,6 +190,10 @@ class hubCourse extends hubRepositoryObject {
 			$this->ilias_object->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 			$update = true;
 		}
+        if($this->getImportantInformation() !== $this->ilias_object->getImportantInformation()) {
+            $this->ilias_object->setImportantInformation($this->getImportantInformation());
+            $update = true;
+        }
 		if ($update) {
 			$this->ilias_object->setOwner($this->getOwner());
 			$this->ilias_object->update();
