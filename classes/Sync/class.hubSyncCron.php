@@ -45,6 +45,14 @@ class hubSyncCron {
 			$ilCronStartup = new ilCronStartUp($_SERVER['argv'][3], $_SERVER['argv'][1], $_SERVER['argv'][2]);
 			$ilCronStartup->initIlias();
 			$ilCronStartup->authenticate();
+
+			// some objects (e.g. LMs with custom style sheets) use the globals $tpl and/or $styleDefinition when copied,
+			// therefore we initailize these globals
+			require_once 'Services/UICore/classes/class.ilTemplate.php';
+			$tpl = new ilTemplate("tpl.main.html", true, true);
+			self::initGlobal("tpl", $tpl);
+			self::initGlobal("styleDefinition", "ilStyleDefinition",
+				"./Services/Style/System/classes/class.ilStyleDefinition.php");
 		} else {
 			hub::initILIAS();
 		}
@@ -55,6 +63,31 @@ class hubSyncCron {
 		} else {
 			$cronJob->run();
 		}
+	}
+
+
+	/**
+	 * @param      $a_name
+	 * @param      $a_class
+	 * @param null $a_source_file
+	 */
+	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
+	{
+		global $DIC;
+
+		if($a_source_file)
+		{
+			include_once $a_source_file;
+			$GLOBALS[$a_name] = new $a_class;
+		}
+		else
+		{
+			$GLOBALS[$a_name] = $a_class;
+		}
+
+		$DIC[$a_name] = function ($c) use ($a_name) {
+			return $GLOBALS[$a_name];
+		};
 	}
 
 
