@@ -21,6 +21,10 @@ class hubOrigin extends ActiveRecord {
 	const CONF_TYPE_EXTERNAL = 3;
 	const CLASS_NONE = 'none';
 	/**
+	 * @var \hubOrigin
+	 */
+	protected $originObject;
+	/**
 	 * @var int
 	 */
 	protected $checksum = 0;
@@ -36,6 +40,10 @@ class hubOrigin extends ActiveRecord {
 	 * @var bool
 	 */
 	protected $ar_safe_read = false;
+	/**
+	 * @var array
+	 */
+	protected static $classname_map = array();
 
 
 	public function __destruct() {
@@ -147,15 +155,20 @@ class hubOrigin extends ActiveRecord {
 	 * @return string
 	 */
 	public static function getClassnameForOriginId($sr_hub_origin_id) {
+		if (isset(self::$classname_map[$sr_hub_origin_id])) {
+			return self::$classname_map[$sr_hub_origin_id];
+		}
 		/**
 		 * @var $obj hubOrigin
 		 */
 		$obj = self::find($sr_hub_origin_id);
 		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == null) {
-			return 'hubOrigin';
+			self::$classname_map[$sr_hub_origin_id] = 'hubOrigin';
 		} else {
-			return $obj->getClassname();
+			self::$classname_map[$sr_hub_origin_id] = $obj->getClassname();
 		}
+
+		return self::$classname_map[$sr_hub_origin_id];
 	}
 
 
@@ -168,7 +181,7 @@ class hubOrigin extends ActiveRecord {
 		/**
 		 * @var $origin hubOrigin
 		 */
-		$origins = self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
+		$origins = self::where(array('usage_type' => $usage_type_id, 'active' => true))->get();
 		foreach ($origins as $key => $origin) {
 			if ($origin->isAsleep()) {
 				unset($origins[$key]);
@@ -190,7 +203,7 @@ class hubOrigin extends ActiveRecord {
 			 * @var $usage_class hubCourse
 			 */
 			$usage_class = self::getUsageClass($this->getId());
-			$existing = $usage_class::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
+			$existing = $usage_class::where(array('sr_hub_origin_id' => $this->getId()))->count();
 			if ($existing == 0) {
 				return true;
 			}
@@ -209,6 +222,9 @@ class hubOrigin extends ActiveRecord {
 	 * @return unibasSLCM
 	 */
 	public function getObject() {
+		if ($this->originObject instanceof hubOrigin) {
+			return $this->originObject;
+		}
 		if ($this->getClassFilePath() AND is_file($this->getClassFilePath())) {
 			if (!$this->originObject) {
 				require_once($this->getClassFilePath());
@@ -244,7 +260,7 @@ class hubOrigin extends ActiveRecord {
 		 */
 		$hubObject = self::getUsageClass($this->getId());
 
-		return $hubObject::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
+		return $hubObject::where(array('sr_hub_origin_id' => $this->getId()))->count();
 	}
 
 

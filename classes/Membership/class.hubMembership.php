@@ -95,18 +95,23 @@ class hubMembership extends hubObject {
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
 		}
+
+		$hubMemberships = hubMembership::getCollection();
+		if ($active_origin_ids) {
+			$hubMemberships = $hubMemberships->where(array('sr_hub_origin_id' => $active_origin_ids));
+		}
+
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubMemberships = self::limit($start, $steps)->get();
+			$hubMemberships = $hubMemberships->limit($start, $steps)->get();
 			if (!count($hubMemberships)) {
 				$hasSets = false;
 				continue;
 			}
 			foreach ($hubMemberships as $hubMembership) {
 				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
-				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
-				) {
+				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
@@ -117,21 +122,14 @@ class hubMembership extends hubObject {
 				 */
 				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-				//			$overridden_status = $hubOriginObj->overrideStatus($hubMembership);
-				//			if ($overridden_status) {
-				//				$status = $overridden_status;
-				//			} else {
-				//			}
-
 				$status = $hubMembership->getHistoryObject()->getStatus();
 				if ($hubOriginObj->returnActivePeriod()) {
 					$active_period = (string)$hubOriginObj->returnActivePeriod();
 					if ($hubMembership->getPeriod() != $active_period) {
-						//						 hubLog::getInstance()->write('ignored period');
 						$status = hubSyncHistory::STATUS_IGNORE;
 					}
 				}
-				//				hubLog::getInstance()->write('Status: ' . $status);
+
 				switch ($status) {
 					case hubSyncHistory::STATUS_NEW:
 						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
@@ -142,7 +140,6 @@ class hubMembership extends hubObject {
 						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
 						break;
 					case hubSyncHistory::STATUS_UPDATED:
-						//						hubLog::getInstance()->write('Update Membership: ' . $hubMembership->getExtId());
 						if (!hubSyncCron::getDryRun()) {
 							$hubMembership->updateMembership();
 							$hubOriginObj->afterObjectUpdate($hubMembership);
@@ -186,7 +183,7 @@ class hubMembership extends hubObject {
 				$hubMembership = null;
 				$hubOriginObj = null;
 			}
-			$step ++;
+			$step++;
 		}
 
 		return true;
@@ -381,7 +378,7 @@ class hubMembership extends hubObject {
 		if ($send) {
 			$mail = new ilCourseMembershipMailNotification();
 			$mail->setRefId($this->getContainerId());
-			$mail->setRecipients(array( $this->getUsrId() ));
+			$mail->setRecipients(array($this->getUsrId()));
 			$mail->setType($type);
 			$mail->send();
 		}
