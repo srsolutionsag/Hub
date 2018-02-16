@@ -92,13 +92,24 @@ class hubMembership extends hubObject {
 		//		hubSyncCron::setDryRun(true);
 		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_MEMBERSHIP);
 		$active_origin_ids = array();
+		$active_periods = array();
+		/**
+		 * @var $origin hubOrigin
+		 */
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
+			$active_period = $origin->returnActivePeriod();
+			if($active_period) {
+				$active_periods[] = $active_period;
+			}
 		}
 
 		$hubMemberships = hubMembership::getCollection();
 		if ($active_origin_ids) {
 			$hubMemberships = $hubMemberships->where(array('sr_hub_origin_id' => $active_origin_ids));
+		}
+		if(count($active_periods) === count($active_origin_ids)) {
+			$hubMemberships = $hubMemberships->where(array('period' => $active_periods));
 		}
 
 		while ($hasSets) {
