@@ -218,7 +218,15 @@ class hubCourse extends hubRepositoryObject {
 	protected function deleteCourse() {
 		if ($this->props()->get(hubCourseFields::F_DELETE)) {
 			$hist = $this->getHistoryObject();
-			$this->initObject();
+			try {
+				$this->initObject();
+			} catch (Exception $e) {
+				hubLog::getInstance()->write('Could not delete course with ref_id ' . $hist->getIliasId() . ', message: ' . $e->getMessage(), hubLog::L_DEBUG);
+				$hist->setAlreadyDeleted(true);
+				$hist->setDeleted(true);
+				$hist->update();
+				return;
+			}
 			switch ($this->props()->get(hubCourseFields::F_DELETE)) {
 				case self::DELETE_MODE_INACTIVE:
 					$this->setCourseInactive();
