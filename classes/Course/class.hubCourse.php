@@ -53,7 +53,6 @@ class hubCourse extends hubRepositoryObject {
 			$hubOriginObj = $hubOrigin::find($hubCourse->getSrHubOriginId());
 			$full_title = $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . $hubCourse->getTitleExtension();
 			$history = $hubCourse->getHistoryObject();
-			hubLog::getInstance()->write($history->getStatus());
 			switch ($history->getStatus()) {
 				case hubSyncHistory::STATUS_NEW:
 					if (!hubSyncCron::getDryRun()) {
@@ -219,7 +218,7 @@ class hubCourse extends hubRepositoryObject {
 	protected function deleteCourse() {
 		if ($this->props()->get(hubCourseFields::F_DELETE)) {
 			$hist = $this->getHistoryObject();
-			
+
 			if (!ilObject2::_exists($hist->getIliasId(), true)) {
 				hubLog::getInstance()->write('Delete Course: ref_id does not exist, ref_id=' . $hist->getIliasId(), hubLog::L_DEBUG);
 				$hist->setAlreadyDeleted(true);
