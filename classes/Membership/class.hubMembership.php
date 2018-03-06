@@ -96,15 +96,15 @@ class hubMembership extends hubObject {
 			$active_origin_ids[] = $origin->getId();
 		}
 
-		$hubMemberships = hubMembership::getCollection();
+		$hubMembershipsCollection = hubMembership::getCollection();
 		if ($active_origin_ids) {
-			$hubMemberships = $hubMemberships->where(array('sr_hub_origin_id' => $active_origin_ids));
+			$hubMembershipsCollection = $hubMembershipsCollection->where(array('sr_hub_origin_id' => $active_origin_ids));
 		}
 
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubMemberships = $hubMemberships->limit($start, $steps)->get();
+			$hubMemberships = $hubMembershipsCollection->limit($start, $steps)->get();
 			if (!count($hubMemberships)) {
 				$hasSets = false;
 				continue;
