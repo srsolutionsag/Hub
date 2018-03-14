@@ -20,6 +20,11 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_SHIB = 2;
 	const ACCOUNT_TYPE_LDAP = 3;
 	const ACCOUNT_TYPE_RADIUS = 4;
+	const ACCOUNT_TYPE_LDAP_1 = 5;
+	const ACCOUNT_TYPE_LDAP_2 = 6;
+	const ACCOUNT_TYPE_LDAP_3 = 7;
+	const ACCOUNT_TYPE_LDAP_4 = 8;
+	const ACCOUNT_TYPE_LDAP_5 = 9;
 	public $user_properties = array(
 		'institution',
 		'street',
@@ -402,6 +407,21 @@ class hubUser extends hubObject {
 				break;
 			case self::ACCOUNT_TYPE_RADIUS:
 				$auth_mode = 'radius';
+				break;
+			case self::ACCOUNT_TYPE_LDAP_1:
+				$auth_mode = 'ldap_1';
+				break;
+			case self::ACCOUNT_TYPE_LDAP_2:
+				$auth_mode = 'ldap_2';
+				break;
+			case self::ACCOUNT_TYPE_LDAP_3:
+				$auth_mode = 'ldap_3';
+				break;
+			case self::ACCOUNT_TYPE_LDAP_4:
+				$auth_mode = 'ldap_4';
+				break;
+			case self::ACCOUNT_TYPE_LDAP_5:
+				$auth_mode = 'ldap_5';
 				break;
 		}
 		$this->ilias_object->setAuthMode($auth_mode);
