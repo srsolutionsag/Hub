@@ -161,7 +161,7 @@ class hubCourse extends hubRepositoryObject {
 
 
 	public function updateCourse() {
-		if (!ilObject2::_exists($this->getHistoryObject()->getIliasId())) {
+		if (!ilObject2::_exists($this->getHistoryObject()->getIliasId(), true)) {
 			$this->getHistoryObject()->setDeleted(1);
 			$this->getHistoryObject()->setAlreadyDeleted(1);
 			$this->getHistoryObject()->update();
