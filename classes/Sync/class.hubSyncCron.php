@@ -122,6 +122,7 @@ class hubSyncCron {
 				//				$class::logCounts();
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->handleMessages();
