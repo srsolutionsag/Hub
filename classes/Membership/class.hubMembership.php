@@ -105,95 +105,101 @@ class hubMembership extends hubObject {
 		}
 
 		while ($hasSets) {
-			$start = $step * $steps;
-			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-			$hubMembershipList = hubMembership::getCollection();
-			if ($active_origin_ids) {
-				$hubMembershipList = $hubMembershipList->where(array('sr_hub_origin_id' => $active_origin_ids));
-			}
-			if(count($active_periods) === count($active_origin_ids)) {
-				$hubMembershipList = $hubMembershipList->where(array('period' => $active_periods));
-			}
-			$hubMemberships = $hubMembershipList->limit($start, $steps)->get();
-			if (!count($hubMemberships)) {
-				$hasSets = false;
-				continue;
-			}
-			foreach ($hubMemberships as $hubMembership) {
-				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
-				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
+			try {
+				$start = $step * $steps;
+				hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
+				$hubMembershipList = hubMembership::getCollection();
+				if ($active_origin_ids) {
+					$hubMembershipList = $hubMembershipList->where(array('sr_hub_origin_id' => $active_origin_ids));
+				}
+				if (count($active_periods) === count($active_origin_ids)) {
+					$hubMembershipList = $hubMembershipList->where(array('period' => $active_periods));
+				}
+				$hubMemberships = $hubMembershipList->limit($start, $steps)->get();
+				if (!count($hubMemberships)) {
+					$hasSets = false;
 					continue;
 				}
-				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
-				hubDurationLogger2::getInstance($duration_id)->resume();
-				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
-				/**
-				 * @var $hubOriginObj hubOrigin
-				 */
-				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
-
-				$status = $hubMembership->getHistoryObject()->getStatus();
-				if ($hubOriginObj->returnActivePeriod()) {
-					$active_period = (string)$hubOriginObj->returnActivePeriod();
-					if ($hubMembership->getPeriod() != $active_period) {
-						$status = hubSyncHistory::STATUS_IGNORE;
+				foreach ($hubMemberships as $hubMembership) {
+					if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
+						|| !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
+					) {
+						continue;
 					}
-				}
+					$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
+					hubDurationLogger2::getInstance($duration_id)->resume();
+					$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+					/**
+					 * @var $hubOriginObj hubOrigin
+					 */
+					$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-				switch ($status) {
-					case hubSyncHistory::STATUS_NEW:
-						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->createMembership();
-							$hubOriginObj->afterObjectCreation($hubMembership);
+					$status = $hubMembership->getHistoryObject()->getStatus();
+					if ($hubOriginObj->returnActivePeriod()) {
+						$active_period = (string)$hubOriginObj->returnActivePeriod();
+						if ($hubMembership->getPeriod() != $active_period) {
+							$status = hubSyncHistory::STATUS_IGNORE;
 						}
-						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_UPDATED:
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->updateMembership();
-							$hubOriginObj->afterObjectUpdate($hubMembership);
-						}
-						hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_DELETED:
-						hubLog::getInstance()->write('Delete Membership: ' . $hubMembership->getExtId());
-						hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->deleteMembership();
-							$hubOriginObj->afterObjectDeletion($hubMembership);
-						}
-						hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_ALREADY_DELETED:
-						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_NEWLY_DELIVERED:
-						hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
-						hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
-							$hubMembership->createMembership();
-							$hubOriginObj->afterObjectDeletion($hubMembership);
-						}
-						break;
-					case hubSyncHistory::STATUS_IGNORE:
-						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-						break;
-				}
+					}
 
-				$hubMembership->getHistoryObject()->updatePickupDate();
-				$hubOrigin::afterObjectModification($hubMembership);
-				if (!hubSyncCron::getDryRun()) {
-					$hubOriginObj->afterObjectInit($hubMembership);
-					arObjectCache::purge($hubMembership->getHistoryObject());
+					switch ($status) {
+						case hubSyncHistory::STATUS_NEW:
+							hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->createMembership();
+								$hubOriginObj->afterObjectCreation($hubMembership);
+							}
+							hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_UPDATED:
+							if (!hubSyncCron::getDryRun()) {
+								// $hubMembership->updateMembership();
+								$hubOriginObj->afterObjectUpdate($hubMembership);
+							}
+							hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_DELETED:
+							hubLog::getInstance()->write('Delete Membership: ' . $hubMembership->getExtId());
+							hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->deleteMembership();
+								$hubOriginObj->afterObjectDeletion($hubMembership);
+							}
+							hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_ALREADY_DELETED:
+							hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+							hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
+							hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
+								$hubMembership->createMembership();
+								$hubOriginObj->afterObjectDeletion($hubMembership);
+							}
+							break;
+						case hubSyncHistory::STATUS_IGNORE:
+							hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+							break;
+					}
+
+					$hubMembership->getHistoryObject()->updatePickupDate();
+					$hubOrigin::afterObjectModification($hubMembership);
+					if (!hubSyncCron::getDryRun()) {
+						$hubOriginObj->afterObjectInit($hubMembership);
+						arObjectCache::purge($hubMembership->getHistoryObject());
+					}
+					hubDurationLogger2::getInstance($duration_id)->resume();
+					arObjectCache::purge($hubMembership);
+					$hubMembership = null;
+					$hubOriginObj = null;
 				}
-				hubDurationLogger2::getInstance($duration_id)->resume();
-				arObjectCache::purge($hubMembership);
-				$hubMembership = null;
-				$hubOriginObj = null;
+				$step++;
+			} catch (Exception $e) {
+				hubLog::getInstance()->write("Catched Exception: " . $e->getMessage(), hubLog::L_PROD);
+				hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 			}
-			$step++;
 		}
 
 		return true;
