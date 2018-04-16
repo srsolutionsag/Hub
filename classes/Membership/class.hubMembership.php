@@ -98,29 +98,21 @@ class hubMembership extends hubObject {
 		 */
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
-			$active_period = $origin->returnActivePeriod();
-			if($active_period) {
-				$active_periods[] = $active_period;
-			}
 		}
 
+		$where = array('sr_hub_origin_id' => $active_origin_ids);
+
 		while ($hasSets) {
-			try {
-				$start = $step * $steps;
-				hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
-				$hubMembershipList = hubMembership::getCollection();
-				if ($active_origin_ids) {
-					$hubMembershipList = $hubMembershipList->where(array('sr_hub_origin_id' => $active_origin_ids));
-				}
-				if (count($active_periods) === count($active_origin_ids)) {
-					$hubMembershipList = $hubMembershipList->where(array('period' => $active_periods));
-				}
-				$hubMemberships = $hubMembershipList->limit($start, $steps)->get();
-				if (!count($hubMemberships)) {
-					$hasSets = false;
-					continue;
-				}
-				foreach ($hubMemberships as $hubMembership) {
+			$start = $step * $steps;
+			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
+			$hubMemberships = self::where($where)->limit($start, $steps)->get();
+			if (!count($hubMemberships)) {
+				$hasSets = false;
+				continue;
+			}
+
+			foreach ($hubMemberships as $hubMembership) {
+				try {
 					if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
 						|| !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
 					) {
@@ -194,11 +186,12 @@ class hubMembership extends hubObject {
 					arObjectCache::purge($hubMembership);
 					$hubMembership = null;
 					$hubOriginObj = null;
+
+					$step++;
+				} catch (Exception $e) {
+					hubLog::getInstance()->write("Catched Exception: " . $e->getMessage(), hubLog::L_PROD);
+					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 				}
-				$step++;
-			} catch (Exception $e) {
-				hubLog::getInstance()->write("Catched Exception: " . $e->getMessage(), hubLog::L_PROD);
-				hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 			}
 		}
 
