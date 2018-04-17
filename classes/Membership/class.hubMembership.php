@@ -84,11 +84,13 @@ class hubMembership extends hubObject {
 		 * @var $hubOrigin        hubOrigin
 		 * @var $hubOriginObj     unibasSLCMMemberships
 		 */
+		// error_reporting(((ini_get("error_reporting") & ~E_NOTICE) & ~E_DEPRECATED) & ~E_STRICT);
+
 		$count = self::count();
 		$steps = 1000;
 		$step = 0;
 		$hasSets = true;
-		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		hubLog::getInstance()->write("Start building $count ILIAS objects", hubLog::L_PROD);
 		//		hubSyncCron::setDryRun(true);
 		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_MEMBERSHIP);
 		$active_origin_ids = array();
@@ -101,11 +103,13 @@ class hubMembership extends hubObject {
 		}
 
 		$where = array('sr_hub_origin_id' => $active_origin_ids);
-
+		//		$where['period'] = '2017005'; // remove
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubMemberships = self::where($where)->limit($start, $steps)->get();
+			hubLog::getInstance()->write('DEBUG QUERY: ' . ActiveRecordList::getLastQuery());
+
 			if (!count($hubMemberships)) {
 				$hasSets = false;
 				continue;
@@ -134,6 +138,8 @@ class hubMembership extends hubObject {
 						}
 					}
 
+					hubLog::getInstance()->write("DEBUG: " . $hubMembership->getExtId(), hubLog::L_PROD);
+
 					switch ($status) {
 						case hubSyncHistory::STATUS_NEW:
 							hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
@@ -145,7 +151,7 @@ class hubMembership extends hubObject {
 							break;
 						case hubSyncHistory::STATUS_UPDATED:
 							if (!hubSyncCron::getDryRun()) {
-								// $hubMembership->updateMembership();
+								 $hubMembership->updateMembership();
 								$hubOriginObj->afterObjectUpdate($hubMembership);
 							}
 							hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
@@ -182,17 +188,16 @@ class hubMembership extends hubObject {
 						$hubOriginObj->afterObjectInit($hubMembership);
 						arObjectCache::purge($hubMembership->getHistoryObject());
 					}
-					hubDurationLogger2::getInstance($duration_id)->resume();
+					hubDurationLogger2::getInstance($duration_id)->pause();
+					$hubMembership->unsetHistoryObjectCache();
 					arObjectCache::purge($hubMembership);
-					$hubMembership = null;
-					$hubOriginObj = null;
-
-					$step++;
+					unset($hubMembership);
 				} catch (Exception $e) {
 					hubLog::getInstance()->write("Catched Exception: " . $e->getMessage(), hubLog::L_PROD);
 					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 				}
 			}
+			$step++;
 		}
 
 		return true;

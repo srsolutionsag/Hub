@@ -57,6 +57,11 @@ abstract class hubObject extends ActiveRecord {
 	 */
 	protected static $existing_ext_ids = array();
 
+	/**
+	 * @var hubSyncHistory
+	 */
+	protected $history;
+
 
 	public function __destruct() {
 		$this->ilias_object = null;
@@ -90,6 +95,11 @@ abstract class hubObject extends ActiveRecord {
 	 */
 	public function update(hubOrigin $origin) {
 		$this->updateInto($origin);
+	}
+
+
+	public function unsetHistoryObjectCache() {
+		arObjectCache::purge($this->getHistoryObject());
 	}
 
 
@@ -233,7 +243,11 @@ abstract class hubObject extends ActiveRecord {
 	 * @return hubSyncHistory
 	 */
 	public function getHistoryObject() {
-		return hubSyncHistory::getInstance($this);
+		if ($this->history === null) {
+			$this->history = hubSyncHistory::getInstance($this);
+		}
+
+		return $this->history;
 	}
 
 
