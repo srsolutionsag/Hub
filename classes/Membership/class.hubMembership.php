@@ -108,7 +108,7 @@ class hubMembership extends hubObject {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubMemberships = self::where($where)->limit($start, $steps)->get();
-			hubLog::getInstance()->write('DEBUG QUERY: ' . ActiveRecordList::getLastQuery());
+			// hubLog::getInstance()->write('DEBUG QUERY: ' . ActiveRecordList::getLastQuery());
 
 			if (!count($hubMemberships)) {
 				$hasSets = false;
@@ -138,7 +138,7 @@ class hubMembership extends hubObject {
 						}
 					}
 
-					hubLog::getInstance()->write("DEBUG: " . $hubMembership->getExtId(), hubLog::L_PROD);
+					// hubLog::getInstance()->write("DEBUG: " . $hubMembership->getExtId(), hubLog::L_PROD);
 
 					switch ($status) {
 						case hubSyncHistory::STATUS_NEW:
