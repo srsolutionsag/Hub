@@ -12,7 +12,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @var array
 	 */
-	protected static $file_types = array( 'png' );
+	protected static $file_types = array( 'svg' );
 	/**
 	 * @var ilHubConfigGUI
 	 */
@@ -58,7 +58,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		if ($this->small->exists()) {
 			$small->setImage($this->small->getPath());
 		}
-		$this->addItem($small);
+//		$this->addItem($small);
 		//
 		$medium = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_MEDIUM), hubIcon::PREF_MEDIUM);
 		$medium->setSuffixes(self::$file_types);
@@ -66,12 +66,14 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		if ($this->medium->exists()) {
 			$medium->setImage($this->medium->getPath());
 		}
-		$this->addItem($medium);
+//		$this->addItem($medium);
 		//
 		$large = new ilImageFileInputGUI($this->pl->txt('icon_title_' . hubIcon::PREF_LARGE), hubIcon::PREF_LARGE);
 		$large->setSuffixes(self::$file_types);
 		//		$large->setInfo($this->large->getDeleted());
+
 		if ($this->large->exists()) {
+
 			$large->setImage($this->large->getPath());
 		}
 		$this->addItem($large);
