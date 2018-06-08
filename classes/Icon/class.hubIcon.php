@@ -21,24 +21,42 @@ class hubIcon extends ActiveRecord {
 	const PREF_MEDIUM = 'medium';
 	const PREF_LARGE = 'large';
 	const PREF_DEP = 'dep';
+	const TABLE_NAME = "hub_icon";
 	/**
 	 * @var array
 	 */
 	protected static $size_prefixes = array(
-		self::SIZE_SMALL  => self::PREF_SMALL,
+		self::SIZE_SMALL => self::PREF_SMALL,
 		self::SIZE_MEDIUM => self::PREF_MEDIUM,
-		self::SIZE_LARGE  => self::PREF_LARGE,
-		self::SIZE_LARGE  => self::PREF_LARGE,
+		self::SIZE_LARGE => self::PREF_LARGE,
+		self::SIZE_LARGE => self::PREF_LARGE,
 	);
 	/**
 	 * @var array
 	 */
 	protected static $foldername = array(
-		self::USAGE_OBJECT            => 'obj',
-		self::USAGE_FIRST_DEPENDENCE  => 'dep_1',
+		self::USAGE_OBJECT => 'obj',
+		self::USAGE_FIRST_DEPENDENCE => 'dep_1',
 		self::USAGE_SECOND_DEPENDENCE => 'dep_2',
-		self::USAGE_THIRD_DEPENDENCE  => 'dep_3',
+		self::USAGE_THIRD_DEPENDENCE => 'dep_3',
 	);
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
 
 
 	/**
@@ -196,24 +214,6 @@ class hubIcon extends ActiveRecord {
 	 * @con_length             1
 	 */
 	protected $deleted = false;
-
-
-	/**
-	 * @return string
-	 * @description Return the Name of your Database Table
-	 * @deprecated
-	 */
-	static function returnDbTableName() {
-		return 'hub_icon';
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return 'hub_icon';
-	}
 
 
 	/**

@@ -24,6 +24,26 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_CRS_TUTOR = 3;
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
+	const TABLE_NAME = "sr_hub_membership";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var ilCourseParticipant
 	 */
@@ -51,9 +71,9 @@ class hubMembership extends hubObject {
 
 
 	public function __destruct() {
-		$this->members_object = null;
-		$this->object_type = null;
-		$this->participants = null;
+		$this->members_object = NULL;
+		$this->object_type = NULL;
+		$this->participants = NULL;
 		parent::__destruct();
 	}
 
@@ -96,7 +116,7 @@ class hubMembership extends hubObject {
 			$active_origin_ids[] = $origin->getId();
 		}
 
-		$where = array('sr_hub_origin_id' => $active_origin_ids);
+		$where = array( 'sr_hub_origin_id' => $active_origin_ids );
 
 		while ($hasSets) {
 			$start = $step * $steps;
@@ -108,7 +128,7 @@ class hubMembership extends hubObject {
 			}
 			foreach ($hubMemberships as $hubMembership) {
 				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
-				    || !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
+					|| !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
 					continue;
 				}
 				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
@@ -177,10 +197,10 @@ class hubMembership extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				arObjectCache::purge($hubMembership);
-				$hubMembership = null;
-				$hubOriginObj = null;
+				$hubMembership = NULL;
+				$hubOriginObj = NULL;
 			}
-			$step++;
+			$step ++;
 		}
 
 		return true;
@@ -263,7 +283,7 @@ class hubMembership extends hubObject {
 	public function createMembership() {
 		$this->initObject();
 		if ($this->ilias_role_id > 1) {
-			if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
+			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
 			if ($this->getHasNotification() AND $this->props()->get(hubMembershipFields::ADD_NOTIFICATION)) {
@@ -284,7 +304,7 @@ class hubMembership extends hubObject {
 		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
-				if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
+				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 					if ($this->participants->isAssigned($this->getUsrId())) {
 						//						$this->participants->updateRoleAssignments($this->getUsrId(), array( $this->ilias_role_id ));
 					} else {
@@ -375,7 +395,7 @@ class hubMembership extends hubObject {
 		if ($send) {
 			$mail = new ilCourseMembershipMailNotification();
 			$mail->setRefId($this->getContainerId());
-			$mail->setRecipients(array($this->getUsrId()));
+			$mail->setRecipients(array( $this->getUsrId() ));
 			$mail->setType($type);
 			$mail->send();
 		}
@@ -431,7 +451,7 @@ class hubMembership extends hubObject {
 	 * @db_fieldtype        text
 	 * @db_length           64
 	 */
-	protected $period = null;
+	protected $period = NULL;
 	//
 	// Setter & Getter
 	//
@@ -516,14 +536,6 @@ class hubMembership extends hubObject {
 	 */
 	public function getExtIdCourse() {
 		return $this->ext_id_course;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_membership';
 	}
 
 

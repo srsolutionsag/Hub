@@ -212,14 +212,14 @@ class hubOriginGUI {
 
 	public function updateAllTables() {
 		if (ilHubAccess::checkAccess()) {
-			hubOriginConfiguration::installDB();
-			hubOrigin::installDB();
-			hubOriginObjectPropertyValue::installDB();
-			hubCategory::installDB();
-			hubCourse::installDB();
-			hubMembership::installDB();
-			hubUser::installDB();
-			hubSyncHistory::installDB();
+			hubOriginConfiguration::updateDB()();
+			hubOrigin::updateDB()();
+			hubOriginObjectPropertyValue::updateDB()();
+			hubCategory::updateDB()();
+			hubCourse::updateDB()();
+			hubMembership::updateDB()();
+			hubUser::updateDB()();
+			hubSyncHistory::updateDB()();
 			ilUtil::sendInfo('Update ok', true);
 			//			$this->ctrl->redirect($this, 'index');
 		}

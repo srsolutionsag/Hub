@@ -20,6 +20,26 @@ class hubOrigin extends ActiveRecord {
 	const CONF_TYPE_DB = 2;
 	const CONF_TYPE_EXTERNAL = 3;
 	const CLASS_NONE = 'none';
+	const TABLE_NAME = "sr_hub_origin";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var \hubOrigin
 	 */
@@ -47,9 +67,9 @@ class hubOrigin extends ActiveRecord {
 
 
 	public function __destruct() {
-		$this->object_properties = null;
-		$this->log = null;
-		$this->conf = null;
+		$this->object_properties = NULL;
+		$this->log = NULL;
+		$this->conf = NULL;
 	}
 
 
@@ -98,7 +118,7 @@ class hubOrigin extends ActiveRecord {
 	 * @return null
 	 */
 	public function returnActivePeriod() {
-		return null;
+		return NULL;
 	}
 
 
@@ -162,7 +182,7 @@ class hubOrigin extends ActiveRecord {
 		 * @var $obj hubOrigin
 		 */
 		$obj = self::find($sr_hub_origin_id);
-		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == null) {
+		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == NULL) {
 			self::$classname_map[$sr_hub_origin_id] = 'hubOrigin';
 		} else {
 			self::$classname_map[$sr_hub_origin_id] = $obj->getClassname();
@@ -181,7 +201,7 @@ class hubOrigin extends ActiveRecord {
 		/**
 		 * @var $origin hubOrigin
 		 */
-		$origins = self::where(array('usage_type' => $usage_type_id, 'active' => true))->get();
+		$origins = self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
 		foreach ($origins as $key => $origin) {
 			if ($origin->isAsleep()) {
 				unset($origins[$key]);
@@ -203,7 +223,7 @@ class hubOrigin extends ActiveRecord {
 			 * @var $usage_class hubCourse
 			 */
 			$usage_class = self::getUsageClass($this->getId());
-			$existing = $usage_class::where(array('sr_hub_origin_id' => $this->getId()))->count();
+			$existing = $usage_class::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
 			if ($existing == 0) {
 				return true;
 			}
@@ -260,7 +280,7 @@ class hubOrigin extends ActiveRecord {
 		 */
 		$hubObject = self::getUsageClass($this->getId());
 
-		return $hubObject::where(array('sr_hub_origin_id' => $this->getId()))->count();
+		return $hubObject::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
 	}
 
 
@@ -621,16 +641,6 @@ class hubOrigin extends ActiveRecord {
 	 * @db_length           8
 	 */
 	protected $duration_objects = 0;
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_origin';
-	}
-
-
 	//
 	// Setter & Getter
 	//

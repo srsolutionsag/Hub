@@ -17,6 +17,26 @@ class hubCategory extends hubRepositoryObject {
 
 	const ORDER_TYPE_TITLE = 0;
 	const ORDER_TYPE_MANUALLY = 1;
+	const TABLE_NAME = "sr_hub_category";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var int
 	 *
@@ -57,14 +77,6 @@ class hubCategory extends hubRepositoryObject {
 	 * @var ilObjCategory
 	 */
 	public $ilias_object;
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_category';
-	}
 
 
 	/**
@@ -156,7 +168,7 @@ class hubCategory extends hubRepositoryObject {
 			}
 
 			hubDurationLogger2::getInstance($duration_id)->pause();
-			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== null AND $hubCategory->getExtId() !== '') {
+			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== '') {
 				self::buildForParentId($hubCategory->getExtId());
 			}
 		}
@@ -268,7 +280,7 @@ class hubCategory extends hubRepositoryObject {
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$hist->setIliasId(null);
+					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_ARCHIVE:
 					if ($this->props()->get(hubCategoryFields::ARCHIVE_NODE)) {

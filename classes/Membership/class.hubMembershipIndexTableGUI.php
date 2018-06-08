@@ -2,6 +2,7 @@
 require_once(hub::pathToActiveRecord() . '/Views/Index/class.arIndexTableGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 require_once('./Services/Link/classes/class.ilLink.php');
+require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php";
 
 /**
  * TableGUI hubMembershipIndexTableGUI
@@ -20,7 +21,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
 
 	protected function beforeGetData() {
-		$this->setDefaultOrderField("sr_hub_membership.usr_id");
+		$this->setDefaultOrderField(hubMembership::TABLE_NAME . ".usr_id");
 	}
 
 
@@ -57,8 +58,8 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param arIndexTableField $field
-	 * @param array $item
-	 * @param mixed $value
+	 * @param array             $item
+	 * @param mixed             $value
 	 *
 	 * @return string
 	 **/
@@ -80,7 +81,7 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 				$hubMembership = hubMembership::find($item['ext_id']);
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubMembership->getContainerId()) . '\'>'
-				       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubMembership->getContainerId())) . '</a>';
+					. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubMembership->getContainerId())) . '</a>';
 				break;
 			default:
 				return parent::setArFieldData($field, $item, $value);

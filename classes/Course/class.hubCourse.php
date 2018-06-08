@@ -12,6 +12,26 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubCourse extends hubRepositoryObject {
 
+	const TABLE_NAME = "sr_hub_course";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var ilObjCourse
 	 */
@@ -20,14 +40,6 @@ class hubCourse extends hubRepositoryObject {
 	 * @var int
 	 */
 	public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_course';
-	}
 
 
 	/**
@@ -78,7 +90,7 @@ class hubCourse extends hubRepositoryObject {
 					}
 					hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
 					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title . ' :: '
-					                                                                  . implode('/', $path), 'Courses deleted with ref_id path:');
+						. implode('/', $path), 'Courses deleted with ref_id path:');
 					break;
 				case hubSyncHistory::STATUS_ALREADY_DELETED:
 					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
@@ -224,6 +236,7 @@ class hubCourse extends hubRepositoryObject {
 				$hist->setAlreadyDeleted(true);
 				$hist->setDeleted(true);
 				$hist->update();
+
 				return;
 			}
 
@@ -330,7 +343,7 @@ class hubCourse extends hubRepositoryObject {
 	 * @return bool
 	 */
 	private function hasDependences() {
-		return $this->getFirstDependence() != null OR $this->getSecondDependence() != null OR $this->getThirdDependence() != null;
+		return $this->getFirstDependence() != NULL OR $this->getSecondDependence() != NULL OR $this->getThirdDependence() != NULL;
 	}
 
 
@@ -406,7 +419,7 @@ class hubCourse extends hubRepositoryObject {
 		 * @var $tree      ilTree
 		 * @var $rbacadmin ilRbacAdmin
 		 */
-		if ($title == null) {
+		if ($title == NULL) {
 			return $parent_id;
 		}
 		global $tree;
@@ -940,6 +953,7 @@ class hubCourse extends hubRepositoryObject {
 		$history->setDeleted(false);
 		$history->update();
 	}
+
 
 	/**
 	 * @param $field_name

@@ -2,6 +2,7 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubObject.php');
 require_once('./Services/Mail/classes/class.ilMimeMail.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUserFields.php');
+require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php";
 
 /**
  * Class hubUser
@@ -25,6 +26,7 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_LDAP_3 = 7;
 	const ACCOUNT_TYPE_LDAP_4 = 8;
 	const ACCOUNT_TYPE_LDAP_5 = 9;
+	const TABLE_NAME = "sr_hub_user";
 	public $user_properties = array(
 		'institution',
 		'street',
@@ -45,6 +47,25 @@ class hubUser extends hubObject {
 		'gender',
 		'birthday',
 	);
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var ilObjUser
 	 */
@@ -135,8 +156,8 @@ class hubUser extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->pause();
 				arObjectCache::purge($hubUser);
-				$hubUser = null;
-				$hubOriginObj = null;
+				$hubUser = NULL;
+				$hubOriginObj = NULL;
 			}
 			$step ++;
 		}
@@ -177,7 +198,7 @@ class hubUser extends hubObject {
 			$getter_name = "get" . ucfirst($user_property);
 
 			if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-				if ($this->$getter_name() !== null) {
+				if ($this->$getter_name() !== NULL) {
 					$this->ilias_object->$setter_name($this->$getter_name());
 				}
 			}
@@ -257,7 +278,7 @@ class hubUser extends hubObject {
 	protected function sendPasswordMail() {
 		global $ilSetting, $ilDB;
 		$sql = "SELECT container_id as ref_id
-					FROM  sr_hub_membership
+					FROM  " . hubMembership::TABLE_NAME . "
 					WHERE ext_id LIKE '" . $this->getExtId() . "%'";
 		$query = $ilDB->query($sql);
 
@@ -283,8 +304,8 @@ class hubUser extends hubObject {
 			}
 
 			$body = strtr($body, array(
-				'[PASSWORD]'    => $this->getPasswd(),
-				'[LOGIN]'       => $this->getLogin(),
+				'[PASSWORD]' => $this->getPasswd(),
+				'[LOGIN]' => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
 				'[COURSE_LINK]' => implode(', ', $crs_links),
 			));
@@ -324,7 +345,7 @@ class hubUser extends hubObject {
 				$getter_name = "get" . ucfirst($user_property);
 
 				if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-					if ($this->$getter_name() !== null) {
+					if ($this->$getter_name() !== NULL) {
 						$this->ilias_object->$setter_name($this->$getter_name());
 					}
 				}
@@ -792,14 +813,6 @@ class hubUser extends hubObject {
 
 	public function clearRoles() {
 		$this->ilias_roles = array();
-	}
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_user';
 	}
 
 
@@ -1309,22 +1322,22 @@ class hubUser extends hubObject {
 	 */
 	protected static function cleanName($name) {
 		$upas = array(
-			'ä'  => 'ae',
-			'å'  => 'ae',
-			'ü'  => 'ue',
-			'ö'  => 'oe',
-			'Ä'  => 'Ae',
-			'Ü'  => 'Ue',
-			'Ö'  => 'Oe',
-			'é'  => 'e',
-			'è'  => 'e',
-			'ê'  => 'e',
-			'Á'  => 'A',
-			'ß'  => 'ss',
+			'ä' => 'ae',
+			'å' => 'ae',
+			'ü' => 'ue',
+			'ö' => 'oe',
+			'Ä' => 'Ae',
+			'Ü' => 'Ue',
+			'Ö' => 'Oe',
+			'é' => 'e',
+			'è' => 'e',
+			'ê' => 'e',
+			'Á' => 'A',
+			'ß' => 'ss',
 			'\'' => '',
-			' '  => '',
-			'-'  => '',
-			'.'  => '',
+			' ' => '',
+			'-' => '',
+			'.' => '',
 		);
 
 		return strtolower(self::toASCII(strtr($name, $upas)));
@@ -1336,8 +1349,8 @@ class hubUser extends hubObject {
 	 */
 	protected function isUpdateRequired() {
 		return $this->props()->get(hubUserFields::F_UPDATE_LOGIN) OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME) OR $this->props()
-		                                                                                                                            ->get(hubUserFields::F_UPDATE_LASTNAME)
-		       OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT);
+				->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
+				->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
 
 

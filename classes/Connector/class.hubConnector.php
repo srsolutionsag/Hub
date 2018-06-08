@@ -23,7 +23,7 @@ class hubConnector extends arConnectorDB {
 	 */
 
 	public function returnDB() {
-		/*if (parent::returnDB()->tableExists(hubConfig::returnDbTableName())) {
+		/*if (parent::returnDB()->tableExists(hubConfig::TABLE_NAME)) {
 			if (hubConfig::get(hubConfig::F_DB)) {
 				if (! isset(self::$db_cache)) {
 					$database = ilDBWrapperFactory::getWrapper('mysql');

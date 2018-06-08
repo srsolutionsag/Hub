@@ -37,10 +37,30 @@ class hubConfig extends ActiveRecord {
 	const F_MMAIL_MSG = 'membership_mail_msg';
 	const F_STANDARD_ROLE = 'standard_role';
 	const MIN_ILIAS_VERSION = self::ILIAS_43;
+	const TABLE_NAME = "sr_hub_conf";
 	const ILIAS_43 = 43;
 	const ILIAS_44 = 44;
 	const ILIAS_45 = 45;
 	const ILIAS_50 = 50;
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var array
 	 */
@@ -53,15 +73,6 @@ class hubConfig extends ActiveRecord {
 	 * @var bool
 	 */
 	protected $ar_safe_read = false;
-
-
-	/**
-	 * @return string
-	 * @description Return the Name of your Database Table
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_conf';
-	}
 
 
 	/**
@@ -133,8 +144,8 @@ class hubConfig extends ActiveRecord {
 	public static function get($name) {
 		if (!isset(self::$cache_loaded[$name])) {
 			$obj = self::find($name);
-			if ($obj === null) {
-				self::$cache[$name] = null;
+			if ($obj === NULL) {
+				self::$cache[$name] = NULL;
 			} else {
 				self::$cache[$name] = $obj->getValue();
 			}
@@ -170,9 +181,9 @@ class hubConfig extends ActiveRecord {
 	 */
 	public static function isImportEnabled() {
 		return hubConfig::get(self::F_IMPORT_EXPORT) AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_CATEGORY))
-		                                                 AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP))
-		                                                     AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
-		                                                         AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
+			AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_MEMBERSHIP))
+			AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_USER))
+			AND is_writable(hubOrigin::getOriginsPathForUsageType(hub::OBJECTTYPE_COURSE));
 	}
 
 

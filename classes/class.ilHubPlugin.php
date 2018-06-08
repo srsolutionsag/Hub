@@ -10,6 +10,8 @@ require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
  */
 class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
+	const PLUGIN_ID = "hub";
+	const PLUGIN_NAME = "Hub";
 	/**
 	 * @var ilHubPlugin
 	 */
@@ -24,7 +26,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return string
 	 */
 	function getPluginName() {
-		return 'Hub';
+		return self::PLUGIN_NAME;
 	}
 
 
@@ -54,6 +56,24 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * @var ilDB
+	 */
+	protected $db;
+
+
+	/**
+	 *
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		global $ilDB;
+
+		$this->db = $ilDB;
 	}
 
 
@@ -147,7 +167,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return string
 	 */
 	public static function getBaseClass() {
-		if (self::$baseClass !== null) {
+		if (self::$baseClass !== NULL) {
 			return self::$baseClass;
 		}
 
@@ -161,6 +181,43 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		}
 
 		return self::$baseClass;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	protected function beforeUninstall() {
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOriginConfiguration.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertyValue.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategory.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourse.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php";
+		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php";
+
+		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
+		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
+		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
+		$this->db->dropTable(hubCategory::TABLE_NAME, false);
+		$this->db->dropTable(hubCourse::TABLE_NAME, false);
+		$this->db->dropTable(hubMembership::TABLE_NAME, false);
+		$this->db->dropTable(hubUser::TABLE_NAME, false);
+		$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
+		$this->db->dropTable(hubConfig::TABLE_NAME, false);
+		$this->db->dropTable(hubIcon::TABLE_NAME, false);
+
+		if (file_exists(hubLog::getFilePath())) {
+			unlink(hubLog::getFilePath());
+		}
+
+		ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
+
+		return true;
 	}
 }
 
