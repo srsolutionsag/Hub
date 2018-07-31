@@ -1,4 +1,7 @@
 <?php
+
+use SRAG\Plugins\Hub2\Origin\unibasSLCMMemberships;
+
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
 require_once('./Services/Membership/classes/class.ilParticipants.php');
@@ -79,8 +82,8 @@ class hubMembership extends hubObject {
 
 
 	/**
-	 * @param $ext_id_usr
-	 * @param $ext_id_container
+	 * @param int $ext_id_usr
+	 * @param string $ext_id_container
 	 *
 	 * @return hubMembership
 	 */
@@ -88,7 +91,7 @@ class hubMembership extends hubObject {
 		$ext_id = $ext_id_usr . self::DELIMITER . $ext_id_container;
 
 		/**
-		 * @var $hubMembership hubMembership
+		 * @var hubMembership $hubMembership
 		 */
 		$hubMembership = hubMembership::findOrGetInstance($ext_id);
 		$hubMembership->setExtIdCourse($ext_id_container);
@@ -100,9 +103,9 @@ class hubMembership extends hubObject {
 
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubMembership    hubMembership
-		 * @var $hubOrigin        hubOrigin
-		 * @var $hubOriginObj     unibasSLCMMemberships
+		 * @var hubMembership $hubMembership
+		 * @var hubOrigin $hubOrigin
+		 * @var unibasSLCMMemberships $hubOriginObj
 		 */
 		$count = self::count();
 		$steps = 1000;
@@ -135,7 +138,7 @@ class hubMembership extends hubObject {
 				hubDurationLogger2::getInstance($duration_id)->resume();
 				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
 				/**
-				 * @var $hubOriginObj hubOrigin
+				 * @var hubOrigin $hubOriginObj
 				 */
 				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
@@ -255,7 +258,7 @@ class hubMembership extends hubObject {
 			//	}
 
 			/**
-			 * @var $hubUser hubUser
+			 * @var hubUser $hubUser
 			 */
 			if ($hubUser instanceof hubUser) {
 				$usr_id = $hubUser->getHistoryObject()->getIliasId();
@@ -371,8 +374,8 @@ class hubMembership extends hubObject {
 
 
 	/**
-	 * @param $prefix
-	 * @param $type
+	 * @param string $prefix
+	 * @param string $type
 	 */
 	protected function sendMails($prefix, $type) {
 		$send = false;

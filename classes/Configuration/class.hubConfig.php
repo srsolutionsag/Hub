@@ -137,11 +137,11 @@ class hubConfig extends ActiveRecord {
 
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return string
 	 */
-	public static function get($name) {
+	public static function get($name=null) {
 		if (!isset(self::$cache_loaded[$name])) {
 			$obj = self::find($name);
 			if ($obj === NULL) {
@@ -157,14 +157,14 @@ class hubConfig extends ActiveRecord {
 
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
 	 *
 	 * @return null
 	 */
 	public static function set($name, $value) {
 		/**
-		 * @var $obj arConfig
+		 * @var arConfig $obj
 		 */
 		$obj = self::findOrGetInstance($name);
 		$obj->setValue($value);

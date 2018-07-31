@@ -33,7 +33,7 @@ class hub {
 
 
 	/**
-	 * @param $type_id
+	 * @param int $type_id
 	 *
 	 * @return bool
 	 */
@@ -51,7 +51,7 @@ class hub {
 
 
 	/**
-	 * @param $object_type_id
+	 * @param int $object_type_id
 	 *
 	 * @return mixed
 	 * @throws Exception

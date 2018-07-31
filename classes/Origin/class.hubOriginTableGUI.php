@@ -60,7 +60,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 	protected function initFormActionsAndCmdButtons() {
 		global $ilToolbar;
 		/**
-		 * @var $ilToolbar ilToolbarGUI
+		 * @var ilToolbarGUI $ilToolbar
 		 */
 		$ilToolbar->setFormAction($this->ctrl->getFormAction($this->parent_obj), true);
 		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, 'add'));
@@ -96,7 +96,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 
 
 	/**
-	 * @param $a_set
+	 * @param array $a_set
 	 *
 	 * @return bool
 	 * @description implement your woen fillRow or return false
@@ -104,7 +104,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 	protected function fillTableRow($a_set) {
 		self::$num ++;
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		$hubOrigin = hubOrigin::find($a_set['id']);
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
@@ -145,7 +145,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');

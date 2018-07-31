@@ -17,15 +17,20 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var  ilCtrl
+	 * @var ilCtrl
 	 */
 	protected $ctrl;
 
 
 	/**
-	 * @param $parent_gui
+	 * @param hubConfGUI $parent_gui
 	 */
 	public function __construct($parent_gui) {
+		if (ILIAS_VERSION_NUMERIC >= "5.2") {
+			parent::__construct();
+		} else {
+			parent::ilPropertyFormGUI();
+		}
 		global $ilCtrl;
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
@@ -143,12 +148,12 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
-	 * @param $array
+	 * @param ilFormPropertyGUI $item
+	 * @param array $array
 	 *
 	 * @internal param $key
 	 */
-	private function getValuesForItem($item, &$array) {
+	private function getValuesForItem(ilFormPropertyGUI$item, array&$array) {
 		if (self::checkItem($item)) {
 			$key = $item->getPostVar();
 			$array[$key] = hubConfig::get($key);
@@ -189,9 +194,9 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 */
-	private function saveValueForItem($item) {
+	private function saveValueForItem(ilFormPropertyGUI $item) {
 		if (self::checkItem($item)) {
 			$key = $item->getPostVar();
 			hubConfig::set($key, $this->getInput($key));
@@ -203,11 +208,11 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 *
 	 * @return bool
 	 */
-	public static function checkItem($item) {
+	public static function checkItem(ilFormPropertyGUI $item) {
 		return get_class($item) != 'ilFormSectionHeaderGUI';
 	}
 

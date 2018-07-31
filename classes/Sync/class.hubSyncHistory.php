@@ -67,7 +67,7 @@ class hubSyncHistory extends ActiveRecord {
 	//
 	//	public static function preloadObjects() {
 	//		/**
-	//		 * @var $hubSyncHistory hubSyncHistory
+	//		 * @var hubSyncHistory $hubSyncHistory
 	//		 */
 	//		foreach (parent::preloadObjects() as $hubSyncHistory) {
 	//			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
@@ -91,7 +91,7 @@ class hubSyncHistory extends ActiveRecord {
 		}
 
 		/**
-		 * @var $obj hubSyncHistory
+		 * @var hubSyncHistory $obj
 		 */
 		$obj = self::findOrGetInstance($ext_id);
 		$obj->setSrHubOriginId($sr_hub_origin_id);
@@ -109,14 +109,14 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	//	/**
-	//	 * @param $primary_key
+	//	 * @param int $primary_key
 	//	 *
 	//	 * @return hubSyncHistory
 	//	 */
 	//	public static function find($primary_key) {
 	//		return parent::
 	////		/**
-	////		 * @var $obj hubSyncHistory
+	////		 * @var hubSyncHistory $obj
 	////		 */
 	////		$class_name = get_called_class();
 	////		if (!arObjectCache::isCached($class_name, $primary_key)) {
@@ -134,15 +134,15 @@ class hubSyncHistory extends ActiveRecord {
 	// Workflow
 	//
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return bool
 	 */
 	public static function initStatus($sr_hub_origin_id) {
 		/**
-		 * @var $class     hubCategory
-		 * @var $hubObject hubCategory
-		 * @var $ilDB      ilDB
+		 * @var hubCategory $class
+		 * @var hubCategory $hubObject
+		 * @var ilDB $ilDB
 		 */
 		if (!self::$loaded[$sr_hub_origin_id]) {
 			global $ilDB;
@@ -178,7 +178,7 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return bool
 	 */
@@ -196,7 +196,7 @@ class hubSyncHistory extends ActiveRecord {
 	public static function hasIliasId(hubObject $hubObject, $type = hubObject::ILIAS_ID_TYPE_OBJ_ID) {
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 		switch ($type) {
 			case hubObject::ILIAS_ID_TYPE_OBJ_ID:
@@ -380,7 +380,7 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @param string $ext_id
+	 * @param int $ext_id
 	 */
 	public function setExtId($ext_id) {
 		$this->ext_id = $ext_id;

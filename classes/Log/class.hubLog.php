@@ -98,7 +98,7 @@ class hubLog {
 
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */
@@ -111,8 +111,9 @@ class hubLog {
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param
+	 * $level
 	 */
 	public function write($message, $level = self::L_DEBUG) {
 		if (!self::$header_written) {
@@ -128,7 +129,7 @@ class hubLog {
 
 
 	/**
-	 * @param $level
+	 * @param int $level
 	 *
 	 * @return string
 	 */
@@ -168,8 +169,8 @@ class hubLogMessage {
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param int $level
 	 */
 	protected function __construct($message, $level) {
 		$this->setLevel($level);
@@ -180,7 +181,7 @@ class hubLogMessage {
 
 
 	/**
-	 * @param        $bytes
+	 * @param int $bytes
 	 * @param string $unit
 	 * @param int    $decimals
 	 *
@@ -250,8 +251,8 @@ class hubLogMessage {
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param int $level
 	 *
 	 * @return hubLogMessage
 	 */

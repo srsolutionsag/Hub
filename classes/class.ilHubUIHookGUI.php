@@ -15,7 +15,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	 */
 	protected $ctrl;
 	/**
-	 * @var $ilTabs
+	 * @var ilTabsGUI
 	 */
 	protected $tabs;
 	/**
@@ -27,7 +27,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	function __construct() {
 		global $ilCtrl, $ilTabs, $ilAccess;
 		/**
-		 * @var $ilCtrl ilCtrl
+		 * @var ilCtrl $ilCtrl
 		 */
 		$this->ctrl = $ilCtrl;
 		$this->tabs = $ilTabs;
@@ -37,8 +37,8 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
 
 	/**
-	 * @param       $a_comp
-	 * @param       $a_part
+	 * @param string $a_comp
+	 * @param string $a_part
 	 * @param array $a_par
 	 *
 	 * @return array

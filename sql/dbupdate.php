@@ -72,7 +72,7 @@ hubIcon::updateDB();
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 /**
- * @var $hubOrigin hubOrigin
+ * @var hubOrigin $hubOrigin
  */
 hubIcon::resetDB();
 hubIcon::initDir();
@@ -155,5 +155,4 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 hubUser::updateDB();
 
 ?>
-
 

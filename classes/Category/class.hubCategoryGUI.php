@@ -14,7 +14,7 @@ require_once('class.hubCategoryDisplayGUI.php');
 class hubCategoryGUI extends arGUI {
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 */
 	function view($id) {
 		$display_gui_class = $this->record_type . "DisplayGUI";

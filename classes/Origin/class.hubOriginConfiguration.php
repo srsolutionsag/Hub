@@ -149,7 +149,7 @@ class hubOriginConfiguration extends ActiveRecord {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return hubOriginConfiguration
 	 */
@@ -352,7 +352,7 @@ class hubOriginConfiguration extends ActiveRecord {
 	// Helper
 	//
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */
@@ -366,7 +366,7 @@ class hubOriginConfiguration extends ActiveRecord {
 
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */

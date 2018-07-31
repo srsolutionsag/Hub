@@ -82,7 +82,7 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param arIndexTableField $field
-	 * @param $item
+	 * @param array $item
 	 * @return string
 	 */
 	protected function setCustomFieldData(arIndexTableField $field, $item) {
@@ -94,8 +94,8 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param ilFormPropertyGUI $filter
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
 	 */
 	protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value) {
 		if ($name == "parent_id") {

@@ -60,4 +60,4 @@ class %2$s extends hubOrigin implements hubOriginInterface {
         }
         return true;
     }
-}?>
+}

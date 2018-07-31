@@ -65,7 +65,7 @@ class hubCourseDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
-	 * @param $value
+	 * @param string $value
 	 * @return bool|null|string
 	 */
 	protected function setArFieldData(arDisplayField $field, $value) {

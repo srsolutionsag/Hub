@@ -34,7 +34,7 @@ class hubDurationLogger2 {
 
 
 	/**
-	 * @param      $key
+	 * @param string $key
 	 * @param bool $micro
 	 *
 	 * @return hubDurationLogger2
@@ -260,7 +260,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param      $id
+	 * @param int $id
 	 * @param bool $micro
 	 *
 	 * @deprecated
@@ -283,7 +283,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 *
 	 * @return bool
 	 * @deprecated
@@ -306,7 +306,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 *
 	 * @return string
 	 * @deprecated
@@ -319,7 +319,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 *
 	 * @deprecated
 	 */
@@ -329,7 +329,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 *
 	 * @deprecated
 	 */

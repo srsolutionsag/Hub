@@ -47,7 +47,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 */
 	public static function checkPreconditions() {
 		/**
-		 * @var $ilCtrl ilCtrl
+		 * @var ilCtrl $ilCtrl
 		 */
 		if (self::getBaseClass() == false) {
 			ilUtil::sendFailure('hub needs ILIAS >= 4.5 OR for ILIAS < 4.5 ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);

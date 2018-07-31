@@ -51,7 +51,7 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
@@ -112,8 +112,8 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $next_class
-	 * @param $cmd
+	 * @param string $next_class
+	 * @param string $cmd
 	 */
 	private function setTabs($next_class, $cmd) {
 		if ($_GET['origin_id'] AND ($cmd != 'index' OR $next_class != 'huborigingui')) {
@@ -142,7 +142,7 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 */
 	private function performCommand($cmd) {
 		$this->{$cmd}();
@@ -261,8 +261,8 @@ class hubOriginGUI {
 
 			global $ilToolbar;
 			/**
-			 * @var $ilToolbar ilToolbarGUI
-			 * @var $hubOrigin hubOrigin
+			 * @var ilToolbarGUI $ilToolbar
+			 * @var hubOrigin $hubOrigin
 			 */
 			$form = new hubOriginFormGUI($this, $this->hubOrigin);
 			$form->fillForm();
@@ -297,7 +297,7 @@ class hubOriginGUI {
 	public function deactivateAll() {
 		if (ilHubAccess::checkAccess()) {
 			/**
-			 * @var $hubOrigin hubOrigin
+			 * @var hubOrigin $hubOrigin
 			 */
 			foreach (hubOrigin::get() as $hubOrigin) {
 				$hubOrigin->setActive(false);
@@ -313,7 +313,7 @@ class hubOriginGUI {
 	public function activateAll() {
 		if (ilHubAccess::checkAccess()) {
 			/**
-			 * @var $hubOrigin hubOrigin
+			 * @var hubOrigin $hubOrigin
 			 */
 			foreach (hubOrigin::get() as $hubOrigin) {
 				$hubOrigin->setActive(true);

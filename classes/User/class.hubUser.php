@@ -81,8 +81,8 @@ class hubUser extends hubObject {
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubUser   hubUser
-		 * @var $hubOrigin hubOrigin
+		 * @var hubUser $hubUser
+		 * @var hubOrigin $hubOrigin
 		 */
 
 		$count = self::count();
@@ -254,7 +254,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setLogin($login);
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 
 		$ilDB->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
@@ -394,7 +394,7 @@ class hubUser extends hubObject {
 			return false;
 		}
 		/**
-		 * @var  $rbacadmin ilRbacAdmin
+		 * @var ilRbacAdmin $rbacadmin
 		 */
 		global $rbacadmin;
 		$user_id = $this->ilias_object->getId();
@@ -456,15 +456,15 @@ class hubUser extends hubObject {
 	// Helper
 	//
 	/**
-	 * @param $login
-	 * @param $usr_id
+	 * @param string $login
+	 * @param int $usr_id
 	 *
 	 * @return bool
 	 */
 	private static function loginExists($login, $usr_id) {
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 		$query = 'SELECT usr_id FROM usr_data WHERE login = ' . $ilDB->quote($login, 'text');
 		$query .= ' AND usr_id != ' . $ilDB->quote($usr_id, 'integer');
@@ -474,8 +474,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $fieldname
-	 * @param $value
+	 * @param string $fieldname
+	 * @param string $value
 	 *
 	 * @return bool
 	 */
@@ -490,7 +490,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $email
+	 * @param string $email
 	 *
 	 * @return bool
 	 */
@@ -500,7 +500,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $external_account
+	 * @param
+	 * $external_account
 	 *
 	 * @return bool
 	 */
@@ -754,7 +755,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $hubUser
+	 * @param hubUser $hubUser
 	 */
 	protected static function lookupExisting(hubUser $hubUser) {
 		$existing_usr_id = 0;
@@ -776,7 +777,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $field_name
+	 * @param string $field_name
 	 *
 	 * @return string
 	 */
@@ -789,8 +790,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $field_name
-	 * @param $field_value
+	 * @param string $field_name
+	 * @param string $field_value
 	 *
 	 * @return array
 	 */
@@ -803,7 +804,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $role_id
+	 * @param int $role_id
 	 */
 	public function addRole($role_id) {
 		$this->ilias_roles[] = $role_id;
@@ -1316,7 +1317,7 @@ class hubUser extends hubObject {
 	// Helper
 	//
 	/**
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return mixed
 	 */

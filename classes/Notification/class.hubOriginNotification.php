@@ -17,8 +17,8 @@ class hubOriginNotification {
 
 
 	/**
-	 * @param      $sr_hub_origin_id
-	 * @param      $text
+	 * @param int $sr_hub_origin_id
+	 * @param string $text
 	 * @param null $header
 	 */
 	public static function addMessage($sr_hub_origin_id, $text, $header = null) {
@@ -45,7 +45,7 @@ class hubOriginNotification {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return string
 	 */

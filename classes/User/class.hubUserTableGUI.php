@@ -27,7 +27,7 @@ class hubUserTableGUI extends hubAbstractTableGUI {
 
 
 	/**
-	 * @param $a_set
+	 * @param array $a_set
 	 *
 	 * @return bool
 	 * @description implement your woen fillRow or return false

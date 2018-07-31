@@ -56,7 +56,7 @@ class hubShortlink {
 
 
 	/**
-	 * @param $ext_id
+	 * @param int $ext_id
 	 */
 	public static function redirect($ext_id) {
 		new self($ext_id);
@@ -64,7 +64,7 @@ class hubShortlink {
 
 
 	/**
-	 * @param $ext_id
+	 * @param int $ext_id
 	 */
 	protected function __construct($ext_id, $init_ilias = true) {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
@@ -235,7 +235,7 @@ class hubShortlink {
 
 
 	/**
-	 * @param $ref_id
+	 * @param int $ref_id
 	 */
 	protected function initObjectData($ref_id) {
 		global $tree;
@@ -249,7 +249,7 @@ class hubShortlink {
 
 
 	/**
-	 * @param \hubObject $hub_object
+	 * @param hubObject $hub_object
 	 */
 	public function setHubObject($hub_object) {
 		$this->hub_object = $hub_object;
@@ -257,7 +257,7 @@ class hubShortlink {
 
 
 	/**
-	 * @return \hubObject
+	 * @return hubObject
 	 */
 	public function getHubObject() {
 		return $this->hub_object;
@@ -297,7 +297,7 @@ class hubShortlink {
 
 
 	/**
-	 * @param \ilObjCourse $il_object
+	 * @param ilObjCourse $il_object
 	 */
 	public function setIlObject($il_object) {
 		$this->il_object = $il_object;
@@ -305,7 +305,7 @@ class hubShortlink {
 
 
 	/**
-	 * @return \ilObjCourse
+	 * @return ilObjCourse
 	 */
 	public function getIlObject() {
 		return $this->il_object;

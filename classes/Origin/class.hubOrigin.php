@@ -41,7 +41,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @var \hubOrigin
+	 * @var hubOrigin
 	 */
 	protected $originObject;
 	/**
@@ -143,25 +143,25 @@ class hubOrigin extends ActiveRecord {
 		return parent::get();
 	}
 
-
-	/**
-	 * @param $ext_id
-	 *
-	 * @return hubOrigin
-	 */
-	public static function find($ext_id) {
-		return parent::find($ext_id);
+		/**
+		 * @param int      $primary_key
+		 * @param array $add_constructor_args
+		 *
+		 * @return hubOrigin
+		 */
+		public static function find($ext_id, array $add_constructor_args = array()) {
+		return parent::find($ext_id,$add_constructor_args);
 	}
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return string
 	 */
 	public static function getUsageClass($sr_hub_origin_id) {
 		/**
-		 * @var $obj hubOrigin
+		 * @var hubOrigin $obj
 		 */
 		$obj = self::find($sr_hub_origin_id);
 
@@ -170,7 +170,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return string
 	 */
@@ -179,7 +179,7 @@ class hubOrigin extends ActiveRecord {
 			return self::$classname_map[$sr_hub_origin_id];
 		}
 		/**
-		 * @var $obj hubOrigin
+		 * @var hubOrigin $obj
 		 */
 		$obj = self::find($sr_hub_origin_id);
 		if ($obj->getClassname() == self::CLASS_NONE OR $obj->getClassname() == NULL) {
@@ -193,13 +193,13 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param $usage_type_id
+	 * @param int $usage_type_id
 	 *
 	 * @return array
 	 */
 	public static function getOriginsForUsage($usage_type_id) {
 		/**
-		 * @var $origin hubOrigin
+		 * @var hubOrigin $origin
 		 */
 		$origins = self::where(array( 'usage_type' => $usage_type_id, 'active' => true ))->get();
 		foreach ($origins as $key => $origin) {
@@ -213,14 +213,14 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param $amount_of_datasets
+	 * @param int $amount_of_datasets
 	 *
 	 * @return bool
 	 */
 	public function compareDataWithExisting($amount_of_datasets) {
 		if ($this->props()->get('check_amount')) {
 			/**
-			 * @var $usage_class hubCourse
+			 * @var hubCourse $usage_class
 			 */
 			$usage_class = self::getUsageClass($this->getId());
 			$existing = $usage_class::where(array( 'sr_hub_origin_id' => $this->getId() ))->count();
@@ -276,7 +276,7 @@ class hubOrigin extends ActiveRecord {
 	 */
 	public function getCountOfHubObjects() {
 		/**
-		 * @var $hubObject hubCourse
+		 * @var hubCourse $hubObject
 		 */
 		$hubObject = self::getUsageClass($this->getId());
 
@@ -391,7 +391,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param $usage_type
+	 * @param string$usage_type
 	 *
 	 * @return string
 	 */
@@ -457,7 +457,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @param hubObject $hub_object
 	 *
-	 * @return \hubObject
+	 * @return hubObject
 	 */
 	public function afterObjectInit(hubObject $hub_object) {
 		return $hub_object;
@@ -469,7 +469,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @param hubObject $hub_object
 	 *
-	 * @return \hubObject
+	 * @return hubObject
 	 */
 	public function afterObjectCreation(hubObject $hub_object) {
 		return $hub_object;
@@ -481,7 +481,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @param hubObject $hub_object
 	 *
-	 * @return \hubObject
+	 * @return hubObject
 	 */
 	public function afterObjectUpdate(hubObject $hub_object) {
 		return $hub_object;
@@ -493,7 +493,7 @@ class hubOrigin extends ActiveRecord {
 	 *
 	 * @param hubObject $hub_object
 	 *
-	 * @return \hubObject
+	 * @return hubObject
 	 */
 	public function afterObjectDeletion(hubObject $hub_object) {
 		return $hub_object;
@@ -739,7 +739,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param \DateTime $last_update
+	 * @param DateTime $last_update
 	 */
 	public function setLastUpdate($last_update) {
 		$this->last_update = $last_update;
@@ -747,7 +747,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @return \DateTime
+	 * @return DateTime
 	 */
 	public function getLastUpdate() {
 		return $this->last_update;

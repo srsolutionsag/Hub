@@ -27,9 +27,9 @@ class hubSyncCron {
 	public function __construct() {
 		global $ilUser, $ilCtrl;
 		/**
-		 * @var $ilDB   ilDB
-		 * @var $ilUser ilObjUser
-		 * @var $ilCtrl ilCtrl
+		 * @var ilDB $ilDB
+		 * @var ilObjUser $ilUser
+		 * @var ilCtrl $ilCtrl
 		 */
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
@@ -67,8 +67,8 @@ class hubSyncCron {
 
 
 	/**
-	 * @param      $a_name
-	 * @param      $a_class
+	 * @param string $a_name
+	 * @param string $a_class
 	 * @param null $a_source_file
 	 */
 	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
@@ -210,7 +210,7 @@ class hubSyncCron {
 
 
 	/**
-	 * @param $usage
+	 * @param string $usage
 	 *
 	 * @return bool
 	 * @throws hubOriginException
@@ -223,8 +223,8 @@ class hubSyncCron {
 		}
 		foreach ($originsForUsage as $origin) {
 			/**
-			 * @var $origin       hubOrigin
-			 * @var $originObject hubOrigin
+			 * @var hubOrigin$origin
+			 * @var hubOrigin $originObject
 			 */
 			if (!$this->syncOrigin($origin)) {
 				$failed ++;
@@ -239,14 +239,14 @@ class hubSyncCron {
 
 
 	/**
-	 * @param $origin
+	 * @param hubOrigin $origin
 	 *
 	 * @return bool
 	 * @throws hubOriginException
 	 */
 	private function syncOrigin(hubOrigin $origin) {
 		/**
-		 * @var $originObject hubOrigin
+		 * @var hubOrigin$originObject
 		 */
 		try {
 			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();

@@ -59,25 +59,25 @@ abstract class hubObject extends ActiveRecord {
 
 
 	public function __destruct() {
-		$this->ilias_object = null;
-		$this->hubOrigin = null;
+		$this->ilias_object = NULL;
+		$this->hubOrigin = NULL;
 	}
 
 
 	/**
-	 * @param $class
-	 * @param $ext_id
+	 * @param string $class
+	 * @param int    $ext_id
 	 *
 	 * @deprecated
 	 * @return bool
 	 */
 	public static function exists($class, $ext_id) {
 		/**
-		 * @var $class hubMembership
+		 * @var hubMembership $class
 		 */
 		if (!self::$loaded[$class]) {
 			$class::get();
-			self::$existing_ext_ids[$class] = array_values($class::getArray(null, 'ext_id'));
+			self::$existing_ext_ids[$class] = array_values($class::getArray(NULL, 'ext_id'));
 			self::$loaded[$class] = true;
 		}
 
@@ -88,15 +88,17 @@ abstract class hubObject extends ActiveRecord {
 	/**
 	 * @param hubOrigin $origin
 	 */
-	public function update(hubOrigin $origin) {
-		$this->updateInto($origin);
+	public function update(hubOrigin $origin = NULL) {
+		if ($origin !== NULL) {
+			$this->updateInto($origin);
+		}
 	}
 
 
 	/**
 	 * @param hubOrigin $origin
 	 */
-	public function create(hubOrigin $origin) {
+	public function create(hubOrigin $origin = NULL) {
 		static $count;
 		$count ++;
 		if ($count == 1000) {
@@ -104,7 +106,9 @@ abstract class hubObject extends ActiveRecord {
 			arObjectCache::flush('hubSyncHistory');
 			$count = 0;
 		}
-		$this->updateInto($origin);
+		if ($origin !== NULL) {
+			$this->updateInto($origin);
+		}
 	}
 
 
@@ -133,20 +137,21 @@ abstract class hubObject extends ActiveRecord {
 
 
 	/**
-	 * @param $primary_key
+	 * @param int   $primary_key
+	 * @param array $add_constructor_args
 	 *
 	 * @return hubObject
 	 */
-	public static function find($primary_key) {
+	public static function find($primary_key, array $add_constructor_args = array()) {
 		/**
-		 * @var $obj hubObject
+		 * @var hubObject $obj
 		 */
 		$class_name = get_called_class();
 		if (!arObjectCache::isCached($class_name, $primary_key)) {
 			if (self::where(array( 'ext_id' => $primary_key ))->hasSets()) {
 				arFactory::getInstance($class_name, $primary_key);
 			} else {
-				return null;
+				return NULL;
 			}
 		}
 
@@ -155,13 +160,13 @@ abstract class hubObject extends ActiveRecord {
 
 
 	//	/**
-	//	 * @param $primary_key
+	//	 * @param int $primary_key
 	//	 *
 	//	 * @return hubObject
 	//	 */
 	//	public static function findOrGetInstance($primary_key) {
 	//		/**
-	//		 * @var $obj hubObject
+	//		 * @var hubObject $obj
 	//		 */
 	//		$obj = self::find($primary_key);
 	//		if ($obj !== NULL) {
@@ -303,14 +308,14 @@ abstract class hubObject extends ActiveRecord {
 	 * @db_fieldtype            integer
 	 * @db_length               1
 	 */
-	protected $ext_status = null;
+	protected $ext_status = NULL;
 	/**
 	 * @var int
 	 *
 	 * @db_has_field            true
 	 * @db_fieldtype            timestamp
 	 */
-	protected $creation_date = null;
+	protected $creation_date = NULL;
 
 
 	/**
@@ -338,7 +343,7 @@ abstract class hubObject extends ActiveRecord {
 
 
 	/**
-	 * @param string $ext_id
+	 * @param int $ext_id
 	 */
 	public function setExtId($ext_id) {
 		$this->ext_id = $ext_id;

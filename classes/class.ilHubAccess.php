@@ -17,8 +17,8 @@ class ilHubAccess {
 	public static function checkAccess($user_id = null) {
 		global $rbacreview;
 		/**
-		 * @var $ilUser     ilObjUser
-		 * @var $rbacreview ilRbacReview
+		 * @var ilObjUser $ilUser
+		 * @var ilRbacReview $rbacreview
 		 */
 		if (!$user_id) {
 			global $ilUser;

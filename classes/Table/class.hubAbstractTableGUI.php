@@ -47,7 +47,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param        $a_parent_obj
+	 * @param object $a_parent_obj
 	 * @param string $a_parent_cmd
 	 */
 	public function __construct($a_parent_obj, $a_parent_cmd) {
@@ -135,7 +135,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $a_set
+	 * @param array $a_set
 	 *
 	 * @return bool
 	 * @description implement your woen fillRow or return false
@@ -148,7 +148,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	 */
 	final function addFilterItemToForm(ilFormPropertyGUI $item) {
 		/**
-		 * @var $item ilTextInputGUI
+		 * @var ilTextInputGUI $item
 		 */
 		$this->addFilterItem($item);
 		$item->readFromSession();
@@ -199,7 +199,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');
@@ -246,15 +246,15 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	public function getNavigationParametersAsArray() {
 		global $ilUser;
 		/**
-		 * @var $ilUser ilObjUser
+		 * @var ilObjUser $ilUser
 		 */
 		$hits = $ilUser->getPref('hits_per_page');
 		$parameters = explode(':', $_GET[$this->getNavParameter()]);
 		$return_values = array(
-			'from'       => $parameters[2] ? $parameters[2] : 0,
-			'to'         => $parameters[2] ? $parameters[2] + $hits - 1 : $hits - 1,
+			'from' => $parameters[2] ? $parameters[2] : 0,
+			'to' => $parameters[2] ? $parameters[2] + $hits - 1 : $hits - 1,
 			'sort_field' => $parameters[0] ? $parameters[0] : false,
-			'order'      => $parameters[1] ? strtoupper($parameters[1]) : 'ASC',
+			'order' => $parameters[1] ? strtoupper($parameters[1]) : 'ASC',
 		);
 
 		return $return_values;
@@ -262,7 +262,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $param
+	 * @param string $param
 	 *
 	 * @return mixed
 	 */

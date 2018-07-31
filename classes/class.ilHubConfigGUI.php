@@ -15,9 +15,9 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 	public function __construct() {
 		global $ilCtrl, $tpl, $ilTabs;
 		/**
-		 * @var $ilCtrl ilCtrl
-		 * @var $tpl    ilTemplate
-		 * @var $ilTabs ilTabsGUI
+		 * @var ilCtrl $ilCtrl
+		 * @var ilTemplate $tpl
+		 * @var ilTabsGUI $ilTabs
 		 */
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
@@ -27,7 +27,7 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 */
 	public function performCommand($cmd) {
 		switch ($cmd) {

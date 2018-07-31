@@ -32,7 +32,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//		$sync_only_period_chooser =
 		//		$this->addItem($sync_only);
 		/**
-		 * @var $origin hubOrigin
+		 * @var hubOrigin $origin
 		 */
 		$opt[0] = $this->pl->txt('common_none');
 		foreach (hubOrigin::where(array( 'usage_type' => hub::OBJECTTYPE_USER ))->get() as $origin) {

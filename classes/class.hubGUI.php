@@ -52,7 +52,7 @@ class hubGUI {
 
 
 	/**
-	 * @param $next_class
+	 * @param string $next_class
 	 */
 	private function setTabs($next_class) {
 		$this->tabs->addTab('hub_origins', $this->pl->txt('hub_origins'), $this->ctrl->getLinkTargetByClass('hubOriginGUI', 'index'));
@@ -93,7 +93,7 @@ class hubGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 */
 	private function performCommand($cmd) {
 		$this->{$cmd}();

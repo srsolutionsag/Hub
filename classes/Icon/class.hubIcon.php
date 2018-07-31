@@ -60,7 +60,7 @@ class hubIcon extends ActiveRecord {
 
 
 	/**
-	 * @param $type
+	 * @param string $type
 	 *
 	 * @return string
 	 */
@@ -98,7 +98,7 @@ class hubIcon extends ActiveRecord {
 
 
 	/**
-	 * @param        $path
+	 * @param string $path
 	 * @param string $mode
 	 *
 	 * @throws Exception
@@ -116,7 +116,7 @@ class hubIcon extends ActiveRecord {
 
 
 	/**
-	 * @param $tmp_name
+	 * @param string $tmp_name
 	 */
 	public function importFromUpload($tmp_name) {
 		$this->importFromPath($tmp_name, 'move_uploaded');

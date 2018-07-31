@@ -23,8 +23,8 @@ class hubCounter {
 
 
 	/**
-	 * @param           $sr_hub_origin_id
-	 * @param           $type
+	 * @param int $sr_hub_origin_id
+	 * @param string$type
 	 */
 	protected static function increment($sr_hub_origin_id, $type) {
 		self::$counter[$sr_hub_origin_id][$type] ++;
@@ -32,8 +32,8 @@ class hubCounter {
 
 
 	/**
-	 * @param           $type
-	 * @param           $sr_hub_origin_id
+	 * @param string$type
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return int
 	 */
@@ -43,7 +43,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $type
+	 * @param string$type
 	 *
 	 * @return int
 	 */
@@ -63,7 +63,7 @@ class hubCounter {
 	//
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 */
 	public static function incrementNewlyDelivered($sr_hub_origin_id) {
 		self::increment($sr_hub_origin_id, self::NEWLY_DELIVERED);
@@ -71,7 +71,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 */
 	public static function incrementDeleted($sr_hub_origin_id) {
 		self::increment($sr_hub_origin_id, self::DELETED);
@@ -79,7 +79,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param $sr_hub_origin_id
 	 */
@@ -89,7 +89,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param $sr_hub_origin_id
 	 */
@@ -99,7 +99,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param $sr_hub_origin_id
 	 */
@@ -117,7 +117,7 @@ class hubCounter {
 	//
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param null $sr_hub_origin_id
 	 *
@@ -129,7 +129,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param null $sr_hub_origin_id
 	 *
@@ -141,7 +141,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param null $sr_hub_origin_id
 	 *
@@ -153,7 +153,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param null $sr_hub_origin_id
 	 *
@@ -165,7 +165,7 @@ class hubCounter {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @internal param null $sr_hub_origin_id
 	 *

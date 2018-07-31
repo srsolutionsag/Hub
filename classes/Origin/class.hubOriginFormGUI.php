@@ -13,7 +13,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 class hubOriginFormGUI extends ilPropertyFormGUI {
 
 	/**
-	 * @var  hubOrigin
+	 * @var hubOrigin
 	 */
 	protected $origin;
 	/**
@@ -21,12 +21,17 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var  ilCtrl
+	 * @var ilCtrl
 	 */
 	protected $ctrl;
 
 
 	public function __construct($parent_gui, hubOrigin $origin, $disable_required = false) {
+		if (ILIAS_VERSION_NUMERIC >= "5.2") {
+			parent::__construct();
+		} else {
+			parent::ilPropertyFormGUI();
+		}
 		global $ilCtrl;
 		$this->origin = $origin;
 		$this->parent_gui = $parent_gui;
@@ -269,8 +274,8 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $src
-	 * @param $dst
+	 * @param string $src
+	 * @param string $dst
 	 */
 	public static function rCopy($src, $dst) {
 		$dir = opendir($src);

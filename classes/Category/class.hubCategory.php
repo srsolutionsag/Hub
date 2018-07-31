@@ -84,7 +84,7 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		foreach (hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_CATEGORY) as $hubOrigin) {
 			self::buildForParentId($hubOrigin->props()->get(hubCategoryFields::BASE_NODE_EXTERNAL));
@@ -95,12 +95,12 @@ class hubCategory extends hubRepositoryObject {
 
 
 	/**
-	 * @param $parent_id
+	 * @param int $parent_id
 	 */
 	private static function buildForParentId($parent_id = 0) {
 		/**
-		 * @var $hubCategory hubCategory
-		 * @var $hubOrigin   hubOrigin
+		 * @var hubCategory $hubCategory
+		 * @var hubOrigin $hubOrigin
 		 */
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
@@ -184,15 +184,15 @@ class hubCategory extends hubRepositoryObject {
 
 
 	/**
-	 * @param $fieldname
-	 * @param $value
+	 * @param string $fieldname
+	 * @param string $value
 	 *
 	 * @return int
 	 */
 	protected function lookupRefIdByField($fieldname, $value) {
 		global $tree;
 		/**
-		 * @var $tree
+		 * @var ilTree $tree
 		 */
 		$node = $this->getNode();
 		foreach ($tree->getChildsByType($node, 'cat') as $cat) {
@@ -210,7 +210,7 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	private function updateSorting() {
 		/**
-		 * @var $sorting ilContainerSorting
+		 * @var ilContainerSorting $sorting
 		 */
 		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
 		//		$sorting->getSortMode()
@@ -339,7 +339,7 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	public function getNode() {
 		/**
-		 * @var $tree ilTree
+		 * @var ilTree $tree
 		 */
 		global $tree;
 		$base_node_prop = $this->props()->get(hubCategoryFields::BASE_NODE_ILIAS);
