@@ -110,7 +110,7 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_archive'), hubCategory::DELETE_MODE_ARCHIVE);
 		$te = new ilTextInputGUI($this->pl->txt('cat_prop_delete_mode_archive_node'), hubCategoryFields::ARCHIVE_NODE);
 		$opt->addSubItem($te);
-		//$ro->addOption($opt); FSX TODO Archiv
+		//$ro->addOption($opt); FSX TODO: Archiv
 		//
 		$this->addItem($ro);
 	}

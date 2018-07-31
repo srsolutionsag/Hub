@@ -66,7 +66,7 @@ class hubSyncHistoryGUI {
 	 * @return mixed|void
 	 */
 	protected function performCommand($cmd) {
-		// TODO Rechteprüfung
+		// TODO: Rechteprüfung
 		$this->{$cmd}();
 	}
 
