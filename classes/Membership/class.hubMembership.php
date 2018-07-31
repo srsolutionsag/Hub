@@ -1,6 +1,6 @@
 <?php
 
-use SRAG\Plugins\Hub2\Origin\unibasSLCMMemberships;
+//use SRAG\Plugins\Hub2\Origin\unibasSLCMMemberships; // TODO: Hub2
 
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
@@ -82,7 +82,7 @@ class hubMembership extends hubObject {
 
 
 	/**
-	 * @param int $ext_id_usr
+	 * @param int    $ext_id_usr
 	 * @param string $ext_id_container
 	 *
 	 * @return hubMembership
@@ -103,8 +103,8 @@ class hubMembership extends hubObject {
 
 	public static function buildILIASObjects() {
 		/**
-		 * @var hubMembership $hubMembership
-		 * @var hubOrigin $hubOrigin
+		 * @var hubMembership         $hubMembership
+		 * @var hubOrigin             $hubOrigin
 		 * @var unibasSLCMMemberships $hubOriginObj
 		 */
 		$count = self::count();
@@ -573,5 +573,3 @@ class hubMembership extends hubObject {
 		return $this->period;
 	}
 }
-
-?>
