@@ -35,7 +35,7 @@ class hubDurationLogger2 {
 
 	/**
 	 * @param string $key
-	 * @param bool $micro
+	 * @param bool   $micro
 	 *
 	 * @return hubDurationLogger2
 	 */
@@ -189,7 +189,7 @@ class hubDurationLogger2 {
 	 */
 	public function get() {
 		if ($this->getStart() == 0) {
-			return null;
+			return NULL;
 		}
 		$this->stop();
 		$full_time = $this->getStop() - $this->getStart();
@@ -260,7 +260,7 @@ class hubDurationLogger {
 
 
 	/**
-	 * @param int $id
+	 * @param int  $id
 	 * @param bool $micro
 	 *
 	 * @deprecated
@@ -337,5 +337,3 @@ class hubDurationLogger {
 		hubLog::getInstance()->write(self::asString($id), hubLog::L_PROD);
 	}
 }
-
-?>

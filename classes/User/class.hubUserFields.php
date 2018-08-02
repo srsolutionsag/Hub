@@ -26,5 +26,3 @@ class hubUserFields extends hubOriginObjectPropertiesFields {
 	const F_UPDATE_LOGIN = 'update_login';
 	const F_DELETE = 'delete';
 }
-
-?>

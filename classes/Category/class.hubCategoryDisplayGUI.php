@@ -23,7 +23,7 @@ class hubCategoryDisplayGUI extends arDisplayGUI {
 		$hubCourse = hubCategory::find($this->ar->getExtId());
 		$hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
 		$this->title = '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix()
-		               . $hubCourse->getTitle() . '</a>';
+			. $hubCourse->getTitle() . '</a>';
 	}
 
 
@@ -58,7 +58,8 @@ class hubCategoryDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
-	 * @param string $value
+	 * @param string         $value
+	 *
 	 * @return bool|null|string
 	 */
 	protected function setArFieldData(arDisplayField $field, $value) {
@@ -67,7 +68,7 @@ class hubCategoryDisplayGUI extends arDisplayGUI {
 				$hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $this->ar->getTitlePrefix() . $value
-				       . '</a>';
+					. '</a>';
 				break;
 			case 'parent_id':
 				$hubParentCategory = hubCategory::find($this->ar->getParentId());
@@ -75,7 +76,7 @@ class hubCategoryDisplayGUI extends arDisplayGUI {
 					$hubSyncHistoryParent = hubSyncHistory::getInstance($hubParentCategory);
 
 					return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistoryParent->getIliasId()) . '\'>'
-					       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
+						. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
 				} else {
 					return "<a target='_blank' href=''></a>";
 				}
@@ -98,6 +99,7 @@ class hubCategoryDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
+	 *
 	 * @return string
 	 */
 	protected function setCustomFieldData(arDisplayField $field) {

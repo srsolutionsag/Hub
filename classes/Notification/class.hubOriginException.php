@@ -23,26 +23,26 @@ class hubOriginException extends Exception {
 	 * @var array
 	 */
 	protected static $msgs = array(
-		self::OTHER                      => '',
-		self::CONNECTION_FAILED          => 'Es konnte keine Verbindung zum Fremdsystem hergestellt werden oder die Datei konnte nicht gelesen werden.',
-		self::PARSE_DATA_FAILED          => 'Daten konnten nicht erfolgreich gelesen werden.',
-		self::NO_DATASETS                => 'Daten vom Fremdsystem konnten nicht abgerufen werden.',
-		self::CHECKSUM_MISMATCH          => 'Die Anzahl Datensätze stimmt nicht mit der Checksumme überein.',
-		self::BUILD_ENTRIES_FAILED       => 'Die hubObjects konnten nicht erfolgreich erstellt werden.',
+		self::OTHER => '',
+		self::CONNECTION_FAILED => 'Es konnte keine Verbindung zum Fremdsystem hergestellt werden oder die Datei konnte nicht gelesen werden.',
+		self::PARSE_DATA_FAILED => 'Daten konnten nicht erfolgreich gelesen werden.',
+		self::NO_DATASETS => 'Daten vom Fremdsystem konnten nicht abgerufen werden.',
+		self::CHECKSUM_MISMATCH => 'Die Anzahl Datensätze stimmt nicht mit der Checksumme überein.',
+		self::BUILD_ENTRIES_FAILED => 'Die hubObjects konnten nicht erfolgreich erstellt werden.',
 		self::BUILD_ILIAS_OBJECTS_FAILED => 'Die ILIAS-Objecte konnten nicht erfolgreich modifiziert werden.',
-		self::TOO_MANY_LOST_DATASETS     => 'Die Anzahl gelieferter Datensätze beträgt weniger als der vorgegebene Prozentsatz der bestehenden Datensätze',
-		self::INIT_STATUS_FAILED         => 'Der Status der hubObjekte konnte nicht erfolgreich gelesen werden.',
-		self::PHP_FATAL_ERROR            => 'PHP FATAL ERROR',
+		self::TOO_MANY_LOST_DATASETS => 'Die Anzahl gelieferter Datensätze beträgt weniger als der vorgegebene Prozentsatz der bestehenden Datensätze',
+		self::INIT_STATUS_FAILED => 'Der Status der hubObjekte konnte nicht erfolgreich gelesen werden.',
+		self::PHP_FATAL_ERROR => 'PHP FATAL ERROR',
 	);
 
 
 	/**
-	 * @param int $code
+	 * @param int       $code
 	 * @param hubOrigin $origin
-	 * @param bool $send_mail
-	 * @param null $optional_message
+	 * @param bool      $send_mail
+	 * @param null      $optional_message
 	 */
-	public function __construct($code = self::OTHER, hubOrigin $origin, $send_mail = false, $optional_message = null) {
+	public function __construct($code = self::OTHER, hubOrigin $origin, $send_mail = false, $optional_message = NULL) {
 		$message = 'hubOrigin-Class: ' . $origin->getClassName() . ' (sr_hub_origin_id ' . $origin->getId() . '): ';
 		$message .= PHP_EOL;
 		$message .= 'Fehlerbeschreibung: ' . self::$msgs[$code];
@@ -70,5 +70,3 @@ class hubOriginException extends Exception {
 		return __CLASS__ . ": [Error-Code {$this->code}]: {$this->message}\n";
 	}
 }
-
-?>

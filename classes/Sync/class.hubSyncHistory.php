@@ -142,7 +142,7 @@ class hubSyncHistory extends ActiveRecord {
 		/**
 		 * @var hubCategory $class
 		 * @var hubCategory $hubObject
-		 * @var ilDB $ilDB
+		 * @var ilDB        $ilDB
 		 */
 		if (!self::$loaded[$sr_hub_origin_id]) {
 			global $ilDB;
@@ -261,7 +261,7 @@ class hubSyncHistory extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getAllStatusAsArray() {
-		$ReflectionClass = new ReflectionClass('hubSyncHistory');
+		$ReflectionClass = new ReflectionClass(hubSyncHistory::class);
 		$status = array();
 		foreach ($ReflectionClass->getConstants() as $name => $value) {
 			if (strpos($name, 'STATUS_') === 0) {
@@ -490,5 +490,3 @@ class hubSyncHistory extends ActiveRecord {
 		return $this->already_deleted;
 	}
 }
-
-?>

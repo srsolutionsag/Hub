@@ -27,9 +27,9 @@ class hubSyncCron {
 	public function __construct() {
 		global $ilUser, $ilCtrl;
 		/**
-		 * @var ilDB $ilDB
+		 * @var ilDB      $ilDB
 		 * @var ilObjUser $ilUser
-		 * @var ilCtrl $ilCtrl
+		 * @var ilCtrl    $ilCtrl
 		 */
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
@@ -51,8 +51,7 @@ class hubSyncCron {
 			require_once 'Services/UICore/classes/class.ilTemplate.php';
 			$tpl = new ilTemplate("tpl.main.html", true, true);
 			self::initGlobal("tpl", $tpl);
-			self::initGlobal("styleDefinition", "ilStyleDefinition",
-				"./Services/Style/System/classes/class.ilStyleDefinition.php");
+			self::initGlobal("styleDefinition", "ilStyleDefinition", "./Services/Style/System/classes/class.ilStyleDefinition.php");
 		} else {
 			hub::initILIAS();
 		}
@@ -69,19 +68,15 @@ class hubSyncCron {
 	/**
 	 * @param string $a_name
 	 * @param string $a_class
-	 * @param null $a_source_file
+	 * @param null   $a_source_file
 	 */
-	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
-	{
+	protected static function initGlobal($a_name, $a_class, $a_source_file = NULL) {
 		global $DIC;
 
-		if($a_source_file)
-		{
+		if ($a_source_file) {
 			include_once $a_source_file;
 			$GLOBALS[$a_name] = new $a_class;
-		}
-		else
-		{
+		} else {
 			$GLOBALS[$a_name] = $a_class;
 		}
 
@@ -223,7 +218,7 @@ class hubSyncCron {
 		}
 		foreach ($originsForUsage as $origin) {
 			/**
-			 * @var hubOrigin$origin
+			 * @var hubOrigin $origin
 			 * @var hubOrigin $originObject
 			 */
 			if (!$this->syncOrigin($origin)) {
@@ -246,7 +241,7 @@ class hubSyncCron {
 	 */
 	private function syncOrigin(hubOrigin $origin) {
 		/**
-		 * @var hubOrigin$originObject
+		 * @var hubOrigin $originObject
 		 */
 		try {
 			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();
@@ -341,5 +336,3 @@ class hubSyncCron {
 		return self::$dry_run;
 	}
 }
-
-?>

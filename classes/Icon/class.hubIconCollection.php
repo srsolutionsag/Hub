@@ -17,7 +17,7 @@ class hubIconCollection {
 
 	/**
 	 * @param hubOrigin $hubOrigin
-	 * @param int $usage
+	 * @param int       $usage
 	 *
 	 * @return hubIconCollection
 	 */
@@ -27,7 +27,7 @@ class hubIconCollection {
 
 		$where = array(
 			'sr_hub_origin_id' => $hubOrigin->getId(),
-			'usage_type'       => $usage,
+			'usage_type' => $usage,
 		);
 		$small_list = hubIcon::where($where)->where(array( 'size_type' => hubIcon::SIZE_SMALL ));
 		if (!$small_list->hasSets()) {
@@ -146,5 +146,3 @@ class hubIconCollection {
 		return $this->usage_type;
 	}
 }
-
-?>

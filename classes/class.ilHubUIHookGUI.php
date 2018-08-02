@@ -1,6 +1,7 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUIHookPluginGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Shortlink/class.hubShortlink.php');
+require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
 
 /**
  * Class ilHubUIHookGUI
@@ -10,6 +11,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
+	const ROLE_ADMIN_ID = 2;
 	/**
 	 * @var ilCtrl
 	 */
@@ -39,7 +41,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 	/**
 	 * @param string $a_comp
 	 * @param string $a_part
-	 * @param array $a_par
+	 * @param array  $a_par
 	 *
 	 * @return array
 	 */
@@ -50,14 +52,14 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		if (!$ilUser) {
 			return array();
 		}
-		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(2));
+		$is_admin = in_array($ilUser->getId(), $rbacreview->assignedUsers(self::ROLE_ADMIN_ID));
 
 		if ($a_comp == 'Services/MainMenu' AND $a_part == 'main_menu_search' AND $is_admin) {
 			$link = $this->ctrl->getLinkTargetByClass(array(
 				ilHubPlugin::getBaseClass(),
-				'hubGUI',
-				'hubOriginGUI',
-			), 'index');
+				hubGUI::class,
+				hubOriginGUI::class,
+			), hubOriginGUI::CMD_INDEX);
 
 			$plugins = ilPluginAdmin::getActivePluginsForSlot("Services", "UIComponent", "uihk");
 			if (!in_array('CtrlMainMenu', $plugins)) {
@@ -68,7 +70,7 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 
 			return array(
 				'mode' => $mode,
-				'html' => '<a href=\'' . $link . '\'>HUB</a>',
+				'html' => '<a href=\'' . $link . '\'>' . $this->pl->txt('hub') . '</a>',
 			);
 		}
 
@@ -83,5 +85,3 @@ class ilHubUIHookGUI extends ilUIHookPluginGUI {
 		}
 	}
 }
-
-?>

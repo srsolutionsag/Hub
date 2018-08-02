@@ -105,8 +105,8 @@ class hubMembershipIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param ilFormPropertyGUI $filter
-	 * @param string $name
-	 * @param string $value
+	 * @param string            $name
+	 * @param string            $value
 	 */
 	protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value) {
 		static $set = false;

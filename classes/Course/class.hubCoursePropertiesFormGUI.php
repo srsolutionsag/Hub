@@ -87,7 +87,7 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$delete = new ilRadioGroupInputGUI($this->pl->txt('crs_prop_delete_mode'), hubCourseFields::F_DELETE);
 		//
-		$opt_none = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_none'), null);
+		$opt_none = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_none'), NULL);
 		$delete->addOption($opt_none);
 
 		$opt_inactive = new ilRadioOption($this->pl->txt('crs_prop_delete_mode_inactive'), hubCourse::DELETE_MODE_INACTIVE);
@@ -106,5 +106,3 @@ class hubCoursePropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($delete);
 	}
 }
-
-?>

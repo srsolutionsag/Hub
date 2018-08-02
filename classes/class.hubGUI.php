@@ -55,31 +55,31 @@ class hubGUI {
 	 * @param string $next_class
 	 */
 	private function setTabs($next_class) {
-		$this->tabs->addTab('hub_origins', $this->pl->txt('hub_origins'), $this->ctrl->getLinkTargetByClass('hubOriginGUI', 'index'));
-//		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass('hubUserGUI', 'index'));
-//		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass('hubCategoryGUI', 'index'));
-//		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass('hubCourseGUI', 'index'));
-//		$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass('hubMembershipGUI', 'index'));
-		//$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass('hubLogGUI', 'index'));
-		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass('hubConfGUI', 'index'));
+		$this->tabs->addTab('hub_origins', $this->pl->txt('hub_origins'), $this->ctrl->getLinkTargetByClass(hubOriginGUI::class, hubOriginGUI::CMD_INDEX));
+		//		$this->tabs->addTab('hub_users', $this->pl->txt('hub_users'), $this->ctrl->getLinkTargetByClass(hubUserGUI::class, hubUserGUI::CMD_INDEX));
+		//		$this->tabs->addTab('hub_categories', $this->pl->txt('hub_categories'), $this->ctrl->getLinkTargetByClass(hubCategoryGUI::class, hubCategoryGUI::CMD_INDEX));
+		//		$this->tabs->addTab('hub_courses', $this->pl->txt('hub_courses'), $this->ctrl->getLinkTargetByClass(hubCourseGUI::class, hubCourseGUI::CMD_INDEX));
+		//		$this->tabs->addTab('hub_memberships', $this->pl->txt('hub_memberships'), $this->ctrl->getLinkTargetByClass(hubMembershipGUI::class, hubMembershipGUI::CMD_INDEX));
+		//$this->tabs->addTab('log', $this->pl->txt('log'), $this->ctrl->getLinkTargetByClass(hubLogGUI::class, hubLogGUI::CMD_INDEX));
+		$this->tabs->addTab('conf', $this->pl->txt('hub_conf'), $this->ctrl->getLinkTargetByClass(hubConfGUI::class, hubConfGUI::CMD_INDEX));
 		switch ($next_class) {
 			case 'huborigingui';
 				$this->tabs->setTabActive('hub_origins');
 				break;
 			case 'hubcoursegui';
-//				$this->tabs->setTabActive('hub_courses');
+				//				$this->tabs->setTabActive('hub_courses');
 				break;
 			case 'hubusergui';
-//				$this->tabs->setTabActive('hub_users');
+				//				$this->tabs->setTabActive('hub_users');
 				break;
 			case 'hubcategorygui';
-//				$this->tabs->setTabActive('hub_categories');
+				//				$this->tabs->setTabActive('hub_categories');
 				break;
 			case 'hubmembershipgui';
-//				$this->tabs->setTabActive('hub_memberships');
+				//				$this->tabs->setTabActive('hub_memberships');
 				break;
 			case 'hubloggui';
-//				$this->tabs->setTabActive('log');
+				//				$this->tabs->setTabActive('log');
 				break;
 			case 'hubconfgui';
 				$this->tabs->setTabActive('conf');
@@ -108,7 +108,7 @@ class hubGUI {
 		$ilMainMenu->setActive('none');
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
-		$next_class = $next_class ? $next_class : 'hubOriginGUI';
+		$next_class = $next_class ? $next_class : hubOriginGUI::class;
 		$this->tpl->getStandardTemplate();
 		$this->setTabs($next_class);
 		$this->setTitleAndDescription();
@@ -141,5 +141,3 @@ class hubGUI {
 		return true;
 	}
 }
-
-?>

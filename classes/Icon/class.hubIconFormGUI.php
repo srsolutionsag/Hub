@@ -24,7 +24,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param hubIconGUI $parent_gui
+	 * @param hubIconGUI        $parent_gui
 	 * @param hubIconCollection $hubIconCollection
 	 */
 	public function __construct($parent_gui, hubIconCollection $hubIconCollection) {
@@ -150,5 +150,3 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$this->setId('icon_form_' . $this->collection->getUsageType());
 	}
 }
-
-?>

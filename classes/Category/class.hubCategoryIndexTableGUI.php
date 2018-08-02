@@ -49,7 +49,7 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
 				$hubSyncHistory = hubSyncHistory::find($item['ext_id']);
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCategory->getTitlePrefix()
-				       . $value . '</a>';
+					. $value . '</a>';
 				break;
 			case 'parent_id':
 				$hubCategory = hubCategory::find($item['ext_id']);
@@ -58,7 +58,7 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
 					$hubSyncHistoryParent = hubSyncHistory::getInstance($hubParentCategory);
 
 					return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistoryParent->getIliasId()) . '\'>'
-					       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
+						. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubSyncHistoryParent->getIliasId())) . '</a>';
 				} else {
 					return "<a target='_blank' href=''></a>";
 				}
@@ -76,5 +76,3 @@ class hubCategoryIndexTableGUI extends arIndexTableGUI {
 		return $this->txt('common_status_' . $hubSyncHistory->getTemporaryStatus());
 	}
 }
-
-?>

@@ -24,7 +24,7 @@ class hubShortlink {
 	/**
 	 * @var ilObjCourse
 	 */
-	protected $il_object = null;
+	protected $il_object = NULL;
 	/**
 	 * @var int
 	 */
@@ -404,5 +404,3 @@ class hubShortlink {
 		@include_once('./classes/class.ilLink.php');
 	}
 }
-
-?>

@@ -99,7 +99,7 @@ class hubOriginObjectProperties {
 		}
 
 		$path = hub::getPath() . 'icons/' . hubOrigin::getUsageClass($this->getSrHubOriginId()) . '/'
-		        . hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
+			. hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
 		if (is_file($path)) {
 			return $path;
 		} else {
@@ -159,7 +159,7 @@ class hubOriginObjectProperties {
 	/**
 	 * @param string $key
 	 * @param string $a_value
-	 * @param bool $short_prefix
+	 * @param bool   $short_prefix
 	 */
 	public function setByKey($key, $a_value, $short_prefix = true) {
 		if ($key) {
@@ -205,7 +205,7 @@ class hubOriginObjectProperties {
 
 	/**
 	 * @param string $name
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
 	 * @return array
 	 */
@@ -276,5 +276,3 @@ class hubOriginObjectProperties {
 		return $this->prefix;
 	}
 }
-
-?>

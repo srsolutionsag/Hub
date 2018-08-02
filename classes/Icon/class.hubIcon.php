@@ -361,5 +361,3 @@ class hubIcon extends ActiveRecord {
 		return $this->deleted;
 	}
 }
-
-?>

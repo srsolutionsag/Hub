@@ -79,5 +79,3 @@ class hubUserTableGUI extends hubAbstractTableGUI {
 		$this->pl = ilHubPlugin::getInstance();
 	}
 }
-
-?>

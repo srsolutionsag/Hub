@@ -220,5 +220,3 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		return true;
 	}
 }
-
-?>

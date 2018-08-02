@@ -47,8 +47,8 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param hubGUI $parent_gui
-	 * @param string $usage_type
+	 * @param hubGUI    $parent_gui
+	 * @param string    $usage_type
 	 * @param hubOrigin $origin
 	 *
 	 * @return bool|hubCategoryPropertiesFormGUI|hubCoursePropertiesFormGUI
@@ -101,7 +101,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var ilRadioGroupInputGUI $item
 		 * @var ilRadioGroupInputGUI $subItem
-		 * @var ilRadioOption $op
+		 * @var ilRadioOption        $op
 		 */
 		if (self::hasValue($item)) {
 			$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
@@ -153,15 +153,15 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
 		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE);
 		$opt = array(
-			10  => '10%',
-			20  => '20%',
-			30  => '30%',
-			40  => '40%',
-			50  => '50%',
-			60  => '60%',
-			70  => '70%',
-			80  => '80%',
-			90  => '90%',
+			10 => '10%',
+			20 => '20%',
+			30 => '30%',
+			40 => '40%',
+			50 => '50%',
+			60 => '60%',
+			70 => '70%',
+			80 => '80%',
+			90 => '90%',
 			100 => '100%',
 		);
 		$se->setOptions($opt);
@@ -246,9 +246,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 	/**
 	 * @param ilFormPropertyGUI $item
-	 * @param array $array
+	 * @param array             $array
 	 */
-	public function returnValuesOfItem(ilFormPropertyGUI $item,array &$array) {
+	public function returnValuesOfItem(ilFormPropertyGUI $item, array &$array) {
 		if (self::hasValue($item)) {
 			$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 			$array[$item->getPostVar()] = $value;

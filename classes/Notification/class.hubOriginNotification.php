@@ -17,11 +17,11 @@ class hubOriginNotification {
 
 
 	/**
-	 * @param int $sr_hub_origin_id
+	 * @param int    $sr_hub_origin_id
 	 * @param string $text
-	 * @param null $header
+	 * @param null   $header
 	 */
-	public static function addMessage($sr_hub_origin_id, $text, $header = null) {
+	public static function addMessage($sr_hub_origin_id, $text, $header = NULL) {
 		if (!$header) {
 			$header = self::COMMON;
 		}
@@ -90,5 +90,3 @@ class hubOriginNotification {
 		return $str;
 	}
 }
-
-?>

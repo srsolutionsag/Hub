@@ -1,7 +1,5 @@
 <?php
 
-//use SRAG\Plugins\Hub2\Origin\unibasSLCMMemberships; // TODO: Hub2
-
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
 require_once('./Services/Membership/classes/class.ilParticipants.php');
@@ -84,9 +82,9 @@ class hubMembership extends hubObject {
 
 	public static function buildILIASObjects() {
 		/**
-		 * @var hubMembership         $hubMembership
-		 * @var hubOrigin             $hubOrigin
-		 * @var unibasSLCMMemberships $hubOriginObj
+		 * @var hubMembership $hubMembership
+		 * @var hubOrigin     $hubOrigin
+		 * @var hubOrigin     $hubOriginObj
 		 */
 		$count = self::count();
 		$steps = 1000;

@@ -126,7 +126,7 @@ abstract class hubObject extends ActiveRecord {
 		$count ++;
 		if ($count == 1000) {
 			arObjectCache::flush(get_class($this));
-			arObjectCache::flush('hubSyncHistory');
+			arObjectCache::flush(hubSyncHistory::class);
 			$count = 0;
 		}
 		if ($origin !== NULL) {
@@ -444,5 +444,3 @@ abstract class hubObject extends ActiveRecord {
 		return $this->creation_date;
 	}
 }
-
-?>

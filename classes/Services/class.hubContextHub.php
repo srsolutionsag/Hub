@@ -69,5 +69,3 @@ class hubContextHub extends ilContextBase {
 		return false;
 	}
 }
-
-?>

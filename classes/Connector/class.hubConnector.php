@@ -47,5 +47,3 @@ class hubConnector extends arConnectorDB {
 		return parent::returnDB();
 	}
 }
-
-?>

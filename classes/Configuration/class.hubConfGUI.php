@@ -9,6 +9,9 @@ require_once('class.hubConfigFormGUI.php');
  */
 class hubConfGUI {
 
+	const CMD_CONFIGURE = 'configure';
+	const CMD_SAVE = 'save';
+	const CMD_CANCEL = 'cancel';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -88,10 +91,8 @@ class hubConfGUI {
 		$form = new hubConfigFormGUI($this);
 		$form->setValuesByPost();
 		if ($form->saveObject()) {
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 		$this->tpl->setContent($form->getHTML());
 	}
 }
-
-?>

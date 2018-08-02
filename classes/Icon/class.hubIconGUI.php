@@ -14,6 +14,7 @@ require_once('class.hubIconCollection.php');
  */
 class hubIconGUI {
 
+	const CMD_INDEX = 'index';
 	/**
 	 * @var hubOrigin
 	 */
@@ -122,5 +123,3 @@ class hubIconGUI {
 		}
 	}
 }
-
-?>

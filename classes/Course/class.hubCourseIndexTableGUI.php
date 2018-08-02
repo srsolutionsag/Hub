@@ -50,8 +50,9 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param arIndexTableField $field
-	 * @param array $item
-	 * @param mixed $value
+	 * @param array             $item
+	 * @param mixed             $value
+	 *
 	 * @return string
 	 */
 	protected function setArFieldData(arIndexTableField $field, $item, $value) {
@@ -65,13 +66,13 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 				$hubSyncHistory = hubSyncHistory::find($item['ext_id']);
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix()
-				       . $value . '</a>';
+					. $value . '</a>';
 				break;
 			case 'parent_id':
 				$hubCourse = hubCourse::find($item['ext_id']);
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubCourse->getParentId()) . '\'>'
-				       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>';
+					. ilObject2::_lookupTitle(ilObject2::_lookupObjId($hubCourse->getParentId())) . '</a>';
 				break;
 			default:
 				return parent::setArFieldData($field, $item, $value);
@@ -82,7 +83,8 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param arIndexTableField $field
-	 * @param array $item
+	 * @param array             $item
+	 *
 	 * @return string
 	 */
 	protected function setCustomFieldData(arIndexTableField $field, $item) {
@@ -94,8 +96,8 @@ class hubCourseIndexTableGUI extends arIndexTableGUI {
 
 	/**
 	 * @param ilFormPropertyGUI $filter
-	 * @param string $name
-	 * @param string $value
+	 * @param string            $name
+	 * @param string            $value
 	 */
 	protected function addFilterWhere(ilFormPropertyGUI $filter, $name, $value) {
 		if ($name == "parent_id") {

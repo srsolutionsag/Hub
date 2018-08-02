@@ -149,11 +149,11 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 	/**
 	 * @param ilFormPropertyGUI $item
-	 * @param array $array
+	 * @param array             $array
 	 *
 	 * @internal param $key
 	 */
-	private function getValuesForItem(ilFormPropertyGUI$item, array&$array) {
+	private function getValuesForItem($item, array &$array) {
 		if (self::checkItem($item)) {
 			$key = $item->getPostVar();
 			$array[$key] = hubConfig::get($key);
@@ -196,7 +196,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @param ilFormPropertyGUI $item
 	 */
-	private function saveValueForItem(ilFormPropertyGUI $item) {
+	private function saveValueForItem($item) {
 		if (self::checkItem($item)) {
 			$key = $item->getPostVar();
 			hubConfig::set($key, $this->getInput($key));
@@ -212,13 +212,13 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return bool
 	 */
-	public static function checkItem(ilFormPropertyGUI $item) {
-		return get_class($item) != 'ilFormSectionHeaderGUI';
+	public static function checkItem($item) {
+		return get_class($item) != ilFormSectionHeaderGUI::class;
 	}
 
 
 	protected function addCommandButtons() {
-		$this->addCommandButton('save', $this->pl->txt('admin_form_button_save'));
-		$this->addCommandButton('cancel', $this->pl->txt('admin_form_button_cancel'));
+		$this->addCommandButton(hubConfGUI::CMD_SAVE, $this->pl->txt('admin_form_button_save'));
+		$this->addCommandButton(hubConfGUI::CMD_CANCEL, $this->pl->txt('admin_form_button_cancel'));
 	}
 }

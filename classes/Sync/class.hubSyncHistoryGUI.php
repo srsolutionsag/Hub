@@ -152,5 +152,3 @@ class hubSyncHistoryGUI {
 			$this->ctrl->redirect($this, 'index');
 		}*/
 }
-
-?>

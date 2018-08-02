@@ -63,7 +63,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		 * @var ilToolbarGUI $ilToolbar
 		 */
 		$ilToolbar->setFormAction($this->ctrl->getFormAction($this->parent_obj), true);
-		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, 'add'));
+		$ilToolbar->addButton($this->pl->txt('origin_table_button_add'), $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_ADD));
 
 		if (hubConfig::isImportEnabled()) {
 			$import = new ilFileInputGUI('import', 'import_file');
@@ -73,12 +73,12 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		}
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj));
 		if (hubConfig::get(hubConfig::F_USE_ASYNC)) {
-			$this->addCommandButton('runAsync', $this->pl->txt('origin_table_button_run') . ' (Async)');
+			$this->addCommandButton(hubOriginGUI::CMD_RUN_ASYNC, $this->pl->txt('origin_table_button_run') . ' (Async)');
 		}
-		$this->addCommandButton('run', $this->pl->txt('origin_table_button_run'));
-		$this->addCommandButton('dryRun', $this->pl->txt('origin_table_button_dryrun'));
-		$this->addCommandButton('deactivateAll', $this->pl->txt('origin_table_button_deactivate_all'));
-		$this->addCommandButton('activateAll', $this->pl->txt('origin_table_button_activate_all'));
+		$this->addCommandButton(hubOriginGUI::CMD_RUN, $this->pl->txt('origin_table_button_run'));
+		$this->addCommandButton(hubOriginGUI::CMD_DRY_RUN, $this->pl->txt('origin_table_button_dryrun'));
+		$this->addCommandButton(hubOriginGUI::CMD_DEACTIVATE_ALL, $this->pl->txt('origin_table_button_deactivate_all'));
+		$this->addCommandButton(hubOriginGUI::CMD_ACTIVATE_ALL, $this->pl->txt('origin_table_button_activate_all'));
 	}
 
 
@@ -108,15 +108,16 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		 */
 		$hubOrigin = hubOrigin::find($a_set['id']);
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
-		$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $hubOrigin->getId());
+		$this->ctrl->setParameterByClass(hubIconGUI::class, 'origin_id', $hubOrigin->getId());
 		if (hubConfig::is50()) {
 			$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.svg')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
 		} else {
 			$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
 		}
-		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate') : $this->ctrl->getLinkTarget($this->parent_obj, 'activate');
+		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_DEACTIVATE) : $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_ACTIVATE);
 		$this->addCell('<a href=\'' . $img_link . '\'>' . $img . '</a>');
-		$this->addCell('<a href=\'' . $this->ctrl->getLinkTarget($this->parent_obj, 'edit') . '\'>' . $hubOrigin->getTitle() . '</a>');
+		$this->addCell('<a href=\'' . $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EDIT) . '\'>' . $hubOrigin->getTitle()
+			. '</a>');
 		$this->addCell($hubOrigin->getShortDescription());
 		$this->addCell($this->pl->txt('origin_form_field_usage_type_' . $hubOrigin->getUsageType()));
 		$this->addCell($hubOrigin->getLastUpdate());
@@ -128,15 +129,15 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		$actions = new ilAdvancedSelectionListGUI();
 		$actions->setId('actions_' . self::$num);
 		$actions->setListTitle($this->pl->txt('common_actions'));
-		$actions->addItem($this->pl->txt('common_edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, 'edit'));
+		$actions->addItem($this->pl->txt('common_edit'), hubOriginGUI::CMD_EDIT, $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EDIT));
 		if ($hubOrigin->getActive()) {
-			$actions->addItem($this->pl->txt('common_deactivate'), 'deactivate', $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate'));
+			$actions->addItem($this->pl->txt('common_deactivate'), 'deactivate', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_DEACTIVATE));
 		} else {
-			$actions->addItem($this->pl->txt('common_activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, 'activate'));
+			$actions->addItem($this->pl->txt('common_activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_ACTIVATE));
 		}
-		$actions->addItem($this->pl->txt('common_delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
+		$actions->addItem($this->pl->txt('common_delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_CONFIRM_DELETE));
 		if (hubConfig::isImportEnabled()) {
-			$actions->addItem($this->pl->txt('common_export'), 'export', $this->ctrl->getLinkTarget($this->parent_obj, 'export'));
+			$actions->addItem($this->pl->txt('common_export'), 'export', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EXPORT));
 		}
 		$this->tpl->setCurrentBlock('cell');
 		$this->tpl->setVariable('VALUE', $actions->getHTML());
@@ -149,9 +150,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');
-		$this->tpl->setVariable('VALUE', $value !== null ? $value : '&nbsp;');
+		$this->tpl->setVariable('VALUE', $value !== NULL ? $value : '&nbsp;');
 		$this->tpl->parseCurrentBlock();
 	}
 }
-
-?>

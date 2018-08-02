@@ -15,9 +15,9 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 	public function __construct() {
 		global $ilCtrl, $tpl, $ilTabs;
 		/**
-		 * @var ilCtrl $ilCtrl
+		 * @var ilCtrl     $ilCtrl
 		 * @var ilTemplate $tpl
-		 * @var ilTabsGUI $ilTabs
+		 * @var ilTabsGUI  $ilTabs
 		 */
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
@@ -31,8 +31,9 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 	 */
 	public function performCommand($cmd) {
 		switch ($cmd) {
-			case 'configure':
-			case 'save':
+			case hubConfGUI::CMD_CONFIGURE:
+			case hubConfGUI::CMD_SAVE:
+			case hubConfGUI::CMD_CANCEL:
 				$this->$cmd();
 				break;
 		}
@@ -50,10 +51,13 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 		$form = new hubConfigFormGUI($this);
 		$form->setValuesByPost();
 		if ($form->saveObject()) {
-			$this->ctrl->redirect($this, 'configure');
+			$this->ctrl->redirect($this, hubConfGUI::CMD_CONFIGURE);
 		}
 		$this->tpl->setContent($form->getHTML());
 	}
-}
 
-?>
+
+	protected function cancel() {
+		$this->configure();
+	}
+}

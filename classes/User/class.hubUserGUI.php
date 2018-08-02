@@ -12,6 +12,7 @@ require_once('class.hubUserTableGUI.php');
  */
 class hubUserGUI {
 
+	const CMD_INDEX = 'index';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -100,5 +101,3 @@ class hubUserGUI {
 		$this->ctrl->redirect($this, 'index');
 	}
 }
-
-?>

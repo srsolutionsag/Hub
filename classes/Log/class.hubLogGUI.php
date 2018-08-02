@@ -9,6 +9,8 @@
  */
 class hubLogGUI {
 
+	const CMD_INDEX = 'index';
+	const CMD_GET_LINE_AJAX = 'getLineAjax';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -74,7 +76,7 @@ class hubLogGUI {
 		$this->tpl->addJavaScript('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/templates/js-logtail-master/logtail.js');
 		$this->tpl->addCss('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/templates/js-logtail-master/logtail.css');
 		$log_tpl = new ilTemplate(hub::getPath() . 'templates/tpl.log.html');
-		//$log_tpl->setVariable('URL', $this->ctrl->getLinkTarget($this, 'getLineAjax'));
+		//$log_tpl->setVariable('URL', $this->ctrl->getLinkTarget($this, self::CMD_GET_LINE_AJAX));
 		$this->tpl->setContent($log_tpl->get());
 		$this->getLine($this->getNumberOfLastLine());
 	}
@@ -114,13 +116,11 @@ class hubLogGUI {
 		$line = $_GET['line'] != 'false' ? $_GET['line'] : ($this->getNumberOfLastLine() - 10);
 		header('Content-Type: application/json');
 		echo json_encode(array(
-			'line'      => $line,
-			'content'   => $this->getLine($line),
-			'get'       => $_GET,
+			'line' => $line,
+			'content' => $this->getLine($line),
+			'get' => $_GET,
 			'next_line' => $line + 1,
 		));
 		exit;
 	}
 }
-
-?>

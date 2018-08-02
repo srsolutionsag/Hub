@@ -23,8 +23,8 @@ class hubCounter {
 
 
 	/**
-	 * @param int $sr_hub_origin_id
-	 * @param string$type
+	 * @param int    $sr_hub_origin_id
+	 * @param string $type
 	 */
 	protected static function increment($sr_hub_origin_id, $type) {
 		self::$counter[$sr_hub_origin_id][$type] ++;
@@ -32,8 +32,8 @@ class hubCounter {
 
 
 	/**
-	 * @param string$type
-	 * @param int $sr_hub_origin_id
+	 * @param string $type
+	 * @param int    $sr_hub_origin_id
 	 *
 	 * @return int
 	 */
@@ -43,7 +43,7 @@ class hubCounter {
 
 
 	/**
-	 * @param string$type
+	 * @param string $type
 	 *
 	 * @return int
 	 */
@@ -209,5 +209,3 @@ class hubCounter {
 		return (self::getCount(self::CREATED) + self::getCount(self::UPDATED) + self::getCount(self::DELETED) + self::getCount(self::IGNORED));
 	}
 }
-
-?>

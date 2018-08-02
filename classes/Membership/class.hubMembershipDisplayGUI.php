@@ -55,7 +55,7 @@ class hubMembershipDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
-	 * @param string $value
+	 * @param string         $value
 	 *
 	 * @return bool|null|string
 	 */
@@ -66,7 +66,7 @@ class hubMembershipDisplayGUI extends arDisplayGUI {
 		switch ($field->getName()) {
 			case 'container_id':
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($this->ar->getContainerId()) . '\'>'
-				       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getContainerId())) . '</a>';
+					. ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getContainerId())) . '</a>';
 				break;
 			case 'delivery_date_micro':
 				return date("Y-m-d H:i:s", $value);

@@ -448,5 +448,3 @@ class hubCategory extends hubRepositoryObject {
 		return $this->order_type;
 	}
 }
-
-?>

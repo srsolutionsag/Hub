@@ -168,5 +168,3 @@ abstract class hubRepositoryObject extends hubObject {
 		return $this->description;
 	}
 }
-
-?>

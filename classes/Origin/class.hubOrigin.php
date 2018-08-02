@@ -143,14 +143,15 @@ class hubOrigin extends ActiveRecord {
 		return parent::get();
 	}
 
-		/**
-		 * @param int      $primary_key
-		 * @param array $add_constructor_args
-		 *
-		 * @return hubOrigin
-		 */
-		public static function find($ext_id, array $add_constructor_args = array()) {
-		return parent::find($ext_id,$add_constructor_args);
+
+	/**
+	 * @param int   $primary_key
+	 * @param array $add_constructor_args
+	 *
+	 * @return hubOrigin
+	 */
+	public static function find($ext_id, array $add_constructor_args = array()) {
+		return parent::find($ext_id, $add_constructor_args);
 	}
 
 
@@ -391,7 +392,7 @@ class hubOrigin extends ActiveRecord {
 
 
 	/**
-	 * @param string$usage_type
+	 * @param string $usage_type
 	 *
 	 * @return string
 	 */
@@ -888,5 +889,3 @@ class hubOrigin extends ActiveRecord {
 		return false;
 	}
 }
-
-?>

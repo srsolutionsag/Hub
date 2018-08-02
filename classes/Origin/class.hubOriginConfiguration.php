@@ -378,5 +378,3 @@ class hubOriginConfiguration extends ActiveRecord {
 		}
 	}
 }
-
-?>

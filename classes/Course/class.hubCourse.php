@@ -966,5 +966,3 @@ class hubCourse extends hubRepositoryObject {
 		}
 	}
 }
-
-?>

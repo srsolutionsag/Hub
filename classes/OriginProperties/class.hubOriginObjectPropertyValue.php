@@ -130,5 +130,3 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 		return $this->sr_hub_origin_id;
 	}
 }
-
-?>

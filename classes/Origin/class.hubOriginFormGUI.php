@@ -52,10 +52,10 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 			$this->setTitle($this->pl->txt('origin_form_title_edit'));
 		}
 		if ($this->origin->getId() == 0) {
-			$this->addCommandButton('create', $this->pl->txt('origin_form_button_create'));
+			$this->addCommandButton(hubOriginGUI::CMD_CREATE, $this->pl->txt('origin_form_button_create'));
 		} else {
-			$this->addCommandButton('update', $this->pl->txt('origin_form_button_update'));
-			$this->addCommandButton('updateAndStay', $this->pl->txt('origin_form_button_update_and_stay'));
+			$this->addCommandButton(hubOriginGUI::CMD_UPDATE, $this->pl->txt('origin_form_button_update'));
+			$this->addCommandButton(hubOriginGUI::CMD_UPDATE_AND_STAY, $this->pl->txt('origin_form_button_update_and_stay'));
 		}
 		// Form Elements
 		if ($this->origin->getId()) {
@@ -180,7 +180,7 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 		$te = new ilTextInputGUI($this->pl->txt('origin_form_field_summary_email'), 'summary_email');
 		$this->addItem($te);
 		//
-		$this->addCommandButton('index', $this->pl->txt('origin_form_button_index'));
+		$this->addCommandButton(hubOriginGUI::CMD_INDEX, $this->pl->txt('origin_form_button_index'));
 	}
 
 
@@ -247,24 +247,24 @@ class hubOriginFormGUI extends ilPropertyFormGUI {
 	 */
 	public function getValues() {
 		$array = array(
-			'title'               => $this->origin->getTitle(),
-			'description'         => $this->origin->getDescription(),
-			'matching_key_ilias'  => $this->origin->getMatchingKeyIlias(),
+			'title' => $this->origin->getTitle(),
+			'description' => $this->origin->getDescription(),
+			'matching_key_ilias' => $this->origin->getMatchingKeyIlias(),
 			'matching_key_origin' => $this->origin->getMatchingKeyOrigin(),
-			'usage_type'          => $this->origin->getUsageType(),
-			'class_name'          => $this->origin->getClassName(),
-			'active'              => $this->origin->getActive(),
-			'conf_type'           => $this->origin->getConfType(),
-			'file_path'           => $this->origin->conf()->getFilePath(),
-			'db_username'         => $this->origin->conf()->getSrvUsername(),
-			'db_password'         => $this->origin->conf()->getSrvPassword(),
-			'db_host'             => $this->origin->conf()->getSrvHost(),
-			'db_database'         => $this->origin->conf()->getSrvDatabase(),
-			'db_port'             => $this->origin->conf()->getSrvPort(),
-			'db_search_base'      => $this->origin->conf()->getSrvSearchBase(),
-			'notification_email'  => $this->origin->conf()->getNotificationEmail(),
-			'summary_email'       => $this->origin->conf()->getSummaryEmail(),
-			'exec_time'           => $this->origin->conf()->getExecTime(),
+			'usage_type' => $this->origin->getUsageType(),
+			'class_name' => $this->origin->getClassName(),
+			'active' => $this->origin->getActive(),
+			'conf_type' => $this->origin->getConfType(),
+			'file_path' => $this->origin->conf()->getFilePath(),
+			'db_username' => $this->origin->conf()->getSrvUsername(),
+			'db_password' => $this->origin->conf()->getSrvPassword(),
+			'db_host' => $this->origin->conf()->getSrvHost(),
+			'db_database' => $this->origin->conf()->getSrvDatabase(),
+			'db_port' => $this->origin->conf()->getSrvPort(),
+			'db_search_base' => $this->origin->conf()->getSrvSearchBase(),
+			'notification_email' => $this->origin->conf()->getNotificationEmail(),
+			'summary_email' => $this->origin->conf()->getSummaryEmail(),
+			'exec_time' => $this->origin->conf()->getExecTime(),
 		);
 		$objectProperitesFormGUI = hubOriginObjectPropertiesFormGUI::getInstance($this->parent_gui, $this->origin->getUsageType(), $this->origin);
 		$array = array_merge($objectProperitesFormGUI->returnValuesArray(), $array);

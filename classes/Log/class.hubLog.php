@@ -170,7 +170,7 @@ class hubLogMessage {
 
 	/**
 	 * @param string $message
-	 * @param int $level
+	 * @param int    $level
 	 */
 	protected function __construct($message, $level) {
 		$this->setLevel($level);
@@ -181,7 +181,7 @@ class hubLogMessage {
 
 
 	/**
-	 * @param int $bytes
+	 * @param int    $bytes
 	 * @param string $unit
 	 * @param int    $decimals
 	 *
@@ -252,7 +252,7 @@ class hubLogMessage {
 
 	/**
 	 * @param string $message
-	 * @param int $level
+	 * @param int    $level
 	 *
 	 * @return hubLogMessage
 	 */
@@ -326,5 +326,3 @@ class hubLogMessage {
 		$this->memory = $memory;
 	}
 }
-
-?>

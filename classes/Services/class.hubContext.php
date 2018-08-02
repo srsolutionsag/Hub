@@ -47,5 +47,3 @@ class hubContext extends ilContext {
 		}
 	}
 }
-
-?>

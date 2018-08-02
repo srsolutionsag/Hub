@@ -17,10 +17,10 @@ class hub {
 	 * @var array
 	 */
 	protected static $object_types = array(
-		self::OBJECTTYPE_USER       => 'hubUser',
+		self::OBJECTTYPE_USER => 'hubUser',
 		self::OBJECTTYPE_MEMBERSHIP => 'hubMembership',
-		self::OBJECTTYPE_COURSE     => 'hubCourse',
-		self::OBJECTTYPE_CATEGORY   => 'hubCategory',
+		self::OBJECTTYPE_COURSE => 'hubCourse',
+		self::OBJECTTYPE_CATEGORY => 'hubCategory',
 	);
 	const OBJECTTYPE_USER = 1;
 	const OBJECTTYPE_MEMBERSHIP = 2;
@@ -101,7 +101,7 @@ class hub {
 
 	/**
 	 * @param string $message
-	 * @param bool $keep
+	 * @param bool   $keep
 	 */
 	public static function sendFailure($message, $keep = false) {
 		if (self::isCli()) {
@@ -231,12 +231,14 @@ class hub {
 		return self::getILIASVersion() >= self::ILIAS_52;
 	}
 
+
 	/**
 	 * @return bool
 	 */
 	public static function is51() {
 		return self::getILIASVersion() >= self::ILIAS_51;
 	}
+
 
 	/**
 	 * @return bool
@@ -245,13 +247,15 @@ class hub {
 		return self::getILIASVersion() >= self::ILIAS_50;
 	}
 
+
 	public static function loadIlDBMySQL() {
-		if (is_file('./Services/Database/classes/class.ilDBMySQL.php'))	{
+		if (is_file('./Services/Database/classes/class.ilDBMySQL.php')) {
 			require_once './Services/Database/classes/class.ilDBMySQL.php';
 		} else {
 			require_once './Services/Database/classes/MDB2/class.ilDBMySQL.php';
 		}
 	}
+
 
 	/**
 	 * @throws ilPluginException

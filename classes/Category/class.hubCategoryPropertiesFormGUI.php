@@ -35,7 +35,7 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$se = new ilSelectInputGUI($this->pl->txt('cat_prop_syncfield'), hubCategoryFields::SYNCFIELD);
 		$opt = array(
-			null    => $this->pl->txt('cat_prop_syncfield_none'),
+			NULL => $this->pl->txt('cat_prop_syncfield_none'),
 			'title' => $this->pl->txt('cat_prop_syncfield_title'),
 		);
 		$se->setOptions($opt);
@@ -95,12 +95,12 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('cat_prop_delete_mode'), hubCategoryFields::DELETE);
 		$ro->setValue(hubCategory::DELETE_MODE_INACTIVE);
-		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), null);
+		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), NULL);
 		$ro->addOption($opt);
 		$opt = new ilRadioOption(sprintf($this->pl->txt('cat_prop_delete_mode_inactive'), $this->pl->txt('com_prop_mark_deleted_text')), hubCategory::DELETE_MODE_INACTIVE);
 		{
 			$m = new ilCheckboxInputGUI(sprintf($this->pl->txt('cat_prop_change_icon'), hubOrigin::getClassnameForOriginId($_GET['origin_id'])
-			                                                                            . '_deleted.png'), hubCategoryFields::DELETED_ICON);
+				. '_deleted.png'), hubCategoryFields::DELETED_ICON);
 			$opt->addSubItem($m);
 		}
 		$ro->addOption($opt);

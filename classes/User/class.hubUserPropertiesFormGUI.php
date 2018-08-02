@@ -25,8 +25,8 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 	protected function initForm() {
 		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_syncfield'), hubUserFields::F_SYNCFIELD);
 		$opt = array(
-			null               => $this->pl->txt('usr_prop_syncfield_none'),
-			'email'            => 'E-Mail',
+			NULL => $this->pl->txt('usr_prop_syncfield_none'),
+			'email' => 'E-Mail',
 			'external_account' => 'External Account',
 			//			'matriculation' => 'Matriculation',
 		);
@@ -35,12 +35,12 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_login_field'), hubUserFields::F_LOGIN_FIELD);
 		$opt = array(
-			null                 => $this->pl->txt('usr_prop_login_field_none'),
-			'email'              => 'E-Mail',
-			'external_account'   => 'External Account',
-			'ext_id'             => 'Externe ID',
+			NULL => $this->pl->txt('usr_prop_login_field_none'),
+			'email' => 'E-Mail',
+			'external_account' => 'External Account',
+			'ext_id' => 'Externe ID',
 			'first_and_lastname' => 'vorname.nachname',
-			'own'                => 'hub-Field login',
+			'own' => 'hub-Field login',
 		);
 		$syncfield->setOptions($opt);
 		$this->addItem($syncfield);
@@ -58,9 +58,9 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$send_password = new ilCheckboxInputGUI($this->pl->txt('usr_prop_send_password'), hubUserFields::F_SEND_PASSWORD);
 		$syncfield = new ilSelectInputGUI($this->pl->txt('usr_prop_send_password_field'), hubUserFields::F_SEND_PASSWORD_FIELD);
 		$opt = array(
-			'email'            => 'email',
+			'email' => 'email',
 			'external_account' => 'external_account',
-			'email_password'   => 'email_password',
+			'email_password' => 'email_password',
 		);
 		$syncfield->setOptions($opt);
 		$activate->addSubItem($syncfield);
@@ -103,7 +103,7 @@ class hubUserPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($header);
 		$delete = new ilRadioGroupInputGUI($this->pl->txt('usr_prop_delete_mode'), hubUserFields::F_DELETE);
 		$delete->setValue(hubUser::DELETE_MODE_INACTIVE);
-		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_none'), null);
+		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_none'), NULL);
 		$delete->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('usr_prop_delete_mode_inactive'), hubUser::DELETE_MODE_INACTIVE);
 		$delete->addOption($opt);

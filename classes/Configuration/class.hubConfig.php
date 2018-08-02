@@ -141,7 +141,7 @@ class hubConfig extends ActiveRecord {
 	 *
 	 * @return string
 	 */
-	public static function get($name=null) {
+	public static function get($name = NULL) {
 		if (!isset(self::$cache_loaded[$name])) {
 			$obj = self::find($name);
 			if ($obj === NULL) {
@@ -239,5 +239,3 @@ class hubConfig extends ActiveRecord {
 		return $this->name;
 	}
 }
-
-?>
