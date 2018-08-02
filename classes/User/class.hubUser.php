@@ -47,25 +47,6 @@ class hubUser extends hubObject {
 		'gender',
 		'birthday',
 	);
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
 	/**
 	 * @var ilObjUser
 	 */
@@ -81,7 +62,7 @@ class hubUser extends hubObject {
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var hubUser $hubUser
+		 * @var hubUser   $hubUser
 		 * @var hubOrigin $hubOrigin
 		 */
 
@@ -457,7 +438,7 @@ class hubUser extends hubObject {
 	//
 	/**
 	 * @param string $login
-	 * @param int $usr_id
+	 * @param int    $usr_id
 	 *
 	 * @return bool
 	 */

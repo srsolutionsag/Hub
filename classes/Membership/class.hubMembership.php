@@ -28,25 +28,6 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
 	const TABLE_NAME = "sr_hub_membership";
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
 	/**
 	 * @var ilCourseParticipant
 	 */

@@ -18,25 +18,6 @@ class hubCategory extends hubRepositoryObject {
 	const ORDER_TYPE_TITLE = 0;
 	const ORDER_TYPE_MANUALLY = 1;
 	const TABLE_NAME = "sr_hub_category";
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
 	/**
 	 * @var int
 	 *
@@ -100,7 +81,7 @@ class hubCategory extends hubRepositoryObject {
 	private static function buildForParentId($parent_id = 0) {
 		/**
 		 * @var hubCategory $hubCategory
-		 * @var hubOrigin $hubOrigin
+		 * @var hubOrigin   $hubOrigin
 		 */
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {

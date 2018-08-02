@@ -13,25 +13,6 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 class hubCourse extends hubRepositoryObject {
 
 	const TABLE_NAME = "sr_hub_course";
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
 	/**
 	 * @var ilObjCourse
 	 */
@@ -366,7 +347,7 @@ class hubCourse extends hubRepositoryObject {
 
 	/**
 	 * @param ilObjCategory $ilObjCategory
-	 * @param int $deph
+	 * @param int           $deph
 	 */
 	protected function updateImportIdForDependence(ilObjCategory $ilObjCategory, $deph) {
 		$a_import_id = 'srhub_' . $this->getSrHubOriginId() . '_dep_' . $deph . '_' . $this->getParentId();
@@ -409,14 +390,14 @@ class hubCourse extends hubRepositoryObject {
 
 	/**
 	 * @param string $title
-	 * @param int $parent_id
-	 * @param int $depth
+	 * @param int    $parent_id
+	 * @param int    $depth
 	 *
 	 * @return int
 	 */
 	private function buildDependeceCategory($title, $parent_id, $depth) {
 		/**
-		 * @var ilTree $tree
+		 * @var ilTree      $tree
 		 * @var ilRbacAdmin $rbacadmin
 		 */
 		if ($title == NULL) {

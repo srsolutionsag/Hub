@@ -29,6 +29,29 @@ abstract class hubObject extends ActiveRecord {
 	const DELETE_MODE_TRASH = 4;
 	const DELETE_MODE_DELETE_OR_INACTIVE = 5;
 	/**
+	 * @abstract
+	 */
+	const TABLE_NAME = "";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return static::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return static::TABLE_NAME;
+	}
+
+
+	/**
 	 * @var hubOrigin
 	 */
 	protected $hubOrigin;
