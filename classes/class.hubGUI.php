@@ -1,5 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
+require_once __DIR__ . "/Configuration/class.hubConfGUI.php";
 
 /**
  * Main GUI-Class hubGUI

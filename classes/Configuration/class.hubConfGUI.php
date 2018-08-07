@@ -9,6 +9,7 @@ require_once('class.hubConfigFormGUI.php');
  */
 class hubConfGUI {
 
+	const CMD_INDEX = 'index';
 	const CMD_CONFIGURE = 'configure';
 	const CMD_SAVE = 'save';
 	const CMD_CANCEL = 'cancel';
