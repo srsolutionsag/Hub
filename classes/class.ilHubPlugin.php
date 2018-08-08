@@ -1,6 +1,17 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
-require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
+require_once(__DIR__ . '/Configuration/class.hubConfig.php');
+require_once __DIR__ . "/Origin/class.hubOriginConfiguration.php";
+require_once __DIR__ . "/Origin/class.hubOrigin.php";
+require_once __DIR__ . "/OriginProperties/class.hubOriginObjectPropertyValue.php";
+require_once __DIR__ . "/Category/class.hubCategory.php";
+require_once __DIR__ . "/Course/class.hubCourse.php";
+require_once __DIR__ . "/Membership/class.hubMembership.php";
+require_once __DIR__ . "/User/class.hubUser.php";
+require_once __DIR__ . "/Sync/class.hubSyncHistory.php";
+require_once __DIR__ . "/Configuration/class.hubConfig.php";
+require_once __DIR__ . "/Icon/class.hubIcon.php";
+require_once __DIR__ . "/Log/class.hubLog.php";
 
 /**
  * Class ilHubPlugin
@@ -188,18 +199,6 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return bool
 	 */
 	protected function beforeUninstall() {
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOriginConfiguration.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertyValue.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Category/class.hubCategory.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Course/class.hubCourse.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php";
-		require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Log/class.hubLog.php";
-
 		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
 		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
 		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
