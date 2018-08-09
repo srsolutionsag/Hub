@@ -99,7 +99,7 @@ class hubOriginGUI {
 			$next_class = $this->ctrl->getNextClass($this);
 			//			$this->tpl->getStandardTemplate();
 			$this->ctrl->setParameterByClass(hubIconGUI::class, 'origin_id', $_GET['origin_id']);
-			if ($cmd != 'delete') {
+			if ($cmd != self::CMD_DELETE) {
 				$this->ctrl->saveParameter($this, 'origin_id');
 			}
 			$this->setTabs($next_class, $cmd);

@@ -44,6 +44,10 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	 * @var int
 	 */
 	static $num = 0;
+	/**
+	 * @var ilHubPlugin
+	 */
+	protected $pl;
 
 
 	/**
@@ -55,6 +59,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 		$this->ctrl = $ilCtrl;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
+		$this->pl = ilHubPlugin::getInstance();
 		if ($this->initLanguage() === false) {
 			global $lng;
 			$this->lng = $lng;
