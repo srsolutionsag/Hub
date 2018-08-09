@@ -206,7 +206,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return mixed
 	 */
-	public function appendToSubItem(ilFormPropertyGUI $form_item) {
+	public function appendToSubItem($form_item) {
 		foreach ($this->getItems() as $item) {
 			$form_item->addSubItem($item);
 		}
@@ -248,7 +248,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @param ilFormPropertyGUI $item
 	 * @param array             $array
 	 */
-	public function returnValuesOfItem(ilFormPropertyGUI $item, array &$array) {
+	public function returnValuesOfItem($item, array &$array) {
 		if (self::hasValue($item)) {
 			$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 			$array[$item->getPostVar()] = $value;
@@ -264,7 +264,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return bool
 	 */
-	public static function hasSubitems(ilFormPropertyGUI $item) {
+	public static function hasSubitems($item) {
 		return (!$item instanceof ilFormSectionHeaderGUI AND !$item instanceof ilRadioGroupInputGUI AND !$item instanceof ilMultiSelectInputGUI);
 	}
 
@@ -274,7 +274,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return bool
 	 */
-	public static function hasValue(ilFormPropertyGUI $item) {
+	public static function hasValue($item) {
 		return (!$item instanceof ilFormSectionHeaderGUI AND $item instanceof ilFormPropertyGUI);
 	}
 
@@ -284,7 +284,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 *
 	 * @return array
 	 */
-	public static function getSubItems(ilFormPropertyGUI $item) {
+	public static function getSubItems($item) {
 		$return = array();
 		if (self::hasSubitems($item)) {
 			return $item->getSubItems();
@@ -301,7 +301,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @param ilFormPropertyGUI $item
 	 */
-	protected function fillValueByItem(ilFormPropertyGUI $item) {
+	protected function fillValueByItem($item) {
 		if (self::hasValue($item)) {
 			$this->origin_properties->setByKey($item->getPostVar(), $this->getInput($item->getPostVar()));
 			foreach (self::getSubItems($item) as $subtitem) {
