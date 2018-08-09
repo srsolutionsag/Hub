@@ -27,6 +27,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @var hubOrigin
 	 */
 	protected $origin;
+	/**
+	 * @var ilHubPlugin ilHubPlugin
+	 */
+	protected $pl;
 
 
 	/**
