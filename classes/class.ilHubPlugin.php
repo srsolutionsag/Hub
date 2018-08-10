@@ -227,27 +227,35 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		$uninstall_remove_hub_data = boolval($uninstall_remove_hub_data);
 
 		if ($uninstall_remove_hub_data) {
-			$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
-			$this->db->dropTable(hubOrigin::TABLE_NAME, false);
-			$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
-			$this->db->dropTable(hubCategory::TABLE_NAME, false);
-			$this->db->dropTable(hubCourse::TABLE_NAME, false);
-			$this->db->dropTable(hubMembership::TABLE_NAME, false);
-			$this->db->dropTable(hubUser::TABLE_NAME, false);
-			$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
-			$this->db->dropTable(hubConfig::TABLE_NAME, false);
-			$this->db->dropTable(hubIcon::TABLE_NAME, false);
-
-			if (file_exists(hubLog::getFilePath())) {
-				unlink(hubLog::getFilePath());
-			}
-
-			ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
+			$this->removeHubData();
 		} else {
 			// Ask again if reinstalled
 			hubConfig::remove(self::UNINSTALL_REMOVE_HUB_DATA);
 		}
 
 		return true;
+	}
+
+
+	/**
+	 *
+	 */
+	protected function removeHubData() {
+		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
+		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
+		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
+		$this->db->dropTable(hubCategory::TABLE_NAME, false);
+		$this->db->dropTable(hubCourse::TABLE_NAME, false);
+		$this->db->dropTable(hubMembership::TABLE_NAME, false);
+		$this->db->dropTable(hubUser::TABLE_NAME, false);
+		$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
+		$this->db->dropTable(hubConfig::TABLE_NAME, false);
+		$this->db->dropTable(hubIcon::TABLE_NAME, false);
+
+		if (file_exists(hubLog::getFilePath())) {
+			unlink(hubLog::getFilePath());
+		}
+
+		ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
 	}
 }
