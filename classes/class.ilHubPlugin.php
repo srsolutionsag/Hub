@@ -12,6 +12,9 @@ require_once __DIR__ . "/Sync/class.hubSyncHistory.php";
 require_once __DIR__ . "/Configuration/class.hubConfig.php";
 require_once __DIR__ . "/Icon/class.hubIcon.php";
 require_once __DIR__ . "/Log/class.hubLog.php";
+require_once __DIR__ . "/uninstall/class.hubUninstall.php";
+require_once "Services/UIComponent/classes/class.ilUIPluginRouterGUI.php";
+require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";
 
 /**
  * Class ilHubPlugin
@@ -23,6 +26,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 	const PLUGIN_ID = "hub";
 	const PLUGIN_NAME = "Hub";
+	const UNINSTALL_REMOVE_HUB_DATA = "uninstall_remove_hub_data";
 	/**
 	 * @var ilHubPlugin
 	 */
@@ -71,6 +75,10 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
+	/**
 	 * @var ilDB
 	 */
 	protected $db;
@@ -82,8 +90,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	public function __construct() {
 		parent::__construct();
 
-		global $ilDB;
+		global $ilCtrl, $ilDB;
 
+		$this->ctrl = $ilCtrl;
 		$this->db = $ilDB;
 	}
 
@@ -96,6 +105,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	}
 
 
+	/**
+	 *
+	 */
 	public function updateLanguageFiles() {
 		if (!in_array('SimpleXLSX', get_declared_classes())) {
 			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/lib/simplexlsx.class.php');
@@ -199,22 +211,42 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return bool
 	 */
 	protected function beforeUninstall() {
-		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
-		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
-		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
-		$this->db->dropTable(hubCategory::TABLE_NAME, false);
-		$this->db->dropTable(hubCourse::TABLE_NAME, false);
-		$this->db->dropTable(hubMembership::TABLE_NAME, false);
-		$this->db->dropTable(hubUser::TABLE_NAME, false);
-		$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
-		$this->db->dropTable(hubConfig::TABLE_NAME, false);
-		$this->db->dropTable(hubIcon::TABLE_NAME, false);
+		$uninstall_remove_hub_data = hubConfig::get(self::UNINSTALL_REMOVE_HUB_DATA);
 
-		if (file_exists(hubLog::getFilePath())) {
-			unlink(hubLog::getFilePath());
+		if ($uninstall_remove_hub_data === NULL) {
+			hubUninstall::saveParameterByClass();
+
+			$this->ctrl->redirectByClass([
+				ilUIPluginRouterGUI::class,
+				hubUninstall::class
+			], hubUninstall::CMD_CONFIRM_REMOVE_HUB_DATA);
+
+			return false;
 		}
 
-		ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
+		$uninstall_remove_hub_data = boolval($uninstall_remove_hub_data);
+
+		if ($uninstall_remove_hub_data) {
+			$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
+			$this->db->dropTable(hubOrigin::TABLE_NAME, false);
+			$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
+			$this->db->dropTable(hubCategory::TABLE_NAME, false);
+			$this->db->dropTable(hubCourse::TABLE_NAME, false);
+			$this->db->dropTable(hubMembership::TABLE_NAME, false);
+			$this->db->dropTable(hubUser::TABLE_NAME, false);
+			$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
+			$this->db->dropTable(hubConfig::TABLE_NAME, false);
+			$this->db->dropTable(hubIcon::TABLE_NAME, false);
+
+			if (file_exists(hubLog::getFilePath())) {
+				unlink(hubLog::getFilePath());
+			}
+
+			ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
+		} else {
+			// Ask again if reinstalled
+			hubConfig::remove(self::UNINSTALL_REMOVE_HUB_DATA);
+		}
 
 		return true;
 	}

@@ -267,3 +267,11 @@ icon_title_medium#:#Mittel
 icon_title_large#:#Gross
 icon_form_button_save#:#Speichern
 hub#:#HUB
+confirm_remove_hub_data#:#Möchten Sie die HUB-Daten auch entfernen? Falls Sie später einmal auf HUB2 wechseln möchten, können die Daten übernommen werden. Allenfalls möchten Sie das HUB-Plugin nur deaktivieren?
+cancel#:#Abbrechen
+remove_hub_data#:#Entferne HUB-Daten
+keep_hub_data#:#HUB-Daten behalten
+deactivate_hub#:#HUB-Plugin nur deaktivieren
+hub_data#:#HUB-Daten
+msg_removed_hub_data#:#Die HUB-Daten wurden auch entfernt!
+msg_kept_hub_data#:#Die HUB-Daten wurden behalten!

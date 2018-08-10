@@ -159,8 +159,6 @@ class hubConfig extends ActiveRecord {
 	/**
 	 * @param string $name
 	 * @param string $value
-	 *
-	 * @return null
 	 */
 	public static function set($name, $value) {
 		/**
@@ -172,6 +170,21 @@ class hubConfig extends ActiveRecord {
 			$obj->update();
 		} else {
 			$obj->create();
+		}
+	}
+
+
+	/**
+	 * @param string $name
+	 * @param string $value
+	 */
+	public static function remove($name) {
+		/**
+		 * @var arConfig $obj
+		 */
+		$obj = self::find($name);
+		if ($obj !== NULL) {
+			$obj->delete();
 		}
 	}
 

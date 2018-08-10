@@ -267,3 +267,11 @@ icon_title_medium#:#Medium
 icon_title_large#:#Large
 icon_form_button_save#:#Save
 hub#:#HUB
+confirm_remove_hub_data#:#Do you want to remove the HUB data as well? If you want to switch to HUB2 later, the data can be transferred. At most, you just want to disable the HUB plugin?
+cancel#:#Cancel
+remove_hub_data#:#Remove HUB data
+keep_hub_data#:#Keep HUB data
+deactivate_hub#:#Just deactivate HUB plugin
+hub_data#:#HUB data
+msg_removed_hub_data#:#The HUB data was also removed!
+msg_kept_hub_data#:#The HUB data was kept!
