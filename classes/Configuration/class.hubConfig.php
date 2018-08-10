@@ -176,7 +176,6 @@ class hubConfig extends ActiveRecord {
 
 	/**
 	 * @param string $name
-	 * @param string $value
 	 */
 	public static function remove($name) {
 		/**
