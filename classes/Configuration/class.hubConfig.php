@@ -162,7 +162,7 @@ class hubConfig extends ActiveRecord {
 	 */
 	public static function set($name, $value) {
 		/**
-		 * @var arConfig $obj
+		 * @var hubConfig $obj
 		 */
 		$obj = self::findOrGetInstance($name);
 		$obj->setValue($value);
@@ -180,7 +180,7 @@ class hubConfig extends ActiveRecord {
 	 */
 	public static function remove($name) {
 		/**
-		 * @var arConfig $obj
+		 * @var hubConfig $obj
 		 */
 		$obj = self::find($name);
 		if ($obj !== NULL) {
