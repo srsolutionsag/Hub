@@ -12,7 +12,7 @@ require_once __DIR__ . "/Sync/class.hubSyncHistory.php";
 require_once __DIR__ . "/Configuration/class.hubConfig.php";
 require_once __DIR__ . "/Icon/class.hubIcon.php";
 require_once __DIR__ . "/Log/class.hubLog.php";
-require_once __DIR__ . "/uninstall/class.hubUninstall.php";
+require_once __DIR__ . "/uninstall/class.hubRemoveDataConfirm.php";
 require_once "Services/UIComponent/classes/class.ilUIPluginRouterGUI.php";
 require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";
 
@@ -214,12 +214,12 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		$uninstall_remove_hub_data = hubConfig::get(self::UNINSTALL_REMOVE_HUB_DATA);
 
 		if ($uninstall_remove_hub_data === NULL) {
-			hubUninstall::saveParameterByClass();
+			hubRemoveDataConfirm::saveParameterByClass();
 
 			$this->ctrl->redirectByClass([
 				ilUIPluginRouterGUI::class,
-				hubUninstall::class
-			], hubUninstall::CMD_CONFIRM_REMOVE_HUB_DATA);
+				hubRemoveDataConfirm::class
+			], hubRemoveDataConfirm::CMD_CONFIRM_REMOVE_HUB_DATA);
 
 			return false;
 		}

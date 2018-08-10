@@ -8,11 +8,11 @@ require_once __DIR__ . "/../class.ilHubPlugin.php";
 require_once "Services/Utilities/classes/class.ilUtil.php";
 
 /**
- * Class hubUninstall
+ * Class hubRemoveDataConfirm
  *
- * @ilCtrl_isCalledBy hubUninstall: ilUIPluginRouterGUI
+ * @ilCtrl_isCalledBy hubRemoveDataConfirm: ilUIPluginRouterGUI
  */
-class hubUninstall {
+class hubRemoveDataConfirm {
 
 	const CMD_CANCEL = "cancel";
 	const CMD_CONFIRM_REMOVE_HUB_DATA = "confirmRemoveHubData";
