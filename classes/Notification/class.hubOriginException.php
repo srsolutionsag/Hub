@@ -45,7 +45,7 @@ class hubOriginException extends Exception {
 	public function __construct($code = self::OTHER, hubOrigin $origin, $send_mail = false, $optional_message = NULL) {
 		$message = 'hubOrigin-Class: ' . $origin->getClassName() . ' (sr_hub_origin_id ' . $origin->getId() . '): ';
 		$message .= PHP_EOL;
-		$message .= 'Fehlerbeschreibung: ' . self::$msgs[$code];
+		$message .= 'Error: ' . self::$msgs[$code];
 		$message .= PHP_EOL;
 		if ($optional_message) {
 			$message .= PHP_EOL;

@@ -259,9 +259,10 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId(), false)->start();
 				if ($originObject->parseData()) {
 					$data = $originObject->getData();
-					if ($originObject->compareDataWithExisting(count($data))) {
+					$count = count($data);
+					if ($originObject->compareDataWithExisting($count)) {
 						hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId())->log();
-						if ($originObject->getChecksum() === count($data) OR $originObject->getChecksum() == 0) {
+						if ($originObject->getChecksum() === $count OR $originObject->getChecksum() == 0) {
 							hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId(), false)->start();
 							if ($originObject->buildEntries()) {
 								hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId())->log();
@@ -278,7 +279,7 @@ class hubSyncCron {
 								throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, !self::getDryRun());
 							}
 						} else {
-							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, !self::getDryRun());
+							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, !self::getDryRun(), "Checksum: {$originObject->getChecksum()}, delivered data sets: {$count}");
 						}
 					} else {
 						$percentage = $originObject->props()->get(hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE) . '%';
