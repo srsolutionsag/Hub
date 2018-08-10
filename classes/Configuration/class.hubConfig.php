@@ -1,6 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
-hub::loadActiveRecord();
+require_once "Services/ActiveRecord/class.ActiveRecord.php";
 require_once('./include/inc.ilias_version.php');
 require_once('./Services/Component/classes/class.ilComponent.php');
 
@@ -36,12 +36,7 @@ class hubConfig extends ActiveRecord {
 	const F_MMAIL_SUBJECT = 'membership_mail_subject';
 	const F_MMAIL_MSG = 'membership_mail_msg';
 	const F_STANDARD_ROLE = 'standard_role';
-	const MIN_ILIAS_VERSION = self::ILIAS_43;
 	const TABLE_NAME = "sr_hub_conf";
-	const ILIAS_43 = 43;
-	const ILIAS_44 = 44;
-	const ILIAS_45 = 45;
-	const ILIAS_50 = 50;
 
 
 	/**
@@ -73,67 +68,6 @@ class hubConfig extends ActiveRecord {
 	 * @var bool
 	 */
 	protected $ar_safe_read = false;
-
-
-	/**
-	 * @return int
-	 */
-	public static function getILIASVersion() {
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
-			return self::ILIAS_50;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.5.000')) {
-			return self::ILIAS_45;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.4.000')) {
-			return self::ILIAS_44;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.3.000')) {
-			return self::ILIAS_43;
-		}
-
-		return 0;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isILIASSupported() {
-		return self::getILIASVersion() >= self::MIN_ILIAS_VERSION;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is44() {
-		return self::getILIASVersion() >= self::ILIAS_44;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is43() {
-		return self::getILIASVersion() >= self::ILIAS_43;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is45() {
-		return self::getILIASVersion() >= self::ILIAS_45;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is50() {
-		return self::getILIASVersion() >= self::ILIAS_50;
-	}
 
 
 	/**

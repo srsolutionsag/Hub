@@ -15,6 +15,8 @@ require_once __DIR__ . "/Log/class.hubLog.php";
 require_once __DIR__ . "/uninstall/class.hubRemoveDataConfirm.php";
 require_once "Services/UIComponent/classes/class.ilUIPluginRouterGUI.php";
 require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";
+require_once __DIR__ . "/class.hubGUI.php";
+require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
 
 /**
  * Class ilHubPlugin
@@ -31,10 +33,6 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @var ilHubPlugin
 	 */
 	protected static $instance;
-	/**
-	 * @var string
-	 */
-	protected static $baseClass;
 
 
 	/**
@@ -61,15 +59,6 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return bool
 	 */
 	public static function checkPreconditions() {
-		/**
-		 * @var ilCtrl $ilCtrl
-		 */
-		if (self::getBaseClass() == false) {
-			ilUtil::sendFailure('hub needs ILIAS >= 4.5 OR for ILIAS < 4.5 ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);
-
-			return false;
-		}
-
 		return true;
 	}
 
@@ -162,7 +151,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		$entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass(self::getBaseClass() . ',hubGUI,hubOriginGUI');
+			$hub_menu->setGuiClass(ilUIPluginRouterGUI::class . ',' . hubGUI::class . ',' . hubOriginGUI::class);
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
 			if (!function_exists('hubConfig::get')) {
@@ -176,34 +165,6 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		}
 
 		return $entries[$id];
-	}
-
-
-	/**
-	 * @var string
-	 *
-	 * In what class the command/ctrl chain should start for this plugin.
-	 *
-	 * This will return ilRouterGUI for ILIAS <= 4.4 if the corresponding plugin is installed
-	 * and ilUIPluginRouterGUI for ILIAS >= 4.5 and false otherwise.
-	 *
-	 * @return string
-	 */
-	public static function getBaseClass() {
-		if (self::$baseClass !== NULL) {
-			return self::$baseClass;
-		}
-
-		global $ilCtrl;
-		if ($ilCtrl->lookupClassPath('ilUIPluginRouterGUI')) {
-			self::$baseClass = 'ilUIPluginRouterGUI';
-		} elseif ($ilCtrl->lookupClassPath('ilRouterGUI')) {
-			self::$baseClass = 'ilRouterGUI';
-		} else {
-			self::$baseClass = false;
-		}
-
-		return self::$baseClass;
 	}
 
 

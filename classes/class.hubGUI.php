@@ -1,6 +1,7 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.ilHubPlugin.php');
 require_once __DIR__ . "/Configuration/class.hubConfGUI.php";
+require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
 
 /**
  * Main GUI-Class hubGUI
@@ -10,7 +11,7 @@ require_once __DIR__ . "/Configuration/class.hubConfGUI.php";
  * @version           1.1.04
  * @revision          $r:
  *
- * @ilCtrl_IsCalledBy hubGUI: ilRouterGUI, ilUIPluginRouterGUI
+ * @ilCtrl_IsCalledBy hubGUI: ilUIPluginRouterGUI
  * @ilCtrl_Calls      hubGUI: hubOriginGUI, hubSyncHistoryGUI, hubCourseGUI, hubUserGUI, hubCategoryGUI, hubLogGUI, hubConfGUI, hubMembershipGUI
  */
 class hubGUI {
@@ -40,9 +41,7 @@ class hubGUI {
 	public function __construct() {
 		global $tpl, $ilCtrl, $ilToolbar, $ilTabs, $ilAccess;
 		$this->tpl = $tpl;
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->getStandardTemplate();
-		}
+		$this->tpl->getStandardTemplate();
 		$this->ctrl = $ilCtrl;
 		$this->toolbar = $ilToolbar;
 		$this->tabs = $ilTabs;

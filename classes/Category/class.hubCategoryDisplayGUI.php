@@ -1,5 +1,5 @@
 <?php
-require_once(hub::pathToActiveRecord() . '/Views/Display/class.arDisplayGUI.php');
+require_once "Services/ActiveRecord/Views/Display/class.arDisplayGUI.php";
 
 /**
  * GUI-Class hubCategoryDisplayGUI

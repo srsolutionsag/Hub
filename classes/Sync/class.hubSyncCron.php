@@ -40,7 +40,7 @@ class hubSyncCron {
 
 	public static function initAndRun() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
-		if (hub::is52()) { // > 5.2.0
+		if (ILIAS_VERSION_NUMERIC >= "5.2.0") { // > 5.2.0
 			require_once './Services/Cron/classes/class.ilCronStartUp.php';
 			$ilCronStartup = new ilCronStartUp($_SERVER['argv'][3], $_SERVER['argv'][1], $_SERVER['argv'][2]);
 			$ilCronStartup->initIlias();

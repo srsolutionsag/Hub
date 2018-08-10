@@ -1,6 +1,6 @@
 <?php
-require_once(hub::pathToActiveRecord() . '/Views/Index/class.arIndexTableGUI.php');
-require_once(hub::pathToActiveRecord() . '/Views/Index/class.arIndexTableGUI.php');
+require_once "Services/ActiveRecord/Views/Index/class.arIndexTableGUI.php";
+require_once "Services/ActiveRecord/Views/Index/class.arIndexTableGUI.php";
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
 require_once('./Services/Link/classes/class.ilLink.php');
 

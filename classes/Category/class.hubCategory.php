@@ -220,15 +220,13 @@ class hubCategory extends hubRepositoryObject {
 			$this->initObject();
 			$this->updateIcon($this->ilias_object);
 		}
-		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
-			if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
-			}
-			if ($this->props()->get(hubCategoryFields::F_UPDATE_INFOPAGE)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
-			}
+		if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+		}
+		if ($this->props()->get(hubCategoryFields::F_UPDATE_INFOPAGE)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
 		}
 
 		if ($update) {
@@ -298,15 +296,13 @@ class hubCategory extends hubRepositoryObject {
 		if ($this->props()->get(hubCategoryFields::CREATE_ICON)) {
 			$this->updateIcon($this->ilias_object);
 		}
-		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
-			if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
-			}
-			if ($this->props()->get(hubCategoryFields::F_SET_INFOPAGE)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
-			}
+		if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+		}
+		if ($this->props()->get(hubCategoryFields::F_SET_INFOPAGE)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
 		}
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getRefId());

@@ -109,11 +109,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		$hubOrigin = hubOrigin::find($a_set['id']);
 		$this->ctrl->setParameter($this->parent_obj, 'origin_id', $hubOrigin->getId());
 		$this->ctrl->setParameterByClass(hubIconGUI::class, 'origin_id', $hubOrigin->getId());
-		if (hubConfig::is50()) {
-			$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.svg')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
-		} else {
-			$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.png')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.png'));
-		}
+		$img = $hubOrigin->getActive() ? ilUtil::img(ilUtil::getImagePath('icon_ok.svg')) : ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
 		$img_link = $hubOrigin->getActive() ? $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_DEACTIVATE) : $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_ACTIVATE);
 		$this->addCell('<a href=\'' . $img_link . '\'>' . $img . '</a>');
 		$this->addCell('<a href=\'' . $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EDIT) . '\'>' . $hubOrigin->getTitle()

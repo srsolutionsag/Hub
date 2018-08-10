@@ -77,11 +77,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 			$this->initStandardTableColumns();
 		}
 		if ($this->initTableRowTemplate() === false) {
-			if (hubConfig::is50()) {
-				$this->setRowTemplate('tpl.std_row_template.html', 'Services/ActiveRecord');
-			} else {
-				$this->setRowTemplate('tpl.std_row_template.html', 'Customizing/global/plugins/Libraries/ActiveRecord');
-			}
+			$this->setRowTemplate('tpl.std_row_template.html', 'Services/ActiveRecord');
 		}
 	}
 

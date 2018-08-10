@@ -47,16 +47,6 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_create_icon'), hubCategoryFields::CREATE_ICON);
 		$this->addItem($cb);
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_NEWS), hubCategoryFields::F_SET_NEWS);
-			$this->addItem($cb);
-			//
-
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_INFOPAGE), hubCategoryFields::F_SET_INFOPAGE);
-			$this->addItem($cb);
-			//
-		}
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_SORTING), hubCategoryFields::F_SET_SORTING);
 		//		$this->addItem($cb);
 		//
@@ -77,15 +67,6 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_icon'), hubCategoryFields::UPDATE_ICON);
 		$this->addItem($cb);
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_UPDATE_NEWS), hubCategoryFields::F_UPDATE_NEWS);
-			$this->addItem($cb);
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_UPDATE_INFOPAGE), hubCategoryFields::F_UPDATE_INFOPAGE);
-			$this->addItem($cb);
-			//
-		}
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
 		//		$this->addItem($cb);
 		//

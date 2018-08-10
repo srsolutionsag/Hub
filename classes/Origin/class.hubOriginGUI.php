@@ -20,7 +20,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @author            Fabian Schmid <fs@studer-raimann.ch>
  * @version           1.1.04
  *
- * @ilCtrl_IsCalledBy hubOriginGUI: ilRouterGUI
+ * @ilCtrl_IsCalledBy hubOriginGUI: ilUIPluginRouterGUI
  */
 class hubOriginGUI {
 
@@ -73,9 +73,7 @@ class hubOriginGUI {
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
 		$this->tpl = $tpl;
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->getStandardTemplate();
-		}
+		$this->tpl->getStandardTemplate();
 		$this->ctrl = $ilCtrl;
 		$this->parent = $parent_gui;
 		$this->toolbar = $ilToolbar;
@@ -117,9 +115,7 @@ class hubOriginGUI {
 					break;
 			}
 
-			if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-				$this->tpl->show();
-			}
+			$this->tpl->show();
 
 			return true;
 		} else {
