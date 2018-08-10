@@ -29,7 +29,7 @@ admin_origins_path#:#Pfad des origins-Verzeichnis
 admin_origins_path_info#:#Wenn leer, wird das Standardverzeichnis unter ./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/origins verwendet.
 admin_password_email_body#:#E-Mail-Body beim versenden von Passwörtern
 admin_roles#:#Rollen
-admin_roles_info#:#Rollen-Ids, welche HUB nutzen können.
+admin_roles_info#:#Rollen-Ids, welche Hub nutzen können.
 admin_shortlink#:#Shortlink
 admin_use_async#:#Asynchrone Synchronisation
 admin_use_async_info#:#Asynchrone Synchronisation über das GUI ermöglichen. Benötigt einen ILIAS Benutzer.
@@ -266,12 +266,12 @@ icon_title_small#:#Small
 icon_title_medium#:#Medium
 icon_title_large#:#Large
 icon_form_button_save#:#Save
-hub#:#HUB
-confirm_remove_hub_data#:#Do you want to remove the HUB data as well? If you want to switch to HUB2 later, the data can be transferred. At most, you just want to disable the HUB plugin?
+hub#:#Hub
+confirm_remove_hub_data#:#Do you want to remove the Hub data as well? If you want to switch to Hub2 later, the data can be transferred. At most, you just want to disable the Hub plugin?
 cancel#:#Cancel
-remove_hub_data#:#Remove HUB data
-keep_hub_data#:#Keep HUB data
-deactivate_hub#:#Just deactivate HUB plugin
-hub_data#:#HUB data
-msg_removed_hub_data#:#The HUB data was also removed!
-msg_kept_hub_data#:#The HUB data was kept!
+remove_hub_data#:#Remove Hub data
+keep_hub_data#:#Keep Hub data
+deactivate_hub#:#Just deactivate Hub plugin
+hub_data#:#Hub data
+msg_removed_hub_data#:#The Hub data was also removed!
+msg_kept_hub_data#:#The Hub data was kept!
