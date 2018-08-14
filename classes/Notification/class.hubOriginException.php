@@ -56,7 +56,7 @@ class hubOriginException extends Exception {
 
 		hubLog::getInstance()->write('FAILURE: ' . $message, hubLog::L_PROD);
 		$message = nl2br($message);
-		
+
 		if ($send_mail) {
 			$origin->loadConf();
 			mail($origin->conf()->getNotificationEmail(), 'hubSyncFailure', $message);
