@@ -435,7 +435,7 @@ class hubCourse extends hubRepositoryObject {
 				if (!in_array($child['ref_id'], self::$updated_dependency_nodes)) {
 					$cat = new ilObjCategory($child['ref_id']);
 					if ($this->props()->get(hubCourseFields::F_UPDATE_ICON)) {
-						$this->updateIcon($cat, $usage);
+						//$this->updateIcon($cat, $usage);
 					}
 					$this->updateImportIdForDependence($cat, $depth);
 					self::$updated_dependency_nodes[] = $child['ref_id'];
