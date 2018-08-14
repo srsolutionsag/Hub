@@ -81,8 +81,8 @@ abstract class hubRepositoryObject extends hubObject {
 			$small = $hubIconCollection->getSmall()->getPath();
 			$medium = $hubIconCollection->getMedium()->getPath();
 			$large = $hubIconCollection->getLarge()->getPath();
-			if ($small AND $medium AND $large) {
-				$ilias_object->saveIcons($large);
+			if ($large) {
+				$ilias_object->saveIcons('./'.$large);
 			} else {
 				$ilias_object->removeCustomIcon();
 				return false;
