@@ -98,7 +98,6 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 	/**
 	 * @param array $a_set
 	 *
-	 * @return bool
 	 * @description implement your woen fillRow or return false
 	 */
 	protected function fillTableRow($a_set) {
@@ -135,9 +134,7 @@ class hubOriginTableGUI extends hubAbstractTableGUI {
 		if (hubConfig::isImportEnabled()) {
 			$actions->addItem($this->pl->txt('common_export'), 'export', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EXPORT));
 		}
-		$this->tpl->setCurrentBlock('cell');
-		$this->tpl->setVariable('VALUE', $actions->getHTML());
-		$this->tpl->parseCurrentBlock();
+		$this->addCell($actions->getHTML());
 	}
 
 

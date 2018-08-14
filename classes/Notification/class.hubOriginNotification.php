@@ -49,7 +49,7 @@ class hubOriginNotification {
 	 *
 	 * @return string
 	 */
-	protected function buildMessage($sr_hub_origin_id) {
+	protected static function buildMessage($sr_hub_origin_id) {
 		$message = 'Common Messages:' . PHP_EOL;
 		$message .= implode(PHP_EOL, self::$messages[$sr_hub_origin_id][self::COMMON]);
 		$message .= PHP_EOL . PHP_EOL;
