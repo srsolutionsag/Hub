@@ -130,7 +130,7 @@ class hubIcon extends ActiveRecord {
 		if ($this->getDeleted()) {
 			return false;
 		} else {
-			$path = $this->getVersionDirectory() . '/image.' . $this->getSuffix();
+			$path = $this->getVersionDirectory() . '/icon_custom.' . $this->getSuffix();
 
 			return $path;
 		}
