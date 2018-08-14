@@ -12,7 +12,7 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @var array
 	 */
-	protected static $file_types = array( 'png','svg' );
+	protected static $file_types = array( 'svg' );
 	/**
 	 * @var ilHubConfigGUI
 	 */
