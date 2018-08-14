@@ -342,7 +342,7 @@ class hubIcon extends ActiveRecord {
 	 * @return string
 	 */
 	public function getfileName() {
-		return '/image.' . $this->getSuffix();
+		return '/icon_custom.' . $this->getSuffix();
 	}
 
 
