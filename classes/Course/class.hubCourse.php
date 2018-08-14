@@ -334,9 +334,22 @@ class hubCourse extends hubRepositoryObject {
 	private function getDependecesNode() {
 		$node_id = $this->getNode();
 		if ($this->hasDependences()) {
+			//DEBUG LOG
+			$warn = 'HUB DEBUG Period Dependences';
+			$warn .= ' - node_id: ' . $node_id;
+			$warn .= ' - First Dep: ' . $this->getFirstDependence();
+			$warn .= ' - Second Dep: ' . $this->getSecondDependence();
+			$warn .= ' - Third Dep: ' . $this->getThirdDependence();
+
+
 			$node_id = $this->buildDependeceCategory($this->getFirstDependence(), $node_id, 1);
 			$node_id = $this->buildDependeceCategory($this->getSecondDependence(), $node_id, 2);
 			$node_id = $this->buildDependeceCategory($this->getThirdDependence(), $node_id, 3);
+
+			//DEBUG LOG
+			$warn .= ' - returned node id: ' . $node_id;
+
+			hubLog::getInstance()->write($warn, hubLog::L_WARN);
 
 			return $node_id;
 		} else {
