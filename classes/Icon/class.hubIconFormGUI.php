@@ -108,6 +108,10 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$input = $this->getInput($type);
 		if ($input['tmp_name']) {
 			$this->{$type}->importFromUpload($input['tmp_name']);
+
+			$icon = $this->{$type};
+			$icon->setSuffix('svg');
+			$icon->update();
 		}
 	}
 
