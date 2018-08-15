@@ -86,101 +86,118 @@ class hubMembership extends hubObject {
 		 * @var hubOrigin     $hubOrigin
 		 * @var hubOrigin     $hubOriginObj
 		 */
+		// error_reporting(((ini_get("error_reporting") & ~E_NOTICE) & ~E_DEPRECATED) & ~E_STRICT);
+
 		$count = self::count();
 		$steps = 1000;
 		$step = 0;
 		$hasSets = true;
-		hubLog::getInstance()->write("Start building $count ILIAS objects");
+		hubLog::getInstance()->write("Start building $count ILIAS objects", hubLog::L_PROD);
 		//		hubSyncCron::setDryRun(true);
 		$active_origins = hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_MEMBERSHIP);
 		$active_origin_ids = array();
+		$active_periods = array();
+		/**
+		 * @var $origin hubOrigin
+		 */
 		foreach ($active_origins as $origin) {
 			$active_origin_ids[] = $origin->getId();
 		}
 
-		$where = array( 'sr_hub_origin_id' => $active_origin_ids );
-
+		$where = array('sr_hub_origin_id' => $active_origin_ids);
+		//		$where['period'] = '2017005'; // remove
 		while ($hasSets) {
 			$start = $step * $steps;
 			hubLog::getInstance()->write("Start looping $steps records, round=" . ($step + 1) . ", limit=$start,$steps");
 			$hubMemberships = self::where($where)->limit($start, $steps)->get();
+			// hubLog::getInstance()->write('DEBUG QUERY: ' . ActiveRecordList::getLastQuery());
+
 			if (!count($hubMemberships)) {
 				$hasSets = false;
 				continue;
 			}
+
 			foreach ($hubMemberships as $hubMembership) {
-				if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
-					|| !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)) {
-					continue;
-				}
-				$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
-				hubDurationLogger2::getInstance($duration_id)->resume();
-				$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
-				/**
-				 * @var hubOrigin $hubOriginObj
-				 */
-				$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
-
-				$status = $hubMembership->getHistoryObject()->getStatus();
-				if ($hubOriginObj->returnActivePeriod()) {
-					$active_period = (string)$hubOriginObj->returnActivePeriod();
-					if ($hubMembership->getPeriod() != $active_period) {
-						$status = hubSyncHistory::STATUS_IGNORE;
+				try {
+					if (!hubSyncHistory::isLoaded($hubMembership->getSrHubOriginId())
+						|| !in_array($hubMembership->getSrHubOriginId(), $active_origin_ids)
+					) {
+						continue;
 					}
-				}
+					$duration_id = 'obj_origin_' . $hubMembership->getSrHubOriginId();
+					hubDurationLogger2::getInstance($duration_id)->resume();
+					$hubOrigin = hubOrigin::getClassnameForOriginId($hubMembership->getSrHubOriginId());
+					/**
+					 * @var $hubOriginObj hubOrigin
+					 */
+					$hubOriginObj = $hubOrigin::find($hubMembership->getSrHubOriginId())->getObject();
 
-				switch ($status) {
-					case hubSyncHistory::STATUS_NEW:
-						hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->createMembership();
-							$hubOriginObj->afterObjectCreation($hubMembership);
+					$status = $hubMembership->getHistoryObject()->getStatus();
+					if ($hubOriginObj->returnActivePeriod()) {
+						$active_period = (string)$hubOriginObj->returnActivePeriod();
+						if ($hubMembership->getPeriod() != $active_period) {
+							$status = hubSyncHistory::STATUS_IGNORE;
 						}
-						hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_UPDATED:
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->updateMembership();
-							$hubOriginObj->afterObjectUpdate($hubMembership);
-						}
-						hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_DELETED:
-						hubLog::getInstance()->write('Delete Membership: ' . $hubMembership->getExtId());
-						hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->deleteMembership();
-							$hubOriginObj->afterObjectDeletion($hubMembership);
-						}
-						hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_ALREADY_DELETED:
-						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-						break;
-					case hubSyncHistory::STATUS_NEWLY_DELIVERED:
-						hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
-						hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
-						if (!hubSyncCron::getDryRun()) {
-							$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
-							$hubMembership->createMembership();
-							$hubOriginObj->afterObjectDeletion($hubMembership);
-						}
-						break;
-					case hubSyncHistory::STATUS_IGNORE:
-						hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
-						break;
-				}
+					}
 
-				$hubMembership->getHistoryObject()->updatePickupDate();
-				$hubOrigin::afterObjectModification($hubMembership);
-				if (!hubSyncCron::getDryRun()) {
-					$hubOriginObj->afterObjectInit($hubMembership);
-					arObjectCache::purge($hubMembership->getHistoryObject());
+					// hubLog::getInstance()->write("DEBUG: " . $hubMembership->getExtId(), hubLog::L_PROD);
+
+					switch ($status) {
+						case hubSyncHistory::STATUS_NEW:
+							hubLog::getInstance()->write('Create Membership: ' . $hubMembership->getExtId());
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->createMembership();
+								$hubOriginObj->afterObjectCreation($hubMembership);
+							}
+							hubCounter::incrementCreated($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_UPDATED:
+							if (!hubSyncCron::getDryRun()) {
+								 $hubMembership->updateMembership();
+								$hubOriginObj->afterObjectUpdate($hubMembership);
+							}
+							hubCounter::incrementUpdated($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_DELETED:
+							hubLog::getInstance()->write('Delete Membership: ' . $hubMembership->getExtId());
+							hubLog::getInstance()->write('Periods: ' . $hubMembership->getPeriod() . ' | ' . $active_period);
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->deleteMembership();
+								$hubOriginObj->afterObjectDeletion($hubMembership);
+							}
+							hubCounter::incrementDeleted($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_ALREADY_DELETED:
+							hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+							break;
+						case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+							hubCounter::incrementNewlyDelivered($hubMembership->getSrHubOriginId());
+							hubLog::getInstance()->write('Create newly delivered Membership: ' . $hubMembership->getExtId());
+							if (!hubSyncCron::getDryRun()) {
+								$hubMembership->getHistoryObject()->setAlreadyDeleted(false);
+								$hubMembership->createMembership();
+								$hubOriginObj->afterObjectDeletion($hubMembership);
+							}
+							break;
+						case hubSyncHistory::STATUS_IGNORE:
+							hubCounter::incrementIgnored($hubMembership->getSrHubOriginId());
+							break;
+					}
+
+					$hubMembership->getHistoryObject()->updatePickupDate();
+					$hubOrigin::afterObjectModification($hubMembership);
+					if (!hubSyncCron::getDryRun()) {
+						$hubOriginObj->afterObjectInit($hubMembership);
+						arObjectCache::purge($hubMembership->getHistoryObject());
+					}
+					hubDurationLogger2::getInstance($duration_id)->pause();
+					$hubMembership->unsetHistoryObjectCache();
+					arObjectCache::purge($hubMembership);
+					unset($hubMembership);
+				} catch (Exception $e) {
+					hubLog::getInstance()->write("Catched Exception: " . $e->getMessage(), hubLog::L_PROD);
+					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 				}
-				hubDurationLogger2::getInstance($duration_id)->resume();
-				arObjectCache::purge($hubMembership);
-				$hubMembership = NULL;
-				$hubOriginObj = NULL;
 			}
 			$step ++;
 		}

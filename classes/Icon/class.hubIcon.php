@@ -107,10 +107,13 @@ class hubIcon extends ActiveRecord {
 		if (!$this->getId()) {
 			throw new Exception('Cannot upload, please create hubIcon object first');
 		}
+		if (file_exists($path)) {
+			throw new Exception('cannot import, file dows not exist');
+		}
 		$this->setVersion($this->getVersion() + 1);
 		$this->setDeleted(false);
 		ilUtil::makeDirParents($this->getVersionDirectory(true));
-		ilUtil::moveUploadedFile($path, $this->getfileName(), $this->getVersionDirectory(true) . $this->getfileName(), true, $mode);
+		ilUtil::moveUploadedFile($path, $this->getfileName(), $this->getVersionDirectory(true) . $this->getfileName(), false, $mode);
 		$this->update();
 	}
 
@@ -292,6 +295,7 @@ class hubIcon extends ActiveRecord {
 	 * @return string
 	 */
 	public function getSuffix() {
+		return 'svg';
 		return $this->suffix;
 	}
 

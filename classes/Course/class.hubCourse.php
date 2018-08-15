@@ -46,50 +46,55 @@ class hubCourse extends hubRepositoryObject {
 			$hubOriginObj = $hubOrigin::find($hubCourse->getSrHubOriginId());
 			$full_title = $hubCourse->getTitlePrefix() . $hubCourse->getTitle() . $hubCourse->getTitleExtension();
 			$history = $hubCourse->getHistoryObject();
-			switch ($history->getStatus()) {
-				case hubSyncHistory::STATUS_NEW:
-					if (!hubSyncCron::getDryRun()) {
-						$hubCourse->createCourse();
-						$hubOriginObj->afterObjectCreation($hubCourse);
-					}
-					hubCounter::incrementCreated($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses created:');
-					break;
-				case hubSyncHistory::STATUS_UPDATED:
-					if (!hubSyncCron::getDryRun()) {
-						$hubCourse->updateCourse();
-						$hubOriginObj->afterObjectUpdate($hubCourse);
-					}
-					hubCounter::incrementUpdated($hubCourse->getSrHubOriginId());
-					break;
-				case hubSyncHistory::STATUS_DELETED:
-					global $tree;
-					$path = $tree->getPathId($history->getIliasId());
-					if (!hubSyncCron::getDryRun()) {
-						$hubCourse->deleteCourse();
-						$hubOriginObj->afterObjectDeletion($hubCourse);
-					}
-					hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title . ' :: '
-						. implode('/', $path), 'Courses deleted with ref_id path:');
-					break;
-				case hubSyncHistory::STATUS_ALREADY_DELETED:
-					hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
-					//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
-					break;
-				case hubSyncHistory::STATUS_NEWLY_DELIVERED:
-					hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
-					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
-					if (!hubSyncCron::getDryRun()) {
-						if (ilObjCourse::_lookupDeletedDate($hubCourse->getHistoryObject()->getIliasId())) {
+			try {
+				switch ($history->getStatus()) {
+					case hubSyncHistory::STATUS_NEW:
+						if (!hubSyncCron::getDryRun()) {
 							$hubCourse->createCourse();
-						} else {
-							$hubCourse->reactivateCourse();
+							$hubOriginObj->afterObjectCreation($hubCourse);
 						}
-					}
-					break;
+						hubCounter::incrementCreated($hubCourse->getSrHubOriginId());
+						hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses created:');
+						break;
+					case hubSyncHistory::STATUS_UPDATED:
+						if (!hubSyncCron::getDryRun()) {
+							$hubCourse->updateCourse();
+							$hubOriginObj->afterObjectUpdate($hubCourse);
+						}
+						hubCounter::incrementUpdated($hubCourse->getSrHubOriginId());
+						break;
+					case hubSyncHistory::STATUS_DELETED:
+						global $tree;
+						$path = $tree->getPathId($history->getIliasId());
+						if (!hubSyncCron::getDryRun()) {
+							$hubCourse->deleteCourse();
+							$hubOriginObj->afterObjectDeletion($hubCourse);
+						}
+						hubCounter::incrementDeleted($hubCourse->getSrHubOriginId());
+						hubOriginNotification::addMessage(
+							$hubCourse->getSrHubOriginId(), $full_title . ' :: ' . implode('/', $path), 'Courses deleted with ref_id path:'
+						);
+						break;
+					case hubSyncHistory::STATUS_ALREADY_DELETED:
+						hubCounter::incrementIgnored($hubCourse->getSrHubOriginId());
+						//					hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses ignored:');
+						break;
+					case hubSyncHistory::STATUS_NEWLY_DELIVERED:
+						hubCounter::incrementNewlyDelivered($hubCourse->getSrHubOriginId());
+						hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $full_title, 'Courses newly delivered:');
+						if (!hubSyncCron::getDryRun()) {
+							if (ilObjCourse::_lookupDeletedDate($hubCourse->getHistoryObject()->getIliasId())) {
+								$hubCourse->createCourse();
+							} else {
+								$hubCourse->reactivateCourse();
+							}
+						}
+						break;
+				}
+			} catch (Exception $e) {
+				hubLog::getInstance()->write("Catched Exception: ".$e->getMessage(), hubLog::L_PROD);
+				hubOriginNotification::addMessage($hubCourse->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 			}
-
 			if (!hubSyncCron::getDryRun()) {
 				$hubOriginObj->afterObjectInit($hubCourse);
 			}
@@ -154,6 +159,13 @@ class hubCourse extends hubRepositoryObject {
 
 
 	public function updateCourse() {
+		if (!ilObject2::_exists($this->getHistoryObject()->getIliasId(), true)) {
+			$this->getHistoryObject()->setDeleted(1);
+			$this->getHistoryObject()->setAlreadyDeleted(1);
+			$this->getHistoryObject()->update();
+
+			return false;
+		}
 		$update = false;
 		$this->moveObject();
 		if ($this->props()->get(hubCourseFields::F_UPDATE_TITLE)) {

@@ -65,10 +65,8 @@ abstract class hubRepositoryObject extends hubObject {
 
 
 	/**
-	 * @param ilObject|ilObject2 $ilias_object
-	 *
-	 * @param int                $usage
-	 *
+	 * @param \ilObject|\ilObjCategory $ilias_object
+	 * @param int $usage
 	 * @return bool
 	 */
 	protected function updateIcon(ilObject $ilias_object, $usage = hubIcon::USAGE_OBJECT) {
@@ -78,13 +76,17 @@ abstract class hubRepositoryObject extends hubObject {
 		 */
 		if ($hubOrigin) {
 			$hubIconCollection = hubIconCollection::getInstance($hubOrigin, $usage);
-			$small = $hubIconCollection->getSmall()->getPath();
-			$medium = $hubIconCollection->getMedium()->getPath();
 			$large = $hubIconCollection->getLarge()->getPath();
 			if ($large) {
-				$ilias_object->saveIcons('./'.$large);
-			} else {
+				$a_custom_icon = realpath($large);
+				$ilias_object->createContainerDirectory();
+				$cont_dir = $ilias_object->getContainerDirectory();
+				$file_name = $cont_dir."/icon_custom.svg";
+				copy($a_custom_icon, $file_name);
+				\ilContainer::_writeContainerSetting($ilias_object->getId(), "icon_custom", 1);
+			} else  {
 				$ilias_object->removeCustomIcon();
+
 				return false;
 			}
 		} else {

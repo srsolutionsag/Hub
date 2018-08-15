@@ -117,6 +117,7 @@ class hubSyncCron {
 				//				$class::logCounts();
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->handleMessages();
@@ -148,7 +149,7 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('build_users')->log();
 			}
 		} catch (Exception $e) {
-			$this->log->write("!!!! Exception !!!!" . $e->getMessage());
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->log->write('End Sync Users', hubLog::L_PROD);
@@ -163,6 +164,7 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('build_categories')->log();
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->log->write('End Sync Categories', hubLog::L_PROD);
@@ -177,6 +179,7 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('build_courses')->log();
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->log->write('End Courses', hubLog::L_PROD);
@@ -191,6 +194,7 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('build_memberships')->log();
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 		$this->log->write('End Memberships', hubLog::L_PROD);
@@ -292,6 +296,7 @@ class hubSyncCron {
 				throw new hubOriginException(hubOriginException::CONNECTION_FAILED, $origin, !self::getDryRun());
 			}
 		} catch (Exception $e) {
+			$this->log->write($e->getMessage() . ' ::: ' . print_r($e->getTrace(), true), hubLog::L_PROD);
 			$this->messages[] = $e->getMessage();
 		}
 	}
