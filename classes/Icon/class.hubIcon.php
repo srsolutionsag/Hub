@@ -107,7 +107,7 @@ class hubIcon extends ActiveRecord {
 		if (!$this->getId()) {
 			throw new Exception('Cannot upload, please create hubIcon object first');
 		}
-		if (file_exists($path)) {
+		if (!file_exists($path)) {
 			throw new Exception('cannot import, file dows not exist');
 		}
 		$this->setVersion($this->getVersion() + 1);
