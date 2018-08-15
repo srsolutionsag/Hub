@@ -2,6 +2,8 @@
 
 require_once('./Services/Component/classes/class.ilPluginConfigGUI.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfigFormGUI.php');
+require_once __DIR__ . "/Configuration/class.hubConfGUI.php";
+require_once __DIR__ . "/class.ilHubPlugin.php";
 
 /**
  * Hub Configuration
@@ -15,9 +17,9 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 	public function __construct() {
 		global $ilCtrl, $tpl, $ilTabs;
 		/**
-		 * @var $ilCtrl ilCtrl
-		 * @var $tpl    ilTemplate
-		 * @var $ilTabs ilTabsGUI
+		 * @var ilCtrl     $ilCtrl
+		 * @var ilTemplate $tpl
+		 * @var ilTabsGUI  $ilTabs
 		 */
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
@@ -27,12 +29,13 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 */
 	public function performCommand($cmd) {
 		switch ($cmd) {
-			case 'configure':
-			case 'save':
+			case hubConfGUI::CMD_CONFIGURE:
+			case hubConfGUI::CMD_SAVE:
+			case hubConfGUI::CMD_CANCEL:
 				$this->$cmd();
 				break;
 		}
@@ -50,10 +53,13 @@ class ilHubConfigGUI extends ilPluginConfigGUI {
 		$form = new hubConfigFormGUI($this);
 		$form->setValuesByPost();
 		if ($form->saveObject()) {
-			$this->ctrl->redirect($this, 'configure');
+			$this->ctrl->redirect($this, hubConfGUI::CMD_CONFIGURE);
 		}
 		$this->tpl->setContent($form->getHTML());
 	}
-}
 
-?>
+
+	protected function cancel() {
+		$this->configure();
+	}
+}

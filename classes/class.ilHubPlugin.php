@@ -1,6 +1,22 @@
 <?php
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
-require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
+require_once(__DIR__ . '/Configuration/class.hubConfig.php');
+require_once __DIR__ . "/Origin/class.hubOriginConfiguration.php";
+require_once __DIR__ . "/Origin/class.hubOrigin.php";
+require_once __DIR__ . "/OriginProperties/class.hubOriginObjectPropertyValue.php";
+require_once __DIR__ . "/Category/class.hubCategory.php";
+require_once __DIR__ . "/Course/class.hubCourse.php";
+require_once __DIR__ . "/Membership/class.hubMembership.php";
+require_once __DIR__ . "/User/class.hubUser.php";
+require_once __DIR__ . "/Sync/class.hubSyncHistory.php";
+require_once __DIR__ . "/Configuration/class.hubConfig.php";
+require_once __DIR__ . "/Icon/class.hubIcon.php";
+require_once __DIR__ . "/Log/class.hubLog.php";
+require_once __DIR__ . "/uninstall/class.hubRemoveDataConfirm.php";
+require_once "Services/UIComponent/classes/class.ilUIPluginRouterGUI.php";
+require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";
+require_once __DIR__ . "/class.hubGUI.php";
+require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
 
 /**
  * Class ilHubPlugin
@@ -10,21 +26,20 @@ require_once(dirname(__FILE__) . '/Configuration/class.hubConfig.php');
  */
 class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
+	const PLUGIN_ID = "hub";
+	const PLUGIN_NAME = "Hub";
+	const UNINSTALL_REMOVE_HUB_DATA = "uninstall_remove_hub_data";
 	/**
 	 * @var ilHubPlugin
 	 */
 	protected static $instance;
-	/**
-	 * @var string
-	 */
-	protected static $baseClass;
 
 
 	/**
 	 * @return string
 	 */
 	function getPluginName() {
-		return 'Hub';
+		return self::PLUGIN_NAME;
 	}
 
 
@@ -44,16 +59,30 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return bool
 	 */
 	public static function checkPreconditions() {
-		/**
-		 * @var $ilCtrl ilCtrl
-		 */
-		if (self::getBaseClass() == false) {
-			ilUtil::sendFailure('hub needs ILIAS >= 4.5 OR for ILIAS < 4.5 ilRouterGUI (https://svn.ilias.de/svn/ilias/branches/sr/Router)', true);
-
-			return false;
-		}
-
 		return true;
+	}
+
+
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
+	/**
+	 * @var ilDB
+	 */
+	protected $db;
+
+
+	/**
+	 *
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		global $ilCtrl, $ilDB;
+
+		$this->ctrl = $ilCtrl;
+		$this->db = $ilDB;
 	}
 
 
@@ -65,6 +94,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	}
 
 
+	/**
+	 *
+	 */
 	public function updateLanguageFiles() {
 		if (!in_array('SimpleXLSX', get_declared_classes())) {
 			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/lib/simplexlsx.class.php');
@@ -119,7 +151,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 		$entries[0] = array();
 		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass(self::getBaseClass() . ',hubGUI,hubOriginGUI');
+			$hub_menu->setGuiClass(ilUIPluginRouterGUI::class . ',' . hubGUI::class . ',' . hubOriginGUI::class);
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
 			if (!function_exists('hubConfig::get')) {
@@ -137,31 +169,54 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	/**
-	 * @var string
-	 *
-	 * In what class the command/ctrl chain should start for this plugin.
-	 *
-	 * This will return ilRouterGUI for ILIAS <= 4.4 if the corresponding plugin is installed
-	 * and ilUIPluginRouterGUI for ILIAS >= 4.5 and false otherwise.
-	 *
-	 * @return string
+	 * @return bool
 	 */
-	public static function getBaseClass() {
-		if (self::$baseClass !== null) {
-			return self::$baseClass;
+	protected function beforeUninstall() {
+		$uninstall_remove_hub_data = hubConfig::get(self::UNINSTALL_REMOVE_HUB_DATA);
+
+		if ($uninstall_remove_hub_data === NULL) {
+			hubRemoveDataConfirm::saveParameterByClass();
+
+			$this->ctrl->redirectByClass([
+				ilUIPluginRouterGUI::class,
+				hubRemoveDataConfirm::class
+			], hubRemoveDataConfirm::CMD_CONFIRM_REMOVE_HUB_DATA);
+
+			return false;
 		}
 
-		global $ilCtrl;
-		if ($ilCtrl->lookupClassPath('ilUIPluginRouterGUI')) {
-			self::$baseClass = 'ilUIPluginRouterGUI';
-		} elseif ($ilCtrl->lookupClassPath('ilRouterGUI')) {
-			self::$baseClass = 'ilRouterGUI';
+		$uninstall_remove_hub_data = boolval($uninstall_remove_hub_data);
+
+		if ($uninstall_remove_hub_data) {
+			$this->removeHubData();
 		} else {
-			self::$baseClass = false;
+			// Ask again if reinstalled
+			hubConfig::remove(self::UNINSTALL_REMOVE_HUB_DATA);
 		}
 
-		return self::$baseClass;
+		return true;
+	}
+
+
+	/**
+	 *
+	 */
+	protected function removeHubData() {
+		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
+		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
+		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
+		$this->db->dropTable(hubCategory::TABLE_NAME, false);
+		$this->db->dropTable(hubCourse::TABLE_NAME, false);
+		$this->db->dropTable(hubMembership::TABLE_NAME, false);
+		$this->db->dropTable(hubUser::TABLE_NAME, false);
+		$this->db->dropTable(hubSyncHistory::TABLE_NAME, false);
+		$this->db->dropTable(hubConfig::TABLE_NAME, false);
+		$this->db->dropTable(hubIcon::TABLE_NAME, false);
+
+		if (file_exists(hubLog::getFilePath())) {
+			unlink(hubLog::getFilePath());
+		}
+
+		ilUtil::delDir(ILIAS_ABSOLUTE_PATH . '/' . ILIAS_WEB_DIR . '/' . CLIENT_ID . '/xhub');
 	}
 }
-
-?>

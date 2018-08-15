@@ -17,6 +17,7 @@ class hubCategory extends hubRepositoryObject {
 
 	const ORDER_TYPE_TITLE = 0;
 	const ORDER_TYPE_MANUALLY = 1;
+	const TABLE_NAME = "sr_hub_category";
 	/**
 	 * @var int
 	 *
@@ -60,19 +61,11 @@ class hubCategory extends hubRepositoryObject {
 
 
 	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_category';
-	}
-
-
-	/**
 	 * @return bool|mixed
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		foreach (hubOrigin::getOriginsForUsage(hub::OBJECTTYPE_CATEGORY) as $hubOrigin) {
 			self::buildForParentId($hubOrigin->props()->get(hubCategoryFields::BASE_NODE_EXTERNAL));
@@ -83,12 +76,12 @@ class hubCategory extends hubRepositoryObject {
 
 
 	/**
-	 * @param $parent_id
+	 * @param int $parent_id
 	 */
 	private static function buildForParentId($parent_id = 0) {
 		/**
-		 * @var $hubCategory hubCategory
-		 * @var $hubOrigin   hubOrigin
+		 * @var hubCategory $hubCategory
+		 * @var hubOrigin   $hubOrigin
 		 */
 
 		foreach (self::where(array( 'parent_id' => $parent_id ))->get() as $hubCategory) {
@@ -156,7 +149,7 @@ class hubCategory extends hubRepositoryObject {
 			}
 
 			hubDurationLogger2::getInstance($duration_id)->pause();
-			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== null AND $hubCategory->getExtId() !== '') {
+			if ($hubCategory->getExtId() !== 0 AND $hubCategory->getExtId() !== NULL AND $hubCategory->getExtId() !== '') {
 				self::buildForParentId($hubCategory->getExtId());
 			}
 		}
@@ -172,15 +165,15 @@ class hubCategory extends hubRepositoryObject {
 
 
 	/**
-	 * @param $fieldname
-	 * @param $value
+	 * @param string $fieldname
+	 * @param string $value
 	 *
 	 * @return int
 	 */
 	protected function lookupRefIdByField($fieldname, $value) {
 		global $tree;
 		/**
-		 * @var $tree
+		 * @var ilTree $tree
 		 */
 		$node = $this->getNode();
 		foreach ($tree->getChildsByType($node, 'cat') as $cat) {
@@ -198,7 +191,7 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	private function updateSorting() {
 		/**
-		 * @var $sorting ilContainerSorting
+		 * @var ilContainerSorting $sorting
 		 */
 		$sorting = ilContainerSorting::_getInstance($this->ilias_object->getId());
 		//		$sorting->getSortMode()
@@ -227,15 +220,13 @@ class hubCategory extends hubRepositoryObject {
 			$this->initObject();
 			$this->updateIcon($this->ilias_object);
 		}
-		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
-			if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
-			}
-			if ($this->props()->get(hubCategoryFields::F_UPDATE_INFOPAGE)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
-			}
+		if ($this->props()->get(hubCategoryFields::F_UPDATE_NEWS)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+		}
+		if ($this->props()->get(hubCategoryFields::F_UPDATE_INFOPAGE)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
 		}
 
 		if ($update) {
@@ -268,7 +259,7 @@ class hubCategory extends hubRepositoryObject {
 					break;
 				case self::DELETE_MODE_DELETE:
 					$this->ilias_object->delete();
-					$hist->setIliasId(null);
+					$hist->setIliasId(NULL);
 					break;
 				case self::DELETE_MODE_ARCHIVE:
 					if ($this->props()->get(hubCategoryFields::ARCHIVE_NODE)) {
@@ -305,15 +296,13 @@ class hubCategory extends hubRepositoryObject {
 		if ($this->props()->get(hubCategoryFields::CREATE_ICON)) {
 			$this->updateIcon($this->ilias_object);
 		}
-		if (hubConfig::getILIASVersion() >= hubConfig::ILIAS_44) {
-			if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
-			}
-			if ($this->props()->get(hubCategoryFields::F_SET_INFOPAGE)) {
-				$this->initObject();
-				$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
-			}
+		if ($this->props()->get(hubCategoryFields::F_SET_NEWS)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::NEWS_VISIBILITY, $this->getShowNews());
+		}
+		if ($this->props()->get(hubCategoryFields::F_SET_INFOPAGE)) {
+			$this->initObject();
+			$this->ilias_object->_writeContainerSetting($this->ilias_object->getId(), ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY, $this->getShowInfopage());
 		}
 		$history = $this->getHistoryObject();
 		$history->setIliasId($this->ilias_object->getRefId());
@@ -327,7 +316,7 @@ class hubCategory extends hubRepositoryObject {
 	 */
 	public function getNode() {
 		/**
-		 * @var $tree ilTree
+		 * @var ilTree $tree
 		 */
 		global $tree;
 		$base_node_prop = $this->props()->get(hubCategoryFields::BASE_NODE_ILIAS);
@@ -455,5 +444,3 @@ class hubCategory extends hubRepositoryObject {
 		return $this->order_type;
 	}
 }
-
-?>

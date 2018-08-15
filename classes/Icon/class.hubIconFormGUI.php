@@ -18,16 +18,21 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var  ilCtrl
+	 * @var ilCtrl
 	 */
 	protected $ctrl;
 
 
 	/**
-	 * @param                   $parent_gui
+	 * @param hubIconGUI        $parent_gui
 	 * @param hubIconCollection $hubIconCollection
 	 */
 	public function __construct($parent_gui, hubIconCollection $hubIconCollection) {
+		if (ILIAS_VERSION_NUMERIC >= "5.2") {
+			parent::__construct();
+		} else {
+			parent::ilPropertyFormGUI();
+		}
 		global $ilCtrl;
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
@@ -99,24 +104,28 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $type
+	 * @param string $type
 	 */
 	protected function import($type) {
 		$input = $this->getInput($type);
 		if ($input['tmp_name']) {
 			$this->{$type}->importFromUpload($input['tmp_name']);
+
+			$icon = $this->{$type};
+			$icon->setSuffix('svg');
+			$icon->update();
 		}
 	}
 
 
 	/**
-	 * @param $type
+	 * @param string $type
 	 */
 	protected function delete($type) {
 		if ($_POST[$type . '_delete']) {
 			$icon = $this->{$type};
 			/**
-			 * @var $icon hubIcon
+			 * @var hubIcon $icon
 			 */
 			$icon->setDeleted(true);
 			$icon->update();
@@ -147,5 +156,3 @@ class hubIconFormGUI extends ilPropertyFormGUI {
 		$this->setId('icon_form_' . $this->collection->getUsageType());
 	}
 }
-
-?>

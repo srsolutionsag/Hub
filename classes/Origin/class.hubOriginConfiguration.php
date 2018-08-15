@@ -1,6 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
-hub::loadActiveRecord();
+require_once "Services/ActiveRecord/class.ActiveRecord.php";
 
 /**
  * Class hubOriginConfiguration
@@ -14,6 +14,26 @@ hub::loadActiveRecord();
 class hubOriginConfiguration extends ActiveRecord {
 
 	const SALT = 'bcb0b417e2ffb2a00a33e109fdeba4e5e7ef08bc55aa0cd8e021db54763051cb';
+	const TABLE_NAME = "sr_hub_origin_conf";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var bool
 	 */
@@ -129,7 +149,7 @@ class hubOriginConfiguration extends ActiveRecord {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return hubOriginConfiguration
 	 */
@@ -328,19 +348,11 @@ class hubOriginConfiguration extends ActiveRecord {
 	}
 
 
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_origin_conf';
-	}
-
-
 	//
 	// Helper
 	//
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */
@@ -354,7 +366,7 @@ class hubOriginConfiguration extends ActiveRecord {
 
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */
@@ -366,5 +378,3 @@ class hubOriginConfiguration extends ActiveRecord {
 		}
 	}
 }
-
-?>

@@ -111,5 +111,3 @@ class hubAsyncSync {
 		return $this->cli_php;
 	}
 }
-
-?>

@@ -14,6 +14,7 @@ require_once('class.hubIconCollection.php');
  */
 class hubIconGUI {
 
+	const CMD_INDEX = 'index';
 	/**
 	 * @var hubOrigin
 	 */
@@ -25,7 +26,7 @@ class hubIconGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
@@ -122,5 +123,3 @@ class hubIconGUI {
 		}
 	}
 }
-
-?>

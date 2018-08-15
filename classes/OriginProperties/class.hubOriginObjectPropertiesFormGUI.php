@@ -16,7 +16,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var  ilCtrl
+	 * @var ilCtrl
 	 */
 	protected $ctrl;
 	/**
@@ -27,6 +27,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	 * @var hubOrigin
 	 */
 	protected $origin;
+	/**
+	 * @var ilHubPlugin ilHubPlugin
+	 */
+	protected $pl;
 
 
 	/**
@@ -37,7 +41,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $var
+	 * @param string $var
 	 *
 	 * @return string
 	 */
@@ -47,8 +51,8 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param           $parent_gui
-	 * @param           $usage_type
+	 * @param hubGUI    $parent_gui
+	 * @param string    $usage_type
 	 * @param hubOrigin $origin
 	 *
 	 * @return bool|hubCategoryPropertiesFormGUI|hubCoursePropertiesFormGUI
@@ -74,6 +78,11 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	public function __construct($parent_gui, hubOrigin $origin) {
+		if (ILIAS_VERSION_NUMERIC >= "5.2") {
+			parent::__construct();
+		} else {
+			parent::ilPropertyFormGUI();
+		}
 		global $ilCtrl;
 		$this->origin = $origin;
 		$this->parent_gui = $parent_gui;
@@ -96,7 +105,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var ilRadioGroupInputGUI $item
 		 * @var ilRadioGroupInputGUI $subItem
-		 * @var ilRadioOption $op
+		 * @var ilRadioOption        $op
 		 */
 		if (self::hasValue($item)) {
 			$item->setPostVar($this->getPrefix() . '_' . $item->getPostVar());
@@ -127,7 +136,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	private function initStandardFields() {
 		$se = new ilSelectInputGUI($this->pl->txt('com_prop_link_to_origin'), hubOriginObjectPropertiesFields::F_ORIGIN_LINK);
 		/**
-		 * @var $origin hubOrigin
+		 * @var hubOrigin $origin
 		 */
 		$opt[0] = $this->pl->txt('common_none');
 		foreach (hubOrigin::get() as $origin) {
@@ -148,15 +157,15 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 		$cb->setInfo($this->pl->txt('com_prop_check_amount_info'));
 		$se = new ilSelectInputGUI($this->pl->txt('com_prop_check_amount_percentage'), hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE);
 		$opt = array(
-			10  => '10%',
-			20  => '20%',
-			30  => '30%',
-			40  => '40%',
-			50  => '50%',
-			60  => '60%',
-			70  => '70%',
-			80  => '80%',
-			90  => '90%',
+			10 => '10%',
+			20 => '20%',
+			30 => '30%',
+			40 => '40%',
+			50 => '50%',
+			60 => '60%',
+			70 => '70%',
+			80 => '80%',
+			90 => '90%',
 			100 => '100%',
 		);
 		$se->setOptions($opt);
@@ -197,7 +206,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $form_item
+	 * @param ilFormPropertyGUI $form_item
 	 *
 	 * @return mixed
 	 */
@@ -228,8 +237,8 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	public function returnValuesArray() {
 		$array = array();
 		/**
-		 * @var $item    ilCheckboxInputGUI
-		 * @var $subItem ilCheckboxInputGUI
+		 * @var ilCheckboxInputGUI $item
+		 * @var ilCheckboxInputGUI $subItem
 		 */
 		foreach ($this->getItems() as $item) {
 			$this->returnValuesOfItem($item, $array);
@@ -240,10 +249,10 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
-	 * @param $array
+	 * @param ilFormPropertyGUI $item
+	 * @param array             $array
 	 */
-	public function returnValuesOfItem($item, &$array) {
+	public function returnValuesOfItem($item, array &$array) {
 		if (self::hasValue($item)) {
 			$value = $this->origin_properties->getByShortPrefix($item->getPostVar());
 			$array[$item->getPostVar()] = $value;
@@ -255,7 +264,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 *
 	 * @return bool
 	 */
@@ -265,7 +274,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 *
 	 * @return bool
 	 */
@@ -275,7 +284,7 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 *
 	 * @return array
 	 */
@@ -293,6 +302,9 @@ abstract class hubOriginObjectPropertiesFormGUI extends ilPropertyFormGUI {
 	}
 
 
+	/**
+	 * @param ilFormPropertyGUI $item
+	 */
 	protected function fillValueByItem($item) {
 		if (self::hasValue($item)) {
 			$this->origin_properties->setByKey($item->getPostVar(), $this->getInput($item->getPostVar()));

@@ -44,10 +44,14 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	 * @var int
 	 */
 	static $num = 0;
+	/**
+	 * @var ilHubPlugin
+	 */
+	protected $pl;
 
 
 	/**
-	 * @param        $a_parent_obj
+	 * @param object $a_parent_obj
 	 * @param string $a_parent_cmd
 	 */
 	public function __construct($a_parent_obj, $a_parent_cmd) {
@@ -55,6 +59,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 		$this->ctrl = $ilCtrl;
 		$this->tabs = $ilTabs;
 		$this->access = $ilAccess;
+		$this->pl = ilHubPlugin::getInstance();
 		if ($this->initLanguage() === false) {
 			global $lng;
 			$this->lng = $lng;
@@ -72,11 +77,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 			$this->initStandardTableColumns();
 		}
 		if ($this->initTableRowTemplate() === false) {
-			if (hubConfig::is50()) {
-				$this->setRowTemplate('tpl.std_row_template.html', 'Services/ActiveRecord');
-			} else {
-				$this->setRowTemplate('tpl.std_row_template.html', 'Customizing/global/plugins/Libraries/ActiveRecord');
-			}
+			$this->setRowTemplate('tpl.std_row_template.html', 'Services/ActiveRecord');
 		}
 	}
 
@@ -135,7 +136,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $a_set
+	 * @param array $a_set
 	 *
 	 * @return bool
 	 * @description implement your woen fillRow or return false
@@ -148,7 +149,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	 */
 	final function addFilterItemToForm(ilFormPropertyGUI $item) {
 		/**
-		 * @var $item ilTextInputGUI
+		 * @var ilTextInputGUI $item
 		 */
 		$this->addFilterItem($item);
 		$item->readFromSession();
@@ -189,8 +190,8 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 			$actions = new ilAdvancedSelectionListGUI();
 			$actions->setId('actions_' . self::$num);
 			$actions->setListTitle($this->lng->txt('actions'));
-			$actions->addItem($this->lng->txt('edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, 'edit'));
-			$actions->addItem($this->lng->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
+			$actions->addItem($this->lng->txt('edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EDIT));
+			$actions->addItem($this->lng->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_CONFIRM_DELETE));
 			$this->tpl->setCurrentBlock('cell');
 			$this->tpl->setVariable('VALUE', $actions->getHTML());
 			$this->tpl->parseCurrentBlock();
@@ -199,7 +200,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');
@@ -246,15 +247,15 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 	public function getNavigationParametersAsArray() {
 		global $ilUser;
 		/**
-		 * @var $ilUser ilObjUser
+		 * @var ilObjUser $ilUser
 		 */
 		$hits = $ilUser->getPref('hits_per_page');
 		$parameters = explode(':', $_GET[$this->getNavParameter()]);
 		$return_values = array(
-			'from'       => $parameters[2] ? $parameters[2] : 0,
-			'to'         => $parameters[2] ? $parameters[2] + $hits - 1 : $hits - 1,
+			'from' => $parameters[2] ? $parameters[2] : 0,
+			'to' => $parameters[2] ? $parameters[2] + $hits - 1 : $hits - 1,
 			'sort_field' => $parameters[0] ? $parameters[0] : false,
-			'order'      => $parameters[1] ? strtoupper($parameters[1]) : 'ASC',
+			'order' => $parameters[1] ? strtoupper($parameters[1]) : 'ASC',
 		);
 
 		return $return_values;
@@ -262,7 +263,7 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param $param
+	 * @param string $param
 	 *
 	 * @return mixed
 	 */
@@ -272,5 +273,3 @@ abstract class hubAbstractTableGUI extends ilTable2GUI {
 		return $array[$param];
 	}
 }
-
-?>

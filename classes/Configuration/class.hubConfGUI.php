@@ -9,6 +9,10 @@ require_once('class.hubConfigFormGUI.php');
  */
 class hubConfGUI {
 
+	const CMD_INDEX = 'index';
+	const CMD_CONFIGURE = 'configure';
+	const CMD_SAVE = 'save';
+	const CMD_CANCEL = 'cancel';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -32,7 +36,7 @@ class hubConfGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
@@ -50,23 +54,19 @@ class hubConfGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->getStandardTemplate();
-		}
+		$this->tpl->getStandardTemplate();
 
 		$cmd = $this->ctrl->getCmd();
 		$this->performCommand($cmd);
 
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->show();
-		}
+		$this->tpl->show();
 
 		return true;
 	}
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 *
 	 * @return mixed|void
 	 */
@@ -88,10 +88,8 @@ class hubConfGUI {
 		$form = new hubConfigFormGUI($this);
 		$form->setValuesByPost();
 		if ($form->saveObject()) {
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 		$this->tpl->setContent($form->getHTML());
 	}
 }
-
-?>

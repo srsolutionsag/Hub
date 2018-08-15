@@ -1,6 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
-hub::loadActiveRecord();
+require_once "Services/ActiveRecord/class.ActiveRecord.php";
 
 /**
  * Class hubOriginObjectPropertyValue
@@ -13,18 +13,30 @@ hub::loadActiveRecord();
  */
 class hubOriginObjectPropertyValue extends ActiveRecord {
 
-	/**
-	 * @var bool
-	 */
-	protected $ar_safe_read = false;
+	const TABLE_NAME = "sr_hub_origin_prop";
 
 
 	/**
 	 * @return string
 	 */
-	static function returnDbTableName() {
-		return 'sr_hub_origin_prop';
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
 	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @var bool
+	 */
+	protected $ar_safe_read = false;
 
 
 	public function update() {
@@ -118,5 +130,3 @@ class hubOriginObjectPropertyValue extends ActiveRecord {
 		return $this->sr_hub_origin_id;
 	}
 }
-
-?>

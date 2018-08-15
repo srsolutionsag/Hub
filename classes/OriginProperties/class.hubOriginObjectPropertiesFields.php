@@ -17,5 +17,3 @@ class hubOriginObjectPropertiesFields {
 	const F_SL_CHECK_ONLINE = 'sl_check_online';
 	const F_MSG_NOT_ONLINE = 'msg_not_online';
 }
-
-?>

@@ -35,7 +35,7 @@ class hubSyncHistoryGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
@@ -61,12 +61,12 @@ class hubSyncHistoryGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 *
 	 * @return mixed|void
 	 */
 	protected function performCommand($cmd) {
-		// TODO Rechteprüfung
+		// TODO: Rechteprüfung
 		$this->{$cmd}();
 	}
 
@@ -152,5 +152,3 @@ class hubSyncHistoryGUI {
 			$this->ctrl->redirect($this, 'index');
 		}*/
 }
-
-?>

@@ -17,15 +17,20 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var  ilCtrl
+	 * @var ilCtrl
 	 */
 	protected $ctrl;
 
 
 	/**
-	 * @param $parent_gui
+	 * @param hubConfGUI $parent_gui
 	 */
 	public function __construct($parent_gui) {
+		if (ILIAS_VERSION_NUMERIC >= "5.2") {
+			parent::__construct();
+		} else {
+			parent::ilPropertyFormGUI();
+		}
 		global $ilCtrl;
 		$this->parent_gui = $parent_gui;
 		$this->ctrl = $ilCtrl;
@@ -143,12 +148,12 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
-	 * @param $array
+	 * @param ilFormPropertyGUI $item
+	 * @param array             $array
 	 *
 	 * @internal param $key
 	 */
-	private function getValuesForItem($item, &$array) {
+	private function getValuesForItem($item, array &$array) {
 		if (self::checkItem($item)) {
 			$key = $item->getPostVar();
 			$array[$key] = hubConfig::get($key);
@@ -189,7 +194,7 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 */
 	private function saveValueForItem($item) {
 		if (self::checkItem($item)) {
@@ -203,17 +208,17 @@ class hubConfigFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param $item
+	 * @param ilFormPropertyGUI $item
 	 *
 	 * @return bool
 	 */
 	public static function checkItem($item) {
-		return get_class($item) != 'ilFormSectionHeaderGUI';
+		return get_class($item) != ilFormSectionHeaderGUI::class;
 	}
 
 
 	protected function addCommandButtons() {
-		$this->addCommandButton('save', $this->pl->txt('admin_form_button_save'));
-		$this->addCommandButton('cancel', $this->pl->txt('admin_form_button_cancel'));
+		$this->addCommandButton(hubConfGUI::CMD_SAVE, $this->pl->txt('admin_form_button_save'));
+		$this->addCommandButton(hubConfGUI::CMD_CANCEL, $this->pl->txt('admin_form_button_cancel'));
 	}
 }

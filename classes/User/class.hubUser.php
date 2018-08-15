@@ -2,6 +2,7 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubObject.php');
 require_once('./Services/Mail/classes/class.ilMimeMail.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUserFields.php');
+require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Membership/class.hubMembership.php";
 
 /**
  * Class hubUser
@@ -25,6 +26,7 @@ class hubUser extends hubObject {
 	const ACCOUNT_TYPE_LDAP_3 = 7;
 	const ACCOUNT_TYPE_LDAP_4 = 8;
 	const ACCOUNT_TYPE_LDAP_5 = 9;
+	const TABLE_NAME = "sr_hub_user";
 	public $user_properties = array(
 		'institution',
 		'street',
@@ -60,8 +62,8 @@ class hubUser extends hubObject {
 	 */
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubUser   hubUser
-		 * @var $hubOrigin hubOrigin
+		 * @var hubUser   $hubUser
+		 * @var hubOrigin $hubOrigin
 		 */
 
 		$count = self::count();
@@ -135,8 +137,8 @@ class hubUser extends hubObject {
 				}
 				hubDurationLogger2::getInstance($duration_id)->pause();
 				arObjectCache::purge($hubUser);
-				$hubUser = null;
-				$hubOriginObj = null;
+				$hubUser = NULL;
+				$hubOriginObj = NULL;
 			}
 			$step ++;
 		}
@@ -177,7 +179,7 @@ class hubUser extends hubObject {
 			$getter_name = "get" . ucfirst($user_property);
 
 			if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-				if ($this->$getter_name() !== null) {
+				if ($this->$getter_name() !== NULL) {
 					$this->ilias_object->$setter_name($this->$getter_name());
 				}
 			}
@@ -233,7 +235,7 @@ class hubUser extends hubObject {
 		$this->ilias_object->setLogin($login);
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 
 		$ilDB->manipulateF('UPDATE usr_data SET login = %s WHERE usr_id = %s', array(
@@ -257,7 +259,7 @@ class hubUser extends hubObject {
 	protected function sendPasswordMail() {
 		global $ilSetting, $ilDB;
 		$sql = "SELECT container_id as ref_id
-					FROM  sr_hub_membership
+					FROM  " . hubMembership::TABLE_NAME . "
 					WHERE ext_id LIKE '" . $this->getExtId() . "%'";
 		$query = $ilDB->query($sql);
 
@@ -283,8 +285,8 @@ class hubUser extends hubObject {
 			}
 
 			$body = strtr($body, array(
-				'[PASSWORD]'    => $this->getPasswd(),
-				'[LOGIN]'       => $this->getLogin(),
+				'[PASSWORD]' => $this->getPasswd(),
+				'[LOGIN]' => $this->getLogin(),
 				'[VALID_UNTIL]' => date($format, $this->getTimeLimitUntil()),
 				'[COURSE_LINK]' => implode(', ', $crs_links),
 			));
@@ -324,7 +326,7 @@ class hubUser extends hubObject {
 				$getter_name = "get" . ucfirst($user_property);
 
 				if (method_exists($this, $getter_name) && method_exists($this->ilias_object, $setter_name)) {
-					if ($this->$getter_name() !== null) {
+					if ($this->$getter_name() !== NULL) {
 						$this->ilias_object->$setter_name($this->$getter_name());
 					}
 				}
@@ -373,7 +375,7 @@ class hubUser extends hubObject {
 			return false;
 		}
 		/**
-		 * @var  $rbacadmin ilRbacAdmin
+		 * @var ilRbacAdmin $rbacadmin
 		 */
 		global $rbacadmin;
 		$user_id = $this->ilias_object->getId();
@@ -435,15 +437,15 @@ class hubUser extends hubObject {
 	// Helper
 	//
 	/**
-	 * @param $login
-	 * @param $usr_id
+	 * @param string $login
+	 * @param int    $usr_id
 	 *
 	 * @return bool
 	 */
 	private static function loginExists($login, $usr_id) {
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 		$query = 'SELECT usr_id FROM usr_data WHERE login = ' . $ilDB->quote($login, 'text');
 		$query .= ' AND usr_id != ' . $ilDB->quote($usr_id, 'integer');
@@ -453,8 +455,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $fieldname
-	 * @param $value
+	 * @param string $fieldname
+	 * @param string $value
 	 *
 	 * @return bool
 	 */
@@ -469,7 +471,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $email
+	 * @param string $email
 	 *
 	 * @return bool
 	 */
@@ -479,7 +481,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $external_account
+	 * @param
+	 * $external_account
 	 *
 	 * @return bool
 	 */
@@ -733,7 +736,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $hubUser
+	 * @param hubUser $hubUser
 	 */
 	protected static function lookupExisting(hubUser $hubUser) {
 		$existing_usr_id = 0;
@@ -755,7 +758,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $field_name
+	 * @param string $field_name
 	 *
 	 * @return string
 	 */
@@ -768,8 +771,8 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $field_name
-	 * @param $field_value
+	 * @param string $field_name
+	 * @param string $field_value
 	 *
 	 * @return array
 	 */
@@ -782,7 +785,7 @@ class hubUser extends hubObject {
 
 
 	/**
-	 * @param $role_id
+	 * @param int $role_id
 	 */
 	public function addRole($role_id) {
 		$this->ilias_roles[] = $role_id;
@@ -792,14 +795,6 @@ class hubUser extends hubObject {
 
 	public function clearRoles() {
 		$this->ilias_roles = array();
-	}
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_user';
 	}
 
 
@@ -1303,28 +1298,28 @@ class hubUser extends hubObject {
 	// Helper
 	//
 	/**
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return mixed
 	 */
 	protected static function cleanName($name) {
 		$upas = array(
-			'ä'  => 'ae',
-			'å'  => 'ae',
-			'ü'  => 'ue',
-			'ö'  => 'oe',
-			'Ä'  => 'Ae',
-			'Ü'  => 'Ue',
-			'Ö'  => 'Oe',
-			'é'  => 'e',
-			'è'  => 'e',
-			'ê'  => 'e',
-			'Á'  => 'A',
-			'ß'  => 'ss',
+			'ä' => 'ae',
+			'å' => 'ae',
+			'ü' => 'ue',
+			'ö' => 'oe',
+			'Ä' => 'Ae',
+			'Ü' => 'Ue',
+			'Ö' => 'Oe',
+			'é' => 'e',
+			'è' => 'e',
+			'ê' => 'e',
+			'Á' => 'A',
+			'ß' => 'ss',
 			'\'' => '',
-			' '  => '',
-			'-'  => '',
-			'.'  => '',
+			' ' => '',
+			'-' => '',
+			'.' => '',
 		);
 
 		return strtolower(self::toASCII(strtr($name, $upas)));
@@ -1336,8 +1331,8 @@ class hubUser extends hubObject {
 	 */
 	protected function isUpdateRequired() {
 		return $this->props()->get(hubUserFields::F_UPDATE_LOGIN) OR $this->props()->get(hubUserFields::F_UPDATE_FIRSTNAME) OR $this->props()
-		                                                                                                                            ->get(hubUserFields::F_UPDATE_LASTNAME)
-		       OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()->get(hubUserFields::F_REACTIVATE_ACCOUNT);
+				->get(hubUserFields::F_UPDATE_LASTNAME) OR $this->props()->get(hubUserFields::F_UPDATE_EMAIL) OR $this->props()
+				->get(hubUserFields::F_REACTIVATE_ACCOUNT);
 	}
 
 

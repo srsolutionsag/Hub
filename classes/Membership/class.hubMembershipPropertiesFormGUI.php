@@ -32,7 +32,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//		$sync_only_period_chooser =
 		//		$this->addItem($sync_only);
 		/**
-		 * @var $origin hubOrigin
+		 * @var hubOrigin $origin
 		 */
 		$opt[0] = $this->pl->txt('common_none');
 		foreach (hubOrigin::where(array( 'usage_type' => hub::OBJECTTYPE_USER ))->get() as $origin) {
@@ -94,7 +94,7 @@ class hubMembershipPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$this->addItem($h);
 
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('mem_prop_delete_mode'), hubMembershipFields::DELETE);
-		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_none'), null);
+		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_none'), NULL);
 		$ro->addOption($opt);
 		$opt = new ilRadioOption($this->pl->txt('mem_prop_delete_mode_inactive'), hubCourse::DELETE_MODE_INACTIVE);
 		//$ro->addOption($opt);

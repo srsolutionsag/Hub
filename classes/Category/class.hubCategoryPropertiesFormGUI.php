@@ -35,7 +35,7 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$se = new ilSelectInputGUI($this->pl->txt('cat_prop_syncfield'), hubCategoryFields::SYNCFIELD);
 		$opt = array(
-			null    => $this->pl->txt('cat_prop_syncfield_none'),
+			NULL => $this->pl->txt('cat_prop_syncfield_none'),
 			'title' => $this->pl->txt('cat_prop_syncfield_title'),
 		);
 		$se->setOptions($opt);
@@ -47,16 +47,6 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_create_icon'), hubCategoryFields::CREATE_ICON);
 		$this->addItem($cb);
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_NEWS), hubCategoryFields::F_SET_NEWS);
-			$this->addItem($cb);
-			//
-
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_INFOPAGE), hubCategoryFields::F_SET_INFOPAGE);
-			$this->addItem($cb);
-			//
-		}
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_SET_SORTING), hubCategoryFields::F_SET_SORTING);
 		//		$this->addItem($cb);
 		//
@@ -77,15 +67,6 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_icon'), hubCategoryFields::UPDATE_ICON);
 		$this->addItem($cb);
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_UPDATE_NEWS), hubCategoryFields::F_UPDATE_NEWS);
-			$this->addItem($cb);
-			//
-			$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_' . hubCategoryFields::F_UPDATE_INFOPAGE), hubCategoryFields::F_UPDATE_INFOPAGE);
-			$this->addItem($cb);
-			//
-		}
 		$cb = new ilCheckboxInputGUI($this->pl->txt('cat_prop_update_sorting'), hubCategoryFields::F_UPDATE_SORTING);
 		//		$this->addItem($cb);
 		//
@@ -95,12 +76,12 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		//
 		$ro = new ilRadioGroupInputGUI($this->pl->txt('cat_prop_delete_mode'), hubCategoryFields::DELETE);
 		$ro->setValue(hubCategory::DELETE_MODE_INACTIVE);
-		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), null);
+		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_none'), NULL);
 		$ro->addOption($opt);
 		$opt = new ilRadioOption(sprintf($this->pl->txt('cat_prop_delete_mode_inactive'), $this->pl->txt('com_prop_mark_deleted_text')), hubCategory::DELETE_MODE_INACTIVE);
 		{
 			$m = new ilCheckboxInputGUI(sprintf($this->pl->txt('cat_prop_change_icon'), hubOrigin::getClassnameForOriginId($_GET['origin_id'])
-			                                                                            . '_deleted.png'), hubCategoryFields::DELETED_ICON);
+				. '_deleted.png'), hubCategoryFields::DELETED_ICON);
 			$opt->addSubItem($m);
 		}
 		$ro->addOption($opt);
@@ -110,7 +91,7 @@ class hubCategoryPropertiesFormGUI extends hubOriginObjectPropertiesFormGUI {
 		$opt = new ilRadioOption($this->pl->txt('cat_prop_delete_mode_archive'), hubCategory::DELETE_MODE_ARCHIVE);
 		$te = new ilTextInputGUI($this->pl->txt('cat_prop_delete_mode_archive_node'), hubCategoryFields::ARCHIVE_NODE);
 		$opt->addSubItem($te);
-		//$ro->addOption($opt); FSX TODO Archiv
+		//$ro->addOption($opt); FSX TODO: Archiv
 		//
 		$this->addItem($ro);
 	}

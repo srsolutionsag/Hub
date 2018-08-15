@@ -17,10 +17,10 @@ class hub {
 	 * @var array
 	 */
 	protected static $object_types = array(
-		self::OBJECTTYPE_USER       => 'hubUser',
+		self::OBJECTTYPE_USER => 'hubUser',
 		self::OBJECTTYPE_MEMBERSHIP => 'hubMembership',
-		self::OBJECTTYPE_COURSE     => 'hubCourse',
-		self::OBJECTTYPE_CATEGORY   => 'hubCategory',
+		self::OBJECTTYPE_COURSE => 'hubCourse',
+		self::OBJECTTYPE_CATEGORY => 'hubCategory',
 	);
 	const OBJECTTYPE_USER = 1;
 	const OBJECTTYPE_MEMBERSHIP = 2;
@@ -33,7 +33,7 @@ class hub {
 
 
 	/**
-	 * @param $type_id
+	 * @param int $type_id
 	 *
 	 * @return bool
 	 */
@@ -51,7 +51,7 @@ class hub {
 
 
 	/**
-	 * @param $object_type_id
+	 * @param int $object_type_id
 	 *
 	 * @return mixed
 	 * @throws Exception
@@ -101,7 +101,7 @@ class hub {
 
 	/**
 	 * @param string $message
-	 * @param bool $keep
+	 * @param bool   $keep
 	 */
 	public static function sendFailure($message, $keep = false) {
 		if (self::isCli()) {
@@ -185,96 +185,21 @@ class hub {
 				$_POST['password'] = $_SERVER['argv'][2];
 		}
 
-		if (hubConfig::is44() OR hubConfig::is45()) {
-			ilContext::init($il_context);
-			ilAuthFactory::setContext($il_context_auth);
-		} else {
-			ilAuthFactory::setContext($il_context_auth);
-		}
+		ilAuthFactory::setContext($il_context_auth);
 		require_once('./include/inc.header.php');
 	}
 
 
-	const ILIAS_44 = 44;
-	const ILIAS_50 = 50;
-	const ILIAS_51 = 51;
-	const ILIAS_52 = 52;
-
-
-	/**
-	 * @return int
-	 */
-	public static function getILIASVersion() {
-		require_once('./include/inc.ilias_version.php');
-		require_once './Services/Component/classes/class.ilComponent.php';
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '5.1.999')) {
-			return self::ILIAS_52;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '5.0.999')) {
-			return self::ILIAS_51;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.9.999')) {
-			return self::ILIAS_50;
-		}
-		if (ilComponent::isVersionGreaterString(ILIAS_VERSION_NUMERIC, '4.3.999')) {
-			return self::ILIAS_44;
-		}
-
-		return 0;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is52() {
-		return self::getILIASVersion() >= self::ILIAS_52;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function is51() {
-		return self::getILIASVersion() >= self::ILIAS_51;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function is50() {
-		return self::getILIASVersion() >= self::ILIAS_50;
-	}
-
 	public static function loadIlDBMySQL() {
-		if (is_file('./Services/Database/classes/class.ilDBMySQL.php'))	{
+		if (is_file('./Services/Database/classes/class.ilDBMySQL.php')) {
 			require_once './Services/Database/classes/class.ilDBMySQL.php';
 		} else {
 			require_once './Services/Database/classes/MDB2/class.ilDBMySQL.php';
 		}
 	}
 
-	/**
-	 * @throws ilPluginException
-	 */
-	public static function loadActiveRecord() {
-		require_once(hub::pathToActiveRecord() . '/class.ActiveRecord.php');
-		if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
-			require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-		} elseif (hub::is50()) {
-			require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-		} else {
-			throw new ilPluginException('Please install ActiveRecord');
-		}
-	}
-
 
 	public static function pathToActiveRecord() {
-		if (is_file('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php')) {
-			return './Customizing/global/plugins/Libraries/ActiveRecord';
-		} elseif (hub::is50()) {
-			return './Services/ActiveRecord';
-		} else {
-			throw new ilPluginException('Please install ActiveRecord');
-		}
+		return './Services/ActiveRecord';
 	}
 }

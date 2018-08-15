@@ -27,9 +27,9 @@ class hubSyncCron {
 	public function __construct() {
 		global $ilUser, $ilCtrl;
 		/**
-		 * @var $ilDB   ilDB
-		 * @var $ilUser ilObjUser
-		 * @var $ilCtrl ilCtrl
+		 * @var ilDB      $ilDB
+		 * @var ilObjUser $ilUser
+		 * @var ilCtrl    $ilCtrl
 		 */
 		$this->user = $ilUser;
 		$this->ctrl = $ilCtrl;
@@ -40,7 +40,7 @@ class hubSyncCron {
 
 	public static function initAndRun() {
 		require_once(dirname(__FILE__) . '/../class.hub.php');
-		if (hub::is52()) { // > 5.2.0
+		if (ILIAS_VERSION_NUMERIC >= "5.2.0") { // > 5.2.0
 			require_once './Services/Cron/classes/class.ilCronStartUp.php';
 			$ilCronStartup = new ilCronStartUp($_SERVER['argv'][3], $_SERVER['argv'][1], $_SERVER['argv'][2]);
 			$ilCronStartup->initIlias();
@@ -51,8 +51,7 @@ class hubSyncCron {
 			require_once 'Services/UICore/classes/class.ilTemplate.php';
 			$tpl = new ilTemplate("tpl.main.html", true, true);
 			self::initGlobal("tpl", $tpl);
-			self::initGlobal("styleDefinition", "ilStyleDefinition",
-				"./Services/Style/System/classes/class.ilStyleDefinition.php");
+			self::initGlobal("styleDefinition", "ilStyleDefinition", "./Services/Style/System/classes/class.ilStyleDefinition.php");
 		} else {
 			hub::initILIAS();
 		}
@@ -67,21 +66,17 @@ class hubSyncCron {
 
 
 	/**
-	 * @param      $a_name
-	 * @param      $a_class
-	 * @param null $a_source_file
+	 * @param string $a_name
+	 * @param string $a_class
+	 * @param null   $a_source_file
 	 */
-	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
-	{
+	protected static function initGlobal($a_name, $a_class, $a_source_file = NULL) {
 		global $DIC;
 
-		if($a_source_file)
-		{
+		if ($a_source_file) {
 			include_once $a_source_file;
 			$GLOBALS[$a_name] = new $a_class;
-		}
-		else
-		{
+		} else {
 			$GLOBALS[$a_name] = $a_class;
 		}
 
@@ -214,7 +209,7 @@ class hubSyncCron {
 
 
 	/**
-	 * @param $usage
+	 * @param string $usage
 	 *
 	 * @return bool
 	 * @throws hubOriginException
@@ -227,8 +222,8 @@ class hubSyncCron {
 		}
 		foreach ($originsForUsage as $origin) {
 			/**
-			 * @var $origin       hubOrigin
-			 * @var $originObject hubOrigin
+			 * @var hubOrigin $origin
+			 * @var hubOrigin $originObject
 			 */
 			if (!$this->syncOrigin($origin)) {
 				$failed ++;
@@ -243,14 +238,14 @@ class hubSyncCron {
 
 
 	/**
-	 * @param $origin
+	 * @param hubOrigin $origin
 	 *
 	 * @return bool
 	 * @throws hubOriginException
 	 */
 	private function syncOrigin(hubOrigin $origin) {
 		/**
-		 * @var $originObject hubOrigin
+		 * @var hubOrigin $originObject
 		 */
 		try {
 			hubDurationLogger2::getInstance('overall_origin_' . $origin->getId(), false)->start();
@@ -268,9 +263,10 @@ class hubSyncCron {
 				hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId(), false)->start();
 				if ($originObject->parseData()) {
 					$data = $originObject->getData();
-					if ($originObject->compareDataWithExisting(count($data))) {
+					$count = count($data);
+					if ($originObject->compareDataWithExisting($count)) {
 						hubDurationLogger2::getInstance('parse_data_origin_' . $origin->getId())->log();
-						if ($originObject->getChecksum() === count($data) OR $originObject->getChecksum() == 0) {
+						if ($originObject->getChecksum() === $count OR $originObject->getChecksum() == 0) {
 							hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId(), false)->start();
 							if ($originObject->buildEntries()) {
 								hubDurationLogger2::getInstance('build_ext_objects_origin_' . $origin->getId())->log();
@@ -287,7 +283,7 @@ class hubSyncCron {
 								throw new hubOriginException(hubOriginException::BUILD_ENTRIES_FAILED, $origin, !self::getDryRun());
 							}
 						} else {
-							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, !self::getDryRun());
+							throw new hubOriginException(hubOriginException::CHECKSUM_MISMATCH, $origin, !self::getDryRun(), "Checksum: {$originObject->getChecksum()}, delivered data sets: {$count}");
 						}
 					} else {
 						$percentage = $originObject->props()->get(hubOriginObjectPropertiesFields::F_CHECK_AMOUNT_PERCENTAGE) . '%';
@@ -346,5 +342,3 @@ class hubSyncCron {
 		return self::$dry_run;
 	}
 }
-
-?>

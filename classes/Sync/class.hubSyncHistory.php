@@ -2,7 +2,7 @@
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 require_once('./Services/Object/classes/class.ilObject2.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
-hub::loadActiveRecord();
+require_once "Services/ActiveRecord/class.ActiveRecord.php";
 
 /**
  * Class hubSyncHistory
@@ -23,6 +23,26 @@ class hubSyncHistory extends ActiveRecord {
 	const STATUS_ALREADY_DELETED = 6;
 	const STATUS_IN_TRASH = self::STATUS_UPDATED; // 7
 	const STATUS_IGNORE = 10;
+	const TABLE_NAME = "sr_hub_sync_history";
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var bool
 	 */
@@ -47,7 +67,7 @@ class hubSyncHistory extends ActiveRecord {
 	//
 	//	public static function preloadObjects() {
 	//		/**
-	//		 * @var $hubSyncHistory hubSyncHistory
+	//		 * @var hubSyncHistory $hubSyncHistory
 	//		 */
 	//		foreach (parent::preloadObjects() as $hubSyncHistory) {
 	//			self::$cache[$hubSyncHistory->getSrHubOriginId()][$hubSyncHistory->getExtId()] = $hubSyncHistory;
@@ -71,7 +91,7 @@ class hubSyncHistory extends ActiveRecord {
 		}
 
 		/**
-		 * @var $obj hubSyncHistory
+		 * @var hubSyncHistory $obj
 		 */
 		$obj = self::findOrGetInstance($ext_id);
 		$obj->setSrHubOriginId($sr_hub_origin_id);
@@ -89,14 +109,14 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	//	/**
-	//	 * @param $primary_key
+	//	 * @param int $primary_key
 	//	 *
 	//	 * @return hubSyncHistory
 	//	 */
 	//	public static function find($primary_key) {
 	//		return parent::
 	////		/**
-	////		 * @var $obj hubSyncHistory
+	////		 * @var hubSyncHistory $obj
 	////		 */
 	////		$class_name = get_called_class();
 	////		if (!arObjectCache::isCached($class_name, $primary_key)) {
@@ -114,21 +134,21 @@ class hubSyncHistory extends ActiveRecord {
 	// Workflow
 	//
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return bool
 	 */
 	public static function initStatus($sr_hub_origin_id) {
 		/**
-		 * @var $class     hubCategory
-		 * @var $hubObject hubCategory
-		 * @var $ilDB      ilDB
+		 * @var hubCategory $class
+		 * @var hubCategory $hubObject
+		 * @var ilDB        $ilDB
 		 */
 		if (!self::$loaded[$sr_hub_origin_id]) {
 			global $ilDB;
 			$class = hubOrigin::getUsageClass($sr_hub_origin_id);
-			$sql = 'UPDATE sr_hub_sync_history hist
-					JOIN ' . $class::returnDbTableName() . ' hub_obj ON hub_obj.ext_id = hist.ext_id
+			$sql = 'UPDATE ' . self::TABLE_NAME . ' hist
+					JOIN ' . $class::TABLE_NAME . ' hub_obj ON hub_obj.ext_id = hist.ext_id
 					SET hist.deleted = 1
 					WHERE hist.sr_hub_origin_id = ' . $ilDB->quote($sr_hub_origin_id, 'integer') . '
 						AND hist.pickup_date_micro > hub_obj.delivery_date_micro;';
@@ -150,7 +170,7 @@ class hubSyncHistory extends ActiveRecord {
 	public function getStatus() {
 		if (!self::isLoaded($this->getSrHubOriginId())) {
 			throw new Exception('Cannot get Status of hubSyncHistory object before hubSyncHistory::initDataForSync()<br>'
-			                    . print_r(hubLog::getBackTrace(), 1));
+				. print_r(hubLog::getBackTrace(), 1));
 		} else {
 			return $this->getTemporaryStatus();
 		}
@@ -158,7 +178,7 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return bool
 	 */
@@ -169,14 +189,14 @@ class hubSyncHistory extends ActiveRecord {
 
 	/**
 	 * @param hubObject $hubObject
-	 * @param int $type
+	 * @param int       $type
 	 *
 	 * @return int
 	 */
 	public static function hasIliasId(hubObject $hubObject, $type = hubObject::ILIAS_ID_TYPE_OBJ_ID) {
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 		switch ($type) {
 			case hubObject::ILIAS_ID_TYPE_OBJ_ID:
@@ -189,7 +209,7 @@ class hubSyncHistory extends ActiveRecord {
 				break;
 			case hubObject::ILIAS_ID_TYPE_REF_ID:
 				$sql = 'SELECT ref_id FROM object_reference JOIN object_data ON object_reference.obj_id = object_data.obj_id WHERE object_data.import_id = '
-				       . $ilDB->quote($hubObject->returnImportId());
+					. $ilDB->quote($hubObject->returnImportId());
 				$res = $ilDB->fetchObject($ilDB->query($sql));
 
 				return $res->ref_id;
@@ -238,19 +258,10 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @return string
-	 * @description Return the Name of your Database Table
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_sync_history';
-	}
-
-
-	/**
 	 * @return array
 	 */
 	public static function getAllStatusAsArray() {
-		$ReflectionClass = new ReflectionClass('hubSyncHistory');
+		$ReflectionClass = new ReflectionClass(hubSyncHistory::class);
 		$status = array();
 		foreach ($ReflectionClass->getConstants() as $name => $value) {
 			if (strpos($name, 'STATUS_') === 0) {
@@ -369,7 +380,7 @@ class hubSyncHistory extends ActiveRecord {
 
 
 	/**
-	 * @param string $ext_id
+	 * @param int $ext_id
 	 */
 	public function setExtId($ext_id) {
 		$this->ext_id = $ext_id;
@@ -479,5 +490,3 @@ class hubSyncHistory extends ActiveRecord {
 		return $this->already_deleted;
 	}
 }
-
-?>

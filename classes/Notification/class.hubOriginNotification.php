@@ -17,11 +17,11 @@ class hubOriginNotification {
 
 
 	/**
-	 * @param      $sr_hub_origin_id
-	 * @param      $text
-	 * @param null $header
+	 * @param int    $sr_hub_origin_id
+	 * @param string $text
+	 * @param null   $header
 	 */
-	public static function addMessage($sr_hub_origin_id, $text, $header = null) {
+	public static function addMessage($sr_hub_origin_id, $text, $header = NULL) {
 		if (!$header) {
 			$header = self::COMMON;
 		}
@@ -45,11 +45,11 @@ class hubOriginNotification {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return string
 	 */
-	protected function buildMessage($sr_hub_origin_id) {
+	protected static function buildMessage($sr_hub_origin_id) {
 		$message = 'Common Messages:' . PHP_EOL;
 		$message .= implode(PHP_EOL, self::$messages[$sr_hub_origin_id][self::COMMON]);
 		$message .= PHP_EOL . PHP_EOL;
@@ -90,5 +90,3 @@ class hubOriginNotification {
 		return $str;
 	}
 }
-
-?>

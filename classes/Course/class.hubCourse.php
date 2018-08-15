@@ -12,6 +12,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  */
 class hubCourse extends hubRepositoryObject {
 
+	const TABLE_NAME = "sr_hub_course";
 	/**
 	 * @var ilObjCourse
 	 */
@@ -20,14 +21,6 @@ class hubCourse extends hubRepositoryObject {
 	 * @var int
 	 */
 	public static $id_type = self::ILIAS_ID_TYPE_REF_ID;
-
-
-	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_course';
-	}
 
 
 	/**
@@ -40,8 +33,8 @@ class hubCourse extends hubRepositoryObject {
 			$active_origin_ids[] = $origin->getId();
 		}
 		/**
-		 * @var $hubCourse    hubCourse
-		 * @var $hubOrigin    hubOrigin
+		 * @var hubCourse $hubCourse
+		 * @var hubOrigin $hubOrigin
 		 */
 		foreach (self::get() as $hubCourse) {
 			if (!hubSyncHistory::isLoaded($hubCourse->getSrHubOriginId()) || !in_array($hubCourse->getSrHubOriginId(), $active_origin_ids)) {
@@ -236,6 +229,7 @@ class hubCourse extends hubRepositoryObject {
 				$hist->setAlreadyDeleted(true);
 				$hist->setDeleted(true);
 				$hist->update();
+
 				return;
 			}
 
@@ -254,7 +248,7 @@ class hubCourse extends hubRepositoryObject {
 				case self::DELETE_MODE_TRASH:
 					global $tree;
 					/**
-					 * @var $tree ilTree
+					 * @var ilTree $tree
 					 */
 					$tree->saveSubTree($this->ilias_object->getRefId(), true);
 					break;
@@ -316,7 +310,7 @@ class hubCourse extends hubRepositoryObject {
 		if ($this->getParentIdType() == self::PARENT_ID_TYPE_EXTERNAL_ID) {
 			if ($this->props()->get(hubCourseFields::F_ORIGIN_LINK)) {
 				/**
-				 * @var $obj hubCategory
+				 * @var hubCategory $obj
 				 */
 				$obj = hubCategory::find($this->getParentId());
 				$ilias_id = $obj->getHistoryObject()->getIliasId();
@@ -342,7 +336,7 @@ class hubCourse extends hubRepositoryObject {
 	 * @return bool
 	 */
 	private function hasDependences() {
-		return $this->getFirstDependence() != null OR $this->getSecondDependence() != null OR $this->getThirdDependence() != null;
+		return $this->getFirstDependence() != NULL OR $this->getSecondDependence() != NULL OR $this->getThirdDependence() != NULL;
 	}
 
 
@@ -352,9 +346,24 @@ class hubCourse extends hubRepositoryObject {
 	private function getDependecesNode() {
 		$node_id = $this->getNode();
 		if ($this->hasDependences()) {
+			//DEBUG LOG
+			/*
+			$warn = 'HUB DEBUG Period Dependences';
+			$warn .= ' - node_id: ' . $node_id;
+			$warn .= ' - First Dep: ' . $this->getFirstDependence();
+			$warn .= ' - Second Dep: ' . $this->getSecondDependence();
+			$warn .= ' - Third Dep: ' . $this->getThirdDependence();*/
+
+
 			$node_id = $this->buildDependeceCategory($this->getFirstDependence(), $node_id, 1);
 			$node_id = $this->buildDependeceCategory($this->getSecondDependence(), $node_id, 2);
 			$node_id = $this->buildDependeceCategory($this->getThirdDependence(), $node_id, 3);
+
+			//DEBUG LOG
+			/*
+			$warn .= ' - returned node id: ' . $node_id;
+			hubLog::getInstance()->write($warn, hubLog::L_WARN);
+			*/
 
 			return $node_id;
 		} else {
@@ -365,7 +374,7 @@ class hubCourse extends hubRepositoryObject {
 
 	/**
 	 * @param ilObjCategory $ilObjCategory
-	 * @param               $deph
+	 * @param int           $deph
 	 */
 	protected function updateImportIdForDependence(ilObjCategory $ilObjCategory, $deph) {
 		$a_import_id = 'srhub_' . $this->getSrHubOriginId() . '_dep_' . $deph . '_' . $this->getParentId();
@@ -375,7 +384,7 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
-	 * @param $deph
+	 * @param int $deph
 	 *
 	 * @deprecated
 	 *
@@ -384,7 +393,7 @@ class hubCourse extends hubRepositoryObject {
 	protected function lookupDependenceCategory($deph) {
 		global $ilDB;
 		/**
-		 * @var $ilDB ilDB
+		 * @var ilDB $ilDB
 		 */
 		$key = 'srhub_' . $this->getSrHubOriginId() . '_dep_' . $deph . '_' . $this->getParentId();
 		$query = 'SELECT ref_id
@@ -407,18 +416,18 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
-	 * @param $title
-	 * @param $parent_id
-	 * @param $depth
+	 * @param string $title
+	 * @param int    $parent_id
+	 * @param int    $depth
 	 *
 	 * @return int
 	 */
 	private function buildDependeceCategory($title, $parent_id, $depth) {
 		/**
-		 * @var $tree      ilTree
-		 * @var $rbacadmin ilRbacAdmin
+		 * @var ilTree      $tree
+		 * @var ilRbacAdmin $rbacadmin
 		 */
-		if ($title == null) {
+		if ($title == NULL) {
 			return $parent_id;
 		}
 		global $tree;
@@ -932,7 +941,7 @@ class hubCourse extends hubRepositoryObject {
 		if ($this->props()->get(hubCourseFields::F_DELETED_ICON)) {
 			$icon = $this->props()->getIconPath('_deleted');
 			if ($icon) {
-				$this->ilias_object->saveIcons($icon, $icon, $icon);
+				$this->ilias_object->saveIcons($icon);
 			}
 		}
 		$this->ilias_object->update();
@@ -953,8 +962,9 @@ class hubCourse extends hubRepositoryObject {
 		$history->update();
 	}
 
+
 	/**
-	 * @param $field_name
+	 * @param string $field_name
 	 *
 	 * @return mixed|string
 	 */
@@ -969,8 +979,8 @@ class hubCourse extends hubRepositoryObject {
 
 
 	/**
-	 * @param $field_name
-	 * @param $field_value
+	 * @param string $field_name
+	 * @param string $field_value
 	 *
 	 * @return mixed
 	 */
@@ -983,5 +993,3 @@ class hubCourse extends hubRepositoryObject {
 		}
 	}
 }
-
-?>

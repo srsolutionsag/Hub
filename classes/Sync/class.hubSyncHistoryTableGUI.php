@@ -41,7 +41,7 @@ class hubSyncHistoryTableGUI extends hubAbstractTableGUI {
 
 
 	/**
-	 * @param $a_set
+	 * @param array $a_set
 	 *
 	 * @return bool
 	 * @description implement your woen fillRow or return false
@@ -80,13 +80,13 @@ class hubSyncHistoryTableGUI extends hubAbstractTableGUI {
 		//		$actions = new ilAdvancedSelectionListGUI();
 		//		$actions->setId('actions_' . self::$num);
 		//		$actions->setListTitle($this->pl->txt('actions'));
-		//		$actions->addItem($this->pl->txt('edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, 'edit'));
+		//		$actions->addItem($this->pl->txt('edit'), 'edit', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_EDIT));
 		//		if ($a_set['active']) {
-		//			$actions->addItem($this->pl->txt('deactivate'), 'deactivate', $this->ctrl->getLinkTarget($this->parent_obj, 'deactivate'));
+		//			$actions->addItem($this->pl->txt('deactivate'), 'deactivate', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_DEACTIVATE));
 		//		} else {
-		//			$actions->addItem($this->pl->txt('activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, 'activate'));
+		//			$actions->addItem($this->pl->txt('activate'), 'activate', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_ACTIVATE));
 		//		}
-		//		$actions->addItem($this->pl->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, 'confirmDelete'));
+		//		$actions->addItem($this->pl->txt('delete'), 'delete', $this->ctrl->getLinkTarget($this->parent_obj, hubOriginGUI::CMD_CONFIRM_DELETE));
 		//		$this->tpl->setCurrentBlock('cell');
 		//		$this->tpl->setVariable('VALUE', $actions->getHTML());
 		//		$this->tpl->parseCurrentBlock();
@@ -131,13 +131,11 @@ class hubSyncHistoryTableGUI extends hubAbstractTableGUI {
 
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 */
 	public function addCell($value) {
 		$this->tpl->setCurrentBlock('cell');
-		$this->tpl->setVariable('VALUE', $value !== null ? $value : '&nbsp;');
+		$this->tpl->setVariable('VALUE', $value !== NULL ? $value : '&nbsp;');
 		$this->tpl->parseCurrentBlock();
 	}
 }
-
-?>

@@ -12,6 +12,7 @@ require_once('class.hubUserTableGUI.php');
  */
 class hubUserGUI {
 
+	const CMD_INDEX = 'index';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -35,7 +36,7 @@ class hubUserGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
@@ -53,28 +54,24 @@ class hubUserGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->getStandardTemplate();
-		}
+		$this->tpl->getStandardTemplate();
 
 		$cmd = $this->ctrl->getCmd();
 		$this->performCommand($cmd);
 
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->show();
-		}
+		$this->tpl->show();
 
 		return true;
 	}
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 *
 	 * @return mixed|void
 	 */
 	protected function performCommand($cmd) {
-		// TODO Rechteprüfung
+		// TODO: Rechteprüfung
 		$this->{$cmd}();
 	}
 
@@ -100,5 +97,3 @@ class hubUserGUI {
 		$this->ctrl->redirect($this, 'index');
 	}
 }
-
-?>

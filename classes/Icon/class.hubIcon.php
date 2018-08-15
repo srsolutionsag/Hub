@@ -1,6 +1,6 @@
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
-hub::loadActiveRecord();
+require_once "Services/ActiveRecord/class.ActiveRecord.php";
 
 /**
  * Class hubIcon
@@ -21,28 +21,46 @@ class hubIcon extends ActiveRecord {
 	const PREF_MEDIUM = 'medium';
 	const PREF_LARGE = 'large';
 	const PREF_DEP = 'dep';
+	const TABLE_NAME = "hub_icon";
 	/**
 	 * @var array
 	 */
 	protected static $size_prefixes = array(
-		self::SIZE_SMALL  => self::PREF_SMALL,
+		self::SIZE_SMALL => self::PREF_SMALL,
 		self::SIZE_MEDIUM => self::PREF_MEDIUM,
-		self::SIZE_LARGE  => self::PREF_LARGE,
-		self::SIZE_LARGE  => self::PREF_LARGE,
+		self::SIZE_LARGE => self::PREF_LARGE,
+		self::SIZE_LARGE => self::PREF_LARGE,
 	);
 	/**
 	 * @var array
 	 */
 	protected static $foldername = array(
-		self::USAGE_OBJECT            => 'obj',
-		self::USAGE_FIRST_DEPENDENCE  => 'dep_1',
+		self::USAGE_OBJECT => 'obj',
+		self::USAGE_FIRST_DEPENDENCE => 'dep_1',
 		self::USAGE_SECOND_DEPENDENCE => 'dep_2',
-		self::USAGE_THIRD_DEPENDENCE  => 'dep_3',
+		self::USAGE_THIRD_DEPENDENCE => 'dep_3',
 	);
 
 
 	/**
-	 * @param $type
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @param string $type
 	 *
 	 * @return string
 	 */
@@ -80,7 +98,7 @@ class hubIcon extends ActiveRecord {
 
 
 	/**
-	 * @param        $path
+	 * @param string $path
 	 * @param string $mode
 	 *
 	 * @throws Exception
@@ -101,7 +119,7 @@ class hubIcon extends ActiveRecord {
 
 
 	/**
-	 * @param $tmp_name
+	 * @param string $tmp_name
 	 */
 	public function importFromUpload($tmp_name) {
 		$this->importFromPath($tmp_name, 'move_uploaded');
@@ -115,7 +133,7 @@ class hubIcon extends ActiveRecord {
 		if ($this->getDeleted()) {
 			return false;
 		} else {
-			$path = $this->getVersionDirectory() . '/image.' . $this->getSuffix();
+			$path = $this->getVersionDirectory() . '/icon_custom.' . $this->getSuffix();
 
 			return $path;
 		}
@@ -199,24 +217,6 @@ class hubIcon extends ActiveRecord {
 	 * @con_length             1
 	 */
 	protected $deleted = false;
-
-
-	/**
-	 * @return string
-	 * @description Return the Name of your Database Table
-	 * @deprecated
-	 */
-	static function returnDbTableName() {
-		return 'hub_icon';
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return 'hub_icon';
-	}
 
 
 	/**
@@ -346,7 +346,7 @@ class hubIcon extends ActiveRecord {
 	 * @return string
 	 */
 	public function getfileName() {
-		return '/image.' . $this->getSuffix();
+		return '/icon_custom.' . $this->getSuffix();
 	}
 
 
@@ -365,5 +365,3 @@ class hubIcon extends ActiveRecord {
 		return $this->deleted;
 	}
 }
-
-?>

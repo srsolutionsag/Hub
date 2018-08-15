@@ -29,5 +29,3 @@ class hubMembershipFields extends hubOriginObjectPropertiesFields {
 	const F_SYNC_ONLY_PERIOD = 'sync_only_period';
 	const F_SYNC_ONLY_PERIOD_CHOOSER = 'sync_only_period_chooser';
 }
-
-?>

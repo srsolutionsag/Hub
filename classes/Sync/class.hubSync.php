@@ -129,5 +129,3 @@ class hubSync {
 		return $this->usage_types;
 	}
 }
-
-?>

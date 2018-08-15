@@ -57,7 +57,7 @@ class hubLog {
 	/**
 	 * @return string
 	 */
-	protected static function getFilePath() {
+	public static function getFilePath() {
 		return self::PATH . DIRECTORY_SEPARATOR . self::FILENAME;
 	}
 
@@ -69,14 +69,13 @@ class hubLog {
 		$return = '';
 		foreach (debug_backtrace() as $bt) {
 			if (!in_array($bt['function'], array( 'getBackTrace', 'executeCommand', 'performCommand' )) AND !in_array($bt['class'], array(
-					'hub',
+					ilHubPlugin::PLUGIN_ID,
 					'ilCtrl',
 					'ilObjectPluginGUI',
 					'ilObject2GUI',
 					'ilObjectFactory',
 					'ilObject2',
-				))
-			) {
+				))) {
 				$return .= $bt['class'] . '::' . $bt['function'] . '(' . $bt['line'] . ')<br>';
 			}
 		}
@@ -99,20 +98,22 @@ class hubLog {
 
 
 	/**
-	 * @param $text
+	 * @param string $text
 	 *
 	 * @return string
 	 */
 	protected function getHeader($text) {
 		$date = '[' . date('d.m.Y - H:i:s') . ']';
 		$length = hubLogMessage::LENGTH - strlen($text) - strlen($date);
+
 		return $text . ' ' . str_repeat('+', ($length > 0 ? $length : 0)) . ' ' . $date;
 	}
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param
+	 * $level
 	 */
 	public function write($message, $level = self::L_DEBUG) {
 		if (!self::$header_written) {
@@ -128,7 +129,7 @@ class hubLog {
 
 
 	/**
-	 * @param $level
+	 * @param int $level
 	 *
 	 * @return string
 	 */
@@ -168,8 +169,8 @@ class hubLogMessage {
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param int    $level
 	 */
 	protected function __construct($message, $level) {
 		$this->setLevel($level);
@@ -180,15 +181,15 @@ class hubLogMessage {
 
 
 	/**
-	 * @param        $bytes
+	 * @param int    $bytes
 	 * @param string $unit
-	 * @param int $decimals
+	 * @param int    $decimals
 	 *
 	 * @return string
 	 */
 	protected static function formatBytes($bytes, $unit = "", $decimals = 2) {
 		$units = array(
-			'B'  => 0,
+			'B' => 0,
 			'KB' => 1,
 			'MB' => 2,
 			'GB' => 3,
@@ -242,7 +243,7 @@ class hubLogMessage {
 			$fill = '  ';
 			$message_array = explode(' :: ', $message);
 			$message = substr($message_array[0], 0, hubLogMessage::LENGTH - strlen($memory_info) - strlen($message_array[1]) - strlen('... :: '))
-			           . '... :: ' . $message_array[1];
+				. '... :: ' . $message_array[1];
 		}
 
 		return $message . $fill . $memory_info;
@@ -250,8 +251,8 @@ class hubLogMessage {
 
 
 	/**
-	 * @param $message
-	 * @param $level
+	 * @param string $message
+	 * @param int    $level
 	 *
 	 * @return hubLogMessage
 	 */
@@ -325,5 +326,3 @@ class hubLogMessage {
 		$this->memory = $memory;
 	}
 }
-
-?>

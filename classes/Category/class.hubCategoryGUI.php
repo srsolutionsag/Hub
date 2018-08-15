@@ -1,5 +1,5 @@
 <?php
-require_once(hub::pathToActiveRecord() . '/Views/class.arGUI.php');
+require_once "Services/ActiveRecord/Views/class.arGUI.php";
 require_once('class.hubCategoryGUI.php');
 require_once('class.hubCategoryIndexTableGUI.php');
 require_once('class.hubCategoryDisplayGUI.php');
@@ -14,7 +14,7 @@ require_once('class.hubCategoryDisplayGUI.php');
 class hubCategoryGUI extends arGUI {
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 */
 	function view($id) {
 		$display_gui_class = $this->record_type . "DisplayGUI";
@@ -23,8 +23,6 @@ class hubCategoryGUI extends arGUI {
 		 */
 		$display_gui = new $display_gui_class($this, $this->ar->find($id));
 		$this->tpl->setContent($display_gui->getHtml());
-		if (hubConfig::is50()) {
-			$this->tpl->show();
-		}
+		$this->tpl->show();
 	}
 }

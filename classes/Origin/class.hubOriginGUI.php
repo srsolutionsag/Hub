@@ -20,10 +20,27 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
  * @author            Fabian Schmid <fs@studer-raimann.ch>
  * @version           1.1.04
  *
- * @ilCtrl_IsCalledBy hubOriginGUI: ilRouterGUI
+ * @ilCtrl_IsCalledBy hubOriginGUI: ilUIPluginRouterGUI
  */
 class hubOriginGUI {
 
+	const CMD_INDEX = 'index';
+	const CMD_BACK = 'back';
+	const CMD_EXPORT = 'export';
+	const CMD_EDIT = 'edit';
+	const CMD_CONFIRM_DELETE = 'confirmDelete';
+	const CMD_ADD = 'add';
+	const CMD_RUN_ASYNC = 'runAsync';
+	const CMD_RUN = 'run';
+	const CMD_DRY_RUN = 'dryRun';
+	const CMD_DEACTIVATE_ALL = 'deactivateAll';
+	const CMD_ACTIVATE_ALL = 'activateAll';
+	const CMD_DEACTIVATE = 'deactivate';
+	const CMD_ACTIVATE = 'activate';
+	const CMD_DELETE = 'delete';
+	const CMD_UPDATE_AND_STAY = 'updateAndStay';
+	const CMD_UPDATE = 'update';
+	const CMD_CREATE = 'create';
 	/**
 	 * @var ilTabsGUI
 	 */
@@ -51,14 +68,12 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * @param null $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		global $tpl, $ilCtrl, $ilToolbar, $lng, $ilTabs;
 		$this->tpl = $tpl;
-		if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-			$this->tpl->getStandardTemplate();
-		}
+		$this->tpl->getStandardTemplate();
 		$this->ctrl = $ilCtrl;
 		$this->parent = $parent_gui;
 		$this->toolbar = $ilToolbar;
@@ -81,8 +96,8 @@ class hubOriginGUI {
 			$cmd = $this->ctrl->getCmd();
 			$next_class = $this->ctrl->getNextClass($this);
 			//			$this->tpl->getStandardTemplate();
-			$this->ctrl->setParameterByClass('hubIconGUI', 'origin_id', $_GET['origin_id']);
-			if ($cmd != 'delete') {
+			$this->ctrl->setParameterByClass(hubIconGUI::class, 'origin_id', $_GET['origin_id']);
+			if ($cmd != self::CMD_DELETE) {
 				$this->ctrl->saveParameter($this, 'origin_id');
 			}
 			$this->setTabs($next_class, $cmd);
@@ -93,16 +108,14 @@ class hubOriginGUI {
 				default:
 					require_once($this->ctrl->lookupClassPath($next_class));
 					if (!$cmd) {
-						$this->ctrl->setCmd('index');
+						$this->ctrl->setCmd(self::CMD_INDEX);
 					}
 					$gui = new $next_class($this);
 					$this->ctrl->forwardCommand($gui);
 					break;
 			}
 
-			if (ilHubPlugin::getBaseClass() != 'ilRouterGUI') {
-				$this->tpl->show();
-			}
+			$this->tpl->show();
 
 			return true;
 		} else {
@@ -112,18 +125,18 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $next_class
-	 * @param $cmd
+	 * @param string $next_class
+	 * @param string $cmd
 	 */
 	private function setTabs($next_class, $cmd) {
-		if ($_GET['origin_id'] AND ($cmd != 'index' OR $next_class != 'huborigingui')) {
+		if ($_GET['origin_id'] AND ($cmd != self::CMD_INDEX OR $next_class != strtolower(hubOriginGUI::class))) {
 			$this->tpl->setTitle($this->hubOrigin->getTitle());
 			$this->tabs_gui->clearTargets();
-			$this->tabs_gui->setBackTarget($this->pl->txt('common_back'), $this->ctrl->getLinkTarget($this, 'back'));
-			$this->tabs_gui->addSubTab('common', $this->pl->txt('origin_subtab_settings'), $this->ctrl->getLinkTarget($this, 'edit'));
+			$this->tabs_gui->setBackTarget($this->pl->txt('common_back'), $this->ctrl->getLinkTarget($this, self::CMD_BACK));
+			$this->tabs_gui->addSubTab('common', $this->pl->txt('origin_subtab_settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
 
 			if ($this->hubOrigin->supportsIcons()) {
-				$this->tabs_gui->addSubTab('icons', $this->pl->txt('origin_subtab_icons'), $this->ctrl->getLinkTargetByClass('hubIconGUI'));
+				$this->tabs_gui->addSubTab('icons', $this->pl->txt('origin_subtab_icons'), $this->ctrl->getLinkTargetByClass(hubIconGUI::class));
 			}
 		}
 		switch ($next_class) {
@@ -142,7 +155,7 @@ class hubOriginGUI {
 
 
 	/**
-	 * @param $cmd
+	 * @param string $cmd
 	 */
 	private function performCommand($cmd) {
 		$this->{$cmd}();
@@ -152,7 +165,7 @@ class hubOriginGUI {
 	public function index() {
 		//		require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/sql/dbupdate.php');
 		if (ilHubAccess::checkAccess()) {
-			$tableGui = new hubOriginTableGUI($this, 'index');
+			$tableGui = new hubOriginTableGUI($this, self::CMD_INDEX);
 			$this->tpl->setContent($tableGui->getHTML());
 		}
 	}
@@ -205,23 +218,23 @@ class hubOriginGUI {
 			if (!hub::isCli()) {
 				ilUtil::sendSuccess('Cronjob run');
 			}
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
 
 	public function updateAllTables() {
 		if (ilHubAccess::checkAccess()) {
-			hubOriginConfiguration::installDB();
-			hubOrigin::installDB();
-			hubOriginObjectPropertyValue::installDB();
-			hubCategory::installDB();
-			hubCourse::installDB();
-			hubMembership::installDB();
-			hubUser::installDB();
-			hubSyncHistory::installDB();
+			hubOriginConfiguration::updateDB();
+			hubOrigin::updateDB();
+			hubOriginObjectPropertyValue::updateDB();
+			hubCategory::updateDB();
+			hubCourse::updateDB();
+			hubMembership::updateDB();
+			hubUser::updateDB();
+			hubSyncHistory::updateDB();
 			ilUtil::sendInfo('Update ok', true);
-			//			$this->ctrl->redirect($this, 'index');
+			//			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
@@ -236,7 +249,7 @@ class hubOriginGUI {
 
 
 	protected function back() {
-		$this->ctrl->setParameter($this, 'origin_id', null);
+		$this->ctrl->setParameter($this, 'origin_id', NULL);
 		$this->ctrl->redirect($this);
 	}
 
@@ -247,8 +260,8 @@ class hubOriginGUI {
 			$form->setValuesByPost();
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('success'), true);
-				$this->ctrl->setParameter($this, 'origin_id', null);
-				//				$this->ctrl->redirect($this, 'index');
+				$this->ctrl->setParameter($this, 'origin_id', NULL);
+				//				$this->ctrl->redirect($this, self::CMD_INDEX);
 			} else {
 				$this->tpl->setContent($form->getHTML());
 			}
@@ -261,12 +274,12 @@ class hubOriginGUI {
 
 			global $ilToolbar;
 			/**
-			 * @var $ilToolbar ilToolbarGUI
-			 * @var $hubOrigin hubOrigin
+			 * @var ilToolbarGUI $ilToolbar
+			 * @var hubOrigin    $hubOrigin
 			 */
 			$form = new hubOriginFormGUI($this, $this->hubOrigin);
 			$form->fillForm();
-			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, 'export'));
+			$ilToolbar->addButton($this->pl->txt('common_export'), $this->ctrl->getLinkTarget($this, self::CMD_EXPORT));
 			$this->tpl->setContent($form->getHTML());
 		}
 	}
@@ -278,7 +291,7 @@ class hubOriginGUI {
 			$this->hubOrigin->update();
 			hubLog::getInstance()->write('Origin activated: ' . $this->hubOrigin->getTitle(), hubLog::L_PROD);
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
@@ -289,7 +302,7 @@ class hubOriginGUI {
 			$this->hubOrigin->update();
 			hubLog::getInstance()->write('Origin deactivated: ' . $this->hubOrigin->getTitle(), hubLog::L_PROD);
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
@@ -297,7 +310,7 @@ class hubOriginGUI {
 	public function deactivateAll() {
 		if (ilHubAccess::checkAccess()) {
 			/**
-			 * @var $hubOrigin hubOrigin
+			 * @var hubOrigin $hubOrigin
 			 */
 			foreach (hubOrigin::get() as $hubOrigin) {
 				$hubOrigin->setActive(false);
@@ -305,7 +318,7 @@ class hubOriginGUI {
 				hubLog::getInstance()->write('Origin deactivated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
 			}
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_deactivated'), true);
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
@@ -313,7 +326,7 @@ class hubOriginGUI {
 	public function activateAll() {
 		if (ilHubAccess::checkAccess()) {
 			/**
-			 * @var $hubOrigin hubOrigin
+			 * @var hubOrigin $hubOrigin
 			 */
 			foreach (hubOrigin::get() as $hubOrigin) {
 				$hubOrigin->setActive(true);
@@ -321,7 +334,7 @@ class hubOriginGUI {
 				hubLog::getInstance()->write('Origin activated: ' . $hubOrigin->getTitle(), hubLog::L_PROD);
 			}
 			ilUtil::sendSuccess($this->pl->txt('msg_origin_activated'), true);
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
@@ -336,9 +349,9 @@ class hubOriginGUI {
 			if ($form->saveObject()) {
 				ilUtil::sendSuccess($this->pl->txt('msg_saved'), $redirect);
 				hubLog::getInstance()->write('Origin updated: ' . hubOrigin::find($_GET['origin_id'])->getTitle(), hubLog::L_PROD);
-				$this->ctrl->setParameter($this, 'origin_id', null);
+				$this->ctrl->setParameter($this, 'origin_id', NULL);
 				if ($redirect) {
-					$this->ctrl->redirect($this, 'index');
+					$this->ctrl->redirect($this, self::CMD_INDEX);
 				}
 			}
 			$this->tpl->setContent($form->getHTML());
@@ -357,8 +370,8 @@ class hubOriginGUI {
 			$conf = new ilConfirmationGUI();
 			$conf->setFormAction($this->ctrl->getFormAction($this));
 			$conf->setHeaderText($this->pl->txt('msg_confirm_delete_origin'));
-			$conf->setConfirm($this->lng->txt('delete'), 'delete');
-			$conf->setCancel($this->lng->txt('cancel'), 'index');
+			$conf->setConfirm($this->lng->txt('delete'), self::CMD_DELETE);
+			$conf->setCancel($this->lng->txt('cancel'), self::CMD_INDEX);
 			$this->tpl->setContent($conf->getHTML());
 		}
 	}
@@ -368,25 +381,23 @@ class hubOriginGUI {
 		if (ilHubAccess::checkAccess()) {
 			$origin = hubOrigin::find($this->hubOrigin->getId());
 			$origin->delete();
-			$this->ctrl->redirect($this, 'index');
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		}
 	}
 
 
 	public function applyFilter() {
-		$tableGui = new hubOriginTableGUI($this, 'index');
+		$tableGui = new hubOriginTableGUI($this, self::CMD_INDEX);
 		$tableGui->writeFilterToSession();
 		$tableGui->resetOffset();
-		$this->ctrl->redirect($this, 'index');
+		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
 
 	public function resetFilter() {
-		$tableGui = new hubOriginTableGUI($this, 'index');
+		$tableGui = new hubOriginTableGUI($this, self::CMD_INDEX);
 		$tableGui->resetOffset();
 		$tableGui->resetFilter();
-		$this->ctrl->redirect($this, 'index');
+		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 }
-
-?>

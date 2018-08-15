@@ -1,5 +1,5 @@
 <?php
-require_once(hub::pathToActiveRecord() . '/Views/Display/class.arDisplayGUI.php');
+require_once "Services/ActiveRecord/Views/Display/class.arDisplayGUI.php";
 require_once('./Services/User/classes/class.ilObjUser.php');
 
 /**
@@ -24,7 +24,7 @@ class hubCourseDisplayGUI extends arDisplayGUI {
 		$hubCourse = hubCourse::find($this->ar->getExtId());
 		$hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
 		$this->title = '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $hubCourse->getTitlePrefix()
-		               . $hubCourse->getTitle() . '</a>';
+			. $hubCourse->getTitle() . '</a>';
 	}
 
 
@@ -65,7 +65,8 @@ class hubCourseDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
-	 * @param $value
+	 * @param string         $value
+	 *
 	 * @return bool|null|string
 	 */
 	protected function setArFieldData(arDisplayField $field, $value) {
@@ -74,11 +75,11 @@ class hubCourseDisplayGUI extends arDisplayGUI {
 				$hubSyncHistory = hubSyncHistory::find($this->ar->getExtId());
 
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($hubSyncHistory->getIliasId()) . '\'>' . $this->ar->getTitlePrefix() . $value
-				       . '</a>';
+					. '</a>';
 				break;
 			case 'parent_id':
 				return '<a target=\'_blank\' href=\'' . ilLink::_getLink($this->ar->getParentId()) . '\'>'
-				       . ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getParentId())) . '</a>';
+					. ilObject2::_lookupTitle(ilObject2::_lookupObjId($this->ar->getParentId())) . '</a>';
 				break;
 			case 'sr_hub_origin_id':
 				return hubOrigin::find($this->ar->getSrHubOriginId())->getTitle();
@@ -103,6 +104,7 @@ class hubCourseDisplayGUI extends arDisplayGUI {
 
 	/**
 	 * @param arDisplayField $field
+	 *
 	 * @return string
 	 */
 	protected function setCustomFieldData(arDisplayField $field) {

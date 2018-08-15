@@ -17,9 +17,9 @@ class hubIconCollection {
 
 	/**
 	 * @param hubOrigin $hubOrigin
-	 * @param int $usage
+	 * @param int       $usage
 	 *
-	 * @return \hubIconCollection
+	 * @return hubIconCollection
 	 */
 	public static function getInstance(hubOrigin $hubOrigin, $usage = hubIcon::USAGE_OBJECT) {
 		$return = new self();
@@ -27,7 +27,7 @@ class hubIconCollection {
 
 		$where = array(
 			'sr_hub_origin_id' => $hubOrigin->getId(),
-			'usage_type'       => $usage,
+			'usage_type' => $usage,
 		);
 		$small_list = hubIcon::where($where)->where(array( 'size_type' => hubIcon::SIZE_SMALL ));
 		if (!$small_list->hasSets()) {
@@ -84,7 +84,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @param \hubIcon $large
+	 * @param hubIcon $large
 	 */
 	public function setLarge($large) {
 		$this->large = $large;
@@ -92,7 +92,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @return \hubIcon
+	 * @return hubIcon
 	 */
 	public function getLarge() {
 		return $this->large;
@@ -100,7 +100,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @param \hubIcon $medium
+	 * @param hubIcon $medium
 	 */
 	public function setMedium($medium) {
 		$this->medium = $medium;
@@ -108,7 +108,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @return \hubIcon
+	 * @return hubIcon
 	 */
 	public function getMedium() {
 		return $this->medium;
@@ -116,7 +116,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @param \hubIcon $small
+	 * @param hubIcon $small
 	 */
 	public function setSmall($small) {
 		$this->small = $small;
@@ -124,7 +124,7 @@ class hubIconCollection {
 
 
 	/**
-	 * @return \hubIcon
+	 * @return hubIcon
 	 */
 	public function getSmall() {
 		return $this->small;
@@ -146,5 +146,3 @@ class hubIconCollection {
 		return $this->usage_type;
 	}
 }
-
-?>

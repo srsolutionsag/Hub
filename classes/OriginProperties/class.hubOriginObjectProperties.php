@@ -29,11 +29,11 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 */
 	protected function __construct($sr_hub_origin_id) {
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		if ($sr_hub_origin_id != 0) {
 			$this->setSrHubOriginId($sr_hub_origin_id);
@@ -53,7 +53,7 @@ class hubOriginObjectProperties {
 					break;
 			}
 			/**
-			 * @var $prop hubOriginObjectPropertyValue
+			 * @var hubOriginObjectPropertyValue $prop
 			 */
 			$where = array( 'sr_hub_origin_id' => $sr_hub_origin_id );
 			foreach (hubOriginObjectPropertyValue::where($where)->get() as $prop) {
@@ -67,7 +67,7 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $sr_hub_origin_id
+	 * @param int $sr_hub_origin_id
 	 *
 	 * @return hubOriginObjectProperties
 	 */
@@ -90,7 +90,7 @@ class hubOriginObjectProperties {
 	 */
 	public function getIconPath($appendix = '') {
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		$hubOrigin = hubOrigin::find($this->getSrHubOriginId());
 		$file = $hubOrigin->getClassPath() . '/icon' . $appendix . '.png';
@@ -99,7 +99,7 @@ class hubOriginObjectProperties {
 		}
 
 		$path = hub::getPath() . 'icons/' . hubOrigin::getUsageClass($this->getSrHubOriginId()) . '/'
-		        . hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
+			. hubOrigin::getClassnameForOriginId($this->getSrHubOriginId()) . $appendix . '.png';
 		if (is_file($path)) {
 			return $path;
 		} else {
@@ -109,7 +109,7 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 *
 	 * @return mixed
 	 */
@@ -122,7 +122,7 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param      $key
+	 * @param string $key
 	 *
 	 * @return mixed
 	 */
@@ -135,7 +135,7 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 *
 	 * @deprecated
 	 * @return mixed
@@ -147,7 +147,7 @@ class hubOriginObjectProperties {
 
 	public function delete() {
 		/**
-		 * @var $prop hubOriginObjectPropertyValue
+		 * @var hubOriginObjectPropertyValue $prop
 		 */
 		$where = array( 'sr_hub_origin_id' => $this->getSrHubOriginId() );
 		foreach (hubOriginObjectPropertyValue::where($where)->get() as $prop) {
@@ -157,9 +157,9 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param      $key
-	 * @param      $a_value
-	 * @param bool $short_prefix
+	 * @param string $key
+	 * @param string $a_value
+	 * @param bool   $short_prefix
 	 */
 	public function setByKey($key, $a_value, $short_prefix = true) {
 		if ($key) {
@@ -180,7 +180,7 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $array
+	 * @param array $array
 	 */
 	public function importRaw(array $array) {
 		$import = array();
@@ -204,8 +204,8 @@ class hubOriginObjectProperties {
 
 
 	/**
-	 * @param $name
-	 * @param $arguments
+	 * @param string $name
+	 * @param array  $arguments
 	 *
 	 * @return array
 	 */
@@ -276,5 +276,3 @@ class hubOriginObjectProperties {
 		return $this->prefix;
 	}
 }
-
-?>

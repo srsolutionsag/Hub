@@ -11,19 +11,19 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/OriginProperties/class.hubOriginObjectPropertyValue.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/User/class.hubUser.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Sync/class.hubSyncHistory.php');
-hubOriginConfiguration::installDB();
-hubOrigin::installDB();
-hubOriginObjectPropertyValue::installDB();
-hubCategory::installDB();
-hubCourse::installDB();
-hubMembership::installDB();
-hubUser::installDB();
-hubSyncHistory::installDB();
+hubOriginConfiguration::updateDB();
+hubOrigin::updateDB();
+hubOriginObjectPropertyValue::updateDB();
+hubCategory::updateDB();
+hubCourse::updateDB();
+hubMembership::updateDB();
+hubUser::updateDB();
+hubSyncHistory::updateDB();
 ?>
 <#2>
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Configuration/class.hubConfig.php');
-hubConfig::installDB();
+hubConfig::updateDB();
 ?>
 <#3>
 <?php
@@ -65,14 +65,14 @@ hubOrigin::updateDB();
 <#8>
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
-hubIcon::installDB();
+hubIcon::updateDB();
 ?>
 <#9>
 <?php
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Icon/class.hubIcon.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOrigin.php');
 /**
- * @var $hubOrigin hubOrigin
+ * @var hubOrigin $hubOrigin
  */
 hubIcon::resetDB();
 hubIcon::initDir();
@@ -128,9 +128,10 @@ hubConfig::set(hubConfig::F_STANDARD_ROLE, 'User');
 ?>
 <#13>
 <?php
+require_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Origin/class.hubOriginConfiguration.php";
 global $ilDB;
-if (!$ilDB->tableColumnExists('sr_hub_origin_conf', 'exec_time')) {
-	$ilDB->addTableColumn('sr_hub_origin_conf', 'exec_time',
+if (!$ilDB->tableColumnExists(hubOriginConfiguration::TABLE_NAME, 'exec_time')) {
+	$ilDB->addTableColumn(hubOriginConfiguration::TABLE_NAME, 'exec_time',
 		array('type' => 'text',
 				'length' => 10,
 				'notnull' => false));
@@ -154,5 +155,4 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 hubUser::updateDB();
 
 ?>
-
 

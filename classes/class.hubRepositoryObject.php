@@ -72,7 +72,7 @@ abstract class hubRepositoryObject extends hubObject {
 	protected function updateIcon(ilObject $ilias_object, $usage = hubIcon::USAGE_OBJECT) {
 		$hubOrigin = hubOrigin::find($this->getSrHubOriginId());
 		/**
-		 * @var $hubOrigin hubOrigin
+		 * @var hubOrigin $hubOrigin
 		 */
 		if ($hubOrigin) {
 			$hubIconCollection = hubIconCollection::getInstance($hubOrigin, $usage);
@@ -161,5 +161,3 @@ abstract class hubRepositoryObject extends hubObject {
 		return $this->description;
 	}
 }
-
-?>

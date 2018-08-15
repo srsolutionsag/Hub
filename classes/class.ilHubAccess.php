@@ -14,11 +14,11 @@ class ilHubAccess {
 	 *
 	 * @return bool
 	 */
-	public static function checkAccess($user_id = null) {
+	public static function checkAccess($user_id = NULL) {
 		global $rbacreview;
 		/**
-		 * @var $ilUser     ilObjUser
-		 * @var $rbacreview ilRbacReview
+		 * @var ilObjUser    $ilUser
+		 * @var ilRbacReview $rbacreview
 		 */
 		if (!$user_id) {
 			global $ilUser;
@@ -35,5 +35,3 @@ class ilHubAccess {
 		return false;
 	}
 }
-
-?>

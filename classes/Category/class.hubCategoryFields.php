@@ -28,5 +28,3 @@ class hubCategoryFields extends hubOriginObjectPropertiesFields {
 	const F_UPDATE_INFOPAGE = 'update_infopage';
 	const F_SET_INFOPAGE = 'set_infopage';
 }
-
-?>

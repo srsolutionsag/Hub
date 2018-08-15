@@ -1,4 +1,5 @@
 <?php
+
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hubRepositoryObject.php');
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
 require_once('./Services/Membership/classes/class.ilParticipants.php');
@@ -24,6 +25,7 @@ class hubMembership extends hubObject {
 	const CONT_ROLE_CRS_TUTOR = 3;
 	const CONT_ROLE_GRP_ADMIN = IL_GRP_ADMIN; // 4
 	const CONT_ROLE_GRP_MEMBER = IL_GRP_MEMBER; // 5
+	const TABLE_NAME = "sr_hub_membership";
 	/**
 	 * @var ilCourseParticipant
 	 */
@@ -51,16 +53,16 @@ class hubMembership extends hubObject {
 
 
 	public function __destruct() {
-		$this->members_object = null;
-		$this->object_type = null;
-		$this->participants = null;
+		$this->members_object = NULL;
+		$this->object_type = NULL;
+		$this->participants = NULL;
 		parent::__destruct();
 	}
 
 
 	/**
-	 * @param $ext_id_usr
-	 * @param $ext_id_container
+	 * @param int    $ext_id_usr
+	 * @param string $ext_id_container
 	 *
 	 * @return hubMembership
 	 */
@@ -68,7 +70,7 @@ class hubMembership extends hubObject {
 		$ext_id = $ext_id_usr . self::DELIMITER . $ext_id_container;
 
 		/**
-		 * @var $hubMembership hubMembership
+		 * @var hubMembership $hubMembership
 		 */
 		$hubMembership = hubMembership::findOrGetInstance($ext_id);
 		$hubMembership->setExtIdCourse($ext_id_container);
@@ -80,9 +82,9 @@ class hubMembership extends hubObject {
 
 	public static function buildILIASObjects() {
 		/**
-		 * @var $hubMembership    hubMembership
-		 * @var $hubOrigin        hubOrigin
-		 * @var $hubOriginObj     unibasSLCMMemberships
+		 * @var hubMembership $hubMembership
+		 * @var hubOrigin     $hubOrigin
+		 * @var hubOrigin     $hubOriginObj
 		 */
 		// error_reporting(((ini_get("error_reporting") & ~E_NOTICE) & ~E_DEPRECATED) & ~E_STRICT);
 
@@ -197,7 +199,7 @@ class hubMembership extends hubObject {
 					hubOriginNotification::addMessage($hubMembership->getSrHubOriginId(), $e->getMessage(), 'Catched Exceptions:');
 				}
 			}
-			$step++;
+			$step ++;
 		}
 
 		return true;
@@ -252,7 +254,7 @@ class hubMembership extends hubObject {
 			//	}
 
 			/**
-			 * @var $hubUser hubUser
+			 * @var hubUser $hubUser
 			 */
 			if ($hubUser instanceof hubUser) {
 				$usr_id = $hubUser->getHistoryObject()->getIliasId();
@@ -280,7 +282,7 @@ class hubMembership extends hubObject {
 	public function createMembership() {
 		$this->initObject();
 		if ($this->ilias_role_id > 1) {
-			if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
+			if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 				$this->participants->add($this->getUsrId(), $this->getContainerRole());
 			}
 			if ($this->getHasNotification() AND $this->props()->get(hubMembershipFields::ADD_NOTIFICATION)) {
@@ -301,7 +303,7 @@ class hubMembership extends hubObject {
 		if ($this->ilias_role_id > 1) {
 			if ($this->props()->get(hubMembershipFields::UPDATE_ROLE)) {
 				$this->initObject();
-				if ($this->getContainerRole() != null AND $this->getUsrId() != null) {
+				if ($this->getContainerRole() != NULL AND $this->getUsrId() != NULL) {
 					if ($this->participants->isAssigned($this->getUsrId())) {
 						//						$this->participants->updateRoleAssignments($this->getUsrId(), array( $this->ilias_role_id ));
 					} else {
@@ -368,8 +370,8 @@ class hubMembership extends hubObject {
 
 
 	/**
-	 * @param $prefix
-	 * @param $type
+	 * @param string $prefix
+	 * @param string $type
 	 */
 	protected function sendMails($prefix, $type) {
 		$send = false;
@@ -392,7 +394,7 @@ class hubMembership extends hubObject {
 		if ($send) {
 			$mail = new ilCourseMembershipMailNotification();
 			$mail->setRefId($this->getContainerId());
-			$mail->setRecipients(array($this->getUsrId()));
+			$mail->setRecipients(array( $this->getUsrId() ));
 			$mail->setType($type);
 			$mail->send();
 		}
@@ -448,7 +450,7 @@ class hubMembership extends hubObject {
 	 * @db_fieldtype        text
 	 * @db_length           64
 	 */
-	protected $period = null;
+	protected $period = NULL;
 	//
 	// Setter & Getter
 	//
@@ -537,14 +539,6 @@ class hubMembership extends hubObject {
 
 
 	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return 'sr_hub_membership';
-	}
-
-
-	/**
 	 * @param boolean $has_notification
 	 */
 	public function setHasNotification($has_notification) {
@@ -575,5 +569,3 @@ class hubMembership extends hubObject {
 		return $this->period;
 	}
 }
-
-?>
