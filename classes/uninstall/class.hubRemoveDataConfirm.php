@@ -15,10 +15,10 @@ require_once "Services/Utilities/classes/class.ilUtil.php";
 class hubRemoveDataConfirm {
 
 	const CMD_CANCEL = "cancel";
-	const CMD_CONFIRM_REMOVE_HUB_DATA = "confirmRemoveHubData";
-	const CMD_DEACTIVATE_HUB = "deactivateHub";
-	const CMD_SET_KEEP_HUB_DATA = "setKeepHubData";
-	const CMD_SET_REMOVE_HUB_DATA = "setRemoveHubData";
+	const CMD_CONFIRM_REMOVE_DATA = "confirmRemoveData";
+	const CMD_DEACTIVATE = "deactivate";
+	const CMD_SET_KEEP_DATA = "setKeepData";
+	const CMD_SET_REMOVE_DATA = "setRemoveData";
 
 
 	/**
@@ -93,10 +93,10 @@ class hubRemoveDataConfirm {
 
 				switch ($cmd) {
 					case self::CMD_CANCEL:
-					case self::CMD_CONFIRM_REMOVE_HUB_DATA:
-					case self::CMD_DEACTIVATE_HUB:
-					case self::CMD_SET_KEEP_HUB_DATA:
-					case self::CMD_SET_REMOVE_HUB_DATA:
+					case self::CMD_CONFIRM_REMOVE_DATA:
+					case self::CMD_DEACTIVATE:
+					case self::CMD_SET_KEEP_DATA:
+					case self::CMD_SET_REMOVE_DATA:
 						$this->{$cmd}();
 						break;
 
@@ -149,20 +149,20 @@ class hubRemoveDataConfirm {
 	/**
 	 *
 	 */
-	protected function confirmRemoveHubData() {
+	protected function confirmRemoveData() {
 		self::saveParameterByClass();
 
 		$confirmation = new ilConfirmationGUI();
 
 		$confirmation->setFormAction($this->ctrl->getFormAction($this));
 
-		$confirmation->setHeaderText($this->pl->txt("uninstall_confirm_remove_hub_data"));
+		$confirmation->setHeaderText($this->pl->txt("uninstall_confirm_remove_data"));
 
-		$confirmation->addItem("_", "_", $this->pl->txt("uninstall_hub_data"));
+		$confirmation->addItem("_", "_", $this->pl->txt("uninstall_data"));
 
-		$confirmation->addButton($this->pl->txt("uninstall_remove_hub_data"), self::CMD_SET_REMOVE_HUB_DATA);
-		$confirmation->addButton($this->pl->txt("uninstall_keep_hub_data"), self::CMD_SET_KEEP_HUB_DATA);
-		$confirmation->addButton($this->pl->txt("uninstall_deactivate_hub"), self::CMD_DEACTIVATE_HUB);
+		$confirmation->addButton($this->pl->txt("uninstall_remove_data"), self::CMD_SET_REMOVE_DATA);
+		$confirmation->addButton($this->pl->txt("uninstall_keep_data"), self::CMD_SET_KEEP_DATA);
+		$confirmation->addButton($this->pl->txt("uninstall_deactivate"), self::CMD_DEACTIVATE);
 		$confirmation->setCancel($this->pl->txt("cancel"), self::CMD_CANCEL);
 
 		$this->show($confirmation->getHTML());
@@ -172,7 +172,7 @@ class hubRemoveDataConfirm {
 	/**
 	 *
 	 */
-	protected function deactivateHub() {
+	protected function deactivate() {
 		$this->redirectToPlugins("deactivatePlugin");
 	}
 
@@ -180,10 +180,10 @@ class hubRemoveDataConfirm {
 	/**
 	 *
 	 */
-	protected function setKeepHubData() {
-		hubConfig::set(ilHubPlugin::UNINSTALL_REMOVE_HUB_DATA, false);
+	protected function setKeepData() {
+		hubConfig::set(ilHubPlugin::KEY_UNINSTALL_REMOVE_DATA, false);
 
-		ilUtil::sendInfo($this->pl->txt("uninstall_msg_kept_hub_data"), true);
+		ilUtil::sendInfo($this->pl->txt("uninstall_msg_kept_data"), true);
 
 		$this->redirectToPlugins("uninstallPlugin");
 	}
@@ -192,10 +192,10 @@ class hubRemoveDataConfirm {
 	/**
 	 *
 	 */
-	protected function setRemoveHubData() {
-		hubConfig::set(ilHubPlugin::UNINSTALL_REMOVE_HUB_DATA, true);
+	protected function setRemoveData() {
+		hubConfig::set(ilHubPlugin::KEY_UNINSTALL_REMOVE_DATA, true);
 
-		ilUtil::sendInfo($this->pl->txt("uninstall_msg_removed_hub_data"), true);
+		ilUtil::sendInfo($this->pl->txt("uninstall_msg_removed_data"), true);
 
 		$this->redirectToPlugins("uninstallPlugin");
 	}

@@ -28,7 +28,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 	const PLUGIN_ID = "hub";
 	const PLUGIN_NAME = "Hub";
-	const UNINSTALL_REMOVE_HUB_DATA = "uninstall_remove_hub_data";
+	const KEY_UNINSTALL_REMOVE_DATA = "uninstall_remove_data";
 	/**
 	 * @var ilHubPlugin
 	 */
@@ -172,26 +172,26 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	 * @return bool
 	 */
 	protected function beforeUninstall() {
-		$uninstall_remove_hub_data = hubConfig::get(self::UNINSTALL_REMOVE_HUB_DATA);
+		$uninstall_remove_data = hubConfig::get(self::KEY_UNINSTALL_REMOVE_DATA);
 
-		if ($uninstall_remove_hub_data === NULL) {
+		if ($uninstall_remove_data === NULL) {
 			hubRemoveDataConfirm::saveParameterByClass();
 
 			$this->ctrl->redirectByClass([
 				ilUIPluginRouterGUI::class,
 				hubRemoveDataConfirm::class
-			], hubRemoveDataConfirm::CMD_CONFIRM_REMOVE_HUB_DATA);
+			], hubRemoveDataConfirm::CMD_CONFIRM_REMOVE_DATA);
 
 			return false;
 		}
 
-		$uninstall_remove_hub_data = boolval($uninstall_remove_hub_data);
+		$uninstall_remove_data = boolval($uninstall_remove_data);
 
-		if ($uninstall_remove_hub_data) {
-			$this->removeHubData();
+		if ($uninstall_remove_data) {
+			$this->removeData();
 		} else {
 			// Ask again if reinstalled
-			hubConfig::remove(self::UNINSTALL_REMOVE_HUB_DATA);
+			hubConfig::remove(self::KEY_UNINSTALL_REMOVE_DATA);
 		}
 
 		return true;
@@ -201,7 +201,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	/**
 	 *
 	 */
-	protected function removeHubData() {
+	protected function removeData() {
 		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
 		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
 		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
