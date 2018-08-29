@@ -156,13 +156,13 @@ class hubRemoveDataConfirm {
 
 		$confirmation->setFormAction($this->ctrl->getFormAction($this));
 
-		$confirmation->setHeaderText($this->pl->txt("confirm_remove_hub_data"));
+		$confirmation->setHeaderText($this->pl->txt("uninstall_confirm_remove_hub_data"));
 
-		$confirmation->addItem("_", "_", $this->pl->txt("hub_data"));
+		$confirmation->addItem("_", "_", $this->pl->txt("uninstall_hub_data"));
 
-		$confirmation->addButton($this->pl->txt("remove_hub_data"), self::CMD_SET_REMOVE_HUB_DATA);
-		$confirmation->addButton($this->pl->txt("keep_hub_data"), self::CMD_SET_KEEP_HUB_DATA);
-		$confirmation->addButton($this->pl->txt("deactivate_hub"), self::CMD_DEACTIVATE_HUB);
+		$confirmation->addButton($this->pl->txt("uninstall_remove_hub_data"), self::CMD_SET_REMOVE_HUB_DATA);
+		$confirmation->addButton($this->pl->txt("uninstall_keep_hub_data"), self::CMD_SET_KEEP_HUB_DATA);
+		$confirmation->addButton($this->pl->txt("uninstall_deactivate_hub"), self::CMD_DEACTIVATE_HUB);
 		$confirmation->setCancel($this->pl->txt("cancel"), self::CMD_CANCEL);
 
 		$this->show($confirmation->getHTML());
@@ -183,7 +183,7 @@ class hubRemoveDataConfirm {
 	protected function setKeepHubData() {
 		hubConfig::set(ilHubPlugin::UNINSTALL_REMOVE_HUB_DATA, false);
 
-		ilUtil::sendInfo($this->pl->txt("msg_kept_hub_data"), true);
+		ilUtil::sendInfo($this->pl->txt("uninstall_msg_kept_hub_data"), true);
 
 		$this->redirectToPlugins("uninstallPlugin");
 	}
@@ -195,7 +195,7 @@ class hubRemoveDataConfirm {
 	protected function setRemoveHubData() {
 		hubConfig::set(ilHubPlugin::UNINSTALL_REMOVE_HUB_DATA, true);
 
-		ilUtil::sendInfo($this->pl->txt("msg_removed_hub_data"), true);
+		ilUtil::sendInfo($this->pl->txt("uninstall_msg_removed_hub_data"), true);
 
 		$this->redirectToPlugins("uninstallPlugin");
 	}
