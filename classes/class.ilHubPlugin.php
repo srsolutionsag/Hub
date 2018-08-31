@@ -134,7 +134,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	/**
-	 *
+	 * @inheritdoc
 	 */
 	protected function deleteData() {
 		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
