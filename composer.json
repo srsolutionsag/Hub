@@ -1,0 +1,6 @@
+{
+  "require": {
+    "php": ">=5.6",
+    "srag/removeplugindataconfirm": ">=0.1.0"
+  }
+}

@@ -1,0 +1,112 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1555b3b3e78948c93962eee63bdc4fe7",
+    "packages": [
+        {
+            "name": "srag/dic",
+            "version": "0.5.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/studer-raimann/DIC.git",
+                "reference": "737a89502d8c9b6681ad3dd54fc21898f2c60431"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/studer-raimann/DIC/zipball/737a89502d8c9b6681ad3dd54fc21898f2c60431",
+                "reference": "737a89502d8c9b6681ad3dd54fc21898f2c60431",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "srag\\DIC\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "srag",
+                    "email": "support-custom1@studer-raimann.ch",
+                    "homepage": "https://studer-raimann.ch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Use all ILIAS globals in your class",
+            "homepage": "https://github.com/studer-raimann/DIC",
+            "keywords": [
+                "ILIAS",
+                "dic",
+                "globals",
+                "trait"
+            ],
+            "time": "2018-08-31T10:42:21+00:00"
+        },
+        {
+            "name": "srag/removeplugindataconfirm",
+            "version": "0.1.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/studer-raimann/RemovePluginDataConfirm.git",
+                "reference": "75ba0a6a5bb244b10038fc1f44c7a9f2ef14d876"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/studer-raimann/RemovePluginDataConfirm/zipball/75ba0a6a5bb244b10038fc1f44c7a9f2ef14d876",
+                "reference": "75ba0a6a5bb244b10038fc1f44c7a9f2ef14d876",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "srag/dic": ">=0.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "srag\\RemovePluginDataConfirm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "srag",
+                    "email": "support-custom1@studer-raimann.ch",
+                    "homepage": "https://studer-raimann.ch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Demand if plugin data should be removed on uninstall",
+            "homepage": "https://github.com/studer-raimann/RemovePluginDataConfirm",
+            "keywords": [
+                "ILIAS",
+                "confirm",
+                "data",
+                "plugin",
+                "uninstall"
+            ],
+            "time": "2018-08-31T09:55:10+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.6"
+    },
+    "platform-dev": []
+}
