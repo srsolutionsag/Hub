@@ -11,6 +11,10 @@ An ILIAS-Plugin for middleware-synchronization of external systems to ILIAS. Sev
 ## Documentation
 Download the full Documentation here: https://github.com/studer-raimann/Hub/blob/master/doc/Dokumentation.docx?raw=true
 
+### Dependencies
+* [srag/removeplugindataconfirm](https://packagist.org/packages/srag/removeplugindataconfirm)
+
+Please use it for further development!
 
 ### ILIAS Plugin SLA
 
