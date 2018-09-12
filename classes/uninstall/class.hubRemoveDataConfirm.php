@@ -22,14 +22,6 @@ class hubRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function removeUninstallRemovesData() {
-		hubConfig::remove(self::KEY_UNINSTALL_REMOVES_DATA);
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
 	public function getUninstallRemovesData() {
 		return hubConfig::get(self::KEY_UNINSTALL_REMOVES_DATA);
 	}
@@ -40,5 +32,13 @@ class hubRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	 */
 	public function setUninstallRemovesData($uninstall_removes_data) {
 		hubConfig::set(self::KEY_UNINSTALL_REMOVES_DATA, false);
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function removeUninstallRemovesData() {
+		hubConfig::remove(self::KEY_UNINSTALL_REMOVES_DATA);
 	}
 }
