@@ -1,12 +1,11 @@
 {
   "name": "srag/plugins/hub",
   "description": "",
-  "version": "2.0.0",
-  "type": "library",
+  "type": "project",
   "keywords": [
     "ILIAS",
     "Plugin",
-    "Hub2"
+    "Hub"
   ],
   "homepage": "https://github.com/studer-raimann/Hub",
   "license": "GPL-3.0-only",
