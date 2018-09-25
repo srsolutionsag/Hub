@@ -20,6 +20,8 @@ require_once __DIR__ . "/class.hubGUI.php";
 require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
 require_once __DIR__ . "/../vendor/autoload.php";
 
+use srag\Plugins\CtrlMainMenu\EntryTypes\Ctrl\ctrlmmEntryCtrl;
+use srag\Plugins\CtrlMainMenu\Menu\ctrlmmMenu;
 use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 
 /**
@@ -114,9 +116,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 		$entries[$id] = array();
 		$entries[0] = array();
-		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
+		if (is_file(__DIR__ . '/../../CtrlMainMenu/vendor/autoload.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass(ilUIPluginRouterGUI::class . ',' . hubGUI::class . ',' . hubOriginGUI::class);
+			$hub_menu->setGuiClass(implode(",", [ ilUIPluginRouterGUI::class, hubGUI::class, hubOriginGUI::class ]));
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
 			if (!function_exists('hubConfig::get')) {
@@ -136,7 +138,7 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 	/**
 	 * @inheritdoc
 	 */
-	protected function deleteData() {
+	protected function deleteData()/*: void*/ {
 		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
 		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
 		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);
