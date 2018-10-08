@@ -9,13 +9,17 @@ use ilPlugin;
 use ilPropertyFormGUI;
 use ilTable2GUI;
 use ilTemplate;
+use JsonSerializable;
 use srag\DIC\DICTrait;
 use srag\DIC\Exception\DICException;
+use stdClass;
 
 /**
  * Class Plugin
  *
  * @package srag\DIC\Plugin
+ *
+ * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
 final class Plugin implements PluginInterface {
 
@@ -27,53 +31,85 @@ final class Plugin implements PluginInterface {
 	/**
 	 * @var ilPlugin
 	 */
-	private $plugin;
+	private $plugin_object;
 
 
 	/**
 	 * Plugin constructor
 	 *
-	 * @param ilPlugin $plugin
+	 * @param ilPlugin $plugin_object
+	 *
+	 * @access namespace
 	 */
-	public function __construct(ilPlugin $plugin) {
-		$this->plugin = $plugin;
+	public function __construct(ilPlugin $plugin_object) {
+		$this->plugin_object = $plugin_object;
 	}
 
 
 	/**
 	 * @inheritdoc
 	 */
-	public function directory() {
-		return $this->plugin->getDirectory();
+	public function directory()/*: string*/ {
+		return $this->plugin_object->getDirectory();
 	}
 
 
 	/**
 	 * @inheritdoc
 	 */
-	public function output($html, $main = true) {
+	public function output($value, /*bool*/
+		$main = true)/*: void*/ {
 		switch (true) {
-			case ($html instanceof ilTemplate):
-				$html = $html->get();
-				break;
-			case ($html instanceof ilConfirmationGUI):
-			case ($html instanceof ilPropertyFormGUI):
-			case ($html instanceof ilTable2GUI):
-				$html = $html->getHTML();
-				break;
-			default:
-				$html = strval($html);
-				break;
-		}
+			// JSON
+			case (is_int($value)):
+			case (is_double($value)):
+			case (is_bool($value)):
+			case (is_array($value)):
+			case ($value instanceof stdClass):
+			case ($value === NULL):
+			case ($value instanceof JsonSerializable):
+				$value = json_encode($value);
 
-		if (self::dic()->ctrl()->isAsynch()) {
-			echo $html;
-		} else {
-			if ($main) {
-				self::dic()->template()->getStandardTemplate();
-			}
-			self::dic()->template()->setContent($html);
-			self::dic()->template()->show();
+				header("Content-Type: application/json; charset=utf-8");
+
+				echo $value;
+
+				break;
+
+			default:
+				switch (true) {
+					// HTML
+					case (is_string($value)):
+						$html = strval($value);
+						break;
+
+					// GUI instance
+					case ($value instanceof ilTemplate):
+						$html = $value->get();
+						break;
+					case ($value instanceof ilConfirmationGUI):
+					case ($value instanceof ilPropertyFormGUI):
+					case ($value instanceof ilTable2GUI):
+						$html = $value->getHTML();
+						break;
+
+					// Not supported!
+					default:
+						throw new DICException("Class " . get_class($value) . " is not supported for output!");
+						break;
+				}
+
+				if (self::dic()->ctrl()->isAsynch()) {
+					echo $html;
+				} else {
+					if ($main) {
+						self::dic()->mainTemplate()->getStandardTemplate();
+					}
+					self::dic()->mainTemplate()->setContent($html);
+					self::dic()->mainTemplate()->show();
+				}
+
+				break;
 		}
 
 		exit;
@@ -83,9 +119,13 @@ final class Plugin implements PluginInterface {
 	/**
 	 * @inheritdoc
 	 */
-	public function template($template, $remove_unknown_variables = true, $remove_empty_blocks = true, $plugin = true) {
+	public function template(/*string*/
+		$template, /*bool*/
+		$remove_unknown_variables = true, /*bool*/
+		$remove_empty_blocks = true, /*bool*/
+		$plugin = true)/*: ilTemplate*/ {
 		if ($plugin) {
-			return $this->plugin->getTemplate($template, $remove_unknown_variables, $remove_empty_blocks);
+			return $this->plugin_object->getTemplate($template, $remove_unknown_variables, $remove_empty_blocks);
 		} else {
 			return new ilTemplate($template, $remove_unknown_variables, $remove_empty_blocks);
 		}
@@ -95,36 +135,43 @@ final class Plugin implements PluginInterface {
 	/**
 	 * @inheritdoc
 	 */
-	public function translate($key, $module = "", array $placeholders = [], $plugin = true, $lang = "", $default = "MISSING %s") {
+	public function translate(/*string*/
+		$key, /*string*/
+		$module = "", array $placeholders = [], /*bool*/
+		$plugin = true, /*string*/
+		$lang = "", /*string*/
+		$default = "MISSING %s")/*: string*/ {
 		if (!empty($module)) {
 			$key = $module . "_" . $key;
 		}
 
+		if (!empty($lang)) {
+			$lng = self::getLanguage($lang);
+		} else {
+			$lng = self::dic()->language();
+		}
+
 		if ($plugin) {
-			if (empty($lang)) {
-				$txt = $this->plugin->txt($key);
+			$lng->loadLanguageModule($this->plugin_object->getPrefix());
+
+			if ($lng->exists($this->plugin_object->getPrefix() . "_" . $key)) {
+				$txt = $lng->txt($this->plugin_object->getPrefix() . "_" . $key);
 			} else {
-				$lng = self::language($lang);
-
-				$lng->loadLanguageModule($this->plugin->getPrefix());
-
-				$txt = $lng->txt($this->plugin->getPrefix() . "_" . $key, $this->plugin->getPrefix());
+				$txt = "";
 			}
 		} else {
-			if (empty($lang)) {
-				$txt = self::dic()->language()->txt($key);
-			} else {
-				$lng = self::language($lang);
+			if (!empty($module)) {
+				$lng->loadLanguageModule($module);
+			}
 
-				if (!empty($module)) {
-					$lng->loadLanguageModule($module);
-				}
-
+			if ($lng->exists($key)) {
 				$txt = $lng->txt($key);
+			} else {
+				$txt = "";
 			}
 		}
 
-		if (!(empty($txt) || ($txt[0] === "-" && $txt[strlen($txt) - 1] === "-") || $txt === "MISSING" || strpos($txt, "MISSING ") === 0)) {
+		if (!(empty($txt) || $txt === "MISSING" || strpos($txt, "MISSING ") === 0)) {
 			try {
 				$txt = vsprintf($txt, $placeholders);
 			} catch (Exception $ex) {
@@ -140,15 +187,17 @@ final class Plugin implements PluginInterface {
 			}
 		}
 
-		return $txt;
+		return strval($txt);
 	}
 
 
 	/**
 	 * @inheritdoc
+	 *
+	 * @deprecated Please avoid to use ILIAS plugin object instance and instead use methods in this class!
 	 */
-	public function getPluginObject() {
-		return $this->plugin;
+	public function getPluginObject()/*: ilPlugin*/ {
+		return $this->plugin_object;
 	}
 
 
@@ -157,7 +206,8 @@ final class Plugin implements PluginInterface {
 	 *
 	 * @return ilLanguage
 	 */
-	protected static function language($lang) {
+	private static final function getLanguage(/*string*/
+		$lang)/*: ilLanguage*/ {
 		if (!isset(self::$languages[$lang])) {
 			self::$languages[$lang] = new ilLanguage($lang);
 		}

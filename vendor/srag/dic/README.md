@@ -3,7 +3,7 @@ Use all ILIAS globals in your class
 ### Usage
 
 #### Composer
-First add the follow to your `composer.json` file:
+First add the following to your `composer.json` file:
 ```json
 "require": {
   "srag/dic": ">=0.1.0"
@@ -39,7 +39,7 @@ You can now access the DIC interface, in instance and in static places:
  * 
  * @return DICInterface DIC interface
  */
-self::dic();
+self::dic()/*: DICInterface*/;
 ```
 
 For instance you can access the ilCtrl global like:
@@ -47,19 +47,19 @@ For instance you can access the ilCtrl global like:
 /**
  * @return ilCtrl
  */
-self::dic()->ctrl();
+self::dic()->ctrl()/*: ilCtrl*/;
 ```
 
-You can now access the plugin interface, in instance and in static places:
+You can access the plugin interface, in instance and in static places:
 ```php
 /**
  * Get plugin interface
  * 
  * @return PluginInterface Plugin interface
  *
- * @throws DICException 
+ * @throws DICException
  */
-self::plugin();
+self::plugin()/*: PluginInterface*/;
 ```
 
 The plugin interface has the follow methods:
@@ -71,20 +71,20 @@ For plugin dir use:
  * 
  * @return string Plugin directory
  */
-self::plugin()->directory();
+self::plugin()->directory()/*: string*/;
 ```
 
-For output html use:
+For output html, gui or json use:
 ```php
 /**
- * Output html
+ * Output HTML, GUI or JSON
  * 
- * @param string|ilTemplate|ilConfirmationGUI|ilPropertyFormGUI|ilTable2GUI $html HTML code or some gui instance
- * @param bool                                                              $main Display main skin?
+ * @param string|ilTemplate|ilConfirmationGUI|ilPropertyFormGUI|ilTable2GUI|int|double|bool|array|stdClass|JsonSerializable $html HTML code or some gui instance
+ * @param bool                                                                                                                   $main Display main skin?
  *
  * @throws DICException
  */
-self::plugin()->output($html, $main = true);
+self::plugin()->output($value, $main = true)/*: void*/;
 ```
 
 For get a template use:
@@ -101,7 +101,7 @@ For get a template use:
  *
  * @throws DICException
  */
-self::plugin()->template($template, $remove_unknown_variables = true, $remove_empty_blocks = true, $plugin = true);
+self::plugin()->template(/*string*/$template, /*bool*/$remove_unknown_variables = true, /*bool*/$remove_empty_blocks = true, /*bool*/$plugin = true)/*: ilTemplate*/;
 ```
 
 For translate use:
@@ -120,18 +120,32 @@ For translate use:
  *
  * @throws DICException
  */
-self::plugin()->translate($key, $module = "", $placeholders = [], $plugin = true, $lang = "", $default = "MISSING %s");
+self::plugin()->translate(/*string*/$key, /*string*/$module = "", array $placeholders = [], /*bool*/$plugin = true, /*string*/$lang = "", /*string*/$default = "MISSING %s")/*: string*/;
 ```
+Hints:
+- Please use not more manually `sprintf` or `vsprintf`, use the `$placeholders` parameter. Otherwise you will get an appropriate DICException thrown. This because `translate` use always `vsprintf` and if you pass to few palceholders, `vsprintf` will throw an Exception.
+- Because `translate` use `vsprintf`, you need to escape `%` with `%%` in your language strings if it is no placeholder!
 
-If you really need the ILIAS plugin object use:
+If you really need the ILIAS plugin object use but avoid this:
 ```php
 /**
  * Get ILIAS plugin object instance
  *
  * @return ilPlugin ILIAS plugin object instance
+ *
+ * @deprecated Please avoid to use ILIAS plugin object instance and instead use methods in this class!
  */
-self::plugin()->getPluginObject();
+self::plugin()->getPluginObject()/*: ilPlugin*/;
 ```
+
+You can access ILIAS version informations, in instance and in static places:
+```php
+/**
+ * Get version interface
+ * 
+ * @return VersionInterface Version interface
+ */
+self::version()/*: VersionInterface*/;
 
 If you really need DICTrait outside a class (For instance in `dbupdate.php`), use `DICStatic::dic()` or `DICStatic::plugin(ilXPlugin::class)`.
 
@@ -146,21 +160,23 @@ Please avoid to store in variables or class variables.
 - Use also `__DIR__` for `Customizing/..` and use relative paths from your class perspective (Except in `dbupdate.php`)
 - Try to avoid use `$pl`
 
-#### Requirements
-This library should works with every ILIAS version provided the features are supported.
+### Dependencies
+* [composer](https://getcomposer.org)
+
+Please use it for further development!
 
 ### Adjustment suggestions
 * Adjustment suggestions by pull requests on https://git.studer-raimann.ch/ILIAS/Plugins/DIC/tree/develop
 * Adjustment suggestions which are not yet worked out in detail by Jira tasks under https://jira.studer-raimann.ch/projects/LDIC
 * Bug reports under https://jira.studer-raimann.ch/projects/LDIC
-* For external developers please send an email to support-custom1@studer-raimann.ch
+* For external users please send an email to support-custom1@studer-raimann.ch
 
 ### Development
 If you want development in this library you should install this library like follow:
 
-Start at your ILIAS root directory 
+Start at your ILIAS root directory
 ```bash
-mkdir -p Customizing/global/plugins/Libraries/  
-cd Customizing/global/plugins/Libraries/  
-git clone git@git.studer-raimann.ch:ILIAS/Plugins/DIC.git DIC
+mkdir -p Customizing/global/plugins/Libraries
+cd Customizing/global/plugins/Libraries
+git clone -b develop git@git.studer-raimann.ch:ILIAS/Plugins/DIC.git DIC
 ```

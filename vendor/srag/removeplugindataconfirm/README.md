@@ -30,7 +30,7 @@ const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = XRemoveDataConfirm::class;
 /**
  * @inheritdoc
  */
-protected function deleteData() {
+protected function deleteData()/*: void*/ {
 	// TODO: Delete your plugin data in this method
 }
 //...
@@ -60,6 +60,8 @@ use srag\RemovePluginDataConfirm\AbstractRemovePluginDataConfirm;
 /**
  * Class XRemoveDataConfirm
  *
+ * @author            studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
+ *
  * @ilCtrl_isCalledBy XRemoveDataConfirm: ilUIPluginRouterGUI
  */
 class XRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
@@ -70,15 +72,7 @@ class XRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function removeUninstallRemovesData() {
-		XConfig::removeUninstallRemovesData();
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getUninstallRemovesData() {
+	public function getUninstallRemovesData()/*: ?bool*/ {
 		return XConfig::getUninstallRemovesData();
 	}
 
@@ -86,13 +80,21 @@ class XRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function setUninstallRemovesData($uninstall_removes_data) {
+	public function setUninstallRemovesData(/*bool*/$uninstall_removes_data)/*: void*/ {
 		XConfig::setUninstallRemovesData($uninstall_removes_data);
 	}
+
+
+	/**
+     * @inheritdoc
+     */
+    public function removeUninstallRemovesData()/*: void*/ {
+        XConfig::removeUninstallRemovesData();
+    }
 }
 
 ```
-`ilXPlugin` is the name of your plugin class.
+`ilXPlugin` is the name of your plugin class ([DICTrait](https://github.com/studer-raimann/DIC)).
 Replace the `X` in `XRemoveDataConfirm` with your plugin name.
 If you do not use `ActiveRecordConfig` replace in the `UninstallRemovesData` methods with your own database functions
 
@@ -104,7 +106,7 @@ use XRemoveDataConfirm;
 /**
  * @return bool|null
  */
-public static function getUninstallRemovesData() {
+public static function getUninstallRemovesData()/*: ?bool*/ {
 	return self::getXValue(XRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA, XRemoveDataConfirm::DEFAULT_UNINSTALL_REMOVES_DATA);
 }
 
@@ -112,7 +114,7 @@ public static function getUninstallRemovesData() {
 /**
  * @param bool $uninstall_removes_data
  */
-public static function setUninstallRemovesData($uninstall_removes_data) {
+public static function setUninstallRemovesData(/*bool*/$uninstall_removes_data)/*: void*/ {
 	self::setBooleanValue(XRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA, $uninstall_removes_data);
 }
 
@@ -120,7 +122,7 @@ public static function setUninstallRemovesData($uninstall_removes_data) {
 /**
  *
  */
-public static function removeUninstallRemovesData() {
+public static function removeUninstallRemovesData()/*: void*/ {
 	self::removeName(XRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA);
 }
 //...
@@ -151,18 +153,30 @@ removeplugindataconfirm_remove_data#:#Entferne %1$s-Daten
 ```
 If you want you can modify these. The `%1$s` placeholder is the name of your plugin.
 
+If you want to use this library, but don't want to confirm to remove data, you can disable it with add the follow to your `ilXPlugin` class:
+```php
+//...
+const REMOVE_PLUGIN_DATA_CONFIRM = false;
+//...
+```
+### Dependencies
+* [composer](https://getcomposer.org)
+* [srag/dic](https://packagist.org/packages/srag/dic)
+
+Please use it for further development!
+
 ### Adjustment suggestions
 * Adjustment suggestions by pull requests on https://git.studer-raimann.ch/ILIAS/Plugins/RemovePluginDataConfirm/tree/develop
 * Adjustment suggestions which are not yet worked out in detail by Jira tasks under https://jira.studer-raimann.ch/projects/LRPDC
 * Bug reports under https://jira.studer-raimann.ch/projects/LRPDC
-* For external developers please send an email to support-custom1@studer-raimann.ch
+* For external users please send an email to support-custom1@studer-raimann.ch
 
 ### Development
 If you want development in this library you should install this library like follow:
 
-Start at your ILIAS root directory 
+Start at your ILIAS root directory
 ```bash
-mkdir -p Customizing/global/plugins/Libraries/  
-cd Customizing/global/plugins/Libraries/  
+mkdir -p Customizing/global/plugins/Libraries
+cd Customizing/global/plugins/Libraries
 git clone git@git.studer-raimann.ch:ILIAS/Plugins/RemovePluginDataConfirm.git RemovePluginDataConfirm
 ```

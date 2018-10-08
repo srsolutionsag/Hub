@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.9.0]
+- VersionInterface
+- `mailMimeTransportFactory`
+- Improve translate, so it correct handle missing language strings and autoload language modules
+- Rename`template` to `mainTemplate` in DICInterface
+
+## [0.8.11]
+- Add `@since`
+
+## [0.8.10]
+- Update readme
+
+## [0.8.9]
+- Added dependencies to readme
+
+## [0.8.8]
+- Add `@author` to classes
+
+## [0.8.7]
+- Fix output
+
+## [0.8.6]
+- PHP7 comments
+
+## [0.8.5]
+- PHP7 comments
+
+## [0.8.4]
+- Update `translate` hints
+
+## [0.8.3]
+- Hint 'Because `translate` use `vsprintf`, you need to escape `%` with `%%` in your language strings if it is no placeholder!'
+
+## [0.8.2]
+- Hint 'Because `translate` use `vsprintf`, you need to escape `%` with `%%` if it is no placeholder!'
+
+## [0.8.1]
+- Update PHPDoc
+
+## [0.8.0]
+- Supports output JSON
+- Exception: Class {get_class($value)} is not supported for output!
+
+## [0.7.3]
+- Update PHPDoc and visibility
+
+## [0.7.2]
+- Update readme and PHPDoc
+- Exception: Class $plugin_class_name not extends ilPlugin!
+
 ## [0.7.1]
 - Fix wrong DICInterface
 
@@ -63,4 +113,3 @@
 
 ## [0.1.0]
 - First version
-

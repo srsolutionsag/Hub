@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.5]
+Update readme
+
+## [0.2.4]
+- Added dependencies to readme
+
+## [0.2.3]
+- Fix
+
+## [0.2.2]
+- Add `@author` to classes
+
+## [0.2.1]
+- PHP7 comments
+
+## [0.2.0]
+- Allow to disable the confirm remove data
+
+## [0.1.15]
+- Update comments
+
+## [0.1.14]
+- Update PHPDoc and visibility
+
 ## [0.1.13]
 - DIC PluginInterface
 
@@ -41,4 +65,3 @@
 
 ## [0.1.0]
 - First version
-
