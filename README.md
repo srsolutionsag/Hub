@@ -12,6 +12,7 @@ An ILIAS-Plugin for middleware-synchronization of external systems to ILIAS. Sev
 Download the full Documentation here: https://github.com/studer-raimann/Hub/blob/master/doc/Dokumentation.docx?raw=true
 
 ### Dependencies
+* PHP 5.6
 * [composer](https://getcomposer.org)
 * [srag/removeplugindataconfirm](https://packagist.org/packages/srag/removeplugindataconfirm)
 
