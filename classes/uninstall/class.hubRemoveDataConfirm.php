@@ -17,29 +17,4 @@ use srag\RemovePluginDataConfirm\AbstractRemovePluginDataConfirm;
 class hubRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 
 	const PLUGIN_CLASS_NAME = ilHubPlugin::class;
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getUninstallRemovesData()/*: ?bool*/ {
-		return hubConfig::get(self::KEY_UNINSTALL_REMOVES_DATA);
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function setUninstallRemovesData(/*bool*/
-		$uninstall_removes_data)/*: void*/ {
-		hubConfig::set(self::KEY_UNINSTALL_REMOVES_DATA, false);
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function removeUninstallRemovesData()/*: void*/ {
-		hubConfig::remove(self::KEY_UNINSTALL_REMOVES_DATA);
-	}
 }
