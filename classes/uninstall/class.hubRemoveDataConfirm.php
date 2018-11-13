@@ -7,7 +7,7 @@ require_once __DIR__ . "/../Configuration/class.hubConfig.php";
 require_once __DIR__ . "/../class.ilHubPlugin.php";
 require_once "Services/Utilities/classes/class.ilUtil.php";
 
-use srag\RemovePluginDataConfirm\AbstractRemovePluginDataConfirm;
+use srag\RemovePluginDataConfirm\Hub\AbstractRemovePluginDataConfirm;
 
 /**
  * Class hubRemoveDataConfirm

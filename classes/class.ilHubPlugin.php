@@ -22,7 +22,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 use srag\Plugins\CtrlMainMenu\EntryTypes\Ctrl\ctrlmmEntryCtrl;
 use srag\Plugins\CtrlMainMenu\Menu\ctrlmmMenu;
-use srag\RemovePluginDataConfirm\PluginUninstallTrait;
+use srag\RemovePluginDataConfirm\Hub\PluginUninstallTrait;
 
 /**
  * Class ilHubPlugin

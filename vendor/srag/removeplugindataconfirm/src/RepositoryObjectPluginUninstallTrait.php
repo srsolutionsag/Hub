@@ -1,11 +1,11 @@
 <?php
 
-namespace srag\RemovePluginDataConfirm;
+namespace srag\RemovePluginDataConfirm\Hub;
 
 /**
  * Trait RepositoryObjectPluginUninstallTrait
  *
- * @package srag\RemovePluginDataConfirm
+ * @package srag\RemovePluginDataConfirm\Hub
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */

@@ -1,13 +1,13 @@
 <?php
 
-namespace srag\DIC\Exception;
+namespace srag\DIC\Hub\Exception;
 
 use ilException;
 
 /**
  * Class DICException
  *
- * @package srag\DIC\Exception
+ * @package srag\DIC\Hub\Exception
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */

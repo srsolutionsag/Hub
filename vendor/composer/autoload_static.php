@@ -4,12 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6864af868c653c961058b34017356b66
+class ComposerStaticInitb2fb37085183f9da6907c80a232a8461
 {
     public static $prefixLengthsPsr4 = array (
         's' => 
         array (
             'srag\\RemovePluginDataConfirm\\' => 29,
+            'srag\\LibrariesNamespaceChanger\\' => 31,
             'srag\\DIC\\' => 9,
         ),
     );
@@ -18,6 +19,10 @@ class ComposerStaticInit6864af868c653c961058b34017356b66
         'srag\\RemovePluginDataConfirm\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src',
+        ),
+        'srag\\LibrariesNamespaceChanger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
         'srag\\DIC\\' => 
         array (
@@ -28,8 +33,8 @@ class ComposerStaticInit6864af868c653c961058b34017356b66
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6864af868c653c961058b34017356b66::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6864af868c653c961058b34017356b66::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb2fb37085183f9da6907c80a232a8461::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb2fb37085183f9da6907c80a232a8461::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

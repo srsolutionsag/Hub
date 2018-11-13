@@ -22,6 +22,10 @@
   },
   "require": {
     "php": ">=5.6",
+    "srag/librariesnamespacechanger": ">=0.1.0",
     "srag/removeplugindataconfirm": ">=0.1.0"
+  },
+  "scripts": {
+    "pre-autoload-dump": "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces"
   }
 }

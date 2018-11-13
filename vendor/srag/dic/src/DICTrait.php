@@ -1,16 +1,16 @@
 <?php
 
-namespace srag\DIC;
+namespace srag\DIC\Hub;
 
-use srag\DIC\DIC\DICInterface;
-use srag\DIC\Exception\DICException;
-use srag\DIC\Plugin\PluginInterface;
-use srag\DIC\Version\VersionInterface;
+use srag\DIC\Hub\DIC\DICInterface;
+use srag\DIC\Hub\Exception\DICException;
+use srag\DIC\Hub\Plugin\PluginInterface;
+use srag\DIC\Hub\Version\VersionInterface;
 
 /**
  * Trait DICTrait
  *
- * @package srag\DIC
+ * @package srag\DIC\Hub
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
