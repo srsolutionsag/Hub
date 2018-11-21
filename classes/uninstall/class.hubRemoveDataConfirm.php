@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . "/../../vendor/autoload.php";
 require_once "Services/Utilities/classes/class.ilConfirmationGUI.php";
 require_once "Services/Administration/classes/class.ilAdministrationGUI.php";
 require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";

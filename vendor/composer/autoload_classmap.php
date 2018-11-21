@@ -6,4 +6,23 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'srag\\DIC\\Hub\\DICStatic' => $vendorDir . '/srag/dic/src/DICStatic.php',
+    'srag\\DIC\\Hub\\DICStaticInterface' => $vendorDir . '/srag/dic/src/DICStaticInterface.php',
+    'srag\\DIC\\Hub\\DICTrait' => $vendorDir . '/srag/dic/src/DICTrait.php',
+    'srag\\DIC\\Hub\\DIC\\AbstractDIC' => $vendorDir . '/srag/dic/src/DIC/AbstractDIC.php',
+    'srag\\DIC\\Hub\\DIC\\DICInterface' => $vendorDir . '/srag/dic/src/DIC/DICInterface.php',
+    'srag\\DIC\\Hub\\DIC\\LegacyDIC' => $vendorDir . '/srag/dic/src/DIC/LegacyDIC.php',
+    'srag\\DIC\\Hub\\DIC\\NewDIC' => $vendorDir . '/srag/dic/src/DIC/NewDIC.php',
+    'srag\\DIC\\Hub\\Exception\\DICException' => $vendorDir . '/srag/dic/src/Exception/DICException.php',
+    'srag\\DIC\\Hub\\Plugin\\Plugin' => $vendorDir . '/srag/dic/src/Plugin/Plugin.php',
+    'srag\\DIC\\Hub\\Plugin\\PluginInterface' => $vendorDir . '/srag/dic/src/Plugin/PluginInterface.php',
+    'srag\\DIC\\Hub\\Plugin\\Pluginable' => $vendorDir . '/srag/dic/src/Plugin/Pluginable.php',
+    'srag\\DIC\\Hub\\Version\\Version' => $vendorDir . '/srag/dic/src/Version/Version.php',
+    'srag\\DIC\\Hub\\Version\\VersionInterface' => $vendorDir . '/srag/dic/src/Version/VersionInterface.php',
+    'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => $vendorDir . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
+    'srag\\RemovePluginDataConfirm\\Hub\\AbstractPluginUninstallTrait' => $vendorDir . '/srag/removeplugindataconfirm/src/AbstractPluginUninstallTrait.php',
+    'srag\\RemovePluginDataConfirm\\Hub\\AbstractRemovePluginDataConfirm' => $vendorDir . '/srag/removeplugindataconfirm/src/AbstractRemovePluginDataConfirm.php',
+    'srag\\RemovePluginDataConfirm\\Hub\\PluginUninstallTrait' => $vendorDir . '/srag/removeplugindataconfirm/src/PluginUninstallTrait.php',
+    'srag\\RemovePluginDataConfirm\\Hub\\RemovePluginDataConfirmException' => $vendorDir . '/srag/removeplugindataconfirm/src/RemovePluginDataConfirmException.php',
+    'srag\\RemovePluginDataConfirm\\Hub\\RepositoryObjectPluginUninstallTrait' => $vendorDir . '/srag/removeplugindataconfirm/src/RepositoryObjectPluginUninstallTrait.php',
 );

@@ -22,7 +22,7 @@
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "srag\\DIC\\": "src/"
+                "srag\\DIC\\Hub\\": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -48,23 +48,23 @@
     },
     {
         "name": "srag/librariesnamespacechanger",
-        "version": "v0.3.2",
-        "version_normalized": "0.3.2.0",
+        "version": "v0.3.5",
+        "version_normalized": "0.3.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/studer-raimann/LibrariesNamespaceChanger.git",
-            "reference": "60c9c9293acb9a2b9d51b3ce3ce18722c0ac87bb"
+            "reference": "d4acc7bff635ef9126ad350e5efdb8a9c0a2de94"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/studer-raimann/LibrariesNamespaceChanger/zipball/60c9c9293acb9a2b9d51b3ce3ce18722c0ac87bb",
-            "reference": "60c9c9293acb9a2b9d51b3ce3ce18722c0ac87bb",
+            "url": "https://api.github.com/repos/studer-raimann/LibrariesNamespaceChanger/zipball/d4acc7bff635ef9126ad350e5efdb8a9c0a2de94",
+            "reference": "d4acc7bff635ef9126ad350e5efdb8a9c0a2de94",
             "shasum": ""
         },
         "require": {
             "php": ">=5.6"
         },
-        "time": "2018-11-13T10:30:02+00:00",
+        "time": "2018-11-14T06:11:41+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -115,7 +115,7 @@
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "srag\\RemovePluginDataConfirm\\": "src/"
+                "srag\\RemovePluginDataConfirm\\Hub\\": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",

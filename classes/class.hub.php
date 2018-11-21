@@ -190,6 +190,11 @@ class hub {
 	}
 
 
+	/**
+	 * ???
+	 *
+	 * @deprecated
+	 */
 	public static function loadIlDBMySQL() {
 		if (is_file('./Services/Database/classes/class.ilDBMySQL.php')) {
 			require_once './Services/Database/classes/class.ilDBMySQL.php';
