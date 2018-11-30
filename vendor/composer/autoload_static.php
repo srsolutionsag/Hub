@@ -11,7 +11,7 @@ class ComposerStaticInita40e2b05edaade5ad898a9098f79323c
         array (
             'srag\\RemovePluginDataConfirm\\Hub\\' => 33,
             'srag\\LibrariesNamespaceChanger\\' => 31,
-            'srag\\DIC\\Hub\\' => 13,
+            'srag\\DIC\\' => 9,
         ),
     );
 
@@ -24,7 +24,7 @@ class ComposerStaticInita40e2b05edaade5ad898a9098f79323c
         array (
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\Hub\\' => 
+        'srag\\DIC\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
