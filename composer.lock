@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8642d774c8e22d2e10adb6b885209d0",
+    "content-hash": "00fb9f2109d404464e49393128bc213d",
     "packages": [
         {
             "name": "srag/dic",
-            "version": "v0.10.3",
+            "version": "v0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/studer-raimann/DIC.git",
-                "reference": "7b4208ac5d0733e13d443099aac45dd89cf14b29"
+                "reference": "bf91c68bf89438753c90bafe143648601f479c60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/DIC/zipball/7b4208ac5d0733e13d443099aac45dd89cf14b29",
-                "reference": "7b4208ac5d0733e13d443099aac45dd89cf14b29",
+                "url": "https://api.github.com/repos/studer-raimann/DIC/zipball/bf91c68bf89438753c90bafe143648601f479c60",
+                "reference": "bf91c68bf89438753c90bafe143648601f479c60",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "srag\\DIC\\": "src/"
+                    "srag\\DIC\\Hub\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -49,20 +49,20 @@
                 "globals",
                 "trait"
             ],
-            "time": "2018-10-15T12:09:44+00:00"
+            "time": "2018-11-30T07:22:56+00:00"
         },
         {
             "name": "srag/librariesnamespacechanger",
-            "version": "v0.3.5",
+            "version": "v0.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/studer-raimann/LibrariesNamespaceChanger.git",
-                "reference": "d4acc7bff635ef9126ad350e5efdb8a9c0a2de94"
+                "reference": "cf5f3be4341270fbe46a977bbd1403d744fb797a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/LibrariesNamespaceChanger/zipball/d4acc7bff635ef9126ad350e5efdb8a9c0a2de94",
-                "reference": "d4acc7bff635ef9126ad350e5efdb8a9c0a2de94",
+                "url": "https://api.github.com/repos/studer-raimann/LibrariesNamespaceChanger/zipball/cf5f3be4341270fbe46a977bbd1403d744fb797a",
+                "reference": "cf5f3be4341270fbe46a977bbd1403d744fb797a",
                 "shasum": ""
             },
             "require": {
@@ -92,20 +92,20 @@
                 "ILIAS",
                 "libraries"
             ],
-            "time": "2018-11-14T06:11:41+00:00"
+            "time": "2018-11-21T08:31:42+00:00"
         },
         {
             "name": "srag/removeplugindataconfirm",
-            "version": "v0.3.1",
+            "version": "v0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/studer-raimann/RemovePluginDataConfirm.git",
-                "reference": "b816ca0856d77eb245e445e7529fcd4906d666a5"
+                "reference": "0a4c2efb645c77ed609885366d3ac8f17c1dedbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/RemovePluginDataConfirm/zipball/b816ca0856d77eb245e445e7529fcd4906d666a5",
-                "reference": "b816ca0856d77eb245e445e7529fcd4906d666a5",
+                "url": "https://api.github.com/repos/studer-raimann/RemovePluginDataConfirm/zipball/0a4c2efb645c77ed609885366d3ac8f17c1dedbc",
+                "reference": "0a4c2efb645c77ed609885366d3ac8f17c1dedbc",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +115,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "srag\\RemovePluginDataConfirm\\": "src/"
+                    "srag\\RemovePluginDataConfirm\\Hub\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -139,7 +139,7 @@
                 "plugin",
                 "uninstall"
             ],
-            "time": "2018-11-08T06:26:27+00:00"
+            "time": "2018-11-28T08:24:16+00:00"
         }
     ],
     "packages-dev": [],

@@ -4,6 +4,7 @@ namespace srag\DIC\Hub;
 
 use srag\DIC\Hub\DIC\DICInterface;
 use srag\DIC\Hub\Exception\DICException;
+use srag\DIC\Hub\Output\OutputInterface;
 use srag\DIC\Hub\Plugin\PluginInterface;
 use srag\DIC\Hub\Version\VersionInterface;
 
@@ -32,6 +33,16 @@ trait DICTrait {
 	 */
 	protected static final function dic()/*: DICInterface*/ {
 		return DICStatic::dic();
+	}
+
+
+	/**
+	 * Get output interface
+	 *
+	 * @return OutputInterface Output interface
+	 */
+	protected static final function output()/*: OutputInterface*/ {
+		return DICStatic::output();
 	}
 
 

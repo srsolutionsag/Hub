@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . "/vendor/srag/dic/src/PHPVersionChecker.php";
+
 $id = 'hub';
 $version = '2.0.00';
 $ilias_min_version = '5.2.0';
