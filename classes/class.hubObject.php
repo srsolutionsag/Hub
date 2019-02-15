@@ -6,7 +6,7 @@ require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHoo
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/Connector/class.hubConnector.php');
 require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/classes/class.hub.php');
 require_once "Services/ActiveRecord/class.ActiveRecord.php";
-hub::loadIlDBMySQL();
+//hub::loadIlDBMySQL();
 
 /**
  * Class hubObject
@@ -78,7 +78,6 @@ abstract class hubObject extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $existing_ext_ids = array();
-
 	/**
 	 * @var hubSyncHistory
 	 */
@@ -270,7 +269,7 @@ abstract class hubObject extends ActiveRecord {
 	 * @return hubSyncHistory
 	 */
 	public function getHistoryObject() {
-		if ($this->history === null) {
+		if ($this->history === NULL) {
 			$this->history = hubSyncHistory::getInstance($this);
 		}
 

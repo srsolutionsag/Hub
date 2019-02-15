@@ -1,4 +1,5 @@
 <?php
+
 require_once('./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php');
 require_once(__DIR__ . '/Configuration/class.hubConfig.php');
 require_once __DIR__ . "/Origin/class.hubOriginConfiguration.php";
@@ -17,6 +18,11 @@ require_once "Services/UIComponent/classes/class.ilUIPluginRouterGUI.php";
 require_once "Services/Component/classes/class.ilObjComponentSettingsGUI.php";
 require_once __DIR__ . "/class.hubGUI.php";
 require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
+require_once __DIR__ . "/../vendor/autoload.php";
+
+use srag\Plugins\CtrlMainMenu\EntryTypes\Ctrl\ctrlmmEntryCtrl;
+use srag\Plugins\CtrlMainMenu\Menu\ctrlmmMenu;
+use srag\RemovePluginDataConfirm\Hub\PluginUninstallTrait;
 
 /**
  * Class ilHubPlugin
@@ -26,9 +32,11 @@ require_once __DIR__ . "/Origin/class.hubOriginGUI.php";
  */
 class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
+	use PluginUninstallTrait;
 	const PLUGIN_ID = "hub";
 	const PLUGIN_NAME = "Hub";
-	const UNINSTALL_REMOVE_HUB_DATA = "uninstall_remove_hub_data";
+	const PLUGIN_CLASS_NAME = self::class;
+	const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = hubRemoveDataConfirm::class;
 	/**
 	 * @var ilHubPlugin
 	 */
@@ -95,47 +103,6 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	/**
-	 *
-	 */
-	public function updateLanguageFiles() {
-		if (!in_array('SimpleXLSX', get_declared_classes())) {
-			require_once('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/Hub/lib/simplexlsx.class.php');
-		}
-		$path = substr(__FILE__, 0, strpos(__FILE__, 'classes')) . 'lang/';
-		if (file_exists($path . 'lang_custom.xlsx')) {
-			$file = $path . 'lang_custom.xlsx';
-		} else {
-			$file = $path . 'lang.xlsx';
-		}
-		$xslx = new SimpleXLSX($file);
-		$new_lines = array();
-		$keys = array();
-		foreach ($xslx->rows() as $n => $row) {
-			if ($n == 0) {
-				$keys = $row;
-				continue;
-			}
-			$data = $row;
-			foreach ($keys as $i => $k) {
-				if ($k != 'var' AND $k != 'part') {
-					$new_lines[$k][] = $data[0] . '_' . $data[1] . '#:#' . $data[$i];
-				}
-			}
-		}
-		$start = '<!-- language file start -->' . PHP_EOL;
-		$status = true;
-		foreach ($new_lines as $lng_key => $lang) {
-			$status = file_put_contents($path . 'ilias_' . $lng_key . '.lang', $start . implode(PHP_EOL, $lang));
-		}
-
-		if (!$status) {
-			ilUtil::sendFailure('Language-Files could not be written');
-		}
-		$this->updateLanguages();
-	}
-
-
-	/**
 	 * @param int $id
 	 *
 	 * @return ctrlmmEntryCtrl[]
@@ -149,9 +116,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 		$entries[$id] = array();
 		$entries[0] = array();
-		if (is_file('./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CtrlMainMenu/classes/EntryTypes/Ctrl/class.ctrlmmEntryCtrl.php')) {
+		if (is_file(__DIR__ . '/../../CtrlMainMenu/vendor/autoload.php')) {
 			$hub_menu = new ctrlmmEntryCtrl();
-			$hub_menu->setGuiClass(ilUIPluginRouterGUI::class . ',' . hubGUI::class . ',' . hubOriginGUI::class);
+			$hub_menu->setGuiClass(implode(",", [ ilUIPluginRouterGUI::class, hubGUI::class, hubOriginGUI::class ]));
 			$hub_menu->setTitle('HUB');
 			$hub_menu->setPermissionType(ctrlmmMenu::PERM_ROLE);
 			if (!function_exists('hubConfig::get')) {
@@ -169,39 +136,9 @@ class ilHubPlugin extends ilUserInterfaceHookPlugin {
 
 
 	/**
-	 * @return bool
+	 * @inheritdoc
 	 */
-	protected function beforeUninstall() {
-		$uninstall_remove_hub_data = hubConfig::get(self::UNINSTALL_REMOVE_HUB_DATA);
-
-		if ($uninstall_remove_hub_data === NULL) {
-			hubRemoveDataConfirm::saveParameterByClass();
-
-			$this->ctrl->redirectByClass([
-				ilUIPluginRouterGUI::class,
-				hubRemoveDataConfirm::class
-			], hubRemoveDataConfirm::CMD_CONFIRM_REMOVE_HUB_DATA);
-
-			return false;
-		}
-
-		$uninstall_remove_hub_data = boolval($uninstall_remove_hub_data);
-
-		if ($uninstall_remove_hub_data) {
-			$this->removeHubData();
-		} else {
-			// Ask again if reinstalled
-			hubConfig::remove(self::UNINSTALL_REMOVE_HUB_DATA);
-		}
-
-		return true;
-	}
-
-
-	/**
-	 *
-	 */
-	protected function removeHubData() {
+	protected function deleteData()/*: void*/ {
 		$this->db->dropTable(hubOriginConfiguration::TABLE_NAME, false);
 		$this->db->dropTable(hubOrigin::TABLE_NAME, false);
 		$this->db->dropTable(hubOriginObjectPropertyValue::TABLE_NAME, false);

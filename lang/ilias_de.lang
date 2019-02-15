@@ -267,11 +267,11 @@ icon_title_medium#:#Mittel
 icon_title_large#:#Gross
 icon_form_button_save#:#Speichern
 hub#:#Hub
-confirm_remove_hub_data#:#Möchten Sie die Hub-Daten auch entfernen? Falls Sie später einmal auf Hub2 wechseln möchten, können die Daten übernommen werden. Allenfalls möchten Sie das Hub-Plugin nur deaktivieren?
-cancel#:#Abbrechen
-remove_hub_data#:#Entferne Hub-Daten
-keep_hub_data#:#Hub-Daten behalten
-deactivate_hub#:#Hub-Plugin nur deaktivieren
-hub_data#:#Hub-Daten
-msg_removed_hub_data#:#Die Hub-Daten wurden auch entfernt!
-msg_kept_hub_data#:#Die Hub-Daten wurden behalten!
+removeplugindataconfirm_cancel#:#Abbrechen
+removeplugindataconfirm_confirm_remove_data#:#Möchten Sie die %1$s-Daten auch entfernen? Falls Sie später einmal auf %1$s2 wechseln möchten, können die Daten übernommen werden. Allenfalls möchten Sie das %1$s-Plugin nur deaktivieren?
+removeplugindataconfirm_deactivate#:#%1$s-Plugin nur deaktivieren
+removeplugindataconfirm_data#:#%1$s-Daten
+removeplugindataconfirm_keep_data#:#%1$s-Daten behalten
+removeplugindataconfirm_msg_kept_data#:#Die %1$s-Daten wurden behalten
+removeplugindataconfirm_msg_removed_data#:#Die %1$s-Daten wurden auch entfernt
+removeplugindataconfirm_remove_data#:#Entferne %1$s-Daten

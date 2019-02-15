@@ -267,11 +267,11 @@ icon_title_medium#:#Medium
 icon_title_large#:#Large
 icon_form_button_save#:#Save
 hub#:#Hub
-confirm_remove_hub_data#:#Do you want to remove the Hub data as well? If you want to switch to Hub2 later, the data can be transferred. At most, you just want to disable the Hub plugin?
-cancel#:#Cancel
-remove_hub_data#:#Remove Hub data
-keep_hub_data#:#Keep Hub data
-deactivate_hub#:#Just deactivate Hub plugin
-hub_data#:#Hub data
-msg_removed_hub_data#:#The Hub data was also removed!
-msg_kept_hub_data#:#The Hub data was kept!
+removeplugindataconfirm_cancel#:#Cancel
+removeplugindataconfirm_confirm_remove_data#:#Do you want to remove the %1$s data as well? If you want to switch to %1$s2 later, the data can be transferred. At most, you just want to disable the %1$s plugin?
+removeplugindataconfirm_deactivate#:#Just deactivate %1$s plugin
+removeplugindataconfirm_data#:#%1$s data
+removeplugindataconfirm_keep_data#:#Keep %1$s data
+removeplugindataconfirm_msg_kept_data#:#The %1$s data was kept
+removeplugindataconfirm_msg_removed_data#:#The %1$s data was also removed
+removeplugindataconfirm_remove_data#:#Remove %1$s data

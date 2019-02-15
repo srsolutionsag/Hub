@@ -75,7 +75,7 @@ class hubOriginNotification {
 			$string .= self::buildMessage($sr_hub_origin_id);
 		}
 
-		return nl2br($string);
+		return nl2br($string, false);
 	}
 
 

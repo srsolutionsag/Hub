@@ -1,0 +1,37 @@
+{
+  "name": "srag/plugins/hub",
+  "description": "",
+  "type": "project",
+  "keywords": [
+    "ILIAS",
+    "Plugin",
+    "Hub"
+  ],
+  "homepage": "https://github.com/studer-raimann/Hub",
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "studer + raimann ag - Team Custom 1",
+      "email": "support-custom1@studer-raimann.ch",
+      "homepage": "https://studer-raimann.ch",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://plugins.studer-raimann.ch/goto.php?target=uihk_srsu_PLHUB2"
+  },
+  "require": {
+    "php": ">=5.6",
+    "srag/dic": ">=0.1.0",
+    "srag/librariesnamespacechanger": ">=0.1.0",
+    "srag/removeplugindataconfirm": ">=0.1.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "classmap-authoritative": true
+  },
+  "scripts": {
+    "pre-autoload-dump": "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces"
+  }
+}
