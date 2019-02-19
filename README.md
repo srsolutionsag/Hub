@@ -11,13 +11,15 @@ An ILIAS-Plugin for middleware-synchronization of external systems to ILIAS. Sev
 ## Documentation
 Download the full Documentation here: https://github.com/studer-raimann/Hub/blob/master/doc/Dokumentation.docx?raw=true
 
+### Some screenshots
+TODO
+
 ### Dependencies
 * ILIAS 5.3
 * PHP >=5.6
 * [composer](https://getcomposer.org)
 * [srag/librariesnamespacechanger](https://packagist.org/packages/srag/librariesnamespacechanger)
 * [srag/removeplugindataconfirm](https://packagist.org/packages/srag/removeplugindataconfirm)
-
 
 Please use it for further development!
 
