@@ -11,6 +11,15 @@ An ILIAS-Plugin for middleware-synchronization of external systems to ILIAS. Sev
 ## Documentation
 Download the full Documentation here: https://github.com/studer-raimann/Hub/blob/master/doc/Dokumentation.docx?raw=true
 
+### Install Hub-Plugin
+Start at your ILIAS root directory
+```bash
+mkdir -p Customizing/global/plugins/Services/UIComponent/UserInterfaceHook
+cd Customizing/global/plugins/Services/UIComponent/UserInterfaceHook
+git clone https://github.com/studer-raimann/Hub.git Hub
+```
+Update, activate and config the plugin in the ILIAS Plugin Administration
+
 ### Some screenshots
 TODO
 
