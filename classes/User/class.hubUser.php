@@ -346,19 +346,20 @@ class hubUser extends hubObject {
 
 
 	public function deleteUser() {
-		if ($this->props()->get(hubUserFields::F_DELETE)) {
-			$this->ilias_object = new ilObjUser($this->getHistoryObject()->getIliasId());
-			switch ($this->props()->get(hubUserFields::F_DELETE)) {
-				case self::DELETE_MODE_INACTIVE:
-					$this->ilias_object->setActive(false);
-					$this->ilias_object->update();
-
-					break;
-				case self::DELETE_MODE_DELETE:
-					$this->ilias_object->delete();
-					break;
-			}
-			$hist = $this->getHistoryObject();
+        if ($this->props()->get(hubUserFields::F_DELETE)) {
+            $hist = $this->getHistoryObject();
+            if (ilObjUser::_exists($hist->getIliasId())) {
+                $this->ilias_object = new ilObjUser($hist->getIliasId());
+                switch ($this->props()->get(hubUserFields::F_DELETE)) {
+                    case self::DELETE_MODE_INACTIVE:
+                        $this->ilias_object->setActive(false);
+                        $this->ilias_object->update();
+                        break;
+                    case self::DELETE_MODE_DELETE:
+                        $this->ilias_object->delete();
+                        break;
+                }
+            }
 			$hist->setAlreadyDeleted(true);
 			$hist->setDeleted(true);
 			$hist->update();
