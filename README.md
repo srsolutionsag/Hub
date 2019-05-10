@@ -23,14 +23,9 @@ Update, activate and config the plugin in the ILIAS Plugin Administration
 ### Some screenshots
 TODO
 
-### Dependencies
+### Requirements
 * ILIAS 5.3
 * PHP >=5.6
-* [composer](https://getcomposer.org)
-* [srag/librariesnamespacechanger](https://packagist.org/packages/srag/librariesnamespacechanger)
-* [srag/removeplugindataconfirm](https://packagist.org/packages/srag/removeplugindataconfirm)
-
-Please use it for further development!
 
 ### Adjustment suggestions
 * Adjustment suggestions by pull requests
